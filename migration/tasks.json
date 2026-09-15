@@ -41,9 +41,9 @@
       "id": "M0.3",
       "phase": "Phase 0 基线固化",
       "title": "注册表快照工具",
-      "status": "pending",
+      "status": "done",
       "acceptance": "工具可导出 buildcraft 全部 registry id（方块/物品/方块实体/实体/流体/配方/标签）到 migration/snapshots/registry-baseline.json 并入库",
-      "evidence": "",
+      "evidence": "evidence：工具 common/buildcraft/datagen/base/BCRegistrySnapshotGenerator 挂在 GatherDataEvent（注册于 BCDataGenerators 末尾，最后执行）；复跑命令 rm -rf buildcraft_resources_generated/.cache && ./gradlew runData；registry-baseline.json 计数 blocks=75, items=974, block_entities=35, entities=17, fluids=60, recipes=1561, tags: block=1/item=66/fluid=1/biome=1，共2791个id全部排序；快照跨两轮全量重跑 md5=6f36e2b1a22d84d2934383ba603c8738 字节级一致",
       "notes": ""
     },
     {

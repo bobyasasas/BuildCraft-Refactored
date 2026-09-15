@@ -2,17 +2,17 @@
 
 > **本文件由 migration/scripts/progress.py 自动生成，禁止手改；更新任务请编辑 migration/tasks.json 或用 `--set` 命令。**
 >
-> 生成时间：2026-09-14 22:09:46 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-14）
+> 生成时间：2026-09-14 22:42:02 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-14）
 
 ## 总览
 
-**总任务数 28** ｜ pending(未完成)=26、in_progress(进行中)=0、partial(部分完成)=0、unverified(未验证)=0、done(已完成)=2 ｜ **完成率 7%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
+**总任务数 28** ｜ pending(未完成)=25、in_progress(进行中)=0、partial(部分完成)=0、unverified(未验证)=0、done(已完成)=3 ｜ **完成率 11%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
 
 ## 阶段汇总
 
 | 阶段 | 任务数 | done | 完成率 |
 |---|---:|---:|---:|
-| Phase 0 基线固化 | 6 | 2 | 33% |
+| Phase 0 基线固化 | 6 | 3 | 50% |
 | Phase 1 工程化整备 | 5 | 0 | 0% |
 | Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109 | 9 | 0 | 0% |
 | Phase 3 功能验证金字塔 | 8 | 0 | 0% |
@@ -23,7 +23,7 @@
 |---|---|---|---|---|
 | M0.1 | 初始化 git 子模块 | done（已完成） | git submodule status 无 '-' 前缀 | git submodule update --init --recursive 后三个子模块全部检出（BuildCraftAPI 262 java） |
 | M0.2 | 基线构建跑通 | done（已完成） | ./gradlew build 退出码 0，CI baseline-build job 变绿 | evidence：./gradlew build 退出码0（本机，2026-09-14，BUILD SUCCESSFUL in 3m 58s）；CI run 34920120110 baseline-build 绿（1m32s）、progress-check 绿 |
-| M0.3 | 注册表快照工具 | pending（未完成） | 工具可导出 buildcraft 全部 registry id（方块/物品/方块实体/实体/流体/配方/标签）到 migration/snapshots/registry-baseline.json 并入库 | — |
+| M0.3 | 注册表快照工具 | done（已完成） | 工具可导出 buildcraft 全部 registry id（方块/物品/方块实体/实体/流体/配方/标签）到 migration/snapshots/registry-baseline.json 并入库 | evidence：工具 common/buildcraft/datagen/base/BCRegistrySnapshotGenerator 挂在 GatherDataEvent（注册于 BCDataGenerators 末尾，最后执行）；复跑命令 rm -rf buildcraft_resources_generated/.cache && ./gradlew runData；registry-baseline.json 计数 blocks=75, items=974, block_entities=35, entities=17, fluids=60, recipes=1561, tags: block=1/item=66/fluid=1/biome=1，共2791个id全部排序；快照跨两轮全量重跑 md5=6f36e2b1a22d84d2934383ba603c8738 字节级一致 |
 | M0.4 | datagen 快照入库 | pending（未完成） | datagen 任务产物与 buildcraft_resources_generated/ 现有 4404 个 json diff=0 且纳入版本管理 | — |
 | M0.5 | 纯逻辑模块特征测试 | pending（未完成） | expression 库与配方/蓝图核心逻辑的 JUnit 特征测试基线全绿，测试数量记录在 evidence | — |
 | M0.6 | 静态分析基线 | pending（未完成） | SpotBugs/Checkstyle 基线报告入库，违规总数记录在 evidence | — |
@@ -52,14 +52,14 @@
 
 ## 代码实时指标
 
-采集时间：2026-09-14 22:09:46；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
+采集时间：2026-09-14 22:42:02；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
 
 | 指标 | 当前值 | 调研基线(2026-09) | 目标 |
 |---|---:|---:|---|
-| .java 文件总数 | 1,772 | 1772（main 1510 + API 子模块 262） | 无目标(参考) |
-| .java 总行数 | 194,560 | — | 无目标(参考) |
-| Forge import 文件数 | 549 | 549 | 0 |
-| Forge import 出现次数 | 1,409 | — | 0 |
+| .java 文件总数 | 1,773 | 1772（main 1510 + API 子模块 262） | 无目标(参考) |
+| .java 总行数 | 194,804 | — | 无目标(参考) |
+| Forge import 文件数 | 550 | 549 | 0 |
+| Forge import 出现次数 | 1,412 | — | 0 |
 | TODO 出现次数 | 222 | 222 | 随 M1.4 下降 |
 | FIXME 出现次数 | 24 | 24 | 随 M1.4 下降 |
 | @OnlyIn(Dist.CLIENT) 出现次数 | 279 | 279 | 随 M1.2 下降 |

@@ -111,6 +111,10 @@ public class BCDataGenerators {
         // Calen 1.20.1: 1 mod jar should contain at most 1 SpriteSourceProvider for BLOCKS_ATLAS, more will overwrite the earlier /assets/minecraft/atlases/blocks.json files
         packGenerator.addProvider(packOutput -> new BCSpriteSourceProvider(packOutput, existingFileHelper));
 
+        // M0.3: registry baseline snapshot -> migration/snapshots/registry-baseline.json
+        // Keep this last, it harvests recipe/tag ids from the other providers' output files.
+        packGenerator.addProvider(packOutput -> new BCRegistrySnapshotGenerator(packOutput));
+
         // Calen 1.20.1
         enableShouldExecute(generator);
     }
