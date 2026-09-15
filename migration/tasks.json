@@ -131,9 +131,9 @@
       "id": "M2.2",
       "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
       "title": "垂直切片：buildcraftcore",
-      "status": "pending",
+      "status": "partial",
       "acceptance": "核心方块（发动机/基础管道）在 26.1.2 全链路（注册/逻辑/渲染/GameTest）可用",
-      "evidence": "",
+      "evidence": "evidence（子步 a 注册+GameTest 基建）：DeferredRegister 注册中心（BcBlocks/BcBlockEntities/BcItems/BcCreativeTabs，占位 marker 方块）+ headless gameTestServer run，gametest 输出 \"All 1 required tests passed :)\"（========= 1 GAME TESTS COMPLETE IN 206.1 ms ======================）；cd neo && ./gradlew runGameTestServer --no-daemon 退出码 0 且服务端自然退出；cd neo && ./gradlew build --no-daemon 退出码 0；runClient 回归正常（latest.log: \"BuildCraft core registration smoke: block buildcraftcore:marker (Block) with item buildcraftcore:marker registered\"，0 ERROR）；待子步 b 发动机、c 管道+渲染+全链路",
       "notes": ""
     },
     {

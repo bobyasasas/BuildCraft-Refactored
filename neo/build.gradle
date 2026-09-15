@@ -38,6 +38,15 @@ neoForge {
             programArgument '--nogui'
         }
 
+        // M2.2a: headless NeoForge gametest server (run type from the NeoForge moddev-config:
+        // main net.neoforged.fml.startup.GameTestServer, neoforge.enableGameTest=true).
+        // The selector keeps the run focused on our own tests instead of vanilla's full suite.
+        gameTestServer {
+            type = 'gameTestServer'
+            programArgument '--tests'
+            programArgument 'buildcraftcore:*'
+        }
+
         // applies to all the run configs above
         configureEach {
             // Recommended logging data for a userdev environment

@@ -5,16 +5,19 @@
 
 package buildcraft.core;
 
+import buildcraft.core.gametest.BcGameTests;
 import com.mojang.logging.LogUtils;
 import buildcraft.lib.expression.DefaultContexts;
 import buildcraft.lib.expression.GenericExpressionCompiler;
 import buildcraft.lib.expression.api.InvalidExpressionException;
 import buildcraft.lib.expression.api.IExpressionNode.INodeLong;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.slf4j.Logger;
 
 /**
- * Minimal mod skeleton proving the NeoForge 26.1.2 toolchain (task M2.1).
+ * BuildCraft core mod entry point for the NeoForge 26.1.2 port (toolchain proven in M2.1).
  * Real content migrates in later Phase 2 tasks.
  */
 // The value here should match the modId in META-INF/neoforge.mods.toml
@@ -25,9 +28,27 @@ public class BuildCraftCore {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public BuildCraftCore() {
+    public BuildCraftCore(IEventBus modEventBus) {
         LOGGER.info("BuildCraft core (neo skeleton) loaded");
         expressionSmokeTest();
+
+        // M2.2a: registration centres, later filled by the M2.4 registry migration.
+        BcBlocks.BLOCKS.register(modEventBus);
+        BcItems.ITEMS.register(modEventBus);
+        BcBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+        BcCreativeTabs.TABS.register(modEventBus);
+
+        modEventBus.addListener(BcGameTests::onRegisterGameTests);
+        modEventBus.addListener(BuildCraftCore::onCommonSetup);
+    }
+
+    /**
+     * M2.2a: runtime proof that the marker placeholder block/item really bound to the frozen registries. Runs in every
+     * dist, so the same log line doubles as evidence for runClient and the headless gametest server.
+     */
+    private static void onCommonSetup(FMLCommonSetupEvent event) {
+        LOGGER.info("BuildCraft core registration smoke: block {} ({}) with item {} registered",
+                BcBlocks.MARKER.getId(), BcBlocks.MARKER.value().getClass().getSimpleName(), BcItems.MARKER.getId());
     }
 
     /**
