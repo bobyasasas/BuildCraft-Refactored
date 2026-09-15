@@ -14,6 +14,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.event.RegisterGameTestsEvent;
 import buildcraft.core.BcBlocks;
 import buildcraft.core.BuildCraftCore;
@@ -27,10 +29,22 @@ import buildcraft.core.blockentity.StoneEngineBlockEntity;
  * <p>Fired on the mod event bus while the test environment/test instance data registries load
  * ({@code RegisterGameTestsEvent}, see the handler wiring in {@link BuildCraftCore}). Each test pairs a structure
  * template from {@code data/buildcraftcore/structure/} with a test function from {@link BcGameTestInstance}.
+ *
+ * <p>Registration is deliberately skipped on the client dist: {@code minecraft:test_instance} is one of vanilla's
+ * login-synchronised registries ({@code RegistryDataLoader#SYNCHRONIZED_REGISTRIES}), and a code-registered instance
+ * whose codec is not an entry of the frozen {@code minecraft:test_instance_type} registry cannot be encoded for that
+ * sync — the encode failure used to crash every singleplayer world join with "Failed to serialize ... /
+ * BcGameTestInstance is code-registered" (found by the M2.5 login handshake probe). The tests only ever run on the
+ * headless gametest server (a dedicated, server-dist process), so skipping the client dist costs nothing.
+ * TODO(M3+): revisit (e.g. register a real test instance type) if tests should be runnable from a singleplayer
+ * {@code /test} command.
  */
 public final class BcGameTests {
 
     public static void onRegisterGameTests(RegisterGameTestsEvent event) {
+        if (FMLEnvironment.getDist() == Dist.CLIENT) {
+            return;
+        }
         Holder<TestEnvironmentDefinition<?>> environment = event.registerEnvironment(
                 Identifier.fromNamespaceAndPath(BuildCraftCore.MOD_ID, "default"));
         event.registerTest(

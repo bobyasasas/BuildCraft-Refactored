@@ -29,6 +29,19 @@ dependencies {
     // into the mod classpath. Staying on 17 is deliberate: the legacy 1.20.1 fat
     // jar packages these class files and must remain Java 17 loadable (major 61).
     implementation project(':expression')
+
+    // M2.5: codec round-trip tests for the 16 payload classes. MDG's unitTest is
+    // enabled below ONLY to put the minecraft/neoforge jars on the test compile
+    // classpath; the tests themselves stay plain JUnit 4.12 (same version as
+    // :expression) on the default JUnit4 runner. NeoForge 26.1.2 cannot
+    // Bootstrap.bootStrap() on a plain JUnit JVM (FeatureFlagLoader needs FML), so
+    // the test payload classes are deliberately registry-free (no Component /
+    // ChunkPos anywhere a codec touches), and booting FML's junit
+    // LauncherSessionListener does not help either — FML 26.1 keeps only one mod
+    // file per modid, so the test classes of the tested mod are never visible to
+    // its ModuleClassLoader. The fml.* system properties unitTest injects are
+    // inert when FML is never started.
+    testImplementation 'junit:junit:4.12'
 }
 
 neoForge {
@@ -79,6 +92,15 @@ neoForge {
                 sourceSet(sourceSets.main)
             }
         }
+    }
+
+    // M2.5: puts the minecraft/neoforge jars on the test sourceSet compile classpath
+    // (needed because the payloads' wire types reference BlockPos/Identifier/...).
+    // We do NOT rely on its FML junit boot (see the dependency comment above) —
+    // the injected fml.* system properties are inert under the plain JUnit4 runner.
+    unitTest {
+        enable()
+        testedMod = mods.buildcraftlib
     }
 }
 
