@@ -239,14 +239,6 @@ jacocoTestReport {
     }
 }
 
-task setupSubProjects(dependsOn: "sub_projects:expression:generateSources") {
-    // Just an inter-dependency task
-}
-
-//eclipseClasspath.dependsOn setupSubProjects
-//ideaModule.dependsOn setupSubProjects
-//compileJava.dependsOn setupSubProjects
-
 repositories {
     // Put repositories for dependencies here
     // ForgeGradle automatically adds the Forge maven and Maven Central for you
