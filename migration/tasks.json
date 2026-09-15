@@ -113,9 +113,9 @@
       "id": "M1.5",
       "phase": "Phase 1 工程化整备",
       "title": "许可证决策落地",
-      "status": "pending",
+      "status": "done",
       "acceptance": "MMPL 1.0.1 与 MPL 2.0 二选一，mods.toml 与 LICENSE 一致，license_checker 脚本通过",
-      "evidence": "",
+      "evidence": "evidence：用户拍板 MPL 2.0；LICENSE=MPL 2.0 全文、LICENSE-NEW 移除；mods.toml 8 mod license=MPL-2.0；license_check.py exit 0（校验 LICENSE 哈希/元数据/无 MMPL 残留/源码头豁免 127 个文件保留历史头：主仓 108+子模块 19）；./gradlew build 退出码 0",
       "notes": ""
     },
     {
