@@ -72,7 +72,10 @@
 ## 6. 命令速查
 
 - 子模块：`git submodule update --init --recursive`
-- 构建/测试：`./gradlew build`、`./gradlew test`（Phase 2 迁移构建系统后，命令以新构建文件为准并更新本节）
+- legacy 构建（MC 1.20.1/Forge，对拍参照，保留至 M2.9）：`./gradlew build`、`./gradlew test`
+- neo 构建（MC 26.1.2/NeoForge 26.1.2.109，M2.1 起独立目录）：`cd neo && ./gradlew build`、`cd neo && ./gradlew test`、
+  `cd neo && xvfb-run -a ./gradlew runClient`（无头验证）、`cd neo && ./gradlew runServer`；根 wrapper 8.8 跑 legacy、
+  neo wrapper 9.1.0 跑新构建，互不干扰
 - 进度：
   - `python3 migration/scripts/progress.py`——生成报告
   - `python3 migration/scripts/progress.py --check`——CI 校验
