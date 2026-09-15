@@ -1,0 +1,275 @@
+{
+  "schema": 1,
+  "updated": "2026-09-14",
+  "target": {
+    "minecraft": "26.1.2",
+    "neoforge": "26.1.2.109",
+    "java": "25",
+    "gradle": "9.1+",
+    "moddevgradle": "2.0.141+"
+  },
+  "baseline_2026_09": {
+    "forge_import_files": 549,
+    "java_files_main": 1510,
+    "java_files_api_submodule": 262,
+    "java_lines_total": 194560,
+    "todo": 222,
+    "fixme": 24,
+    "onlyin_client": 279,
+    "registryobject_files": 42
+  },
+  "tasks": [
+    {
+      "id": "M0.1",
+      "phase": "Phase 0 基线固化",
+      "title": "初始化 git 子模块",
+      "status": "done",
+      "acceptance": "git submodule status 无 '-' 前缀",
+      "evidence": "git submodule update --init --recursive 后三个子模块全部检出（BuildCraftAPI 262 java）",
+      "notes": ""
+    },
+    {
+      "id": "M0.2",
+      "phase": "Phase 0 基线固化",
+      "title": "基线构建跑通",
+      "status": "pending",
+      "acceptance": "./gradlew build 退出码 0，CI baseline-build job 变绿",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M0.3",
+      "phase": "Phase 0 基线固化",
+      "title": "注册表快照工具",
+      "status": "pending",
+      "acceptance": "工具可导出 buildcraft 全部 registry id（方块/物品/方块实体/实体/流体/配方/标签）到 migration/snapshots/registry-baseline.json 并入库",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M0.4",
+      "phase": "Phase 0 基线固化",
+      "title": "datagen 快照入库",
+      "status": "pending",
+      "acceptance": "datagen 任务产物与 buildcraft_resources_generated/ 现有 4404 个 json diff=0 且纳入版本管理",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M0.5",
+      "phase": "Phase 0 基线固化",
+      "title": "纯逻辑模块特征测试",
+      "status": "pending",
+      "acceptance": "expression 库与配方/蓝图核心逻辑的 JUnit 特征测试基线全绿，测试数量记录在 evidence",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M0.6",
+      "phase": "Phase 0 基线固化",
+      "title": "静态分析基线",
+      "status": "pending",
+      "acceptance": "SpotBugs/Checkstyle 基线报告入库，违规总数记录在 evidence",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M1.1",
+      "phase": "Phase 1 工程化整备",
+      "title": "Gradle 多项目拆分",
+      "status": "pending",
+      "acceptance": "settings.gradle 正式 include BuildCraftAPI/expression/主体模块，各模块可独立构建，srcDir 拼装方式移除",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M1.2",
+      "phase": "Phase 1 工程化整备",
+      "title": "client 源集分离",
+      "status": "pending",
+      "acceptance": "client 类移入专用源集，@OnlyIn(Dist.CLIENT) 从基线 267 处显著下降，具体数字记录在 evidence",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M1.3",
+      "phase": "Phase 1 工程化整备",
+      "title": "完整 CI 流水线",
+      "status": "pending",
+      "acceptance": "GitHub Actions 含 build+test+JaCoCo 覆盖率报告并上传 artifact",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M1.4",
+      "phase": "Phase 1 工程化整备",
+      "title": "死代码与卫生清理",
+      "status": "pending",
+      "acceptance": "注释掉的代码行（基线 3546）与 Calen 移植注释（基线 688）清零或显著下降；test.py、testsuite/、.travis.yml 移除；数字记录在 evidence",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M1.5",
+      "phase": "Phase 1 工程化整备",
+      "title": "许可证决策落地",
+      "status": "pending",
+      "acceptance": "MMPL 1.0.1 与 MPL 2.0 二选一，mods.toml 与 LICENSE 一致，license_checker 脚本通过",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M2.1",
+      "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
+      "title": "构建系统迁移",
+      "status": "pending",
+      "acceptance": "ModDevGradle + Java 25 + Gradle 9.1，空 mod 骨架在 26.1.2 下 runClient 可启动",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M2.2",
+      "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
+      "title": "垂直切片：buildcraftcore",
+      "status": "pending",
+      "acceptance": "核心方块（发动机/基础管道）在 26.1.2 全链路（注册/逻辑/渲染/GameTest）可用",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M2.3",
+      "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
+      "title": "纯逻辑模块迁移",
+      "status": "pending",
+      "acceptance": "expression 等纯逻辑模块 0 个 Forge import 且特征测试全绿",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M2.4",
+      "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
+      "title": "注册层迁移",
+      "status": "pending",
+      "acceptance": "RegistrationHelper/BC*Blocks 等 3 处注册基类重写为 NeoForge DeferredRegister，RegistryObject 引用（基线 38 文件 362 处）全部改为 DeferredHolder 并清零",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M2.5",
+      "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
+      "title": "网络层迁移",
+      "status": "pending",
+      "acceptance": "MessageManager 基于 CustomPacketPayload/StreamCodec 重写，16 个消息类全部适配，客户端-服务端握手可用",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M2.6",
+      "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
+      "title": "数据组件迁移",
+      "status": "pending",
+      "acceptance": "物品 NBT 持久化全部迁移到 DataComponents（物品过滤/门配置/机器人参数），序列化行为与基线对拍一致",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M2.7",
+      "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
+      "title": "渲染迁移",
+      "status": "pending",
+      "acceptance": "19 个 BlockEntityRenderer 与自研模型系统在 26.1.2 渲染管线（extractRenderState 模式）下正常工作",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M2.8",
+      "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
+      "title": "世界生成迁移",
+      "status": "pending",
+      "acceptance": "biome/结构注册迁移完成，油田世界生成验证可用",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M2.9",
+      "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
+      "title": "迁移清零",
+      "status": "pending",
+      "acceptance": "grep -r \"net.minecraftforge\" 全部 .java 结果为 0，8 个 mod 在 26.1.2 全部加载",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M3.1",
+      "phase": "Phase 3 功能验证金字塔",
+      "title": "GameTest 基建",
+      "status": "pending",
+      "acceptance": "headless GameTest 可在 CI 中运行并输出 x/y passing 统计",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M3.2",
+      "phase": "Phase 3 功能验证金字塔",
+      "title": "核心功能 GameTest",
+      "status": "pending",
+      "acceptance": "管道传输/引擎功率/采石场/填充器/门逻辑/机器人各有至少 1 个用例且全部通过",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M3.3",
+      "phase": "Phase 3 功能验证金字塔",
+      "title": "注册表对拍",
+      "status": "pending",
+      "acceptance": "26.1.2 registry dump 与 migration/snapshots/registry-baseline.json diff=0（白名单外）",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M3.4",
+      "phase": "Phase 3 功能验证金字塔",
+      "title": "datagen 对拍",
+      "status": "pending",
+      "acceptance": "26.1.2 datagen 产物与基线 diff=0（白名单外）",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M3.5",
+      "phase": "Phase 3 功能验证金字塔",
+      "title": "语言键对拍",
+      "status": "pending",
+      "acceptance": "BuildCraft-Localization 语言键集合与基线 diff=0",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M3.6",
+      "phase": "Phase 3 功能验证金字塔",
+      "title": "覆盖率门禁",
+      "status": "pending",
+      "acceptance": "JaCoCo 对核心包设行覆盖率阈值并在 CI 强制失败",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M3.7",
+      "phase": "Phase 3 功能验证金字塔",
+      "title": "冒烟与性能",
+      "status": "pending",
+      "acceptance": "headless runServer 启动无 crash，8 个 mod 全部加载，启动时间记录在 evidence",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M3.8",
+      "phase": "Phase 3 功能验证金字塔",
+      "title": "迁移仪表盘",
+      "status": "pending",
+      "acceptance": "progress.py 输出含 Forge import 等指标的趋势记录，随 CI 自动更新",
+      "evidence": "",
+      "notes": ""
+    }
+  ]
+}
