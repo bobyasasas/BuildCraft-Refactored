@@ -2,7 +2,7 @@
 
 > **本文件由 migration/scripts/progress.py 自动生成，禁止手改；更新任务请编辑 migration/tasks.json 或用 `--set` 命令。**
 >
-> 生成时间：2026-09-14 22:07:44 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-14）
+> 生成时间：2026-09-14 22:09:46 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-14）
 
 ## 总览
 
@@ -22,7 +22,7 @@
 | ID | 任务 | 状态 | 验收标准 | evidence / notes |
 |---|---|---|---|---|
 | M0.1 | 初始化 git 子模块 | done（已完成） | git submodule status 无 '-' 前缀 | git submodule update --init --recursive 后三个子模块全部检出（BuildCraftAPI 262 java） |
-| M0.2 | 基线构建跑通 | done（已完成） | ./gradlew build 退出码 0，CI baseline-build job 变绿 | evidence：./gradlew build 退出码0（本机，2026-09-14，BUILD SUCCESSFUL in 3m 58s）；CI run 待补记 baseline-build 绿 |
+| M0.2 | 基线构建跑通 | done（已完成） | ./gradlew build 退出码 0，CI baseline-build job 变绿 | evidence：./gradlew build 退出码0（本机，2026-09-14，BUILD SUCCESSFUL in 3m 58s）；CI run 34920120110 baseline-build 绿（1m32s）、progress-check 绿 |
 | M0.3 | 注册表快照工具 | pending（未完成） | 工具可导出 buildcraft 全部 registry id（方块/物品/方块实体/实体/流体/配方/标签）到 migration/snapshots/registry-baseline.json 并入库 | — |
 | M0.4 | datagen 快照入库 | pending（未完成） | datagen 任务产物与 buildcraft_resources_generated/ 现有 4404 个 json diff=0 且纳入版本管理 | — |
 | M0.5 | 纯逻辑模块特征测试 | pending（未完成） | expression 库与配方/蓝图核心逻辑的 JUnit 特征测试基线全绿，测试数量记录在 evidence | — |
@@ -52,7 +52,7 @@
 
 ## 代码实时指标
 
-采集时间：2026-09-14 22:07:44；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
+采集时间：2026-09-14 22:09:46；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
 
 | 指标 | 当前值 | 调研基线(2026-09) | 目标 |
 |---|---:|---:|---|
