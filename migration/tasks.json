@@ -87,7 +87,7 @@
       "phase": "Phase 1 工程化整备",
       "title": "client 源集分离",
       "status": "pending",
-      "acceptance": "client 类移入专用源集，@OnlyIn(Dist.CLIENT) 从基线 267 处显著下降，具体数字记录在 evidence",
+      "acceptance": "client 类移入专用源集，@OnlyIn(Dist.CLIENT) 从基线 279 处显著下降，具体数字记录在 evidence",
       "evidence": "",
       "notes": ""
     },
@@ -150,7 +150,7 @@
       "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
       "title": "注册层迁移",
       "status": "pending",
-      "acceptance": "RegistrationHelper/BC*Blocks 等 3 处注册基类重写为 NeoForge DeferredRegister，RegistryObject 引用（基线 38 文件 362 处）全部改为 DeferredHolder 并清零",
+      "acceptance": "RegistrationHelper/BC*Blocks 等 3 处注册基类重写为 NeoForge DeferredRegister，RegistryObject 引用（基线 42 文件 362 处）全部改为 DeferredHolder 并清零",
       "evidence": "",
       "notes": ""
     },
