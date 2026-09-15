@@ -1,0 +1,55 @@
+// M1.1: expression 表达式库独立子项目。
+// 纯 java-library，无任何 MC/Forge 依赖，可单独构建发布。
+// 源码布局沿用上游独立构建模板（同目录 build.gradle_）：
+//   main = src/main/java + src/autogen/java（autogen 为已入库的生成代码）
+//   test = src/test/java
+plugins {
+    id 'java-library'
+    // 与根工程同款宽松静态分析基线（M0.6：只记录现状、不上门禁），共用根工程配置
+    id 'checkstyle'
+}
+
+repositories {
+    mavenCentral()
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+sourceSets {
+    main {
+        java {
+            // src/main/java 为 java 插件默认目录；autogen 为已入库的生成代码
+            srcDir 'src/autogen/java'
+        }
+    }
+}
+
+dependencies {
+    // 仅提供 javax.annotation.Nullable 编译期注解，声明与上游模板 build.gradle_ 一致，
+    // 根工程当前亦经 forge 依赖传递获得同一构件；compileOnly 不打入发布产物
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.1'
+
+    // Testing
+    testImplementation 'junit:junit:4.12'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
+
+javadoc {
+    options.setEncoding('UTF-8')
+}
+
+checkstyle {
+    toolVersion = '10.12.5'
+    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+    ignoreFailures = true
+    showViolations = false
+}
+tasks.withType(Checkstyle).configureEach {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}

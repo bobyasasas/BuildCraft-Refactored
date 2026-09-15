@@ -143,8 +143,8 @@ sourceSets {
             srcDir "common"
             srcDir "BuildCraftAPI/api"
 //            srcDir "common_old_license"
-            srcDir "sub_projects/expression/src/main/java"
-            srcDir "sub_projects/expression/src/autogen/java"
+            // M1.1: expression 已拆为独立子项目 :expression（main+autogen），不再经 srcDir 拼装，
+            // 编译期经 implementation project(':expression') 引用，jar 打包见下方 jar 任务
             // srcDir "src_old_license"
         }
         resources {
@@ -168,7 +168,7 @@ sourceSets {
     test {
         java {
             srcDir "src/test/java"
-            srcDir "sub_projects/expression/src/test/java"
+            // M1.1: expression 测试随 :expression 子项目独立运行，不再拼装进根 test 源集
         }
     }
 }
@@ -255,6 +255,9 @@ dependencies {
     // then special handling is done to allow a setup of a vanilla dependency without the use of an external repository.
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
+    // M1.1: expression 表达式库（纯 java，common 有 68 处引用）
+    implementation project(':expression')
+
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
@@ -315,6 +318,11 @@ javadoc {
 
 // Example for how to get properties into the manifest for reading at runtime.
 tasks.named('jar', Jar).configure {
+    // M1.1: 保持单 jar 分发——把 :expression 的编译输出打进主 jar（不含其 resources，
+    // 其中只有 LICENSE 文件，拆分前的单 jar 里没有这个条目）
+    dependsOn ':expression:classes'
+    from('sub_projects/expression/build/classes/java/main')
+
     manifest {
         attributes([
                 'Specification-Title'     : mod_id,

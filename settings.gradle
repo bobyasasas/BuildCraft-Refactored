@@ -12,5 +12,7 @@ plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '0.7.0'
 }
 
-//include 'sub_projects:expression'
+// M1.1: expression 表达式库已拆为独立纯 Java 子项目（java-library，无 MC/Forge 依赖）
+include ':expression'
+project(':expression').projectDir = file('sub_projects/expression')
 
