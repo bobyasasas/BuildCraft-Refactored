@@ -2,17 +2,17 @@
 
 > **本文件由 migration/scripts/progress.py 自动生成，禁止手改；更新任务请编辑 migration/tasks.json 或用 `--set` 命令。**
 >
-> 生成时间：2026-09-14 22:42:02 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-14）
+> 生成时间：2026-09-14 22:42:25 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-14）
 
 ## 总览
 
-**总任务数 28** ｜ pending(未完成)=25、in_progress(进行中)=0、partial(部分完成)=0、unverified(未验证)=0、done(已完成)=3 ｜ **完成率 11%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
+**总任务数 28** ｜ pending(未完成)=24、in_progress(进行中)=0、partial(部分完成)=1、unverified(未验证)=0、done(已完成)=3 ｜ **完成率 12%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
 
 ## 阶段汇总
 
 | 阶段 | 任务数 | done | 完成率 |
 |---|---:|---:|---:|
-| Phase 0 基线固化 | 6 | 3 | 50% |
+| Phase 0 基线固化 | 6 | 3 | 58% |
 | Phase 1 工程化整备 | 5 | 0 | 0% |
 | Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109 | 9 | 0 | 0% |
 | Phase 3 功能验证金字塔 | 8 | 0 | 0% |
@@ -24,7 +24,7 @@
 | M0.1 | 初始化 git 子模块 | done（已完成） | git submodule status 无 '-' 前缀 | git submodule update --init --recursive 后三个子模块全部检出（BuildCraftAPI 262 java） |
 | M0.2 | 基线构建跑通 | done（已完成） | ./gradlew build 退出码 0，CI baseline-build job 变绿 | evidence：./gradlew build 退出码0（本机，2026-09-14，BUILD SUCCESSFUL in 3m 58s）；CI run 34920120110 baseline-build 绿（1m32s）、progress-check 绿 |
 | M0.3 | 注册表快照工具 | done（已完成） | 工具可导出 buildcraft 全部 registry id（方块/物品/方块实体/实体/流体/配方/标签）到 migration/snapshots/registry-baseline.json 并入库 | evidence：工具 common/buildcraft/datagen/base/BCRegistrySnapshotGenerator 挂在 GatherDataEvent（注册于 BCDataGenerators 末尾，最后执行）；复跑命令 rm -rf buildcraft_resources_generated/.cache && ./gradlew runData；registry-baseline.json 计数 blocks=75, items=974, block_entities=35, entities=17, fluids=60, recipes=1561, tags: block=1/item=66/fluid=1/biome=1，共2791个id全部排序；快照跨两轮全量重跑 md5=6f36e2b1a22d84d2934383ba603c8738 字节级一致 |
-| M0.4 | datagen 快照入库 | pending（未完成） | datagen 任务产物与 buildcraft_resources_generated/ 现有 4404 个 json diff=0 且纳入版本管理 | — |
+| M0.4 | datagen 快照入库 | partial（部分完成） | datagen 任务产物与 buildcraft_resources_generated/ 现有 4404 个 json diff=0 且纳入版本管理 | evidence：datagen 任务 runData（build.gradle runs.data，--output=buildcraft_resources_generated/）全量重新生成后 diff≠0：改48/删1/增0，json 计数 4403 vs 基线4404；48处改动经逐文件多重集比对全部为同一id集合的顺序排列差异（0处语义差异）；删除1处为旧代码遗留文件 data/buildcraft/tags/blocks/tags/blocks/soft.json.json（现 OreDictionaryTags.SOFT=blockTag(buildcraft:soft)，不再生成该路径，由 datagen 缓存清理删除）；根因：datagen provider 输出 JSON 数组用 identity-hash 集合迭代，顺序逐 JVM 洗牌（同代码两轮重跑同文件顺序不同已复现），与本次新增快照工具无关；已满足部分：runData 可完整重新生成全部产物、工具链可复跑、生成文件已还原 HEAD 未做任何手改；待主 agent 决策：是否接受顺序不敏感基线或先做 provider 排序修复后重新固化 |
 | M0.5 | 纯逻辑模块特征测试 | pending（未完成） | expression 库与配方/蓝图核心逻辑的 JUnit 特征测试基线全绿，测试数量记录在 evidence | — |
 | M0.6 | 静态分析基线 | pending（未完成） | SpotBugs/Checkstyle 基线报告入库，违规总数记录在 evidence | — |
 | M1.1 | Gradle 多项目拆分 | pending（未完成） | settings.gradle 正式 include BuildCraftAPI/expression/主体模块，各模块可独立构建，srcDir 拼装方式移除 | — |
@@ -52,7 +52,7 @@
 
 ## 代码实时指标
 
-采集时间：2026-09-14 22:42:02；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
+采集时间：2026-09-14 22:42:25；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
 
 | 指标 | 当前值 | 调研基线(2026-09) | 目标 |
 |---|---:|---:|---|
