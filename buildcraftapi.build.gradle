@@ -1,0 +1,72 @@
+// M1.1: BuildCraftAPI 独立 ForgeGradle 子项目构建脚本。
+// 本文件必须放在仓库根侧：BuildCraftAPI/ 是 git 子模块，内部禁止新增/修改任何文件，
+// settings.gradle 通过 buildFileName 指到这里，同时绕开子模块自带的上游独立构建脚本
+// （BuildCraftAPI/build.gradle 为 FG5/FG6 混杂的独立构建，jar 任务还带 include 过滤器，
+// 不适用于多项目布局）。
+// 配置与根工程 build.gradle 完全同源：同一 MC/Forge/mappings/toolchain/AT。AT 用根工程
+// 那份（buildcraft_resources/META-INF/accesstransformer.cfg），它是 API 自带 AT
+// （BuildCraftAPI/resources/accesstransformer.cfg，仅 Direction 两条）的超集，因此
+// BuildCraftAPI/api 源码的编译环境与拆分前经根工程 srcDir 拼装编译时一致。
+plugins {
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+}
+
+// 版本号沿用根工程 build.properties，避免双处维护
+ext.configFile = rootProject.file('build.properties')
+configFile.withReader {
+    def prop = new Properties()
+    prop.load(it)
+    project.ext.config = new ConfigSlurper().parse prop
+}
+
+version = config.mod_version
+group = 'com.mod-buildcraft.api'
+
+// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    // 与根工程同款 mappings（official 1.20.1），FG6 多项目共用 ~/.gradle 缓存
+    mappings channel: config.mappings_channel, version: config.mappings_version
+
+    copyIdeResources = true
+
+    // 与根工程同一份 AT（FG 按 AT 内容哈希缓存 MC 变换产物，两个工程命中同一条目）
+    accessTransformer = file("${rootProject.projectDir}/buildcraft_resources/META-INF/accesstransformer.cfg")
+
+    // runs 块省略：api 是纯编译期库，无 client/server/data 运行需求
+}
+
+// api 源码在子模块的 BuildCraftAPI/api 下（仅 java，无资源文件）
+sourceSets {
+    main {
+        java {
+            srcDir 'api'
+        }
+    }
+}
+
+compileJava {
+    options.compilerArgs << "-Xmaxerrs" << "2000"
+    options.compilerArgs << "-Xmaxwarns" << "2"
+    options.compilerArgs << "-Xlint:all"
+    options.compilerArgs << "-Xdiags:verbose"
+    options.compilerArgs << "-encoding" << "UTF-8"
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${config.mc_version}-${config.forge_version}"
+}
+
+// 注意：FG6 会自动把 jar 任务挂上 reobfJar 且原地覆盖 jar 产物（产出 SRG 名 class）。
+// 本工程只被根工程以 project 依赖消费，双方同用 official mappings；jar 一旦被原地
+// reobf，SRG 名就会泄漏进根工程编译类路径（common 侧 Recipe/IProgrammingRecipe 的
+// override 集体报错）。api 类在最终 mod jar 里由根工程的 reobfJar 统一再混淆（与拆分前
+// 打包路径一致），因此这里关闭本工程的 reobfJar。
+tasks.matching { it.name == 'reobfJar' }.configureEach {
+    enabled = false
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}

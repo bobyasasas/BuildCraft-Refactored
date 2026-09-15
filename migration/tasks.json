@@ -77,9 +77,9 @@
       "id": "M1.1",
       "phase": "Phase 1 工程化整备",
       "title": "Gradle 多项目拆分",
-      "status": "partial",
+      "status": "done",
       "acceptance": "settings.gradle 正式 include BuildCraftAPI/expression/主体模块，各模块可独立构建，srcDir 拼装方式移除",
-      "evidence": "evidence：:expression 已拆为纯 java-library 子项目（64 文件 0 forge import），:expression:test 58 个测试全绿独立可构建，根 build 退出码0，jar 内 expression class 数量拆分前后一致（431 个）；剩余：:buildcraftapi 拆分 + 全部 srcDir 拼装移除",
+      "evidence": "evidence：settings.gradle include :buildcraftapi/:expression/:主体(根)，srcDir 拼装（api 262 文件+expression 166 文件）全部移除；:buildcraftapi:build 与 :expression:build 独立成功；根 build 退出码0、test 95 全绿；jar 条目 9210 与 api class 数拆分前后一致（360 个）；子模块工作树 clean",
       "notes": ""
     },
     {

@@ -2,18 +2,18 @@
 
 > **本文件由 migration/scripts/progress.py 自动生成，禁止手改；更新任务请编辑 migration/tasks.json 或用 `--set` 命令。**
 >
-> 生成时间：2026-09-15 00:41:09 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-15）
+> 生成时间：2026-09-15 01:04:21 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-15）
 
 ## 总览
 
-**总任务数 28** ｜ pending(未完成)=21、in_progress(进行中)=0、partial(部分完成)=1、unverified(未验证)=0、done(已完成)=6 ｜ **完成率 23%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
+**总任务数 28** ｜ pending(未完成)=21、in_progress(进行中)=0、partial(部分完成)=0、unverified(未验证)=0、done(已完成)=7 ｜ **完成率 25%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
 
 ## 阶段汇总
 
 | 阶段 | 任务数 | done | 完成率 |
 |---|---:|---:|---:|
 | Phase 0 基线固化 | 6 | 6 | 100% |
-| Phase 1 工程化整备 | 5 | 0 | 10% |
+| Phase 1 工程化整备 | 5 | 1 | 20% |
 | Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109 | 9 | 0 | 0% |
 | Phase 3 功能验证金字塔 | 8 | 0 | 0% |
 
@@ -27,7 +27,7 @@
 | M0.4 | datagen 快照入库 | done（已完成） | datagen 任务产物与 buildcraft_resources_generated/ 现有 4404 个 json diff=0 且纳入版本管理 | evidence：datagen 确定性修复5处：BCItemTagsGenerator.addAllOptional 按RegistryObject id排序（paintbrush+pipe系列tags）；PipeRegistry.getAllRegisteredPipes 按identifier排序（pipe颜色tags+atlas贴图+item model遍历）；SpriteHolderRegistry/ModelHolderRegistry 的 onDatagenTextureRegister 按location排序（atlas sources）；SiliconAssemblyRecipeGenerator input 集合 HashSet→LinkedHashSet（plug_pulsar requiredStacks）；复跑命令 rm -rf buildcraft_resources_generated/.cache && ./gradlew runData 连续两轮全量重跑，4643个产物文件 sha256 两轮完全一致（字节级）；最终 vs HEAD：改65/删1/增0，65处全部为 values/requiredStacks 数组顺序差异（python 多重集比对语义相等0差异，loot/models/recipes/advancements 无一涉改），修复后文件内容稳定按 id 字典序；json 总数 4403（stale data/buildcraft/tags/blocks/tags/blocks/soft.json.json 由 datagen 清理 4404→4403）；migration/snapshots/registry-baseline.json 复跑后字节级不变未触碰；本机 ./gradlew build BUILD SUCCESSFUL |
 | M0.5 | 纯逻辑模块特征测试 | done（已完成） | expression 库与配方/蓝图核心逻辑的 JUnit 特征测试基线全绿，测试数量记录在 evidence | evidence：./gradlew test 退出码0（2026-09-14，29个测试类/153个测试全绿，其中基线原有20类54个未被改动）；新增特征测试99个：expression 45个（ExpressionOpsCharacterizationTester 17：整数字面量为long/优先级怪癖[%比*松、^按位异或且绑定最紧]/~取反/移位mod64/整除与浮点除/除零行为/跨类型字符串拼接/交叉类型==；ExpressionFunctionsCharacterizationTester 18：常量与函数大小写不敏感/round-floor-ceil-sign-clamp-min-max-pow-log-trig/字符串length-char_at-substring边界怪癖/VecLong+-length-distance/叉积非标准实现怪癖/vec除零抛异常/编译函数复用/变量大小写不敏感/类型名占用；ExpressionErrorsCharacterizationTester 10：括号/尾运算符/未知变量与函数/参数个数/double异或/'>>>'不可编译怪癖/词法合并怪癖等错误路径）+ 配方蓝图54个（SnapshotIndexCharacterizationTester 6：posToIndex=((z*Y)+y)*X+x具体值/数据尺寸/实例静态一致；TemplateSnapshotCharacterizationTester 9：Template NBT往返/超长数据拒绝/invert/computeKey确定性SHA-256/copy独立性/边界检查；NbtRuleCharacterizationTester 11：NbtPath遍历与NBT_NULL哨兵/EnumNbtCompareOperation按序列化JSON比对/JsonSelector字符串简写与对象形式/规则JSON裸数字变DoubleTag永不匹配int怪癖；FillerPatternCharacterizationTester 11：fill/box/frame/pyramid/stairs/sphere(hollow与filled)/2d圆与方的具体每层格子数基线/none返回false/clear不改模板怪癖；AssemblyRecipeBasicCharacterizationTester 11：输出匹配/数量门槛/空物品栈/多原料AND/相等按id/元数据访问器；BoxCharacterizationTester 6：min-max归一化/setMax语义/半开边界/NBT往返）；测试类路径src/test/java与sub_projects/expression/src/test/java（JUnit4.12），未改生产源码与build.gradle。覆盖边界：RulesLoader/SchematicBlockManager/Blueprint调色板序列化/AssemblyRecipeRegistry依赖Forge运行期注册表或Level，未覆盖 |
 | M0.6 | 静态分析基线 | done（已完成） | SpotBugs/Checkstyle 基线报告入库，违规总数记录在 evidence | evidence：./gradlew check 生成两工具报告且 build 退出码0；Checkstyle 违规 1228 条、SpotBugs 违规 2525 条（High 274 / Medium 1507 / Low 744），摘要已入库 migration/snapshots/static-analysis-baseline.md |
-| M1.1 | Gradle 多项目拆分 | partial（部分完成） | settings.gradle 正式 include BuildCraftAPI/expression/主体模块，各模块可独立构建，srcDir 拼装方式移除 | evidence：:expression 已拆为纯 java-library 子项目（64 文件 0 forge import），:expression:test 58 个测试全绿独立可构建，根 build 退出码0，jar 内 expression class 数量拆分前后一致（431 个）；剩余：:buildcraftapi 拆分 + 全部 srcDir 拼装移除 |
+| M1.1 | Gradle 多项目拆分 | done（已完成） | settings.gradle 正式 include BuildCraftAPI/expression/主体模块，各模块可独立构建，srcDir 拼装方式移除 | evidence：settings.gradle include :buildcraftapi/:expression/:主体(根)，srcDir 拼装（api 262 文件+expression 166 文件）全部移除；:buildcraftapi:build 与 :expression:build 独立成功；根 build 退出码0、test 95 全绿；jar 条目 9210 与 api class 数拆分前后一致（360 个）；子模块工作树 clean |
 | M1.2 | client 源集分离 | pending（未完成） | client 类移入专用源集，@OnlyIn(Dist.CLIENT) 从基线 279 处显著下降，具体数字记录在 evidence | — |
 | M1.3 | 完整 CI 流水线 | pending（未完成） | GitHub Actions 含 build+test+JaCoCo 覆盖率报告并上传 artifact | — |
 | M1.4 | 死代码与卫生清理 | pending（未完成） | 注释掉的代码行（基线 3546）与 Calen 移植注释（基线 688）清零或显著下降；test.py、testsuite/、.travis.yml 移除；数字记录在 evidence | — |
@@ -52,7 +52,7 @@
 
 ## 代码实时指标
 
-采集时间：2026-09-15 00:41:09；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
+采集时间：2026-09-15 01:04:21；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
 
 | 指标 | 当前值 | 调研基线(2026-09) | 目标 |
 |---|---:|---:|---|

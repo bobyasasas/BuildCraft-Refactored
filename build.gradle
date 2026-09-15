@@ -141,10 +141,10 @@ sourceSets {
     main {
         java {
             srcDir "common"
-            srcDir "BuildCraftAPI/api"
 //            srcDir "common_old_license"
-            // M1.1: expression 已拆为独立子项目 :expression（main+autogen），不再经 srcDir 拼装，
-            // 编译期经 implementation project(':expression') 引用，jar 打包见下方 jar 任务
+            // M1.1: expression 已拆为独立子项目 :expression（main+autogen）、BuildCraftAPI 已拆为
+            // 独立子项目 :buildcraftapi，均不再经 srcDir 拼装，编译期经 implementation project(...)
+            // 引用，jar 打包见下方 jar 任务
             // srcDir "src_old_license"
         }
         resources {
@@ -160,11 +160,6 @@ sourceSets {
 //            exclude "pack.mcmeta" // exclude from the guide repo
         }
     }
-    api {
-        java {
-            srcDir "BuildCraftAPI/api"
-        }
-    }
     test {
         java {
             srcDir "src/test/java"
@@ -177,9 +172,9 @@ sourceSets {
 // 静态分析基线（M0.6）
 // 定位：迁移前的质量基线快照，只记录现状、不上门禁（门禁是 Phase 3 的事）。
 // 因此两工具都 ignoreFailures = true，build/check 永远不会因违规而失败。
-// 分析范围 = main 源集 Java 代码（含 srcDir 拼装进来的 common/、BuildCraftAPI/api、
-// sub_projects/expression 各源目录）；api 源集与 BuildCraftAPI/api 重复、test 源集
-// 非本次范围，对应 checkstyle/spotbugs 任务关闭。
+// 分析范围 = main 源集 Java 代码（M1.1 拆分后即 common/；BuildCraftAPI/api 与
+// expression 已拆为独立子项目，不在根工程分析范围）；test 源集非基线范围，
+// 对应 checkstyle/spotbugs 任务关闭。
 // 报告输出在 build/reports/checkstyle/ 与 build/reports/spotbugs/（不入库）。
 // ---------------------------------------------------------------------------
 checkstyle {
@@ -194,15 +189,12 @@ tasks.withType(Checkstyle).configureEach {
         html.required = true
     }
 }
-// api/test 源集不纳入静态分析。注意：checkstyle/spotbugs 插件会给所有源集生成
+// test 源集不纳入静态分析。注意：checkstyle/spotbugs 插件会给所有源集生成
 // checkstyleXxx/spotbugsXxx 任务并把 check 挂到它们上面（依赖是活的 withType 集合，
-// 无法按条目摘除），即便任务 enabled=false，其输入依赖 compileApiJava 仍会被拉进
-// 任务图。api 源集没有 MC classpath、历史上从未参与编译（一编即失败），这里保持其
-// "从不编译"的现状；test 源集非基线范围，一并关闭。
-tasks.named('compileApiJava') { enabled = false }
-tasks.named('checkstyleApi') { enabled = false }
+// 无法按条目摘除）。M1.1 后死的 api 源集已整体删除（由 :buildcraftapi 子项目取代，
+// 压制它的 compileApiJava enabled=false workaround 一并移除）；test 源集非基线范围，
+// 保持关闭。
 tasks.named('checkstyleTest') { enabled = false }
-tasks.named('spotbugsApi') { enabled = false }
 tasks.named('spotbugsTest') { enabled = false }
 
 spotbugs {
@@ -257,6 +249,10 @@ dependencies {
 
     // M1.1: expression 表达式库（纯 java，common 有 68 处引用）
     implementation project(':expression')
+
+    // M1.1: BuildCraftAPI（58 个文件 import net.minecraftforge，需 MC classpath，
+    // 故与根工程同为 FG6 子项目）
+    implementation project(':buildcraftapi')
 
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
@@ -322,6 +318,9 @@ tasks.named('jar', Jar).configure {
     // 其中只有 LICENSE 文件，拆分前的单 jar 里没有这个条目）
     dependsOn ':expression:classes'
     from('sub_projects/expression/build/classes/java/main')
+    // M1.1: :buildcraftapi 的编译输出同样打进主 jar（api 目录无资源文件）
+    dependsOn ':buildcraftapi:classes'
+    from('BuildCraftAPI/build/classes/java/main')
 
     manifest {
         attributes([

@@ -16,3 +16,10 @@ plugins {
 include ':expression'
 project(':expression').projectDir = file('sub_projects/expression')
 
+// M1.1: BuildCraftAPI 已拆为独立 ForgeGradle 子项目。projectDir 指向 git 子模块目录
+// （该目录内零写入零修改，保持子模块工作树 clean）；buildFileName 指到仓库根侧的
+// buildcraftapi.build.gradle——既承载全部构建配置，又避免执行子模块自带的上游构建脚本
+include ':buildcraftapi'
+project(':buildcraftapi').projectDir = file('BuildCraftAPI')
+project(':buildcraftapi').buildFileName = '../buildcraftapi.build.gradle'
+
