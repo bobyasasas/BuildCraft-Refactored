@@ -6,6 +6,10 @@
 package buildcraft.core;
 
 import com.mojang.logging.LogUtils;
+import buildcraft.lib.expression.DefaultContexts;
+import buildcraft.lib.expression.GenericExpressionCompiler;
+import buildcraft.lib.expression.api.InvalidExpressionException;
+import buildcraft.lib.expression.api.IExpressionNode.INodeLong;
 import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
 
@@ -23,5 +27,20 @@ public class BuildCraftCore {
 
     public BuildCraftCore() {
         LOGGER.info("BuildCraft core (neo skeleton) loaded");
+        expressionSmokeTest();
+    }
+
+    /**
+     * M2.3: runtime proof that the expression library shared from
+     * sub_projects/expression is really on the mod classpath, by compiling and
+     * evaluating a constant expression through the real compiler.
+     */
+    private static void expressionSmokeTest() {
+        try {
+            INodeLong node = GenericExpressionCompiler.compileExpressionLong("1+2*3", DefaultContexts.createWithAll());
+            LOGGER.info("BuildCraft expression smoke: 1+2*3 = " + node.evaluate());
+        } catch (InvalidExpressionException e) {
+            throw new IllegalStateException("BuildCraft expression smoke test failed to compile", e);
+        }
     }
 }

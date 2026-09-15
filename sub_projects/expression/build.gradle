@@ -43,7 +43,10 @@ javadoc {
 
 checkstyle {
     toolVersion = '10.12.5'
-    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+    // M2.3: resolve against this project's dir instead of rootProject so the same
+    // config file is found both from the legacy root build and from the standalone
+    // neo build (where rootProject is neo/, which has no config/ dir).
+    configFile = file('../../config/checkstyle/checkstyle.xml')
     ignoreFailures = true
     showViolations = false
 }

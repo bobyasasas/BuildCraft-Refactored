@@ -17,6 +17,13 @@ base {
 // Mojang ships Java 25 to end users in 26.1, so mods should target Java 25.
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
+dependencies {
+    // M2.3: wire the pure-logic expression library (Java 17 toolchain, no MC deps)
+    // into the mod classpath. Staying on 17 is deliberate: the legacy 1.20.1 fat
+    // jar packages these class files and must remain Java 17 loadable (major 61).
+    implementation project(':expression')
+}
+
 neoForge {
     // Specify the version of NeoForge to use.
     version = project.neo_version

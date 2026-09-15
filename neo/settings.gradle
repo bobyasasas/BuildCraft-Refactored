@@ -19,3 +19,9 @@ plugins {
 }
 
 rootProject.name = 'buildcraft-neo'
+
+// M2.3: reuse the pure-logic expression library from the single source tree in
+// sub_projects/expression instead of copying it: one source tree serves both the
+// legacy root build (Gradle 8.8 / MC 1.20.1) and this build (Gradle 9.1 / 26.1).
+include ':expression'
+project(':expression').projectDir = file('../sub_projects/expression')
