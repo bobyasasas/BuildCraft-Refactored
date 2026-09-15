@@ -33,8 +33,8 @@
 四个阶段（详细任务与验收标准见 `migration/tasks.json`）：
 
 - **Phase 0 基线固化**（1.20.1 上）：构建跑通、注册表/datagen 快照、特征测试、静态分析基线。
-- **Phase 1 工程化整备**（1.20.1 上）：多项目拆分、client 源集、完整 CI、死代码清理、许可证决策。
-- **Phase 2 分层迁移**：构建系统 → 垂直切片（buildcraftcore）→ 纯逻辑 → 注册层 → 网络 → DataComponents → 渲染 → 世界生成 → 清零。
+- **Phase 1 工程化整备**（1.20.1 上）：多项目拆分、client 边界基线（源集分离经引用闭包分析证实需依赖倒置，推迟至 M2.7）、完整 CI、死代码清理、许可证决策。
+- **Phase 2 分层迁移**：构建系统 → 垂直切片（buildcraftcore）→ 纯逻辑 → 注册层 → 网络 → DataComponents → 渲染（含 client 源集分离与依赖倒置，工作清单=migration/snapshots/client-boundary-baseline.json）→ 世界生成 → 清零。
 - **Phase 3 验证金字塔**：GameTest、注册表/datagen/语言键对拍、覆盖率门禁、冒烟。
 
 原则：Phase 0/1 未完成不得开始 Phase 2 大面积铺开；每阶段退出以 `tasks.json` 里的 acceptance 命令输出为准，不以"感觉完成"为准。
