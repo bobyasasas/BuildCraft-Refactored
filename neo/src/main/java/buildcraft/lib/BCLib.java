@@ -5,6 +5,7 @@
 
 package buildcraft.lib;
 
+import buildcraft.lib.datacomponent.BcDataComponents;
 import buildcraft.lib.net.MessageManager;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
@@ -26,6 +27,9 @@ public class BCLib {
     public BCLib(IEventBus modEventBus) {
         LOGGER.info("BuildCraft lib (neo skeleton) loaded");
         BcLibItems.ITEMS.register(modEventBus);
+
+        // M2.6: item NBT schemas as data components (buildcraftlib:filter / buildcraftlib:gate_config).
+        BcDataComponents.LIB.register(modEventBus);
 
         // M2.5: the whole BuildCraft message set registers under this mod's network namespace (legacy registered the
         // same set through the lib-owned MessageManager).

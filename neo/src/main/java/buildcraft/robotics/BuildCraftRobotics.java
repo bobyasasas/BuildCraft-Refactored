@@ -10,6 +10,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
 
+import buildcraft.lib.datacomponent.BcDataComponents;
+
 /**
  * BuildCraft robotics mod entry point for the NeoForge 26.1.2 port (task M2.4a eight-mod skeleton, M2.4c registry
  * parity). Legacy counterpart: {@code buildcraft.robotics.BCRobotics}.
@@ -28,5 +30,8 @@ public class BuildCraftRobotics {
         BcRoboticsItems.ITEMS.register(modEventBus);
         BcRoboticsBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         BcRoboticsEntities.ENTITIES.register(modEventBus);
+
+        // M2.6: robot params NBT schema as a data component (buildcraftrobotics:robot_params).
+        BcDataComponents.ROBOTICS.register(modEventBus);
     }
 }

@@ -88,6 +88,18 @@ public final class BcGameTests {
                                 0, // setupTicks
                                 true),
                         RegistryParityTest::run));
+        // M2.6 data component parity gate: registration ids + ItemStack persistence shape vs legacy NBT. Immediate
+        // checks, so it runs in the vanilla empty structure too.
+        event.registerTest(
+                Identifier.fromNamespaceAndPath(BuildCraftCore.MOD_ID, "data_components_parity"),
+                new BcGameTestInstance(
+                        new TestData<>(
+                                environment,
+                                Identifier.withDefaultNamespace("empty"),
+                                100, // maxTicks: the checks are immediate; margin only
+                                0, // setupTicks
+                                true),
+                        DataComponentsParityTest::run));
     }
 
     /**
