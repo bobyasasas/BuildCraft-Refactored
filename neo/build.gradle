@@ -14,6 +14,13 @@ base {
     archivesName = mod_id
 }
 
+// M2.4a: all eight legacy BuildCraft mods ship from this single jar (see
+// src/main/templates/META-INF/neoforge.mods.toml). mod_id/gradle.properties stays
+// pinned to buildcraftcore as the archive name; the list below drives everything
+// that is per-mod in ModDevGradle.
+def buildcraft_mod_ids = ['buildcraftlib', 'buildcraftcore', 'buildcraftbuilders', 'buildcraftenergy',
+                          'buildcraftfactory', 'buildcraftsilicon', 'buildcrafttransport', 'buildcraftrobotics']
+
 // Mojang ships Java 25 to end users in 26.1, so mods should target Java 25.
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
@@ -64,8 +71,13 @@ neoForge {
     mods {
         // define mod <-> source bindings
         // these are used to tell the game which sources are for which mod
-        "${mod_id}" {
-            sourceSet(sourceSets.main)
+        // M2.4a: one entry per shipped mod, all bound to the same source set so dev
+        // runs expose the mod code/resources under every modid (MDG builds the
+        // MOD_CLASSES argument from these).
+        buildcraft_mod_ids.each { id ->
+            "$id" {
+                sourceSet(sourceSets.main)
+            }
         }
     }
 }

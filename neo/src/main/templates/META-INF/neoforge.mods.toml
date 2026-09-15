@@ -1,27 +1,232 @@
 license="${mod_license}"
 
+# M2.4a: the eight legacy BuildCraft mods ship from this single jar, mirroring
+# mod_info/META-INF/mods.toml (1.20.1). Descriptions are the legacy ones.
+
 [[mods]]
-# The modid of the mod
-modId="${mod_id}"
-# The version number of the mod
+modId="buildcraftlib"
 version="${mod_version}"
-# A display name for the mod
-displayName="${mod_name}"
-# The description text for the mod (multi line!)
+displayName="BuildCraft Lib"
 description='''
-BuildCraft core module (NeoForge 26.1.2 port skeleton).
+Library mod used by buildcraft (NeoForge 26.1.2 port skeleton).
 '''
 
-[[dependencies.${mod_id}]]
+[[mods]]
+modId="buildcraftcore"
+version="${mod_version}"
+displayName="BuildCraft"
+description='''
+Extending Minecraft with pipes, auto-crafting, quarries, engines and much more! (NeoForge 26.1.2 port skeleton)
+'''
+
+[[mods]]
+modId="buildcraftbuilders"
+version="${mod_version}"
+displayName="BuildCraft Builders"
+description='''
+Extending Minecraft with pipes, auto-crafting, quarries, engines and much more! (Builders Component)
+'''
+
+[[mods]]
+modId="buildcraftenergy"
+version="${mod_version}"
+displayName="BuildCraft Energy"
+description='''
+Extending Minecraft with pipes, auto-crafting, quarries, engines and much more! (Energy Component)
+'''
+
+[[mods]]
+modId="buildcraftfactory"
+version="${mod_version}"
+displayName="BuildCraft Factory"
+description='''
+Extending Minecraft with pipes, auto-crafting, quarries, engines and much more! (Factory Component)
+'''
+
+[[mods]]
+modId="buildcraftsilicon"
+version="${mod_version}"
+displayName="BuildCraft Silicon"
+description='''
+Extending Minecraft with pipes, auto-crafting, quarries, engines and much more! (Silicon Component)
+'''
+
+[[mods]]
+modId="buildcrafttransport"
+version="${mod_version}"
+displayName="BuildCraft Transport"
+description='''
+Extending Minecraft with pipes, auto-crafting, quarries, engines and much more! (Transport Component)
+'''
+
+[[mods]]
+modId="buildcraftrobotics"
+version="${mod_version}"
+displayName="BuildCraft Robotics"
+description='''
+Extending Minecraft with pipes, auto-crafting, quarries, engines and much more! (Robotics Component)
+'''
+
+# Every mod requires neoforge + minecraft; every mod except buildcraftlib itself
+# depends on buildcraftlib and loads after it (legacy dependency layout).
+
+[[dependencies.buildcraftlib]]
     modId="neoforge"
     type="required"
     versionRange="[${neo_version},)"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.${mod_id}]]
+[[dependencies.buildcraftlib]]
     modId="minecraft"
     type="required"
     versionRange="${minecraft_version_range}"
     ordering="NONE"
+    side="BOTH"
+
+[[dependencies.buildcraftcore]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.buildcraftcore]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.buildcraftcore]]
+    modId="buildcraftlib"
+    type="required"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.buildcraftbuilders]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.buildcraftbuilders]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.buildcraftbuilders]]
+    modId="buildcraftlib"
+    type="required"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.buildcraftenergy]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.buildcraftenergy]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.buildcraftenergy]]
+    modId="buildcraftlib"
+    type="required"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.buildcraftfactory]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.buildcraftfactory]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.buildcraftfactory]]
+    modId="buildcraftlib"
+    type="required"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.buildcraftsilicon]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.buildcraftsilicon]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.buildcraftsilicon]]
+    modId="buildcraftlib"
+    type="required"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.buildcrafttransport]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.buildcrafttransport]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.buildcrafttransport]]
+    modId="buildcraftlib"
+    type="required"
+    versionRange="[0,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.buildcraftrobotics]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.buildcraftrobotics]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.buildcraftrobotics]]
+    modId="buildcraftlib"
+    type="required"
+    versionRange="[0,)"
+    ordering="AFTER"
     side="BOTH"

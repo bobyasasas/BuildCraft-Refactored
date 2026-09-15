@@ -22,16 +22,15 @@ public final class BcCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister
             .create(Registries.CREATIVE_MODE_TAB, BuildCraftCore.MOD_ID);
 
-    /** Main BuildCraft tab. Displays the marker placeholder and the M2.2b stone engine slice. */
+    /** Main BuildCraft tab. Displays every registered buildcraftcore item (registration order). */
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN = TABS.register("main",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.buildcraftcore"))
                     .icon(() -> new ItemStack(BcItems.MARKER.value()))
                     .displayItems((parameters, output) -> {
-                        output.accept(BcItems.MARKER.value());
-                        output.accept(BcItems.ENGINE_STONE.value());
-                        output.accept(BcItems.PIPE_KINESIS_WOOD.value());
-                        output.accept(BcItems.ENERGY_METER.value());
+                        // M2.4a: the item set grew to the full baseline parity set; stream the register instead of
+                        // listing 45+ fields by hand.
+                        BcItems.ITEMS.getEntries().forEach(entry -> output.accept(entry.value()));
                     })
                     .build());
 

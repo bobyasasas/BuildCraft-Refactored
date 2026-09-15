@@ -17,8 +17,8 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.slf4j.Logger;
 
 /**
- * BuildCraft core mod entry point for the NeoForge 26.1.2 port (toolchain proven in M2.1).
- * Real content migrates in later Phase 2 tasks.
+ * BuildCraft core mod entry point for the NeoForge 26.1.2 port (toolchain proven in M2.1, registry parity since
+ * M2.4a). Real behaviour classes migrate in later Phase 2 tasks.
  */
 // The value here should match the modId in META-INF/neoforge.mods.toml
 @Mod(BuildCraftCore.MOD_ID)
@@ -32,7 +32,7 @@ public class BuildCraftCore {
         LOGGER.info("BuildCraft core (neo skeleton) loaded");
         expressionSmokeTest();
 
-        // M2.2a: registration centres, later filled by the M2.4 registry migration.
+        // M2.2a registration centres, carrying the full 1.20.1 baseline parity set since M2.4a.
         BcBlocks.BLOCKS.register(modEventBus);
         BcItems.ITEMS.register(modEventBus);
         BcBlockEntities.BLOCK_ENTITIES.register(modEventBus);

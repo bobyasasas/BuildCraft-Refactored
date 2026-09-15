@@ -63,6 +63,17 @@ public final class BcGameTests {
                                 0, // setupTicks
                                 true),
                         BcGameTests::kinesisChainTransfersPowerTest));
+        // M2.4a registry parity gate: needs no blocks, so it runs in the vanilla empty structure.
+        event.registerTest(
+                Identifier.fromNamespaceAndPath(BuildCraftCore.MOD_ID, "registry_parity"),
+                new BcGameTestInstance(
+                        new TestData<>(
+                                environment,
+                                Identifier.withDefaultNamespace("empty"),
+                                100, // maxTicks: the checks are immediate; margin only
+                                0, // setupTicks
+                                true),
+                        RegistryParityTest::run));
     }
 
     /**
