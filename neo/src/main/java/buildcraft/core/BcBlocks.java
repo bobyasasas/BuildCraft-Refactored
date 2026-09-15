@@ -9,6 +9,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import buildcraft.core.block.EnergyMeterBlock;
+import buildcraft.core.block.KinesisPipeBlock;
 import buildcraft.core.block.StoneEngineBlock;
 
 /**
@@ -37,6 +39,20 @@ public final class BcBlocks {
      */
     public static final DeferredBlock<StoneEngineBlock> ENGINE_STONE = BLOCKS.registerBlock("engine_stone",
             StoneEngineBlock::new, () -> BlockBehaviour.Properties.of().strength(3.5F));
+
+    /**
+     * M2.2c wooden kinesis pipe slice block (see {@link KinesisPipeBlock}). Placeholder placement for the M2.2 slice
+     * only: the real transport module registry migration (legacy {@code BlockGenericPipe}) is M2.4/M2.9.
+     */
+    public static final DeferredBlock<KinesisPipeBlock> PIPE_KINESIS_WOOD = BLOCKS.registerBlock("pipe_kinesis_wood",
+            KinesisPipeBlock::new, () -> BlockBehaviour.Properties.of().strength(0.5F));
+
+    /**
+     * M2.2c slice-only measurement block (see {@link EnergyMeterBlock}); not final content, exists for the
+     * {@code kinesis_chain_transfers_power} game test.
+     */
+    public static final DeferredBlock<EnergyMeterBlock> ENERGY_METER = BLOCKS.registerBlock("energy_meter",
+            EnergyMeterBlock::new, () -> BlockBehaviour.Properties.of().strength(1.0F));
 
     private BcBlocks() {
     }

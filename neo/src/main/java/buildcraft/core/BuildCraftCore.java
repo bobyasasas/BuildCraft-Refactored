@@ -53,6 +53,12 @@ public class BuildCraftCore {
         LOGGER.info("BuildCraft core registration smoke: block {} ({}) with item {} and block entity type {} registered",
                 BcBlocks.ENGINE_STONE.getId(), BcBlocks.ENGINE_STONE.value().getClass().getSimpleName(),
                 BcItems.ENGINE_STONE.getId(), BcBlockEntities.ENGINE_STONE.getId());
+        LOGGER.info("BuildCraft core registration smoke: block {} ({}) with item {} and block entity type {} registered",
+                BcBlocks.PIPE_KINESIS_WOOD.getId(), BcBlocks.PIPE_KINESIS_WOOD.value().getClass().getSimpleName(),
+                BcItems.PIPE_KINESIS_WOOD.getId(), BcBlockEntities.PIPE_KINESIS_WOOD.getId());
+        LOGGER.info("BuildCraft core registration smoke: block {} ({}) with item {} and block entity type {} registered",
+                BcBlocks.ENERGY_METER.getId(), BcBlocks.ENERGY_METER.value().getClass().getSimpleName(),
+                BcItems.ENERGY_METER.getId(), BcBlockEntities.ENERGY_METER.getId());
     }
 
     /**

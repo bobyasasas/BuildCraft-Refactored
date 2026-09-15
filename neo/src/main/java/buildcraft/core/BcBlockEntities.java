@@ -9,6 +9,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import buildcraft.core.blockentity.EnergyMeterBlockEntity;
+import buildcraft.core.blockentity.KinesisPipeBlockEntity;
 import buildcraft.core.blockentity.StoneEngineBlockEntity;
 
 /**
@@ -37,6 +39,14 @@ public final class BcBlockEntities {
      */
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StoneEngineBlockEntity>> ENGINE_STONE = BLOCK_ENTITIES
             .register("engine_stone", () -> new BlockEntityType<>(StoneEngineBlockEntity::new, BcBlocks.ENGINE_STONE.value()));
+
+    /** M2.2c wooden kinesis pipe slice block entity type (see {@link KinesisPipeBlockEntity}). */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<KinesisPipeBlockEntity>> PIPE_KINESIS_WOOD = BLOCK_ENTITIES
+            .register("pipe_kinesis_wood", () -> new BlockEntityType<>(KinesisPipeBlockEntity::new, BcBlocks.PIPE_KINESIS_WOOD.value()));
+
+    /** M2.2c slice-only measurement block entity type (see {@link EnergyMeterBlockEntity}). */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EnergyMeterBlockEntity>> ENERGY_METER = BLOCK_ENTITIES
+            .register("energy_meter", () -> new BlockEntityType<>(EnergyMeterBlockEntity::new, BcBlocks.ENERGY_METER.value()));
 
     private BcBlockEntities() {
     }

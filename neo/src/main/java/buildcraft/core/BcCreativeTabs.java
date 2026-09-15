@@ -30,6 +30,8 @@ public final class BcCreativeTabs {
                     .displayItems((parameters, output) -> {
                         output.accept(BcItems.MARKER.value());
                         output.accept(BcItems.ENGINE_STONE.value());
+                        output.accept(BcItems.PIPE_KINESIS_WOOD.value());
+                        output.accept(BcItems.ENERGY_METER.value());
                     })
                     .build());
 

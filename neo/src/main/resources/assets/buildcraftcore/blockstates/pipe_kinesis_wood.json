@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "buildcraftcore:block/pipe_kinesis_wood"
+    }
+  }
+}

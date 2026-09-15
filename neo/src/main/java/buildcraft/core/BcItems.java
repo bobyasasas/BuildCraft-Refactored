@@ -25,6 +25,12 @@ public final class BcItems {
     /** Item form of the {@link BcBlocks#ENGINE_STONE} slice block (M2.2b). */
     public static final DeferredItem<BlockItem> ENGINE_STONE = ITEMS.registerSimpleBlockItem(BcBlocks.ENGINE_STONE);
 
+    /** Item form of the {@link BcBlocks#PIPE_KINESIS_WOOD} slice block (M2.2c). */
+    public static final DeferredItem<BlockItem> PIPE_KINESIS_WOOD = ITEMS.registerSimpleBlockItem(BcBlocks.PIPE_KINESIS_WOOD);
+
+    /** Item form of the {@link BcBlocks#ENERGY_METER} slice-only measurement block (M2.2c). */
+    public static final DeferredItem<BlockItem> ENERGY_METER = ITEMS.registerSimpleBlockItem(BcBlocks.ENERGY_METER);
+
     private BcItems() {
     }
 }

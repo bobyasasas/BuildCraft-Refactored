@@ -1,5 +1,7 @@
 {
   "itemGroup.buildcraftcore": "BuildCraft Core",
   "block.buildcraftcore.marker": "Marker (Placeholder)",
-  "block.buildcraftcore.engine_stone": "Stone Engine"
+  "block.buildcraftcore.engine_stone": "Stone Engine",
+  "block.buildcraftcore.pipe_kinesis_wood": "Wooden Kinesis Pipe",
+  "block.buildcraftcore.energy_meter": "Energy Meter (Slice Test Block)"
 }

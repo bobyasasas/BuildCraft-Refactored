@@ -11,11 +11,14 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.TestData;
 import net.minecraft.gametest.framework.TestEnvironmentDefinition;
 import net.minecraft.resources.Identifier;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.event.RegisterGameTestsEvent;
 import buildcraft.core.BcBlocks;
 import buildcraft.core.BuildCraftCore;
+import buildcraft.core.block.StoneEngineBlock;
+import buildcraft.core.blockentity.EnergyMeterBlockEntity;
 import buildcraft.core.blockentity.StoneEngineBlockEntity;
 
 /**
@@ -50,6 +53,16 @@ public final class BcGameTests {
                                 0, // setupTicks
                                 true),
                         BcGameTests::engineStoneProducesPowerTest));
+        event.registerTest(
+                Identifier.fromNamespaceAndPath(BuildCraftCore.MOD_ID, "kinesis_chain_transfers_power"),
+                new BcGameTestInstance(
+                        new TestData<>(
+                                environment,
+                                Identifier.fromNamespaceAndPath(BuildCraftCore.MOD_ID, "kinesis_test"),
+                                200, // maxTicks: budget for burn ignition + two diffusion hops, assertion succeeds in ~15 ticks
+                                0, // setupTicks
+                                true),
+                        BcGameTests::kinesisChainTransfersPowerTest));
     }
 
     /**
@@ -83,6 +96,38 @@ public final class BcGameTests {
             }
             if (tickingEngine.extractEnergy(StoneEngineBlockEntity.POWER_PER_TICK, true) <= 0) {
                 helper.fail("extractEnergy(simulate) could not pull the freshly produced energy");
+            }
+        });
+    }
+
+    /**
+     * M2.2c full-chain vertical slice test: builds the complete energy path of the slice in code (no structure blocks
+     * needed beyond the empty air box) &mdash; engine with {@code FACING = EAST} at x=1, kinesis pipe A at x=2, kinesis
+     * pipe B at x=3, energy meter at x=4, all in one straight line. One coal is injected through the programmatic
+     * {@link StoneEngineBlockEntity#insertFuel} entry point; the engine burns it, pipe A pulls the micro-MJ out of the
+     * engine buffer, equalises into pipe B, and pipe B pushes into the meter. The test succeeds as soon as the meter
+     * reports any lifetime received energy ({@code succeedWhen} polls each tick via
+     * {@code GameTestSequence#thenWaitUntil}); a meter reading greater than zero transitively proves every link of the
+     * chain, because the meter is only fed by pipe B, which is only fed by pipe A, which is only fed by the engine.
+     */
+    static void kinesisChainTransfersPowerTest(GameTestHelper helper) {
+        BlockPos enginePos = new BlockPos(1, 1, 1);
+        BlockPos pipeAPos = new BlockPos(2, 1, 1);
+        BlockPos pipeBPos = new BlockPos(3, 1, 1);
+        BlockPos meterPos = new BlockPos(4, 1, 1);
+        helper.setBlock(enginePos,
+                BcBlocks.ENGINE_STONE.value().defaultBlockState().setValue(StoneEngineBlock.FACING, Direction.EAST));
+        helper.setBlock(pipeAPos, BcBlocks.PIPE_KINESIS_WOOD.value());
+        helper.setBlock(pipeBPos, BcBlocks.PIPE_KINESIS_WOOD.value());
+        helper.setBlock(meterPos, BcBlocks.ENERGY_METER.value());
+        StoneEngineBlockEntity engine = helper.getBlockEntity(enginePos, StoneEngineBlockEntity.class);
+        if (!engine.insertFuel(new ItemStack(Items.COAL), helper.getLevel().fuelValues())) {
+            helper.fail("engine rejected a coal item");
+        }
+        helper.succeedWhen(() -> {
+            EnergyMeterBlockEntity meter = helper.getBlockEntity(meterPos, EnergyMeterBlockEntity.class);
+            if (meter.getTotalReceived() <= 0) {
+                helper.fail("energy meter is still empty while the kinesis chain should be transferring power");
             }
         });
     }
