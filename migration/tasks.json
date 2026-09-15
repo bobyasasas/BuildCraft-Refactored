@@ -32,9 +32,9 @@
       "id": "M0.2",
       "phase": "Phase 0 基线固化",
       "title": "基线构建跑通",
-      "status": "pending",
+      "status": "done",
       "acceptance": "./gradlew build 退出码 0，CI baseline-build job 变绿",
-      "evidence": "",
+      "evidence": "evidence：./gradlew build 退出码0（本机，2026-09-14，BUILD SUCCESSFUL in 3m 58s）；CI run 待补记 baseline-build 绿",
       "notes": ""
     },
     {
