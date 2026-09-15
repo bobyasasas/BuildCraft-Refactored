@@ -140,9 +140,9 @@
       "id": "M2.3",
       "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
       "title": "纯逻辑模块迁移",
-      "status": "pending",
+      "status": "done",
       "acceptance": "expression 等纯逻辑模块 0 个 Forge import 且特征测试全绿",
-      "evidence": "",
+      "evidence": "evidence：expression（单一源码树）被 neo 构建复用（include :expression，projectDir=../sub_projects/expression），Gradle 9.1 下 :expression:test 58/58 全绿（JUnit XML 汇总 tests=58 failures=0 errors=0 skipped=0）；neo build 退出码0 且 buildcraftcore implementation project(':expression') 接线，runClient 日志出现 expression 冒烟求值 1+2*3=7；forge/minecraft import 计数=0（grep 计数 0）；toolchain 保持 17（javap major=61，legacy 胖 jar 兼容性不受影响），根 ./gradlew build 回归绿；CI 三 job 绿（run 34943461451）",
       "notes": ""
     },
     {
