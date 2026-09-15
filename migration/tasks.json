@@ -85,11 +85,11 @@
     {
       "id": "M1.2",
       "phase": "Phase 1 工程化整备",
-      "title": "client 源集分离",
-      "status": "pending",
-      "acceptance": "client 类移入专用源集，@OnlyIn(Dist.CLIENT) 从基线 279 处显著下降，具体数字记录在 evidence",
-      "evidence": "",
-      "notes": ""
+      "title": "client 边界基线（源集分离推迟至 M2.7）",
+      "status": "done",
+      "acceptance": "client 边界清单入库：client 路径文件 234 个、混编文件 132 个（含 262 处 @OnlyIn 分布）、引用锚定分析（222 锚定/12 可独立移动），作为 M2.7 依赖倒置工作清单",
+      "evidence": "引用闭包分析：common 262 处 @OnlyIn（~251 方法级/132 混编文件）；234 个 client 路径文件 222 个被 common 锚定，解缠需 M2.7 级依赖倒置；主 agent 裁决固化边界清单，migration/snapshots/client-boundary-baseline.json",
+      "notes": "原 acceptance（client 源集+@OnlyIn 显著下降）经引用闭包分析证实 1.20.1 上不可达，2026-09-15 主 agent 裁决改道"
     },
     {
       "id": "M1.3",
@@ -179,7 +179,7 @@
       "status": "pending",
       "acceptance": "19 个 BlockEntityRenderer 与自研模型系统在 26.1.2 渲染管线（extractRenderState 模式）下正常工作",
       "evidence": "",
-      "notes": ""
+      "notes": "含 M1.2 推迟的 client 源集分离与依赖倒置，工作清单=migration/snapshots/client-boundary-baseline.json"
     },
     {
       "id": "M2.8",

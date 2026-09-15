@@ -1,0 +1,1033 @@
+{
+  "metadata": {
+    "date": "2026-09-15",
+    "head": "1798b5dc3",
+    "method": "引用闭包分析（类名 grep + 锚定传播至不动点）"
+  },
+  "onlyin_census": {
+    "common": {
+      "occurrences": 262,
+      "files": 194,
+      "member_level": 179,
+      "class_level": 83
+    },
+    "mixed_files_outside_client_path": 132,
+    "submodules": 17,
+    "repo_total": 279
+  },
+  "client_path_files": [
+    "common/buildcraft/builders/client/BuildersItemModelPredicates.java",
+    "common/buildcraft/builders/client/ClientArchitectTables.java",
+    "common/buildcraft/builders/client/render/AdvDebuggerQuarry.java",
+    "common/buildcraft/builders/client/render/HudSingleSchematic.java",
+    "common/buildcraft/builders/client/render/RenderArchitectTable.java",
+    "common/buildcraft/builders/client/render/RenderArchitectTables.java",
+    "common/buildcraft/builders/client/render/RenderBuilder.java",
+    "common/buildcraft/builders/client/render/RenderFiller.java",
+    "common/buildcraft/builders/client/render/RenderMarkerConstruction.java",
+    "common/buildcraft/builders/client/render/RenderQuarry.java",
+    "common/buildcraft/builders/client/render/RenderSnapshotBuilder.java",
+    "common/buildcraft/core/client/BCConfigElement.java",
+    "common/buildcraft/core/client/BuildCraftLaserManager.java",
+    "common/buildcraft/core/client/ConfigGuiFactoryBC.java",
+    "common/buildcraft/core/client/CoreItemModelPredicates.java",
+    "common/buildcraft/core/client/RenderTickListener.java",
+    "common/buildcraft/core/client/render/RenderEngineCreative.java",
+    "common/buildcraft/core/client/render/RenderEngineWood.java",
+    "common/buildcraft/core/client/render/RenderMarkerVolume.java",
+    "common/buildcraft/core/client/render/RenderVolumeBoxes.java",
+    "common/buildcraft/energy/client/gui/GuiDynamoMJ.java",
+    "common/buildcraft/energy/client/gui/GuiEngineIron_BC8.java",
+    "common/buildcraft/energy/client/gui/GuiEngineRF.java",
+    "common/buildcraft/energy/client/gui/GuiEngineStone_BC8.java",
+    "common/buildcraft/energy/client/gui/LedgerDynamoMJ.java",
+    "common/buildcraft/energy/client/render/RenderDynamoMJ.java",
+    "common/buildcraft/energy/client/render/RenderEngineIron.java",
+    "common/buildcraft/energy/client/render/RenderEngineRF.java",
+    "common/buildcraft/energy/client/render/RenderEngineStone.java",
+    "common/buildcraft/energy/client/sprite/AtlasSpriteFluid.java",
+    "common/buildcraft/factory/client/model/ModelHeatExchange.java",
+    "common/buildcraft/factory/client/render/RenderDistiller.java",
+    "common/buildcraft/factory/client/render/RenderHeatExchange.java",
+    "common/buildcraft/factory/client/render/RenderMiningWell.java",
+    "common/buildcraft/factory/client/render/RenderPump.java",
+    "common/buildcraft/factory/client/render/RenderTank.java",
+    "common/buildcraft/factory/client/render/RenderTube.java",
+    "common/buildcraft/lib/client/ToastInformation.java",
+    "common/buildcraft/lib/client/guide/ETypeTag.java",
+    "common/buildcraft/lib/client/guide/GuiGuide.java",
+    "common/buildcraft/lib/client/guide/GuideManager.java",
+    "common/buildcraft/lib/client/guide/GuidePageRegistry.java",
+    "common/buildcraft/lib/client/guide/PageLine.java",
+    "common/buildcraft/lib/client/guide/TypeOrder.java",
+    "common/buildcraft/lib/client/guide/block/EngineBlockMapper.java",
+    "common/buildcraft/lib/client/guide/block/IBlockGuidePageMapper.java",
+    "common/buildcraft/lib/client/guide/data/JsonTypeTags.java",
+    "common/buildcraft/lib/client/guide/entry/IEntryIterable.java",
+    "common/buildcraft/lib/client/guide/entry/IEntryLinkConsumer.java",
+    "common/buildcraft/lib/client/guide/entry/ItemStackValueFilter.java",
+    "common/buildcraft/lib/client/guide/entry/PageEntry.java",
+    "common/buildcraft/lib/client/guide/entry/PageEntryExternal.java",
+    "common/buildcraft/lib/client/guide/entry/PageEntryItemStack.java",
+    "common/buildcraft/lib/client/guide/entry/PageEntryStatement.java",
+    "common/buildcraft/lib/client/guide/entry/PageValue.java",
+    "common/buildcraft/lib/client/guide/entry/PageValueType.java",
+    "common/buildcraft/lib/client/guide/font/FontManager.java",
+    "common/buildcraft/lib/client/guide/font/GuideFont.java",
+    "common/buildcraft/lib/client/guide/font/IFontRenderer.java",
+    "common/buildcraft/lib/client/guide/font/MinecraftFont.java",
+    "common/buildcraft/lib/client/guide/loader/IPageLoader.java",
+    "common/buildcraft/lib/client/guide/loader/IPageLoaderText.java",
+    "common/buildcraft/lib/client/guide/loader/MarkdownPageLoader.java",
+    "common/buildcraft/lib/client/guide/loader/XmlPageLoader.java",
+    "common/buildcraft/lib/client/guide/node/FormatSegment.java",
+    "common/buildcraft/lib/client/guide/node/FormatString.java",
+    "common/buildcraft/lib/client/guide/parts/GuideChapter.java",
+    "common/buildcraft/lib/client/guide/parts/GuideChapterContents.java",
+    "common/buildcraft/lib/client/guide/parts/GuideChapterWithin.java",
+    "common/buildcraft/lib/client/guide/parts/GuideImage.java",
+    "common/buildcraft/lib/client/guide/parts/GuideImageFactory.java",
+    "common/buildcraft/lib/client/guide/parts/GuideInWorld.java",
+    "common/buildcraft/lib/client/guide/parts/GuideInWorldFactory.java",
+    "common/buildcraft/lib/client/guide/parts/GuidePage.java",
+    "common/buildcraft/lib/client/guide/parts/GuidePageBase.java",
+    "common/buildcraft/lib/client/guide/parts/GuidePageEntry.java",
+    "common/buildcraft/lib/client/guide/parts/GuidePageFactory.java",
+    "common/buildcraft/lib/client/guide/parts/GuidePageStandInRecipes.java",
+    "common/buildcraft/lib/client/guide/parts/GuidePart.java",
+    "common/buildcraft/lib/client/guide/parts/GuidePartCodeBlock.java",
+    "common/buildcraft/lib/client/guide/parts/GuidePartFactory.java",
+    "common/buildcraft/lib/client/guide/parts/GuidePartGroup.java",
+    "common/buildcraft/lib/client/guide/parts/GuidePartItem.java",
+    "common/buildcraft/lib/client/guide/parts/GuidePartLink.java",
+    "common/buildcraft/lib/client/guide/parts/GuidePartMulti.java",
+    "common/buildcraft/lib/client/guide/parts/GuidePartNewPage.java",
+    "common/buildcraft/lib/client/guide/parts/GuideText.java",
+    "common/buildcraft/lib/client/guide/parts/contents/ContentsNode.java",
+    "common/buildcraft/lib/client/guide/parts/contents/ContentsNodeGui.java",
+    "common/buildcraft/lib/client/guide/parts/contents/GuidePageContents.java",
+    "common/buildcraft/lib/client/guide/parts/contents/IContentsLeaf.java",
+    "common/buildcraft/lib/client/guide/parts/contents/IContentsNode.java",
+    "common/buildcraft/lib/client/guide/parts/contents/PageLink.java",
+    "common/buildcraft/lib/client/guide/parts/contents/PageLinkItemPermutations.java",
+    "common/buildcraft/lib/client/guide/parts/contents/PageLinkItemStack.java",
+    "common/buildcraft/lib/client/guide/parts/contents/PageLinkNormal.java",
+    "common/buildcraft/lib/client/guide/parts/contents/PageLinkStatement.java",
+    "common/buildcraft/lib/client/guide/parts/recipe/GuideAssembly.java",
+    "common/buildcraft/lib/client/guide/parts/recipe/GuideAssemblyFactory.java",
+    "common/buildcraft/lib/client/guide/parts/recipe/GuideAssemblyRecipes.java",
+    "common/buildcraft/lib/client/guide/parts/recipe/GuideCrafting.java",
+    "common/buildcraft/lib/client/guide/parts/recipe/GuideCraftingFactory.java",
+    "common/buildcraft/lib/client/guide/parts/recipe/GuideCraftingFactoryDirect.java",
+    "common/buildcraft/lib/client/guide/parts/recipe/GuideCraftingRecipes.java",
+    "common/buildcraft/lib/client/guide/parts/recipe/GuideSmelting.java",
+    "common/buildcraft/lib/client/guide/parts/recipe/GuideSmeltingFactory.java",
+    "common/buildcraft/lib/client/guide/parts/recipe/GuideSmeltingRecipes.java",
+    "common/buildcraft/lib/client/guide/parts/recipe/IStackRecipes.java",
+    "common/buildcraft/lib/client/guide/parts/recipe/RecipeLookupHelper.java",
+    "common/buildcraft/lib/client/guide/ref/GuideGroupManager.java",
+    "common/buildcraft/lib/client/guide/ref/GuideGroupSet.java",
+    "common/buildcraft/lib/client/guide/world/WorldInfo.java",
+    "common/buildcraft/lib/client/guide/world/WorldLabel.java",
+    "common/buildcraft/lib/client/guide/world/WorldState.java",
+    "common/buildcraft/lib/client/model/AdvModelCache.java",
+    "common/buildcraft/lib/client/model/IModelCache.java",
+    "common/buildcraft/lib/client/model/ModelCache.java",
+    "common/buildcraft/lib/client/model/ModelCacheJoiner.java",
+    "common/buildcraft/lib/client/model/ModelCacheMultipleSame.java",
+    "common/buildcraft/lib/client/model/ModelHolder.java",
+    "common/buildcraft/lib/client/model/ModelHolderRegistry.java",
+    "common/buildcraft/lib/client/model/ModelHolderStatic.java",
+    "common/buildcraft/lib/client/model/ModelHolderVariable.java",
+    "common/buildcraft/lib/client/model/ModelItemSimple.java",
+    "common/buildcraft/lib/client/model/ModelNotifyOfRF.java",
+    "common/buildcraft/lib/client/model/ModelPluggableItem.java",
+    "common/buildcraft/lib/client/model/ModelUtil.java",
+    "common/buildcraft/lib/client/model/MutableQuad.java",
+    "common/buildcraft/lib/client/model/MutableVertex.java",
+    "common/buildcraft/lib/client/model/ResourceLoaderContext.java",
+    "common/buildcraft/lib/client/model/json/JsonModel.java",
+    "common/buildcraft/lib/client/model/json/JsonModelPart.java",
+    "common/buildcraft/lib/client/model/json/JsonModelRule.java",
+    "common/buildcraft/lib/client/model/json/JsonQuad.java",
+    "common/buildcraft/lib/client/model/json/JsonTexture.java",
+    "common/buildcraft/lib/client/model/json/JsonVariableFaceUV.java",
+    "common/buildcraft/lib/client/model/json/JsonVariableModel.java",
+    "common/buildcraft/lib/client/model/json/JsonVariableModelPart.java",
+    "common/buildcraft/lib/client/model/json/JsonVertex.java",
+    "common/buildcraft/lib/client/model/json/VariablePartContainer.java",
+    "common/buildcraft/lib/client/model/json/VariablePartCuboid.java",
+    "common/buildcraft/lib/client/model/json/VariablePartCuboidBase.java",
+    "common/buildcraft/lib/client/model/json/VariablePartLed.java",
+    "common/buildcraft/lib/client/model/json/VariablePartTextureExpand.java",
+    "common/buildcraft/lib/client/model/plug/PlugBakerSimple.java",
+    "common/buildcraft/lib/client/reload/IReloadable.java",
+    "common/buildcraft/lib/client/reload/LibConfigChangeListener.java",
+    "common/buildcraft/lib/client/reload/ReloadManager.java",
+    "common/buildcraft/lib/client/reload/ReloadSource.java",
+    "common/buildcraft/lib/client/reload/ReloadUtil.java",
+    "common/buildcraft/lib/client/reload/SourceType.java",
+    "common/buildcraft/lib/client/render/DetachedRenderer.java",
+    "common/buildcraft/lib/client/render/HudRenderer.java",
+    "common/buildcraft/lib/client/render/ItemRenderUtil.java",
+    "common/buildcraft/lib/client/render/MarkerRenderer.java",
+    "common/buildcraft/lib/client/render/fluid/FluidRenderer.java",
+    "common/buildcraft/lib/client/render/fluid/FluidSpriteType.java",
+    "common/buildcraft/lib/client/render/fluid/SpriteFluidFrozen.java",
+    "common/buildcraft/lib/client/render/font/ConfigurableFontRenderer.java",
+    "common/buildcraft/lib/client/render/font/DelegateFontRenderer.java",
+    "common/buildcraft/lib/client/render/font/SpecialColourFontRenderer.java",
+    "common/buildcraft/lib/client/render/laser/CompiledLaserRow.java",
+    "common/buildcraft/lib/client/render/laser/CompiledLaserType.java",
+    "common/buildcraft/lib/client/render/laser/ILaserRenderer.java",
+    "common/buildcraft/lib/client/render/laser/LaserBoxRenderer.java",
+    "common/buildcraft/lib/client/render/laser/LaserCompiledBuffer.java",
+    "common/buildcraft/lib/client/render/laser/LaserCompiledList.java",
+    "common/buildcraft/lib/client/render/laser/LaserContext.java",
+    "common/buildcraft/lib/client/render/laser/LaserData_BC8.java",
+    "common/buildcraft/lib/client/render/laser/LaserRenderer_BC8.java",
+    "common/buildcraft/lib/client/render/tile/RenderEngine_BC8.java",
+    "common/buildcraft/lib/client/render/tile/RenderMachineWave.java",
+    "common/buildcraft/lib/client/render/tile/RenderPartCube.java",
+    "common/buildcraft/lib/client/resource/DataMetadataSection.java",
+    "common/buildcraft/lib/client/resource/MetadataLoader.java",
+    "common/buildcraft/lib/client/sprite/AtlasSpriteSwappable.java",
+    "common/buildcraft/lib/client/sprite/AtlasSpriteVariants.java",
+    "common/buildcraft/lib/client/sprite/DynamicTextureBC.java",
+    "common/buildcraft/lib/client/sprite/SpriteAtlas.java",
+    "common/buildcraft/lib/client/sprite/SpriteChanging.java",
+    "common/buildcraft/lib/client/sprite/SpriteHolderRegistry.java",
+    "common/buildcraft/lib/client/sprite/SpriteNineSliced.java",
+    "common/buildcraft/lib/client/sprite/SpriteRaw.java",
+    "common/buildcraft/lib/client/sprite/SubSprite.java",
+    "common/buildcraft/lib/client/sprite/SubSpriteChanging.java",
+    "common/buildcraft/lib/client/sprite/White.java",
+    "common/buildcraft/robotics/client/model/RoboticsNodeTypes.java",
+    "common/buildcraft/robotics/client/model/key/KeyPlugRobotStation.java",
+    "common/buildcraft/robotics/client/particle/EntityRobotEnergyParticle.java",
+    "common/buildcraft/robotics/client/render/PlugRobotStationRenderer.java",
+    "common/buildcraft/robotics/client/render/RenderRobot.java",
+    "common/buildcraft/robotics/client/render/RenderZonePlanner.java",
+    "common/buildcraft/silicon/client/FacadeItemColours.java",
+    "common/buildcraft/silicon/client/SiliconItemModelPredicates.java",
+    "common/buildcraft/silicon/client/model/GateMeshDefinition.java",
+    "common/buildcraft/silicon/client/model/ModelGateItem.java",
+    "common/buildcraft/silicon/client/model/key/KeyPlugFacade.java",
+    "common/buildcraft/silicon/client/model/key/KeyPlugGate.java",
+    "common/buildcraft/silicon/client/model/key/KeyPlugLens.java",
+    "common/buildcraft/silicon/client/model/key/KeyPlugLightSensor.java",
+    "common/buildcraft/silicon/client/model/key/KeyPlugPulsar.java",
+    "common/buildcraft/silicon/client/model/key/KeyPlugTimer.java",
+    "common/buildcraft/silicon/client/model/plug/ModelFacadeItem.java",
+    "common/buildcraft/silicon/client/model/plug/ModelLensItem.java",
+    "common/buildcraft/silicon/client/model/plug/PlugBakerFacade.java",
+    "common/buildcraft/silicon/client/model/plug/PlugBakerLens.java",
+    "common/buildcraft/silicon/client/model/plug/PlugGateBaker.java",
+    "common/buildcraft/silicon/client/render/AdvDebuggerLaser.java",
+    "common/buildcraft/silicon/client/render/PlugGateRenderer.java",
+    "common/buildcraft/silicon/client/render/PlugPulsarRenderer.java",
+    "common/buildcraft/silicon/client/render/RenderLaser.java",
+    "common/buildcraft/silicon/client/render/RenderProgrammingTable.java",
+    "common/buildcraft/transport/client/PipeBlockColours.java",
+    "common/buildcraft/transport/client/PipeRegistryClient.java",
+    "common/buildcraft/transport/client/TransportItemModelPredicates.java",
+    "common/buildcraft/transport/client/model/IPipeBaseModelGen.java",
+    "common/buildcraft/transport/client/model/ModelPipe.java",
+    "common/buildcraft/transport/client/model/ModelPipeItem.java",
+    "common/buildcraft/transport/client/model/PipeBaseModelGenConnected.java",
+    "common/buildcraft/transport/client/model/PipeBaseModelGenStandard.java",
+    "common/buildcraft/transport/client/model/PipeModelCacheAll.java",
+    "common/buildcraft/transport/client/model/PipeModelCacheBase.java",
+    "common/buildcraft/transport/client/model/PipeModelCachePluggable.java",
+    "common/buildcraft/transport/client/model/key/KeyPlugBlocker.java",
+    "common/buildcraft/transport/client/model/key/KeyPlugPowerAdaptor.java",
+    "common/buildcraft/transport/client/model/key/PipeModelKey.java",
+    "common/buildcraft/transport/client/render/PipeBehaviourRendererStripes.java",
+    "common/buildcraft/transport/client/render/PipeFlowRendererFluids.java",
+    "common/buildcraft/transport/client/render/PipeFlowRendererItems.java",
+    "common/buildcraft/transport/client/render/PipeFlowRendererPower.java",
+    "common/buildcraft/transport/client/render/PipeFlowRendererRf.java",
+    "common/buildcraft/transport/client/render/PipeTabButton.java",
+    "common/buildcraft/transport/client/render/PipeWireRenderer.java",
+    "common/buildcraft/transport/client/render/RenderPipeHolder.java"
+  ],
+  "mixed_files": [
+    {
+      "file": "common/buildcraft/builders/BCBuilders.java",
+      "onlyin_count": 2
+    },
+    {
+      "file": "common/buildcraft/builders/BCBuildersEventDist.java",
+      "onlyin_count": 3
+    },
+    {
+      "file": "common/buildcraft/builders/BCBuildersProxy.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/builders/block/BlockFrame.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/builders/item/ItemSchematicSingle.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/builders/item/ItemSnapshot.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/builders/snapshot/ClientSnapshots.java",
+      "onlyin_count": 2
+    },
+    {
+      "file": "common/buildcraft/builders/snapshot/FakeWorld.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/builders/snapshot/pattern/PatternBox.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/builders/snapshot/pattern/PatternClear.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/builders/snapshot/pattern/PatternFill.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/builders/snapshot/pattern/PatternFrame.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/builders/snapshot/pattern/PatternNone.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/builders/snapshot/pattern/PatternStairs.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/builders/snapshot/pattern/parameter/PatternParameterCenter.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/builders/snapshot/pattern/parameter/PatternParameterFacing.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/builders/snapshot/pattern/parameter/PatternParameterHollow.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/builders/snapshot/pattern/parameter/PatternParameterRotation.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/builders/snapshot/pattern/parameter/PatternParameterXZDir.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/builders/snapshot/pattern/parameter/PatternParameterYDir.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/builders/tile/TileArchitectTable.java",
+      "onlyin_count": 2
+    },
+    {
+      "file": "common/buildcraft/builders/tile/TileBuilder.java",
+      "onlyin_count": 4
+    },
+    {
+      "file": "common/buildcraft/builders/tile/TileFiller.java",
+      "onlyin_count": 3
+    },
+    {
+      "file": "common/buildcraft/builders/tile/TileQuarry.java",
+      "onlyin_count": 3
+    },
+    {
+      "file": "common/buildcraft/core/BCCore.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/core/BCCoreModels.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/core/item/ItemBlockDecorated.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/core/item/ItemFragileFluidContainer.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/core/item/ItemList_BC8.java",
+      "onlyin_count": 2
+    },
+    {
+      "file": "common/buildcraft/core/item/ItemMapLocation.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/core/item/ItemPaintbrush_BC8.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/core/marker/PathConnection.java",
+      "onlyin_count": 3
+    },
+    {
+      "file": "common/buildcraft/core/marker/VolumeConnection.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/core/marker/VolumeSubCache.java",
+      "onlyin_count": 2
+    },
+    {
+      "file": "common/buildcraft/core/marker/volume/Addon.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/core/marker/volume/AddonDefaultRenderer.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/core/marker/volume/Lock.java",
+      "onlyin_count": 3
+    },
+    {
+      "file": "common/buildcraft/core/statements/ActionMachineControl.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/core/statements/ActionRedstoneOutput.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/core/statements/StatementParamGateSideOnly.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/core/statements/StatementParameterDirection.java",
+      "onlyin_count": 3
+    },
+    {
+      "file": "common/buildcraft/core/statements/StatementParameterItemStackExact.java",
+      "onlyin_count": 4
+    },
+    {
+      "file": "common/buildcraft/core/statements/StatementParameterRedstoneLevel.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/core/statements/TriggerEnginePowerStage.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/core/statements/TriggerFluidContainer.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/core/statements/TriggerInventoryLevel.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/core/statements/TriggerMachine.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/core/tile/TileMarkerVolume.java",
+      "onlyin_count": 2
+    },
+    {
+      "file": "common/buildcraft/energy/BCEnergy.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/energy/BCEnergyModels.java",
+      "onlyin_count": 2
+    },
+    {
+      "file": "common/buildcraft/energy/tile/TileDynamoMJ.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/factory/BCFactory.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/factory/BCFactoryEventDist.java",
+      "onlyin_count": 2
+    },
+    {
+      "file": "common/buildcraft/factory/BCFactoryModels.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/factory/block/BlockTank.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/factory/tile/TileDistiller_BC8.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/factory/tile/TileHeatExchange.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/factory/tile/TileMiner.java",
+      "onlyin_count": 4
+    },
+    {
+      "file": "common/buildcraft/factory/tile/TileTank.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/BCLibEventDist.java",
+      "onlyin_count": 5
+    },
+    {
+      "file": "common/buildcraft/lib/BCLibEventDistModBus.java",
+      "onlyin_count": 5
+    },
+    {
+      "file": "common/buildcraft/lib/BCLibProxy.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/block/BlockMarkerBase.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/config/DetailedConfigOption.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/config/OverridableConfigOption.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/debug/DebugRenderHelper.java",
+      "onlyin_count": 2
+    },
+    {
+      "file": "common/buildcraft/lib/debug/IAdvDebugTarget.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/engine/BlockEngineBase_BC8.java",
+      "onlyin_count": 3
+    },
+    {
+      "file": "common/buildcraft/lib/engine/TileEngineBase_BC8.java",
+      "onlyin_count": 3
+    },
+    {
+      "file": "common/buildcraft/lib/fluid/Tank.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/fluid/TankManager.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/gui/GuiIcon.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/gui/IGuiElement.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/gui/Widget_Neptune.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/gui/button/GuiImageButton.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/gui/elem/ScrollbarElement.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/gui/help/ElementHelpInfo.java",
+      "onlyin_count": 3
+    },
+    {
+      "file": "common/buildcraft/lib/gui/statement/IDrawingParameter.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/gui/widget/WidgetFluidTank.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/gui/widget/WidgetPhantomSlot.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/list/ListHandler.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/list/ListMatchHandlerOreDictionary.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/marker/MarkerConnection.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/marker/MarkerSubCache.java",
+      "onlyin_count": 3
+    },
+    {
+      "file": "common/buildcraft/lib/misc/GlUtil.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/misc/RegistryUtil.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/misc/data/Box.java",
+      "onlyin_count": 3
+    },
+    {
+      "file": "common/buildcraft/lib/misc/data/ProfilerBC.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/lib/tile/TileBC_Neptune.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/robotics/BCRobotics.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/robotics/BCRoboticsModels.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/robotics/BCRoboticsProxy.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/robotics/boards/BCBoardNBT.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/robotics/entity/EntityRobot.java",
+      "onlyin_count": 3
+    },
+    {
+      "file": "common/buildcraft/robotics/item/ItemRedstoneBoard.java",
+      "onlyin_count": 2
+    },
+    {
+      "file": "common/buildcraft/robotics/item/ItemRobot.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/robotics/plug/PluggableRobotStation.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/robotics/statements/ActionRobotFilterTool.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/robotics/tile/TileZonePlanner.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/robotics/zone/ZonePlannerMapRenderer.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/silicon/BCSilicon.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/silicon/BCSiliconModels.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/silicon/item/ItemGateCopier.java",
+      "onlyin_count": 2
+    },
+    {
+      "file": "common/buildcraft/silicon/item/ItemPluggableFacade.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/silicon/item/ItemPluggableGate.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/silicon/plug/PluggableFacade.java",
+      "onlyin_count": 2
+    },
+    {
+      "file": "common/buildcraft/silicon/plug/PluggableGate.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/silicon/plug/PluggableLens.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/silicon/plug/PluggableLightSensor.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/silicon/plug/PluggablePulsar.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/silicon/statement/TriggerLightSensor.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/silicon/statement/TriggerTimer.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/silicon/tile/TileLaser.java",
+      "onlyin_count": 2
+    },
+    {
+      "file": "common/buildcraft/transport/BCTransport.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/transport/BCTransportEventDist.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/transport/BCTransportModels.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/transport/BCTransportProxy.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/transport/BCTransportSprites.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/transport/block/BlockPipeHolder.java",
+      "onlyin_count": 7
+    },
+    {
+      "file": "common/buildcraft/transport/item/ItemPipeHolder.java",
+      "onlyin_count": 2
+    },
+    {
+      "file": "common/buildcraft/transport/item/ItemWire.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/transport/pipe/Pipe.java",
+      "onlyin_count": 3
+    },
+    {
+      "file": "common/buildcraft/transport/pipe/flow/PipeFlowFluids.java",
+      "onlyin_count": 3
+    },
+    {
+      "file": "common/buildcraft/transport/pipe/flow/PipeFlowItems.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/transport/plug/PluggableBlocker.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/transport/plug/PluggablePowerAdaptor.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/transport/statements/ActionExtractionPreset.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/transport/statements/ActionPipeColor.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/transport/statements/ActionPipeDirection.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/transport/statements/ActionPowerLimit.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/transport/statements/TriggerParameterSignal.java",
+      "onlyin_count": 1
+    },
+    {
+      "file": "common/buildcraft/transport/wire/WireManager.java",
+      "onlyin_count": 1
+    }
+  ],
+  "anchoring": {
+    "anchored": [
+      "common/buildcraft/builders/client/BuildersItemModelPredicates.java",
+      "common/buildcraft/builders/client/ClientArchitectTables.java",
+      "common/buildcraft/builders/client/render/AdvDebuggerQuarry.java",
+      "common/buildcraft/builders/client/render/RenderArchitectTable.java",
+      "common/buildcraft/builders/client/render/RenderArchitectTables.java",
+      "common/buildcraft/builders/client/render/RenderBuilder.java",
+      "common/buildcraft/builders/client/render/RenderFiller.java",
+      "common/buildcraft/builders/client/render/RenderMarkerConstruction.java",
+      "common/buildcraft/builders/client/render/RenderQuarry.java",
+      "common/buildcraft/builders/client/render/RenderSnapshotBuilder.java",
+      "common/buildcraft/core/client/BCConfigElement.java",
+      "common/buildcraft/core/client/BuildCraftLaserManager.java",
+      "common/buildcraft/core/client/ConfigGuiFactoryBC.java",
+      "common/buildcraft/core/client/CoreItemModelPredicates.java",
+      "common/buildcraft/core/client/RenderTickListener.java",
+      "common/buildcraft/core/client/render/RenderEngineCreative.java",
+      "common/buildcraft/core/client/render/RenderEngineWood.java",
+      "common/buildcraft/core/client/render/RenderMarkerVolume.java",
+      "common/buildcraft/core/client/render/RenderVolumeBoxes.java",
+      "common/buildcraft/energy/client/gui/GuiDynamoMJ.java",
+      "common/buildcraft/energy/client/gui/GuiEngineIron_BC8.java",
+      "common/buildcraft/energy/client/gui/GuiEngineRF.java",
+      "common/buildcraft/energy/client/gui/GuiEngineStone_BC8.java",
+      "common/buildcraft/energy/client/gui/LedgerDynamoMJ.java",
+      "common/buildcraft/energy/client/render/RenderDynamoMJ.java",
+      "common/buildcraft/energy/client/render/RenderEngineIron.java",
+      "common/buildcraft/energy/client/render/RenderEngineRF.java",
+      "common/buildcraft/energy/client/render/RenderEngineStone.java",
+      "common/buildcraft/energy/client/sprite/AtlasSpriteFluid.java",
+      "common/buildcraft/factory/client/model/ModelHeatExchange.java",
+      "common/buildcraft/factory/client/render/RenderDistiller.java",
+      "common/buildcraft/factory/client/render/RenderHeatExchange.java",
+      "common/buildcraft/factory/client/render/RenderMiningWell.java",
+      "common/buildcraft/factory/client/render/RenderPump.java",
+      "common/buildcraft/factory/client/render/RenderTank.java",
+      "common/buildcraft/factory/client/render/RenderTube.java",
+      "common/buildcraft/lib/client/ToastInformation.java",
+      "common/buildcraft/lib/client/guide/ETypeTag.java",
+      "common/buildcraft/lib/client/guide/GuiGuide.java",
+      "common/buildcraft/lib/client/guide/GuideManager.java",
+      "common/buildcraft/lib/client/guide/GuidePageRegistry.java",
+      "common/buildcraft/lib/client/guide/PageLine.java",
+      "common/buildcraft/lib/client/guide/TypeOrder.java",
+      "common/buildcraft/lib/client/guide/data/JsonTypeTags.java",
+      "common/buildcraft/lib/client/guide/entry/IEntryIterable.java",
+      "common/buildcraft/lib/client/guide/entry/IEntryLinkConsumer.java",
+      "common/buildcraft/lib/client/guide/entry/ItemStackValueFilter.java",
+      "common/buildcraft/lib/client/guide/entry/PageEntry.java",
+      "common/buildcraft/lib/client/guide/entry/PageEntryExternal.java",
+      "common/buildcraft/lib/client/guide/entry/PageEntryItemStack.java",
+      "common/buildcraft/lib/client/guide/entry/PageEntryStatement.java",
+      "common/buildcraft/lib/client/guide/entry/PageValue.java",
+      "common/buildcraft/lib/client/guide/entry/PageValueType.java",
+      "common/buildcraft/lib/client/guide/font/FontManager.java",
+      "common/buildcraft/lib/client/guide/font/GuideFont.java",
+      "common/buildcraft/lib/client/guide/font/IFontRenderer.java",
+      "common/buildcraft/lib/client/guide/font/MinecraftFont.java",
+      "common/buildcraft/lib/client/guide/loader/IPageLoader.java",
+      "common/buildcraft/lib/client/guide/loader/IPageLoaderText.java",
+      "common/buildcraft/lib/client/guide/loader/MarkdownPageLoader.java",
+      "common/buildcraft/lib/client/guide/loader/XmlPageLoader.java",
+      "common/buildcraft/lib/client/guide/node/FormatSegment.java",
+      "common/buildcraft/lib/client/guide/node/FormatString.java",
+      "common/buildcraft/lib/client/guide/parts/GuideChapter.java",
+      "common/buildcraft/lib/client/guide/parts/GuideChapterContents.java",
+      "common/buildcraft/lib/client/guide/parts/GuideChapterWithin.java",
+      "common/buildcraft/lib/client/guide/parts/GuideImage.java",
+      "common/buildcraft/lib/client/guide/parts/GuideImageFactory.java",
+      "common/buildcraft/lib/client/guide/parts/GuidePage.java",
+      "common/buildcraft/lib/client/guide/parts/GuidePageBase.java",
+      "common/buildcraft/lib/client/guide/parts/GuidePageEntry.java",
+      "common/buildcraft/lib/client/guide/parts/GuidePageFactory.java",
+      "common/buildcraft/lib/client/guide/parts/GuidePageStandInRecipes.java",
+      "common/buildcraft/lib/client/guide/parts/GuidePart.java",
+      "common/buildcraft/lib/client/guide/parts/GuidePartCodeBlock.java",
+      "common/buildcraft/lib/client/guide/parts/GuidePartFactory.java",
+      "common/buildcraft/lib/client/guide/parts/GuidePartGroup.java",
+      "common/buildcraft/lib/client/guide/parts/GuidePartItem.java",
+      "common/buildcraft/lib/client/guide/parts/GuidePartLink.java",
+      "common/buildcraft/lib/client/guide/parts/GuidePartMulti.java",
+      "common/buildcraft/lib/client/guide/parts/GuidePartNewPage.java",
+      "common/buildcraft/lib/client/guide/parts/GuideText.java",
+      "common/buildcraft/lib/client/guide/parts/contents/ContentsNode.java",
+      "common/buildcraft/lib/client/guide/parts/contents/ContentsNodeGui.java",
+      "common/buildcraft/lib/client/guide/parts/contents/GuidePageContents.java",
+      "common/buildcraft/lib/client/guide/parts/contents/IContentsLeaf.java",
+      "common/buildcraft/lib/client/guide/parts/contents/IContentsNode.java",
+      "common/buildcraft/lib/client/guide/parts/contents/PageLink.java",
+      "common/buildcraft/lib/client/guide/parts/contents/PageLinkItemPermutations.java",
+      "common/buildcraft/lib/client/guide/parts/contents/PageLinkItemStack.java",
+      "common/buildcraft/lib/client/guide/parts/contents/PageLinkNormal.java",
+      "common/buildcraft/lib/client/guide/parts/contents/PageLinkStatement.java",
+      "common/buildcraft/lib/client/guide/parts/recipe/GuideAssembly.java",
+      "common/buildcraft/lib/client/guide/parts/recipe/GuideAssemblyFactory.java",
+      "common/buildcraft/lib/client/guide/parts/recipe/GuideAssemblyRecipes.java",
+      "common/buildcraft/lib/client/guide/parts/recipe/GuideCrafting.java",
+      "common/buildcraft/lib/client/guide/parts/recipe/GuideCraftingFactory.java",
+      "common/buildcraft/lib/client/guide/parts/recipe/GuideCraftingRecipes.java",
+      "common/buildcraft/lib/client/guide/parts/recipe/GuideSmelting.java",
+      "common/buildcraft/lib/client/guide/parts/recipe/GuideSmeltingFactory.java",
+      "common/buildcraft/lib/client/guide/parts/recipe/GuideSmeltingRecipes.java",
+      "common/buildcraft/lib/client/guide/parts/recipe/IStackRecipes.java",
+      "common/buildcraft/lib/client/guide/parts/recipe/RecipeLookupHelper.java",
+      "common/buildcraft/lib/client/guide/ref/GuideGroupManager.java",
+      "common/buildcraft/lib/client/guide/ref/GuideGroupSet.java",
+      "common/buildcraft/lib/client/guide/world/WorldInfo.java",
+      "common/buildcraft/lib/client/guide/world/WorldLabel.java",
+      "common/buildcraft/lib/client/model/AdvModelCache.java",
+      "common/buildcraft/lib/client/model/IModelCache.java",
+      "common/buildcraft/lib/client/model/ModelCache.java",
+      "common/buildcraft/lib/client/model/ModelCacheJoiner.java",
+      "common/buildcraft/lib/client/model/ModelCacheMultipleSame.java",
+      "common/buildcraft/lib/client/model/ModelHolder.java",
+      "common/buildcraft/lib/client/model/ModelHolderRegistry.java",
+      "common/buildcraft/lib/client/model/ModelHolderStatic.java",
+      "common/buildcraft/lib/client/model/ModelHolderVariable.java",
+      "common/buildcraft/lib/client/model/ModelItemSimple.java",
+      "common/buildcraft/lib/client/model/ModelPluggableItem.java",
+      "common/buildcraft/lib/client/model/ModelUtil.java",
+      "common/buildcraft/lib/client/model/MutableQuad.java",
+      "common/buildcraft/lib/client/model/MutableVertex.java",
+      "common/buildcraft/lib/client/model/ResourceLoaderContext.java",
+      "common/buildcraft/lib/client/model/json/JsonModel.java",
+      "common/buildcraft/lib/client/model/json/JsonModelPart.java",
+      "common/buildcraft/lib/client/model/json/JsonModelRule.java",
+      "common/buildcraft/lib/client/model/json/JsonQuad.java",
+      "common/buildcraft/lib/client/model/json/JsonTexture.java",
+      "common/buildcraft/lib/client/model/json/JsonVariableFaceUV.java",
+      "common/buildcraft/lib/client/model/json/JsonVariableModel.java",
+      "common/buildcraft/lib/client/model/json/JsonVariableModelPart.java",
+      "common/buildcraft/lib/client/model/json/JsonVertex.java",
+      "common/buildcraft/lib/client/model/json/VariablePartContainer.java",
+      "common/buildcraft/lib/client/model/json/VariablePartCuboid.java",
+      "common/buildcraft/lib/client/model/json/VariablePartCuboidBase.java",
+      "common/buildcraft/lib/client/model/json/VariablePartLed.java",
+      "common/buildcraft/lib/client/model/json/VariablePartTextureExpand.java",
+      "common/buildcraft/lib/client/model/plug/PlugBakerSimple.java",
+      "common/buildcraft/lib/client/reload/IReloadable.java",
+      "common/buildcraft/lib/client/reload/LibConfigChangeListener.java",
+      "common/buildcraft/lib/client/reload/ReloadManager.java",
+      "common/buildcraft/lib/client/reload/ReloadSource.java",
+      "common/buildcraft/lib/client/reload/ReloadUtil.java",
+      "common/buildcraft/lib/client/reload/SourceType.java",
+      "common/buildcraft/lib/client/render/DetachedRenderer.java",
+      "common/buildcraft/lib/client/render/ItemRenderUtil.java",
+      "common/buildcraft/lib/client/render/MarkerRenderer.java",
+      "common/buildcraft/lib/client/render/fluid/FluidRenderer.java",
+      "common/buildcraft/lib/client/render/fluid/FluidSpriteType.java",
+      "common/buildcraft/lib/client/render/fluid/SpriteFluidFrozen.java",
+      "common/buildcraft/lib/client/render/font/ConfigurableFontRenderer.java",
+      "common/buildcraft/lib/client/render/font/DelegateFontRenderer.java",
+      "common/buildcraft/lib/client/render/font/SpecialColourFontRenderer.java",
+      "common/buildcraft/lib/client/render/laser/CompiledLaserRow.java",
+      "common/buildcraft/lib/client/render/laser/CompiledLaserType.java",
+      "common/buildcraft/lib/client/render/laser/ILaserRenderer.java",
+      "common/buildcraft/lib/client/render/laser/LaserBoxRenderer.java",
+      "common/buildcraft/lib/client/render/laser/LaserCompiledBuffer.java",
+      "common/buildcraft/lib/client/render/laser/LaserCompiledList.java",
+      "common/buildcraft/lib/client/render/laser/LaserContext.java",
+      "common/buildcraft/lib/client/render/laser/LaserData_BC8.java",
+      "common/buildcraft/lib/client/render/laser/LaserRenderer_BC8.java",
+      "common/buildcraft/lib/client/render/tile/RenderEngine_BC8.java",
+      "common/buildcraft/lib/client/render/tile/RenderPartCube.java",
+      "common/buildcraft/lib/client/resource/DataMetadataSection.java",
+      "common/buildcraft/lib/client/resource/MetadataLoader.java",
+      "common/buildcraft/lib/client/sprite/AtlasSpriteSwappable.java",
+      "common/buildcraft/lib/client/sprite/AtlasSpriteVariants.java",
+      "common/buildcraft/lib/client/sprite/DynamicTextureBC.java",
+      "common/buildcraft/lib/client/sprite/SpriteAtlas.java",
+      "common/buildcraft/lib/client/sprite/SpriteHolderRegistry.java",
+      "common/buildcraft/lib/client/sprite/SpriteNineSliced.java",
+      "common/buildcraft/lib/client/sprite/SpriteRaw.java",
+      "common/buildcraft/lib/client/sprite/SubSprite.java",
+      "common/buildcraft/lib/client/sprite/SubSpriteChanging.java",
+      "common/buildcraft/lib/client/sprite/White.java",
+      "common/buildcraft/robotics/client/model/RoboticsNodeTypes.java",
+      "common/buildcraft/robotics/client/model/key/KeyPlugRobotStation.java",
+      "common/buildcraft/robotics/client/particle/EntityRobotEnergyParticle.java",
+      "common/buildcraft/robotics/client/render/PlugRobotStationRenderer.java",
+      "common/buildcraft/robotics/client/render/RenderRobot.java",
+      "common/buildcraft/robotics/client/render/RenderZonePlanner.java",
+      "common/buildcraft/silicon/client/FacadeItemColours.java",
+      "common/buildcraft/silicon/client/SiliconItemModelPredicates.java",
+      "common/buildcraft/silicon/client/model/GateMeshDefinition.java",
+      "common/buildcraft/silicon/client/model/ModelGateItem.java",
+      "common/buildcraft/silicon/client/model/key/KeyPlugFacade.java",
+      "common/buildcraft/silicon/client/model/key/KeyPlugGate.java",
+      "common/buildcraft/silicon/client/model/key/KeyPlugLens.java",
+      "common/buildcraft/silicon/client/model/key/KeyPlugLightSensor.java",
+      "common/buildcraft/silicon/client/model/key/KeyPlugPulsar.java",
+      "common/buildcraft/silicon/client/model/key/KeyPlugTimer.java",
+      "common/buildcraft/silicon/client/model/plug/ModelFacadeItem.java",
+      "common/buildcraft/silicon/client/model/plug/ModelLensItem.java",
+      "common/buildcraft/silicon/client/model/plug/PlugBakerFacade.java",
+      "common/buildcraft/silicon/client/model/plug/PlugBakerLens.java",
+      "common/buildcraft/silicon/client/model/plug/PlugGateBaker.java",
+      "common/buildcraft/silicon/client/render/AdvDebuggerLaser.java",
+      "common/buildcraft/silicon/client/render/PlugGateRenderer.java",
+      "common/buildcraft/silicon/client/render/PlugPulsarRenderer.java",
+      "common/buildcraft/silicon/client/render/RenderLaser.java",
+      "common/buildcraft/silicon/client/render/RenderProgrammingTable.java",
+      "common/buildcraft/transport/client/PipeBlockColours.java",
+      "common/buildcraft/transport/client/PipeRegistryClient.java",
+      "common/buildcraft/transport/client/TransportItemModelPredicates.java",
+      "common/buildcraft/transport/client/model/IPipeBaseModelGen.java",
+      "common/buildcraft/transport/client/model/ModelPipe.java",
+      "common/buildcraft/transport/client/model/ModelPipeItem.java",
+      "common/buildcraft/transport/client/model/PipeBaseModelGenStandard.java",
+      "common/buildcraft/transport/client/model/PipeModelCacheAll.java",
+      "common/buildcraft/transport/client/model/PipeModelCacheBase.java",
+      "common/buildcraft/transport/client/model/PipeModelCachePluggable.java",
+      "common/buildcraft/transport/client/model/key/KeyPlugBlocker.java",
+      "common/buildcraft/transport/client/model/key/KeyPlugPowerAdaptor.java",
+      "common/buildcraft/transport/client/model/key/PipeModelKey.java",
+      "common/buildcraft/transport/client/render/PipeBehaviourRendererStripes.java",
+      "common/buildcraft/transport/client/render/PipeFlowRendererFluids.java",
+      "common/buildcraft/transport/client/render/PipeFlowRendererItems.java",
+      "common/buildcraft/transport/client/render/PipeFlowRendererPower.java",
+      "common/buildcraft/transport/client/render/PipeFlowRendererRf.java",
+      "common/buildcraft/transport/client/render/PipeTabButton.java",
+      "common/buildcraft/transport/client/render/PipeWireRenderer.java",
+      "common/buildcraft/transport/client/render/RenderPipeHolder.java"
+    ],
+    "free": [
+      "common/buildcraft/builders/client/render/HudSingleSchematic.java",
+      "common/buildcraft/lib/client/guide/block/EngineBlockMapper.java",
+      "common/buildcraft/lib/client/guide/block/IBlockGuidePageMapper.java",
+      "common/buildcraft/lib/client/guide/parts/GuideInWorld.java",
+      "common/buildcraft/lib/client/guide/parts/GuideInWorldFactory.java",
+      "common/buildcraft/lib/client/guide/parts/recipe/GuideCraftingFactoryDirect.java",
+      "common/buildcraft/lib/client/guide/world/WorldState.java",
+      "common/buildcraft/lib/client/model/ModelNotifyOfRF.java",
+      "common/buildcraft/lib/client/render/HudRenderer.java",
+      "common/buildcraft/lib/client/render/tile/RenderMachineWave.java",
+      "common/buildcraft/lib/client/sprite/SpriteChanging.java",
+      "common/buildcraft/transport/client/model/PipeBaseModelGenConnected.java"
+    ],
+    "examples": [
+      "BCBuilders -> RenderArchitectTable",
+      "BCCore -> ConfigGuiFactoryBC",
+      "PathConnection -> BuildCraftLaserManager",
+      "RenderMarkerConstruction -> RenderSnapshotBuilder（锚定传播）",
+      "GuiGuide -> ToastInformation（锚定传播）",
+      "GuideManager -> PageLine（锚定传播）"
+    ]
+  },
+  "deferral": "大批量 client 源集分离需依赖倒置重构，推迟至 M2.7（NeoForge 渲染迁移）"
+}
