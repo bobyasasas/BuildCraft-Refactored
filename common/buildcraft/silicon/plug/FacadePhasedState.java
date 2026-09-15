@@ -84,9 +84,6 @@ public class FacadePhasedState implements IFacadePhasedState {
         return stateInfo.isSideSolid[side.ordinal()];
     }
 
-//    public BlockFaceShape getBlockFaceShape(EnumFacing side) {
-//        return stateInfo.blockFaceShape[side.ordinal()];
-//    }
 
     @Override
     public String toString() {

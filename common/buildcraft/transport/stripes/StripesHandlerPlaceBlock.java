@@ -43,7 +43,6 @@ public enum StripesHandlerPlaceBlock implements IStripesHandlerItem {
 //                0.5f,
 //                0.5f,
 //                0.5f
-//        );
         player.setItemInHand(InteractionHand.MAIN_HAND, stack);
         InteractionResult result = ((ServerPlayer) player).gameMode.useItemOn(
                 (ServerPlayer) player,
@@ -57,7 +56,6 @@ public enum StripesHandlerPlaceBlock implements IStripesHandlerItem {
                         false
                 )
         );
-        // return true;
         return result.consumesAction();
     }
 }

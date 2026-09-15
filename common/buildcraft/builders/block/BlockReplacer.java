@@ -29,22 +29,18 @@ public class BlockReplacer extends BlockBCTile_Neptune<TileReplacer> implements 
 
     @Nullable
     @Override
-//    public TileBC_Neptune createTileEntity(World world, IBlockState state)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
         return new TileReplacer(pos, state);
     }
 
     @Override
 //    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, Player player, InteractionHand hand,
-//                                    Direction side, float hitX, float hitY, float hitZ)
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!world.isClientSide) {
-//            BCBuildersGuis.REPLACER.openGUI(player, pos);
             if (world.getBlockEntity(pos) instanceof TileReplacer tile) {
                 MessageUtil.serverOpenTileGui(player, tile);
             }
         }
-//        return true;
         return InteractionResult.SUCCESS;
     }
 }

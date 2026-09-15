@@ -40,11 +40,9 @@ public enum StripesHandlerShears implements IStripesHandlerItem {
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
 
-//        if (block instanceof IShearable shearableBlock)
         if (block instanceof IForgeShearable shearableBlock) {
             if (shearableBlock.isShearable(stack, world, pos)) {
                 List<ItemStack> drops = shearableBlock.onSheared(null, stack, world, pos, 0);
-//                if (stack.attemptDamageItem(1, player.getRNG(), player instanceof ServerPlayer ? (ServerPlayer) player : null))
                 if (stack.hurt(1, player.getRandom(), player instanceof ServerPlayer ? (ServerPlayer) player : null)) {
                     stack.shrink(1);
                 }

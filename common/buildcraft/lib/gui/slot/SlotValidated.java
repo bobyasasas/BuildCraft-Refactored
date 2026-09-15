@@ -14,15 +14,12 @@ import javax.annotation.Nonnull;
 // public class SlotValidated extends Slot
 public class SlotValidated extends SlotBase {
 
-    // public SlotValidated(Container inv, int id, int x, int y)
     public SlotValidated(IItemHandlerAdv inv, int id, int x, int y) {
         super(inv, id, x, y);
     }
 
     @Override
-    // public boolean isItemValid(ItemStack itemStack)
     public boolean mayPlace(@Nonnull ItemStack itemStack) {
-        // return inventory.isItemValidForSlot(this.getSlotIndex(), itemStack);
         return itemHandler.canSet(handlerIndex, itemStack);
     }
 }

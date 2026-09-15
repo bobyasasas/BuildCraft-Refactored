@@ -12,27 +12,22 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 // TODO: Implement this!
-// (Just a way to make sure people know that RF support is enabled, I'm not sure how detailed this will need to be)
 // public class ModelNotifyOfRF implements IBakedModel
 public class ModelNotifyOfRF implements BakedModel {
 
-    // final IBakedModel parent;
     final BakedModel parent;
 
-    // public ModelNotifyOfRF(IBakedModel parent)
     public ModelNotifyOfRF(BakedModel parent) {
         this.parent = parent;
     }
 
     @Override
-    // public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, RandomSource rand) {
         // TODO Auto-generated method stub
         throw new AbstractMethodError("// TODO: Implement this!");
     }
 
     @Override
-    // public boolean isAmbientOcclusion()
     public boolean useAmbientOcclusion() {
         // TODO Auto-generated method stub
         throw new AbstractMethodError("// TODO: Implement this!");
@@ -45,21 +40,18 @@ public class ModelNotifyOfRF implements BakedModel {
     }
 
     @Override
-    // public boolean isBuiltInRenderer()
     public boolean isCustomRenderer() {
         // TODO Auto-generated method stub
         throw new AbstractMethodError("// TODO: Implement this!");
     }
 
     @Override
-    // public TextureAtlasSprite getParticleTexture()
     public TextureAtlasSprite getParticleIcon() {
         // TODO Auto-generated method stub
         throw new AbstractMethodError("// TODO: Implement this!");
     }
 
     @Override
-    // public ItemOverrideList getOverrides()
     public ItemOverrides getOverrides() {
         // TODO Auto-generated method stub
         throw new AbstractMethodError("// TODO: Implement this!");

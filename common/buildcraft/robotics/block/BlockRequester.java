@@ -28,22 +28,18 @@ public class BlockRequester extends BlockBCTile_Neptune<TileRequester> implement
     }
 
     @Override
-//    public TileEntity createNewTileEntity(Level world, int meta)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
         return new TileRequester(pos, state);
     }
 
     @Override
-//    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer entityplayer, EnumFacing face, float hitX, float hitY, float hitZ)
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player entityplayer, InteractionHand hand, BlockHitResult hitResult) {
-//        if (super.onBlockActivated(world, pos, state, entityplayer, face, hitX, hitY, hitZ))
         InteractionResult su = super.use(state, world, pos, entityplayer, hand, hitResult);
         if (su.consumesAction()) {
             return su;
         }
 
         if (!world.isClientSide) {
-            // entityplayer.openGui(BCRobotics.instance, GuiIds.REQUESTER, world, pos.getX(), pos.getY(), pos.getZ());
             BlockEntity tile = world.getBlockEntity(pos);
             if (tile instanceof TileRequester) {
                 MessageUtil.serverOpenTileGui(entityplayer, (TileRequester) tile, pos);
@@ -60,11 +56,9 @@ public class BlockRequester extends BlockBCTile_Neptune<TileRequester> implement
 
     /** Just like {@link net.minecraft.world.inventory.AbstractContainerMenu#getRedstoneSignalFromContainer(Container)} */
     @Override
-    // public boolean doesSlotCountComparator(BlockEntity tile, int slot, ItemStack stack)
     public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
         BlockEntity tile = level.getBlockEntity(pos);
         if (tile instanceof TileRequester) {
-            // return ((TileRequester) tile).getRequestTemplate(slot) != null;
 
             TileRequester requester = ((TileRequester) tile);
             int i = 0;

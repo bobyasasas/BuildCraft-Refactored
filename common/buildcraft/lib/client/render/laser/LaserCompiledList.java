@@ -36,14 +36,10 @@ public abstract class LaserCompiledList {
 
     public static class Builder implements ILaserRenderer, AutoCloseable {
         public final RenderUtil.AutoTessellator tess;
-        // private final boolean useColour;
 
-        // public Builder(boolean useNormalColour)
         public Builder() {
-//            this.useColour = useNormalColour;
             tess = RenderUtil.getThreadLocalUnusedTessellator();
             BufferBuilder bufferBuilder = tess.tessellator.getBuilder();
-//            bufferBuilder.begin(VertexFormat.Mode.QUADS, useNormalColour ? LaserRenderer_BC8.FORMAT_ALL : LaserRenderer_BC8.FORMAT_LESS);
             bufferBuilder.begin(VertexFormat.Mode.QUADS, LaserRenderer_BC8.FORMAT_ALL);
         }
 
@@ -58,42 +54,21 @@ public abstract class LaserCompiledList {
                 float nz,
                 float diffuse
         ) {
-//            BufferBuilder bufferBuilder = tess.tessellator.getBuffer();
             BufferBuilder bufferBuilder = tess.tessellator.getBuilder();
-            // bufferBuilder.pos(x, y, z);
             bufferBuilder.vertex(x, y, z);
-//            if (useColour) {
             bufferBuilder.color(diffuse, diffuse, diffuse, 1.0f);
-//            }
-            // bufferBuilder.tex(u, v);
             bufferBuilder.uv((float) u, (float) v);
-            // bufferBuilder.lightmap((lmap >> 16) & 0xFFFF, lmap & 0xFFFF);
             bufferBuilder.uv2(lmap);
             bufferBuilder.endVertex();
         }
 
         public LaserCompiledList build() {
-//            if (OpenGlHelper.useVbo()) {
-//            BufferBuilder bufferBuilder = tess.tessellator.getBuffer();
             BufferBuilder bufferBuilder = tess.tessellator.getBuilder();
-//            VertexBuffer vertexBuffer = new VertexBuffer(bufferBuilder.getVertexFormat());
             VertexBuffer vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
-//            bufferBuilder.finishDrawing();
-//            bufferBuilder.reset();
             BufferBuilder.RenderedBuffer bufferbuilder$renderedbuffer = bufferBuilder.end();
-//            vertexBuffer.bufferData(bufferBuilder.getByteBuffer());
             vertexBuffer.bind();
             vertexBuffer.upload(bufferbuilder$renderedbuffer);
-//            VertexBuffer.unbind();
-//            return new Vbo(useColour, vertexBuffer);
             return new Vbo(vertexBuffer);
-//            } else {
-//                int glList = GLAllocation.generateDisplayLists(1);
-//                GL11.glNewList(glList, GL11.GL_COMPILE);
-//                tess.tessellator.draw();
-//                GL11.glEndList();
-//                return new GlList(glList);
-//            }
         }
 
         @Override
@@ -102,31 +77,13 @@ public abstract class LaserCompiledList {
         }
     }
 
-//    private static class GlList extends LaserCompiledList {
-//        private final int glListId;
-//
-//        private GlList(int glListId) {
-//            this.glListId = glListId;
-//        }
-//
 //        @Override
-//        public void render() {
-//            GL11.glCallList(glListId);
-//        }
-//
 //        @Override
-//        public void delete() {
-//            GL11.glDeleteLists(glListId, 1);
-//        }
-//    }
 
     private static class Vbo extends LaserCompiledList {
-        // private final boolean useColour;
         private final VertexBuffer vertexBuffer;
 
-        // private Vbo(boolean useColour, VertexBuffer vertexBuffer)
         private Vbo(VertexBuffer vertexBuffer) {
-//            this.useColour = useColour;
             this.vertexBuffer = vertexBuffer;
         }
 
@@ -136,13 +93,11 @@ public abstract class LaserCompiledList {
             RenderSystem.setShaderColor(1, 1, 1, 1);
             vertexBuffer.bind();
             vertexBuffer.drawWithShader(modelViewMatrix.pose(), RenderSystem.getProjectionMatrix(), GameRenderer.getPositionColorTexLightmapShader());
-//            VertexBuffer.unbind();
             LASER_RENDER_TYPE_FORMAT_ALL.clearRenderState();
         }
 
         @Override
         public void delete() {
-//            vertexBuffer.deleteGlBuffers();
             vertexBuffer.close();
         }
     }

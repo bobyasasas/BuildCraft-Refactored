@@ -159,8 +159,6 @@ public enum ReloadManager {
 
     static {
         // 1.18.2: forced lower
-//        CONFIG_COLOUR_BLIND = cfg("config/colourBlindMode");
-//        CONFIG_ROTATE_TRAVEL_ITEMS = cfg("config/rotateTravelingItems");
         CONFIG_COLOUR_BLIND = cfg("config/colour_blind_mode");
         CONFIG_ROTATE_TRAVEL_ITEMS = cfg("config/rotate_traveling_items");
     }

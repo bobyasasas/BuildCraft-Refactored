@@ -22,13 +22,11 @@ import net.minecraft.world.phys.Vec3;
 public class RenderTube implements BlockEntityRenderer<TileMiner> {
     private final LaserType laserType;
 
-    // public RenderTube(LaserType laserType)
     public RenderTube(BlockEntityRendererProvider.Context context, LaserType laserType) {
         this.laserType = laserType;
     }
 
     @Override
-//    public void renderTileEntityFast(@Nonnull TileMiner tile, double x, double y, double z, float partialTicks, int destroyStage, float partial, @Nonnull BufferBuilder buffer)
     public void render(TileMiner tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         if (tile.isComplete()) {
             return;
@@ -36,12 +34,9 @@ public class RenderTube implements BlockEntityRenderer<TileMiner> {
 
         VertexConsumer buffer = bufferSource.getBuffer(Sheets.solidBlockSheet());
 
-//        double tubeY = tile.getPos().getY() - tile.getLength(partialTicks);
         double tubeY = tile.getBlockPos().getY() - tile.getLength(partialTicks);
 
-//        BlockPos from = tile.getPos();
         BlockPos from = tile.getBlockPos();
-//        buffer.setTranslation(x - from.getX(), y - from.getY(), z - from.getZ());
         poseStack.pushPose();
         poseStack.translate(-from.getX(), -from.getY(), -from.getZ());
 
@@ -52,7 +47,6 @@ public class RenderTube implements BlockEntityRenderer<TileMiner> {
         LaserData_BC8 data = new LaserData_BC8(laserType, start, end, 1 / 16.0);
         LaserRenderer_BC8.renderLaserDynamic(data, poseStack.last(), buffer);
 
-//        buffer.setTranslation(0, 0, 0);
         poseStack.popPose();
     }
 }

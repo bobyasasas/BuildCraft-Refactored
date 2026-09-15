@@ -39,21 +39,16 @@ public class GuideCraftingFactory implements GuidePartFactory {
         ListTag hashNbt = new ListTag();
         for (Ingredient ingredient : this.input) {
             ListTag list = new ListTag();
-//            for (ItemStack stack : ingredient.getMatchingStacks())
             for (ItemStack stack : ingredient.getItems()) {
-//                list.appendTag(stack.serializeNBT());
                 list.add(stack.serializeNBT());
             }
-//            hashNbt.appendTag(list);
             hashNbt.add(list);
         }
         this.hash = hashNbt.hashCode();
     }
 
     public static GuidePartFactory create(@Nonnull ItemStack stack) {
-//        for (IRecipe recipe : ForgeRegistries.RECIPES)
         for (CraftingRecipe recipe : Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING)) {
-//            if (OreDictionary.itemMatches(stack, StackUtil.asNonNull(recipe.getRecipeOutput()), false))
             if (ItemStack.matches(stack, recipe.getResultItem(Minecraft.getInstance().level.registryAccess()))) {
                 GuidePartFactory val = getFactory(recipe);
                 if (val != null) {
@@ -67,9 +62,7 @@ public class GuideCraftingFactory implements GuidePartFactory {
         return null;
     }
 
-    // public static GuidePartFactory getFactory(IRecipe recipe)
     public static GuidePartFactory getFactory(Recipe<?> recipe) {
-//        ItemStack output = recipe.getRecipeOutput();
         ItemStack output = recipe.getResultItem(Minecraft.getInstance().level.registryAccess());
         NonNullList<Ingredient> input = recipe.getIngredients();
         if (input == null || input.isEmpty() || output.isEmpty()) {
@@ -106,7 +99,6 @@ public class GuideCraftingFactory implements GuidePartFactory {
             return ((ItemStack) object).copy();
         }
         if (object instanceof String) {
-//            NonNullList<ItemStack> stacks = OreDictionary.getOres((String) object);
             NonNullList<ItemStack> stacks = NonNullList.create();
             ForgeRegistries.ITEMS.tags().getTag(TagKey.create(Registries.ITEM, new ResourceLocation((String) object))).stream().forEach(i -> stacks.add(new ItemStack(i)));
             // It will be sorted out below
@@ -129,7 +121,6 @@ public class GuideCraftingFactory implements GuidePartFactory {
                     }
                     ItemStack stack = (ItemStack) obj;
                     // The lower the ID of an item, the closer it is to minecraft. Hmmm.
-//                    if (Item.getIdFromItem(stack.getItem()) < Item.getIdFromItem(best.getItem()))
                     if (Item.getId(stack.getItem()) < Item.getId(best.getItem())) {
                         best = stack;
                     }
@@ -168,23 +159,17 @@ public class GuideCraftingFactory implements GuidePartFactory {
         ListTag nbtThis = new ListTag();
         for (Ingredient ingredient : this.input) {
             ListTag list = new ListTag();
-//            for (ItemStack stack : ingredient.getMatchingStacks())
             for (ItemStack stack : ingredient.getItems()) {
-//                list.appendTag(stack.serializeNBT());
                 list.add(stack.serializeNBT());
             }
-//            nbtThis.appendTag(list);
             nbtThis.add(list);
         }
         ListTag nbtThat = new ListTag();
         for (Ingredient ingredient : other.input) {
             ListTag list = new ListTag();
-//            for (ItemStack stack : ingredient.getMatchingStacks())
             for (ItemStack stack : ingredient.getItems()) {
-//                list.appendTag(stack.serializeNBT());
                 list.add(stack.serializeNBT());
             }
-//            nbtThat.appendTag(list);
             nbtThat.add(list);
         }
         return nbtThis.equals(nbtThat);

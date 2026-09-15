@@ -52,7 +52,6 @@ public abstract class StatementWrapper implements IStatement, Comparable<Stateme
         return this.delegate.getDescription();
     }
 
-    // Calen
 
     /** @see IStatement#getDescriptionKey() */
     @Override
@@ -96,7 +95,6 @@ public abstract class StatementWrapper implements IStatement, Comparable<Stateme
         if (sourcePart != EnumPipePart.CENTER) {
             list = new ArrayList<>(list);
             Component translated = Component.literal(ColourUtil.getTextFullTooltip(sourcePart.face));
-//            list.add(Component.literal(LocaleUtil.localize("gate.side", translated)));
             list.add(Component.translatable("gate.side", translated));
         }
         return list;

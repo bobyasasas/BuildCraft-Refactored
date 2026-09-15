@@ -19,8 +19,6 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 import javax.annotation.Nullable;
 
-// Calen: OverworldBiomes.class https://forums.minecraftforge.net/topic/104296-solved1165-custom-biome-not-generating-in-overworld-dimension/
-//@Mod.EventBusSubscriber(modid = BCEnergy.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BCBiomes {
     @Nullable
     private static final Music NORMAL_MUSIC = null;
@@ -28,18 +26,6 @@ public class BCBiomes {
     public static Biome oil_desert;
     public static Biome oil_ocean;
 
-//    // Calen test
-//    public static final DeferredRegister<Biome> reg = DeferredRegister.create(ForgeRegistries.BIOMES, BCEnergy.MODID);
-//    //    public static final RegistryObject<Biome> OIL_DESERT = reg.register(BCBiomeRegistry.BIOME_OIL_DESERT, BCBiomes::makeOilDesertBiome);
-////    public static final RegistryObject<Biome> OIL_OCEAN = reg.register(BCBiomeRegistry.BIOME_OIL_OCEAN, BCBiomes::makeOilOceanBiome);
-//    public static RegistryObject<Biome> OIL_DESERT;
-//    public static RegistryObject<Biome> OIL_OCEAN;
-//
-//    public static void init() {
-//        OIL_DESERT = reg.register(BCBiomeRegistry.BIOME_OIL_DESERT, BCBiomes::makeOilDesertBiome);
-//        OIL_OCEAN = reg.register(BCBiomeRegistry.BIOME_OIL_OCEAN, BCBiomes::makeOilOceanBiome);
-//        reg.register(FMLJavaModLoadingContext.get().getModEventBus());
-//    }
 
     public static void initBiome(BootstapContext<Biome> context) {
         HolderGetter<PlacedFeature> placedFeatureHolderGetter = context.lookup(Registries.PLACED_FEATURE);
@@ -47,18 +33,10 @@ public class BCBiomes {
 
         oil_desert = makeOilDesertBiome(placedFeatureHolderGetter, configuredWorldCarverHolderGetter);
         oil_ocean = makeOilOceanBiome(placedFeatureHolderGetter, configuredWorldCarverHolderGetter);
-////        event.getRegistry().register();
-////        event.getRegistry().register();
-////        BiomeManager.addAdditionalOverworldBiomes(BCBiomeRegistry.RESOURCE_KEY_BIOME_OIL_DESERT);
-////        BiomeManager.addAdditionalOverworldBiomes(BCBiomeRegistry.RESOURCE_KEY_BIOME_OIL_OCEAN);
-//
-//        ForgeRegistries.BIOMES.register(ResourceLocation.tryBuild(BCEnergy.MODID, BCBiomeRegistry.BIOME_OIL_DESERT), oil_desert);
-//        ForgeRegistries.BIOMES.register(ResourceLocation.tryBuild(BCEnergy.MODID, BCBiomeRegistry.BIOME_OIL_OCEAN), oil_ocean);
         context.register(ResourceKey.create(Registries.BIOME, ResourceLocation.tryBuild(BCEnergy.MODID, BCBiomeRegistry.BIOME_OIL_DESERT)), oil_desert);
         context.register(ResourceKey.create(Registries.BIOME, ResourceLocation.tryBuild(BCEnergy.MODID, BCBiomeRegistry.BIOME_OIL_OCEAN)), oil_ocean);
     }
 
-    // Calen: the same as Desert
     public static Biome makeOilDesertBiome(HolderGetter<PlacedFeature> placedFeatureHolderGetter, HolderGetter<ConfiguredWorldCarver<?>> configuredWorldCarverHolderGetter) {
         MobSpawnSettings.Builder mobspawnsettings$builder = new MobSpawnSettings.Builder();
         BiomeDefaultFeatures.desertSpawns(mobspawnsettings$builder);
@@ -88,7 +66,6 @@ public class BCBiomes {
 
     }
 
-    // Calen: the same as Ocean
     public static Biome makeOilOceanBiome(HolderGetter<PlacedFeature> placedFeatureHolderGetter, HolderGetter<ConfiguredWorldCarver<?>> configuredWorldCarverHolderGetter) {
         MobSpawnSettings.Builder mobspawnsettings$builder = new MobSpawnSettings.Builder();
         BiomeDefaultFeatures.oceanSpawns(mobspawnsettings$builder, 1, 4, 10);
@@ -132,7 +109,6 @@ public class BCBiomes {
     ) {
         return (new Biome.BiomeBuilder())
                 .hasPrecipitation(p_194852_ != Biome.Precipitation.NONE)
-//                .biomeCategory(p_194853_)
                 .temperature(temperature)
                 .downfall(downfall)
                 .specialEffects(

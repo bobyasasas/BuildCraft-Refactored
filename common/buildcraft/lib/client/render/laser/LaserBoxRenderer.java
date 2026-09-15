@@ -32,7 +32,6 @@ public class LaserBoxRenderer {
         makeLaserBox(box, type, center);
 
         for (LaserData_BC8 data : box.laserData) {
-//            LaserRenderer_BC8.renderLaserStatic(data);
             LaserRenderer_BC8.renderLaserStatic(data, modelViewMatrix);
         }
     }

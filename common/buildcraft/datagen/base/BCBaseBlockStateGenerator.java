@@ -29,13 +29,11 @@ public abstract class BCBaseBlockStateGenerator extends BlockStateProvider {
     }
 
     public void builtinEntity(Block b) {
-        // Calen: set this in blockstate json to avoid the model loaded by mc
         simpleBlock(b, new ConfiguredModel(BUILTIN_ENTITY_MODEL));
     }
 
     public void builtinEntity(BlockBCBase_Neptune b, String particle) {
         models().existingFileHelper.trackGenerated(BUILTIN_ENTITY_LOCATION, PackType.CLIENT_RESOURCES, ".json", "models");
-        // Calen: set this in blockstate json to avoid the model loaded by mc
         simpleBlock(b, ConfiguredModel.builder().modelFile(
                         models().withExistingParent(b.getRegistryName().toString(), BUILTIN_ENTITY_LOCATION)
                                 .texture("particle", particle)

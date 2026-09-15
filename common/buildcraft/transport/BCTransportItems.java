@@ -72,7 +72,6 @@ public class BCTransportItems {
     public static Map<DyeColor, RegistryObject<? extends IItemPipe>> pipeFluidVoid;
 
     public static Map<DyeColor, RegistryObject<? extends IItemPipe>> pipeItemObsidian;
-//    public static Map<DyeColor, RegistryObject<? extends IItemPipe>> pipeFluidObsidian;
 
     public static Map<DyeColor, RegistryObject<? extends IItemPipe>> pipeItemLapis;
     public static Map<DyeColor, RegistryObject<? extends IItemPipe>> pipeItemDaizuli;
@@ -118,7 +117,6 @@ public class BCTransportItems {
         pipeFluidVoid = makePipeItem(BCTransportPipes.voidFluid);
         pipeFluidDiamond = makePipeItem(BCTransportPipes.diamondFluid);
         pipeFluidDiaWood = makePipeItem(BCTransportPipes.diaWoodFluid);
-        // pipeFluidObsidian = makePipeItem(BCTransportPipes.obsidianFluid);
 
         pipePowerWood = makePipeItem(BCTransportPipes.woodPower);
         pipePowerCobble = makePipeItem(BCTransportPipes.cobblePower);

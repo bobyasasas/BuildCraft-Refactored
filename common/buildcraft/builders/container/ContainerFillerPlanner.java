@@ -84,7 +84,6 @@ public class ContainerFillerPlanner extends ContainerBC_Neptune<TileFiller> impl
 
     @SuppressWarnings("NullableProblems")
     @Override
-//    public boolean canInteractWith(Player player)
     public boolean stillValid(Player player) {
         return true;
     }

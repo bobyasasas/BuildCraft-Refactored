@@ -21,18 +21,9 @@ public class BCConfig {
     }
 
     @SubscribeEvent
-//    public static void onConfigChange(OnConfigChangedEvent cce)
     public static void onConfigChange(ModConfigEvent.Loading cce) {
-//        if (BCModules.isBcMod(cce.getModID()))
         if (BCModules.isBcMod(cce.getConfig().getModId())) {
-//            EnumRestartRequirement req = EnumRestartRequirement.NONE;
-//            if (Loader.instance().isInState(LoaderState.AVAILABLE)) {
 //                // The loaders state will be LoaderState.SERVER_STARTED when we are in a world
-//                req = EnumRestartRequirement.WORLD;
-//            }
-//            for (Consumer<EnumRestartRequirement> listener : reloadListeners) {
-//                listener.accept(req);
-//            }
 
             reloadListeners.getOrDefault(BCModules.getBcMod(cce.getConfig().getModId()), new LinkedList<>()).forEach(Runnable::run);
         }

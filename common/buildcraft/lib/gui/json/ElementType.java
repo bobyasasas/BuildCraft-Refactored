@@ -102,7 +102,6 @@ public abstract class ElementType {
     public static FunctionContext createContext(JsonGuiElement json) {
         FunctionContext ctx = json.context;
 
-        // if json overrides variables then its ok
         ctx = new FunctionContext(ctx);
 
         Set<String> args = new HashSet<>();
@@ -132,7 +131,6 @@ public abstract class ElementType {
                 ctx.putVariable(key, NodeTypes.createConstantNode(node));
             } catch (InvalidExpressionException e) {
                 // Ignore the error
-                // BCLog.logger.info("Failed to compile expression for " + key + " because " + e.getMessage());
             }
         }
         return ctx;

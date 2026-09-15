@@ -114,7 +114,6 @@ public class PipeBehaviourWoodDiamond extends PipeBehaviourWood {
             }
         }
         if (!player.level().isClientSide) {
-//            BCTransportGuis.PIPE_DIAMOND_WOOD.openGui(player, pipe.getHolder().getPipePos());
             MessageUtil.serverOpenTileGui(player, pipe.getHolder(), pipe.getHolder().getPipePos());
         }
         return true;
@@ -164,7 +163,6 @@ public class PipeBehaviourWoodDiamond extends PipeBehaviourWood {
     }
 
     @Override
-//    protected FluidStack extractFluid(IFlowFluid flow, Direction dir, int millibuckets, boolean simulate)
     protected FluidStack extractFluid(IFlowFluid flow, Direction dir, int millibuckets, IFluidHandler.FluidAction action) {
         if (filters.getStackInSlot(currentFilter).isEmpty()) {
             advanceFilter();
@@ -174,11 +172,9 @@ public class PipeBehaviourWoodDiamond extends PipeBehaviourWood {
             default:
             case WHITE_LIST:
                 if (filters.extract(s -> true, 1, 1, true).isEmpty()) {
-//                    return flow.tryExtractFluid(millibuckets, dir, null, simulate);
                     return flow.tryExtractFluid(millibuckets, dir, null, action);
                 }
                 // Firstly try the advanced version - if that fails we will need to try the basic version
-//                InteractionResultHolder<FluidStack> result = flow.tryExtractFluidAdv(millibuckets, dir, new ArrayFluidFilter(filters.stacks), simulate);
                 InteractionResultHolder<FluidStack> result = flow.tryExtractFluidAdv(millibuckets, dir, new ArrayFluidFilter(filters.stacks), action);
                 FluidStack extracted = result.getObject();
                 if (result.getResult() != InteractionResult.PASS) {
@@ -191,7 +187,6 @@ public class PipeBehaviourWoodDiamond extends PipeBehaviourWood {
                         if (stack.isEmpty()) {
                             continue;
                         }
-//                        extracted = flow.tryExtractFluid(millibuckets, dir, FluidUtil.getFluidContained(stack).orElse(StackUtil.EMPTY_FLUID), simulate);
                         extracted = flow.tryExtractFluid(millibuckets, dir, FluidUtil.getFluidContained(stack).orElse(StackUtil.EMPTY_FLUID), action);
                         if (extracted != null && extracted.getAmount() > 0) {
                             return extracted;
@@ -202,7 +197,6 @@ public class PipeBehaviourWoodDiamond extends PipeBehaviourWood {
             case BLACK_LIST:
                 // We cannot fallback to the basic version - only use the advanced version
                 InvertedFluidFilter filter = new InvertedFluidFilter(new ArrayFluidFilter(filters.stacks));
-//                return flow.tryExtractFluidAdv(millibuckets, dir, filter, simulate).getObject();
                 return flow.tryExtractFluidAdv(millibuckets, dir, filter, action).getObject();
             case ROUND_ROBIN:
                 // We can't do this -- amounts might differ and its just ugly

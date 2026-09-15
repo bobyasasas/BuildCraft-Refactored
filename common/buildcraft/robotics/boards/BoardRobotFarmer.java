@@ -40,9 +40,7 @@ public class BoardRobotFarmer extends RedstoneBoardRobot {
 
     @Override
     public void update() {
-        // final IWorldProperty isDirt = BuildCraftAPI.getWorldProperty("dirt");
         final TagKey<Block> isDirt = BlockTags.DIRT;
-        // if (robot.getHeldItem() == null)
         if (robot.getMainHandItem().isEmpty()) {
             startDelegateAI(new AIRobotFetchAndEquipItemStack(robot, new IStackFilter() {
                 @Override
@@ -54,7 +52,6 @@ public class BoardRobotFarmer extends RedstoneBoardRobot {
             startDelegateAI(new AIRobotSearchAndGotoBlock(robot, false, new IBlockFilter() {
                 @Override
                 public boolean matches(Level world, BlockPos pos) {
-                    // return isDirt.get(world, pos) && !robot.getRegistry().isTaken(new ResourceIdBlock(pos)) && isAirAbove(world, pos);
                     return world.getBlockState(pos).is(isDirt) && !robot.getRegistry().isTaken(new ResourceIdBlock(pos)) && isAirAbove(world, pos);
                 }
             }));

@@ -31,7 +31,6 @@ public class RetroGenData extends SavedData {
     }
 
     public RetroGenData(String name) {
-//        super(name);
     }
 
     // @Override
@@ -98,7 +97,6 @@ public class RetroGenData extends SavedData {
     }
 
     @Override
-//    public CompoundTag writeToNBT(CompoundTag nbt)
     public CompoundTag save(CompoundTag nbt) {
         Set<String> allNames = new HashSet<>();
         for (Set<String> used : gennedChunks.values()) {

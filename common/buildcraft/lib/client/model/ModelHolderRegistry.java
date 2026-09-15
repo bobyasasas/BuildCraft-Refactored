@@ -23,26 +23,16 @@ import java.util.function.Consumer;
 public class ModelHolderRegistry {
     public static final boolean DEBUG = BCDebugging.shouldDebugLog("lib.model.holder");
 
-    // Calen: Thread Safety
-    // static final List<ModelHolder> HOLDERS = new ArrayList<>();
     static final List<ModelHolder> HOLDERS = new CopyOnWriteArrayList<>();
 
-    // public static void onTextureStitchPre(TextureMap map)
     public static void onTextureStitchPre() {
-        // Calen: Thread Safety
-//        Set<ResourceLocation> toStitch = new HashSet<>();
         CopyOnWriteArraySet<ResourceLocation> toStitch = new CopyOnWriteArraySet<>();
         for (ModelHolder holder : HOLDERS) {
             holder.onTextureStitchPre(toStitch);
         }
 
-//        for (ResourceLocation res : toStitch) {
-////            map.setTextureEntry(AtlasSpriteVariants.createForConfig(res));
-//            event.addSprite(res);
-//        }
     }
 
-    // Calen 1.20.1
     public static void onDatagenTextureRegister(Consumer<ResourceLocation> consumer, ExistingFileHelper fileHelper) {
         CopyOnWriteArraySet<ResourceLocation> toStitch = new CopyOnWriteArraySet<>();
         for (ModelHolder holder : HOLDERS) {
@@ -61,7 +51,6 @@ public class ModelHolderRegistry {
         for (ModelHolder holder : HOLDERS) {
             holder.onModelBake();
         }
-//        if (DEBUG && Loader.instance().isInState(LoaderState.AVAILABLE))
         if (DEBUG && ModLoadingContext.get().getActiveContainer().getCurrentState() == ModLoadingStage.COMPLETE) {
             BCLog.logger.info("[lib.model.holder] List of registered Models:");
             List<ModelHolder> holders = new ArrayList<>();

@@ -76,7 +76,6 @@ public class AIRobotGotoBlock extends AIRobotGoto {
             pathSearchJob = new IterableAlgorithmRunner(pathSearch, 50);
             pathSearchJob.start();
         } else if (path != null && next != null) {
-            // double distance = robot.getDistance(next.x, next.y, next.z);
             double distance = Math.sqrt(robot.distanceToSqr(next.x, next.y, next.z));
 
             if (!robot.isMoving() || distance > prevDistance) {
@@ -86,11 +85,9 @@ public class AIRobotGotoBlock extends AIRobotGoto {
 
                 setNextInPath();
             } else {
-                // prevDistance = robot.getDistance(next.x, next.y, next.z);
                 prevDistance = Math.sqrt(robot.distanceToSqr(next.x, next.y, next.z));
             }
         } else {
-            // if (pathSearchJob.isDone())
             if (pathSearchJob != null && pathSearchJob.isDone()) {
                 path = pathSearch.getResult();
 
@@ -107,15 +104,9 @@ public class AIRobotGotoBlock extends AIRobotGoto {
         }
 
         if (path != null && path.size() == 0) {
-//            robot.motionX = 0;
-//            robot.motionY = 0;
-//            robot.motionZ = 0;
             robot.setDeltaMovement(0, 0, 0);
 
             if (lastBlockInPath != null) {
-//                robot.posX = lastBlockInPath.getX() + 0.5F;
-//                robot.posY = lastBlockInPath.getY() + 0.5F;
-//                robot.posZ = lastBlockInPath.getZ() + 0.5F;
                 robot.setPos(lastBlockInPath.getX() + 0.5F, lastBlockInPath.getY() + 0.5F, lastBlockInPath.getZ() + 0.5F);
             }
             terminate();
@@ -128,7 +119,6 @@ public class AIRobotGotoBlock extends AIRobotGoto {
             boolean isFirst = prevDistance == Double.MAX_VALUE;
 
             BlockPos next = path.getFirst();
-            // if (isFirst || BuildCraftAPI.isSoftBlock(robot.level, next))
             if (isFirst || BlockUtil.isSoftBlock(robot.level(), next)) {
                 lastBlock = next;
                 setDestination(robot, VecUtil.convertCenter(next));
@@ -142,9 +132,6 @@ public class AIRobotGotoBlock extends AIRobotGoto {
 
                 if (pathSearchJob != null) {
                     pathSearchJob.terminate();
-//                    robot.motionX = 0;
-//                    robot.motionY = 0;
-//                    robot.motionZ = 0;
                     robot.setDeltaMovement(0, 0, 0);
                 }
 
@@ -159,9 +146,6 @@ public class AIRobotGotoBlock extends AIRobotGoto {
     public void end() {
         if (pathSearchJob != null) {
             pathSearchJob.terminate();
-//            robot.motionX = 0;
-//            robot.motionY = 0;
-//            robot.motionZ = 0;
             robot.setDeltaMovement(0, 0, 0);
         }
     }

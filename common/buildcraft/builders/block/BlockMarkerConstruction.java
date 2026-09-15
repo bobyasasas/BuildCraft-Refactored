@@ -34,21 +34,16 @@ public class BlockMarkerConstruction extends BlockMarkerBase implements IBlockWi
     }
 
     @Override
-    // public TileEntity createNewTileEntity(World world, int metadata)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
         return BCBuildersBlocks.markerConstructionTile.get().create(pos, state);
     }
 
     @Override
-    // public void breakBlock(Level world, BlockPos pos, BlockState state)
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-        // Calen 1.18.2
         if (newState.getBlock() == state.getBlock()) {
             return;
         }
-        // Utils.preDestroyBlock(world, pos); // Calen: removed in 1.18.2
         dropMarkerIfPresent(world, pos, true);
-        // super.breakBlock(world, pos, state);
         super.onRemove(state, world, pos, newState, isMoving);
     }
 
@@ -56,10 +51,8 @@ public class BlockMarkerConstruction extends BlockMarkerBase implements IBlockWi
         BlockEntity tile = world.getBlockEntity(pos);
         if (tile instanceof TileMarkerConstruction) {
             TileMarkerConstruction marker = (TileMarkerConstruction) world.getBlockEntity(pos);
-            // if (marker != null && marker.itemBlueprint != null && !world.isClientSide)
             if (marker != null && !marker.itemBlueprint.isEmpty() && !world.isClientSide) {
                 BlockUtil.dropItem((ServerLevel) world, pos, 6000, marker.itemBlueprint);
-                // marker.itemBlueprint = null;
                 if (!onBreak) {
                     if (marker.bluePrintBuilder != null) {
                         marker.bluePrintBuilder.invalidate();
@@ -76,23 +69,18 @@ public class BlockMarkerConstruction extends BlockMarkerBase implements IBlockWi
     }
 
     @Override
-    // public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entityliving, ItemStack stack)
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity entityliving, ItemStack stack) {
-        // super.onBlockPlacedBy(world, pos, state, entityliving, stack);
         super.setPlacedBy(world, pos, state, entityliving, stack);
 
         BlockEntity tile = world.getBlockEntity(pos);
         if (tile instanceof TileMarkerConstruction) {
             TileMarkerConstruction marker = (TileMarkerConstruction) tile;
-//            marker.direction = entityliving.getHorizontalFacing();
             marker.direction = entityliving.getDirection();
         }
     }
 
     @Override
-    // public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer entityplayer, EnumFacing face, float hitX, float hitY, float hitZ)
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player entityplayer, InteractionHand hand, BlockHitResult hitResult) {
-        // if (super.onBlockActivated(world, pos, state, entityplayer, face, hitX, hitY, hitZ))
         InteractionResult superResult = super.use(state, world, pos, entityplayer, hand, hitResult);
         if (superResult.consumesAction()) {
             return superResult;
@@ -100,38 +88,28 @@ public class BlockMarkerConstruction extends BlockMarkerBase implements IBlockWi
 
         TileMarkerConstruction marker = (TileMarkerConstruction) world.getBlockEntity(pos);
 
-//        Item equipped = entityplayer.getCurrentEquippedItem() != null ? entityplayer.getCurrentEquippedItem().getItem() : null;
         Item equipped = entityplayer.getItemInHand(hand).getItem();
 
         if (equipped instanceof ItemSnapshot) {
-            // if (marker.itemBlueprint == null)
             if (marker.itemBlueprint.isEmpty()) {
-//                ItemStack stack = entityplayer.inventory.getCurrentItem().copy();
                 ItemStack stack = entityplayer.getInventory().getSelected().copy();
                 stack.setCount(1);
                 marker.setBlueprint(stack);
-//                stack = null;
                 stack = StackUtil.EMPTY;
                 if (entityplayer.getInventory().getSelected().getCount() > 1) {
-//                    stack = entityplayer.getCurrentEquippedItem().copy();
                     stack = entityplayer.getItemInHand(hand).copy();
-//                    stack.getCount() = entityplayer.getCurrentEquippedItem().stackSize - 1;
                     stack.setCount(entityplayer.getItemInHand(hand).getCount() - 1);
                 }
-//                entityplayer.getInventory().setInventorySlotContents(entityplayer.inventory.currentItem, stack);
                 entityplayer.getInventory().setItem(entityplayer.getInventory().selected, stack);
 
                 return InteractionResult.SUCCESS;
             }
         } else if (equipped instanceof ItemMarkerConstruction) {
-//            if (ItemMarkerConstruction.linkStarted(entityplayer.getCurrentEquippedItem()))
             if (ItemMarkerConstruction.linkStarted(entityplayer.getItemInHand(hand))) {
-//                ItemMarkerConstruction.link(entityplayer.getCurrentEquippedItem(), world, pos);
                 ItemMarkerConstruction.link(entityplayer.getItemInHand(hand), world, pos);
                 return InteractionResult.SUCCESS;
             }
         }
-        // else if ((equipped == null || equipped instanceof IToolWrench) && entityplayer.isShiftKeyDown())
         else if ((equipped instanceof AirItem || equipped instanceof IToolWrench) && entityplayer.isShiftKeyDown()) {
             return dropMarkerIfPresent(world, pos, false);
         }

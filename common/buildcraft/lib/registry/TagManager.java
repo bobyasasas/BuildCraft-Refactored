@@ -20,8 +20,6 @@ import java.util.function.Consumer;
  * near the start - we don't want name clashes between addons or an addon and BC itself. If you want more types of tags
  * keys then just make an issue for it, and it will probably be added. */
 public class TagManager {
-    // Calen: thread safety
-//    private static final Map<String, TagEntry> idsToEntry = new HashMap<>();
     private static final Map<String, TagEntry> idsToEntry = new ConcurrentHashMap<>();
 
     public static Item getItem(String id) {
@@ -70,7 +68,6 @@ public class TagManager {
         OREDICT_NAME,
         REGISTRY_NAME,
         CREATIVE_TAB,
-        // Calen: not still used in 1.18.2
 //        MODEL_LOCATION,
     }
 
@@ -127,10 +124,6 @@ public class TagManager {
             return setSingleTag(EnumTagType.CREATIVE_TAB, creativeTab);
         }
 
-        // Calen: not still used in 1.18.2
-//        public TagEntry model(String modelLocation) {
-//            return setSingleTag(EnumTagType.MODEL_LOCATION, modelLocation);
-//        }
 
         public TagEntry addMultiTag(EnumTagTypeMulti type, String... tags) {
             if (!this.multiTags.containsKey(type)) {
@@ -142,16 +135,12 @@ public class TagManager {
             return this;
         }
 
-//        public TagEntry oldReg(String... tags) {
-//            return addMultiTag(EnumTagTypeMulti.OLD_REGISTRY_NAME, tags);
-//        }
     }
 
     public static TagEntry getTag(String id) {
         return idsToEntry.get(id);
     }
 
-    // public static TagEntry registerTag(String id)
     public TagEntry registerTag(String id) {
         TagEntry entry = new TagEntry(id);
         idsToEntry.put(id, entry);
@@ -167,15 +156,12 @@ public class TagManager {
     //
     // #########################
 
-    // private static final Deque<List<TagEntry>> batchTasks = new ArrayDeque<>();
     private final Deque<List<TagEntry>> batchTasks = new ArrayDeque<>();
 
-    // public static void startBatch()
     public void startBatch() {
         batchTasks.push(new ArrayList<>());
     }
 
-    // public static void endBatch(Consumer<TagEntry> consumer)
     public void endBatch(Consumer<TagEntry> consumer) {
         batchTasks.pop().forEach(consumer);
     }

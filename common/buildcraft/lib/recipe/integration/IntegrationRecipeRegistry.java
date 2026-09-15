@@ -25,9 +25,7 @@ public class IntegrationRecipeRegistry implements IIntegrationRecipeRegistry {
     public final Map<ResourceLocation, IntegrationRecipe> recipes = new HashMap<>();
 
     @Override
-    // public IntegrationRecipe getRecipeFor(@Nonnull ItemStack target, @Nonnull NonNullList<ItemStack> toIntegrate)
     public IntegrationRecipe getRecipeFor(@Nonnull ItemStack target, @Nonnull NonNullList<ItemStack> toIntegrate, Level world) {
-        // for (IntegrationRecipe recipe : recipes.values())
         for (IntegrationRecipe recipe : getAllRecipes(world)) {
             if (!recipe.getOutput(target, toIntegrate).isEmpty()) {
                 return recipe;
@@ -46,7 +44,6 @@ public class IntegrationRecipeRegistry implements IIntegrationRecipeRegistry {
     }
 
     @Override
-    // public Iterable<IntegrationRecipe> getAllRecipes()
     public Iterable<IntegrationRecipe> getAllRecipes(Level world) {
         List<IntegrationRecipe> ret = Lists.newArrayList();
         ret.addAll(world.getRecipeManager().getAllRecipesFor(IntegrationRecipe.TYPE));
@@ -56,7 +53,6 @@ public class IntegrationRecipeRegistry implements IIntegrationRecipeRegistry {
 
 
     @Override
-    // public IntegrationRecipe getRecipe(@Nonnull ResourceLocation name)
     public IntegrationRecipe getRecipe(@Nonnull ResourceLocation name, Level world) {
         List<IntegrationRecipe> all = world.getRecipeManager().getAllRecipesFor(IntegrationRecipe.TYPE);
         List<IntegrationRecipe> found = all.stream().filter(r -> name.equals(r.name)).collect(Collectors.toList());

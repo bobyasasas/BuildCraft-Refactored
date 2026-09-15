@@ -27,7 +27,6 @@ public class TriggerType extends StatementType<TriggerWrapper> {
         if (value instanceof ITriggerInternal) {
             return new TriggerWrapperInternal((ITriggerInternal) value);
         }
-        // We cannot convert sided actions (as they require a side)
         return null;
     }
 

@@ -129,7 +129,6 @@ public class NodeStateful implements ITickableNode.Source {
                     INodeLong l = (INodeLong) last;
                     INodeDouble p = DefaultContexts.RENDER_PARTIAL_TICKS;
 
-                    // return l + ( round( (v - l) * p ) )
                     FunctionContext ctx = new FunctionContext();
                     ctx.putVariable("v", v);
                     ctx.putVariable("l", l);

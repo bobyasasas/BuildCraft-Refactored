@@ -47,7 +47,6 @@ public class TriggerRobotInStation extends BCStatement implements ITriggerIntern
 
     @Override
     public int maxParameters() {
-        // return 1;
         // TODO: Discuss whether we actually want to allow parameters here.
         return 0;
     }

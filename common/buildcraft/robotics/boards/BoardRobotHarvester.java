@@ -30,7 +30,6 @@ public class BoardRobotHarvester extends BoardRobotGenericSearchBlock {
 
     @Override
     public boolean isExpectedBlock(Level world, BlockPos pos) {
-        // return BuildCraftAPI.getWorldProperty("harvestable").get(world, pos);
         return CropManager.isMature(world, world.getBlockState(pos), pos);
     }
 

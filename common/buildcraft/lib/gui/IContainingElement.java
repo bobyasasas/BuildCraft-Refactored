@@ -76,23 +76,19 @@ public interface IContainingElement extends IInteractionElement {
     }
 
     @Override
-//    default void onMouseDragged(int button, long ticksSinceClick)
     default void onMouseDragged(int button) {
         for (IGuiElement elem : getChildElements()) {
             if (elem instanceof IInteractionElement) {
-//                ((IInteractionElement) elem).onMouseDragged(button, ticksSinceClick);
                 ((IInteractionElement) elem).onMouseDragged(button);
             }
         }
     }
 
     @Override
-//    default boolean onKeyPress(char typedChar, int keyCode)
     default boolean onKeyPress(int typedChar, int keyCode, int modifiers) {
         boolean action = false;
         for (IGuiElement elem : getChildElements()) {
             if (elem instanceof IInteractionElement) {
-//                action |= ((IInteractionElement) elem).onKeyPress(typedChar, keyCode);
                 action |= ((IInteractionElement) elem).onKeyPress(typedChar, keyCode, modifiers);
             }
         }
@@ -100,12 +96,10 @@ public interface IContainingElement extends IInteractionElement {
     }
 
     @Override
-//    default boolean onKeyPress(char typedChar, int keyCode)
     default boolean charTyped(char typedChar, int keyCode) {
         boolean action = false;
         for (IGuiElement elem : getChildElements()) {
             if (elem instanceof IInteractionElement) {
-//                action |= ((IInteractionElement) elem).onKeyPress(typedChar, keyCode);
                 action |= ((IInteractionElement) elem).charTyped(typedChar, keyCode);
             }
         }

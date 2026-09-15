@@ -30,7 +30,6 @@ public class BoardRobotKnight extends RedstoneBoardRobot {
 
     @Override
     public final void update() {
-        // if (robot.getHeldItem() == null)
         if (robot.getMainHandItem().isEmpty()) {
             startDelegateAI(new AIRobotFetchAndEquipItemStack(robot, new IStackFilter() {
                 @Override
@@ -39,7 +38,6 @@ public class BoardRobotKnight extends RedstoneBoardRobot {
                 }
             }));
         }
-        // else if (robot.getHeldItem() != null && robot.getHeldItem().getItemDamage() >= robot.getHeldItem().getMaxDamage())
         else if (!robot.getMainHandItem().isEmpty() && robot.getMainHandItem().getDamageValue() >= robot.getMainHandItem().getMaxDamage()) {
             startDelegateAI(new AIRobotGotoStationAndUnload(robot));
         } else {

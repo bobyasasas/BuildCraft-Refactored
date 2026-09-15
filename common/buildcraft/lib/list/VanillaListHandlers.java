@@ -17,12 +17,10 @@ public class VanillaListHandlers {
         ListRegistry.registerHandler(new ListMatchHandlerFluid());
         ListRegistry.registerHandler(new ListMatchHandlerTools());
         ListRegistry.registerHandler(new ListMatchHandlerArmor());
-//        ListRegistry.itemClassAsType.add(Foods.class);
         ListRegistry.registerHandler(new ListMatchHandlerFood());
     }
 
     public static void fmlPostInit() {
-//        for (String s : OreDictionary.getOreNames())
         for (TagKey<Item> s : ForgeRegistries.ITEMS.tags().getTagNames().toList()) {
             ListOreDictionaryCache.INSTANCE.registerName(s);
         }

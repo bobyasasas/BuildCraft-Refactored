@@ -57,44 +57,14 @@ public enum BCBuildersEventDist {
         }
     }
 
-    // TODO Calen how to add collision boxes to world??? Player#maybeBackOffFromEdge:1044 this.level.noCollision(...) mixin??? create entities?
 //    @SubscribeEvent
-//    public synchronized void onGetCollisionBoxesForQuarry(GetCollisionBoxesEvent event)
-//    {
-//        Deque<WeakReference<TileQuarry>> quarries = allQuarries.get(event.getWorld());
-//        if (quarries == null)
-//        {
 //            // No quarries in the target world
-//            return;
-//        }
-//        Iterator<WeakReference<TileQuarry>> iter = quarries.iterator();
-//        while (iter.hasNext())
-//        {
-//            WeakReference<TileQuarry> ref = iter.next();
-//            TileQuarry quarry = ref.get();
-//            if (quarry == null)
-//            {
-//                iter.remove();
-//                continue;
-//            }
-//            for (AxisAlignedBB aabb : quarry.getCollisionBoxes())
-//            {
-//                if (event.getAabb().intersects(aabb))
-//                {
-//                    event.getCollisionBoxesList().add(aabb);
-//                }
-//            }
-//        }
-//    }
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-//    public void onRenderTooltipPostText(RenderTooltipEvent.PostText event)
     public void onRenderTooltipPostText(RenderTooltipEvent.Color event) {
         Snapshot snapshot = null;
-//        ItemStack stack = event.getStack();
         ItemStack stack = event.getItemStack();
-//        Header header = BCBuildersItems.snapshotBLUEPRINT_CLEAN != null ? BCBuildersItems.snapshotBLUEPRINT_CLEAN.get().getHeader(stack) : null;
         Header header = BCBuildersItems.snapshotBLUEPRINT != null ? BCBuildersItems.snapshotBLUEPRINT.get().getHeader(stack) : null;
         if (header != null) {
             snapshot = ClientSnapshots.INSTANCE.getSnapshot(header.key);
@@ -113,7 +83,6 @@ public enum BCBuildersEventDist {
 
         if (snapshot != null) {
             int pX = event.getX();
-//            int pY = event.getY() + event.getHeight() + 10;
             int pY = event.getY() + 10;
             for (ClientTooltipComponent line : event.getComponents()) {
                 pY += line.getHeight();
@@ -124,20 +93,9 @@ public enum BCBuildersEventDist {
             GuiGraphics guiGraphics = event.getGraphics();
 
             // Copy from GuiUtils#drawHoveringText
-            // Calen: z = 400 in 1.18.2
-//            int zLevel = 300;
             int zLevel = 400;
             int backgroundColor = 0xF0100010;
-//            Tesselator tesselator = Tesselator.getInstance();
-//            BufferBuilder bufferbuilder = tesselator.getBuilder();
             // 1.16.5: should use GuiUtils.drawGradientRect because bufferbuilder not started
-            // 1.18.2: should not use GuiUtils.drawGradientRect because duplicated bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR)
-            // Calen: z is after x y in 1.18.2
-//            GuiUtils.drawGradientRect(pose, zLevel, pX - 3, pY - 4, pX + sX + 3, pY - 3, backgroundColor, backgroundColor);
-//            GuiUtils.drawGradientRect(pose, zLevel, pX - 3, pY + sY + 3, pX + sX + 3, pY + sY + 4, backgroundColor, backgroundColor);
-//            GuiUtils.drawGradientRect(pose, zLevel, pX - 3, pY - 3, pX + sX + 3, pY + sY + 3, backgroundColor, backgroundColor);
-//            GuiUtils.drawGradientRect(pose, zLevel, pX - 4, pY - 3, pX - 3, pY + sY + 3, backgroundColor, backgroundColor);
-//            GuiUtils.drawGradientRect(pose, zLevel, pX + sX + 3, pY - 3, pX + sX + 4, pY + sY + 3, backgroundColor, backgroundColor);
             guiGraphics.fillGradient(pX - 3, pY - 4, pX + sX + 3, pY - 3, zLevel, backgroundColor, backgroundColor);
             guiGraphics.fillGradient(pX - 3, pY + sY + 3, pX + sX + 3, pY + sY + 4, zLevel, backgroundColor, backgroundColor);
             guiGraphics.fillGradient(pX - 3, pY - 3, pX + sX + 3, pY + sY + 3, zLevel, backgroundColor, backgroundColor);
@@ -145,32 +103,16 @@ public enum BCBuildersEventDist {
             guiGraphics.fillGradient(pX + sX + 3, pY - 3, pX + sX + 4, pY + sY + 3, zLevel, backgroundColor, backgroundColor);
             int borderColorStart = 0x505000FF;
             int borderColorEnd = (borderColorStart & 0xFEFEFE) >> 1 | borderColorStart & 0xFF000000;
-//            GuiUtils.drawGradientRect(pose, zLevel, pX - 3, pY - 3 + 1, pX - 3 + 1, pY + sY + 3 - 1, borderColorStart, borderColorEnd);
-//            GuiUtils.drawGradientRect(pose, zLevel, pX + sX + 2, pY - 3 + 1, pX + sX + 3, pY + sY + 3 - 1, borderColorStart, borderColorEnd);
-//            GuiUtils.drawGradientRect(pose, zLevel, pX - 3, pY - 3, pX + sX + 3, pY - 3 + 1, borderColorStart, borderColorStart);
-//            GuiUtils.drawGradientRect(pose, zLevel, pX - 3, pY + sY + 2, pX + sX + 3, pY + sY + 3, borderColorEnd, borderColorEnd);
             guiGraphics.fillGradient(pX - 3, pY - 3 + 1, pX - 3 + 1, pY + sY + 3 - 1, zLevel, borderColorStart, borderColorEnd);
             guiGraphics.fillGradient(pX + sX + 2, pY - 3 + 1, pX + sX + 3, pY + sY + 3 - 1, zLevel, borderColorStart, borderColorEnd);
             guiGraphics.fillGradient(pX - 3, pY - 3, pX + sX + 3, pY - 3 + 1, zLevel, borderColorStart, borderColorStart);
             guiGraphics.fillGradient(pX - 3, pY + sY + 2, pX + sX + 3, pY + sY + 3, zLevel, borderColorEnd, borderColorEnd);
 
-//            // Calen: draw and recover the context
-//            RenderSystem.enableDepthTest();
-////            RenderSystem.disableTexture();
-//            RenderUtil.enableBlend();
-//            RenderSystem.defaultBlendFunc();
-//            tesselator.end();
-//            RenderSystem.disableBlend();
-////            RenderSystem.enableTexture();
 
-//            ClientSnapshots.INSTANCE.renderSnapshot(snapshot, pX, pY, sX, sY, guiGraphics);
             Snapshot final_snapshot = snapshot;
             int final_pY = pY;
             snapshotRenderTask = () -> ClientSnapshots.INSTANCE.renderSnapshot(final_snapshot, pX, final_pY, sX, sY);
 
-//            // Calen: recover the context in Screen#renderTooltipInternal
-//            RenderSystem.setShader(GameRenderer::getPositionColorShader);
-//            bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         }
     }
 
@@ -188,7 +130,6 @@ public enum BCBuildersEventDist {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onTickClientTick(TickEvent.ClientTickEvent event) {
-//        if (event.phase == TickEvent.Phase.END && !Minecraft.getMinecraft().isGamePaused())
         if (event.phase == TickEvent.Phase.END && !Minecraft.getInstance().isPaused()) {
             ClientArchitectTables.tick();
         }

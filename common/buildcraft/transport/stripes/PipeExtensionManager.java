@@ -45,7 +45,6 @@ import java.util.*;
 public enum PipeExtensionManager implements IPipeExtensionManager {
     INSTANCE;
 
-    // private final Int2ObjectOpenHashMap<List<PipeExtensionRequest>> requests = new Int2ObjectOpenHashMap<>();
     private final HashMap<String, List<PipeExtensionRequest>> requests = new HashMap<>();
     private final Set<PipeDefinition> retractionPipeDefs = new HashSet<>();
 
@@ -55,7 +54,6 @@ public enum PipeExtensionManager implements IPipeExtensionManager {
             return false;
         }
 
-//        int id = world.provider.getDimension();
         String id = world.dimension().location().toString();
         List<PipeExtensionRequest> rList = requests.get(id);
         if (rList == null) {
@@ -73,11 +71,9 @@ public enum PipeExtensionManager implements IPipeExtensionManager {
 
     @SubscribeEvent
     public void tick(TickEvent.LevelTickEvent event) {
-//        if (event.phase != Phase.END || event.side != Side.SERVER)
         if (event.phase != TickEvent.Phase.END || event.side != LogicalSide.SERVER) {
             return;
         }
-//        List<PipeExtensionRequest> rList = requests.get(event.world.provider.getDimension());
         List<PipeExtensionRequest> rList = requests.get(event.level.dimension().location().toString());
         if (rList == null) {
             return;
@@ -110,7 +106,6 @@ public enum PipeExtensionManager implements IPipeExtensionManager {
                 r.stripes.sendItem(r.stack.copy(), r.dir);
                 return;
             }
-//            retractDir = possible.get(MathHelper.getInt(w.random, 0, possible.size() - 1));
             retractDir = possible.get(Mth.nextInt(w.random, 0, possible.size() - 1));
         }
         BlockPos p = r.pos.relative(retractDir);
@@ -120,7 +115,6 @@ public enum PipeExtensionManager implements IPipeExtensionManager {
         stacksToSendBack.add(r.stack);
 
         // Step 1: Copy over existing stripes pipe
-//        BlockSnapshot blockSnapshot1 = BlockSnapshot.getBlockSnapshot(w, r.pos);
         BlockSnapshot blockSnapshot1 = BlockSnapshot.create(w.dimension(), w, r.pos);
         BlockState stripesStateOld = w.getBlockState(r.pos);
         BlockEntity stripesTileOld = w.getBlockEntity(r.pos);
@@ -140,12 +134,9 @@ public enum PipeExtensionManager implements IPipeExtensionManager {
             }
         }
 
-//        NBTTagCompound stripesNBTOld = new NBTTagCompound();
-//        stripesTileOld.writeToNBT(stripesNBTOld);
         CompoundTag stripesNBTOld = stripesTileOld.saveWithFullMetadata();
 
         // Step 2: Remove previous pipe
-//        BlockSnapshot blockSnapshot2 = BlockSnapshot.getBlockSnapshot(w, p);
         BlockSnapshot blockSnapshot2 = BlockSnapshot.create(w.dimension(), w, p);
         NonNullList<ItemStack> list = NonNullList.create();
         boolean canceled = !BlockUtil.breakBlock((ServerLevel) w, p, list, r.pos, owner);
@@ -168,9 +159,7 @@ public enum PipeExtensionManager implements IPipeExtensionManager {
             FakePlayer player = BuildCraftAPI.fakePlayerProvider.getFakePlayer((ServerLevel) w, owner, p);
             player.getInventory().clearContent();
             w.setBlock(p, stripesStateOld, Block.UPDATE_ALL);
-//            BlockEvent.PlaceEvent placeEvent = ForgeEventFactory.onPlayerBlockPlace(player, blockSnapshot2, r.dir, InteractionHand.MAIN_HAND);
             canceled = ForgeEventFactory.onBlockPlace(player, blockSnapshot2, r.dir.getOpposite());
-//            if (canceled = placeEvent.isCanceled())
             if (canceled) {
                 blockSnapshot2.restore(true);
                 BlockEntity tile = w.getBlockEntity(r.pos);
@@ -196,7 +185,6 @@ public enum PipeExtensionManager implements IPipeExtensionManager {
                 } else {
                     stacksToSendBack.addAll(list);
                     for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-//                        ItemStack stack = player.getInventory().removeStackFromSlot(i);
                         ItemStack stack = player.getInventory().removeItem(i, player.getInventory().getItem(i).getCount());
                         if (!stack.isEmpty()) {
                             stacksToSendBack.add(stack);
@@ -212,7 +200,6 @@ public enum PipeExtensionManager implements IPipeExtensionManager {
 
     private void extend(Level w, PipeExtensionRequest r) {
         BlockPos p = r.pos.relative(r.dir);
-//        if (!w.isAirBlock(p) && !w.getBlockState(p).getBlock().isReplaceable(w, p))
         if (!w.isEmptyBlock(p) && !w.getBlockState(p).getBlock().canBeReplaced(
                 w.getBlockState(p),
                 new BlockPlaceContext(
@@ -246,9 +233,7 @@ public enum PipeExtensionManager implements IPipeExtensionManager {
             owner = holder.getOwner();
         }
 
-//        stripesTileOld.writeToNBT(stripesNBTOld);
         stripesNBTOld = stripesTileOld.saveWithFullMetadata();
-//        BlockSnapshot blockSnapshot1 = BlockSnapshot.getBlockSnapshot(w, r.pos);
         BlockSnapshot blockSnapshot1 = BlockSnapshot.create(w.dimension(), w, r.pos);
         boolean canceled = !BlockUtil.breakBlock((ServerLevel) w, r.pos, NonNullList.create(), r.pos, owner);
         if (canceled) {
@@ -268,7 +253,6 @@ public enum PipeExtensionManager implements IPipeExtensionManager {
             FakePlayer player = BuildCraftAPI.fakePlayerProvider.getFakePlayer((ServerLevel) w, owner, r.pos);
             player.getInventory().clearContent();
             player.getInventory().setItem(player.getInventory().selected, r.stack);
-//            InteractionResult result = ForgeHooks.onPlaceItemIntoWorld(r.stack, player, w, r.pos, r.dir.getOpposite(), 0.5F, 0.5F, 0.5F, InteractionHand.MAIN_HAND);
             InteractionResult result = ForgeHooks.onPlaceItemIntoWorld(
                     new UseOnContext(w,
                             player,
@@ -283,13 +267,11 @@ public enum PipeExtensionManager implements IPipeExtensionManager {
                     )
             );
             for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-//                ItemStack stack = player.inventory.removeStackFromSlot(i);
                 ItemStack stack = player.getInventory().removeItem(i, player.getInventory().getItem(i).getCount());
                 if (!stack.isEmpty()) {
                     list.add(stack);
                 }
             }
-//            if (canceled = result != EnumActionResult.SUCCESS)
             if (canceled = (!result.consumesAction())) {
                 blockSnapshot1.restore(true);
                 BlockEntity tile = w.getBlockEntity(r.pos);
@@ -308,12 +290,9 @@ public enum PipeExtensionManager implements IPipeExtensionManager {
 
             // - Create block and tile
             FakePlayer player = BuildCraftAPI.fakePlayerProvider.getFakePlayer((ServerLevel) w, owner, p);
-//            player.inventory.clear();
             player.getInventory().clearContent();
-//            BlockSnapshot blockSnapshot2 = BlockSnapshot.getBlockSnapshot(w, p);
             BlockSnapshot blockSnapshot2 = BlockSnapshot.create(w.dimension(), w, p);
             w.setBlock(p, stripesStateOld, Block.UPDATE_ALL);
-//            BlockEvent.PlaceEvent placeEvent = ForgeEventFactory.onPlayerBlockPlace(player, blockSnapshot2, r.dir.getOpposite(), InteractionHand.MAIN_HAND);
             canceled = ForgeEventFactory.onBlockPlace(player, blockSnapshot2, r.dir.getOpposite());
             if (canceled) {
                 stacksToSendBack.add(r.stack);

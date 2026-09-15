@@ -22,9 +22,7 @@ public class GuiGate extends GuiBC8<ContainerGate> {
         BuildCraftJsonGui jsonGui = (BuildCraftJsonGui) mainGui;
         preLoad(jsonGui);
         jsonGui.load();
-//        xSize = jsonGui.getSizeX();
         imageWidth = jsonGui.getSizeX();
-//        ySize = jsonGui.getSizeY();
         imageHeight = jsonGui.getSizeY();
     }
 

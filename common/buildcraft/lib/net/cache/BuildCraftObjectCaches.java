@@ -32,7 +32,6 @@ public class BuildCraftObjectCaches {
     static final List<NetworkedObjectCache<?>> CACHES = new ArrayList<>();
 
     public static void registerCache(NetworkedObjectCache<?> cache) {
-//        if (Loader.instance().hasReachedState(LoaderState.POSTINITIALIZATION))
         if (ModLoadingContext.get().getActiveContainer().getCurrentState().ordinal() >= ModLoadingStage.COMPLETE.ordinal()) {
             throw new IllegalStateException("May only construct a cache BEFORE post-init!");
         }

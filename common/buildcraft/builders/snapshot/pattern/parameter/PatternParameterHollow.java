@@ -80,7 +80,6 @@ public enum PatternParameterHollow implements IStatementParameter {
     @Override
     public Component getDescription() {
         String after = filled ? (outerFilled ? "filled_outer" : "filled") : "hollow";
-//        return LocaleUtil.localize("fillerpattern.parameter." + after);
         return Component.translatable("fillerpattern.parameter." + after);
     }
 

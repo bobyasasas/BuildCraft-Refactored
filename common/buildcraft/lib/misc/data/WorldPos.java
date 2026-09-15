@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public final class WorldPos {
     @SuppressWarnings("WeakerAccess")
-//    public final int dimension;
     public final String dimension;
     public final BlockPos pos;
 
@@ -43,7 +42,6 @@ public final class WorldPos {
 
     @Override
     public int hashCode() {
-//        return 31 * dimension + pos.hashCode();
         return 31 * dimension.hashCode() + pos.hashCode();
     }
 }

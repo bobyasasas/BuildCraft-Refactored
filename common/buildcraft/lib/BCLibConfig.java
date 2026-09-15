@@ -32,10 +32,8 @@ import java.util.List;
  * on BC Core itself, and it might not be loaded in the mod environment. */
 public class BCLibConfig {
 
-    // public static File guiConfigFile = null;
     private static File guiConfigFile = null;
 
-    // Calen
 
     public static synchronized File getGuiConfigFileAndEnsureCreated() {
         if (guiConfigFile == null) {

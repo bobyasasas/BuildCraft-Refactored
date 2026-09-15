@@ -18,31 +18,23 @@ public enum DefaultPipeConnection implements ICustomPipeConnection {
 
     @Override
     public float getExtension(Level world, BlockPos pos, Direction face, BlockState state) {
-//        AxisAlignedBB bb = state.getCollisionBoundingBox(world, pos);
         VoxelShape bb = state.getShape(world, pos);
-//        if (bb == null)
         if (bb == null || bb.isEmpty()) {
             return 0;
         }
 
         switch (face) {
             case DOWN:
-//                return (float) bb.minY;
                 return (float) bb.bounds().minY;
             case UP:
-//                return 1 - (float) bb.maxY;
                 return 1 - (float) bb.bounds().maxY;
             case NORTH:
-//                return (float) bb.minZ;
                 return (float) bb.bounds().minZ;
             case SOUTH:
-//                return 1 - (float) bb.maxZ;
                 return 1 - (float) bb.bounds().maxZ;
             case WEST:
-//                return (float) bb.minX;
                 return (float) bb.bounds().minX;
             case EAST:
-//                return 1 - (float) bb.maxX;
                 return 1 - (float) bb.bounds().maxX;
             default:
                 return 0;

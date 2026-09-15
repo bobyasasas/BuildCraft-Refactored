@@ -13,10 +13,7 @@ import java.util.Locale;
 
 public class ItemPlastic extends ItemBlockBCMulti {
     public ItemPlastic(BlockPlastic block, Item.Properties properties) {
-//        super(block, createNameArray());
         super(block, properties);
-//        this.setMaxDamage(0);
-//        this.setHasSubtypes(true);
     }
 
     private static String[] createNameArray() {
@@ -29,10 +26,4 @@ public class ItemPlastic extends ItemBlockBCMulti {
     }
 
 //    @Override
-//    @SideOnly(Side.CLIENT)
-//    public void addModelVariants(TIntObjectHashMap<ModelResourceLocation> variants) {
-//        for (EnumDyeColor colour : EnumDyeColor.values()) {
-//            addVariant(variants, colour.getMetadata(), colour.getName());
-//        }
-//    }
 }

@@ -14,17 +14,14 @@ import java.util.*;
 
 public class ContentsNode implements IContentsNode {
 
-    // public final String title;
     public final String titleKey;
     public final Component title;
     public final int indent;
     private final Map<String, IContentsNode> nodes = new HashMap<>();
-    // private final Map<Object, IContentsNode> nodes = new HashMap<>();
     private IContentsNode[] sortedNodes = new IContentsNode[0];
     IContentsNode[] visibleNodes = new IContentsNode[0];
     private boolean needsSorting = false;
 
-    // public ContentsNode(String title, int indent)
     public ContentsNode(String titleKey, Component title, int indent) {
         this.titleKey = titleKey;
         this.title = title;
@@ -32,11 +29,9 @@ public class ContentsNode implements IContentsNode {
     }
 
     @Override
-//    public String getSearchName()
     public Component getSearchName() {
         return title;
     }
-    // Calen
 
 
     @Override
@@ -47,10 +42,8 @@ public class ContentsNode implements IContentsNode {
     @Override
     public GuidePart createGuidePart(GuiGuide gui) {
         if (indent == 0) {
-//            return new GuideChapterWithin(gui, TextFormatting.UNDERLINE + title);
             return new GuideChapterWithin(gui, ChatFormatting.UNDERLINE + titleKey, Component.literal(ChatFormatting.UNDERLINE.toString()).append(title));
         } else {
-//            return new GuideText(gui, new PageLine(indent + 1, TextFormatting.UNDERLINE + title, false));
             return new GuideText(gui, new PageLine(indent + 1, ChatFormatting.UNDERLINE + titleKey, Component.literal(ChatFormatting.UNDERLINE.toString()).append(title), false));
         }
     }
@@ -62,7 +55,6 @@ public class ContentsNode implements IContentsNode {
 
     @Override
     public void addChild(IContentsNode node) {
-//        nodes.put(node.getSearchName(), node);
         nodes.put(node.getKey(), node);
         needsSorting = true;
     }
@@ -84,7 +76,6 @@ public class ContentsNode implements IContentsNode {
         }
         needsSorting = false;
         sortedNodes = nodes.values().toArray(new IContentsNode[0]);
-//        Arrays.sort(sortedNodes, StringUtilBC.compareBasicReadable(IContentsNode::getSearchName));
         Arrays.sort(sortedNodes, StringUtilBC.compareBasicReadable(IContentsNode::getKey));
         for (IContentsNode node : sortedNodes) {
             node.sort();

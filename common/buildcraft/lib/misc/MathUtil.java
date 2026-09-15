@@ -13,7 +13,6 @@ public class MathUtil {
 
     static {
         HCF_TABLE = new short[HCF_SIZE][HCF_SIZE];
-        // Prefill a,0 as its cheapest (and the algorithm can't handle 0,0)
         for (short a = 0; a < HCF_SIZE; a++) {
             HCF_TABLE[a][0] = a;
         }

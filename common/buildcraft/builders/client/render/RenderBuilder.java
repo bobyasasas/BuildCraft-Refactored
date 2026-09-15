@@ -36,33 +36,27 @@ public class RenderBuilder implements BlockEntityRenderer<TileBuilder> {
     }
 
     @Override
-//    public void renderTileEntityFast(@Nonnull TileBuilder tile, double x, double y, double z, float partialTicks, int destroyStage, float partial, @Nonnull BufferBuilder buffer)
     public void render(TileBuilder tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         Minecraft.getInstance().getProfiler().push("bc");
         Minecraft.getInstance().getProfiler().push("builder");
 
-//        buffer.setTranslation(x - tile.getPos().getX(), y - tile.getPos().getY(), z - tile.getPos().getZ());
         poseStack.pushPose();
         poseStack.translate(-tile.getBlockPos().getX(), -tile.getBlockPos().getY(), -tile.getBlockPos().getZ());
 
         Minecraft.getInstance().getProfiler().push("box");
         Box box = tile.getBox();
-//        VertexConsumer buffer = bufferSource.getBuffer(Sheets.translucentCullBlockSheet());
         VertexConsumer buffer = bufferSource.getBuffer(RenderType.solid());
         LaserBoxRenderer.renderLaserBoxDynamic(box, BuildCraftLaserManager.STRIPES_WRITE, poseStack.last(), buffer, true);
 
         Minecraft.getInstance().getProfiler().popPush("path");
 
-//        buffer = bufferSource.getBuffer(Sheets.translucentCullBlockSheet());
         buffer = bufferSource.getBuffer(RenderType.solid());
         List<BlockPos> path = tile.path;
         if (path != null) {
             BlockPos last = null;
             for (BlockPos p : path) {
                 if (last != null) {
-//                    Vec3 from = new Vec3(last).add(VecUtil.VEC_HALF);
                     Vec3 from = Vec3.atLowerCornerOf(last).add(VecUtil.VEC_HALF);
-//                    Vec3 to = new Vec3(p).add(VecUtil.VEC_HALF);
                     Vec3 to = Vec3.atLowerCornerOf(p).add(VecUtil.VEC_HALF);
                     Vec3 one = offset(from, to);
                     Vec3 two = offset(to, from);
@@ -75,12 +69,10 @@ public class RenderBuilder implements BlockEntityRenderer<TileBuilder> {
 
         Minecraft.getInstance().getProfiler().pop();
 
-//        buffer.setTranslation(0, 0, 0);
         poseStack.popPose();
 
         if (tile.getBuilder() != null) {
             buffer = bufferSource.getBuffer(Sheets.translucentCullBlockSheet());
-//            RenderSnapshotBuilder.render(tile.getBuilder(), tile.getWorld(), tile.getPos(), x, y, z, partialTicks, buffer);
             RenderSnapshotBuilder.render(tile.getBuilder(), tile.getLevel(), tile.getBlockPos(), partialTicks, poseStack, buffer);
         }
 
@@ -94,7 +86,6 @@ public class RenderBuilder implements BlockEntityRenderer<TileBuilder> {
     }
 
     @Override
-//    public boolean isGlobalRenderer(TileBuilder te)
     public boolean shouldRenderOffScreen(TileBuilder tile) {
         return true;
     }

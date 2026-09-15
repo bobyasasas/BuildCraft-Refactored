@@ -19,25 +19,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MapWorld {
-    // private final LongHashMap regionMap;
     private final Long2ObjectOpenHashMap regionMap;
-    // private final HashMap<Chunk, Integer> timeToUpdate = new HashMap<Chunk, Integer>();
     private final HashMap<ChunkAccess, Integer> timeToUpdate = new HashMap<ChunkAccess, Integer>();
     private final Long2LongOpenHashMap regionUpdateTime;
     private final LongOpenHashSet updatedChunks;
     private final File location;
 
     public MapWorld(Level world, File location) {
-        // regionMap = new LongHashMap();
         regionMap = new Long2ObjectOpenHashMap();
         regionUpdateTime = new Long2LongOpenHashMap();
         updatedChunks = new LongOpenHashSet();
 
-        // String saveFolder = world.provider.getSaveFolder();
-        // if (saveFolder == null) {
-        //     saveFolder = "world";
-        // }
-        // this.location = new File(location, saveFolder);
         this.location = DimensionType.getStorageFolder(world.dimension(), Paths.get(location.toURI())).toFile();
         try {
             this.location.mkdirs();
@@ -48,7 +40,6 @@ public class MapWorld {
 
     private MapRegion getRegion(int x, int z) {
         long id = MapUtils.getIDFromCoords(x, z);
-        // MapRegion region = (MapRegion) regionMap.getValueByKey(id);
         MapRegion region = (MapRegion) regionMap.get(id);
         if (region == null) {
             region = new MapRegion(x, z);
@@ -57,12 +48,7 @@ public class MapWorld {
             File target = new File(location, "r" + x + "," + z + ".nbt");
             if (target.exists()) {
                 try {
-                    // FileInputStream f = new FileInputStream(target);
-                    // byte[] data = new byte[(int) target.length()];
-                    // f.read(data);
-                    // f.close();
 
-                    // CompoundTag nbt = NBTUtilBC.load(data);
                     CompoundTag nbt = NbtIo.read(target);
                     if (nbt != null) {
                         region.readFromNBT(nbt);
@@ -72,7 +58,6 @@ public class MapWorld {
                 }
             }
 
-            // regionMap.add(id, region);
             regionMap.put(id, region);
         }
         return region;
@@ -96,7 +81,6 @@ public class MapWorld {
         }
 
         for (long id : chunkList) {
-            // MapRegion region = (MapRegion) regionMap.getValueByKey(id);
             MapRegion region = (MapRegion) regionMap.get(id);
             if (region == null) {
                 continue;
@@ -104,13 +88,9 @@ public class MapWorld {
 
             CompoundTag output = new CompoundTag();
             region.writeToNBT(output);
-            // byte[] data = NBTUtilBC.save(output);
             File file = new File(location, "r" + MapUtils.getXFromID(id) + "," + MapUtils.getZFromID(id) + ".nbt");
 
             try {
-                // FileOutputStream f = new FileOutputStream(file);
-                // f.write(data);
-                // f.close();
                 NbtIo.write(output, file);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -126,17 +106,14 @@ public class MapWorld {
     public void tick() {
         if (timeToUpdate.size() > 0) {
             synchronized (timeToUpdate) {
-                // Set<Chunk> chunks = new HashSet<Chunk>();
                 Set<ChunkAccess> chunks = new HashSet<ChunkAccess>();
                 chunks.addAll(timeToUpdate.keySet());
-                // for (Chunk c : chunks)
                 for (ChunkAccess c : chunks) {
                     int v = timeToUpdate.get(c);
                     if (v > 1) {
                         timeToUpdate.put(c, v - 1);
                     } else {
                         try {
-                            // updateChunk(c);
                             if (c instanceof LevelChunk) {
                                 updateChunk((LevelChunk) c);
                             }
@@ -150,9 +127,7 @@ public class MapWorld {
     }
 
     public void updateChunk(LevelChunk rchunk) {
-        // long id = MapUtils.getIDFromCoords(rchunk.xPosition, rchunk.zPosition);
         long id = MapUtils.getIDFromCoords(rchunk.getPos().x, rchunk.getPos().z);
-        // MapChunk chunk = getChunk(rchunk.xPosition, rchunk.zPosition);
         MapChunk chunk = getChunk(rchunk.getPos().x, rchunk.getPos().z);
         chunk.update(rchunk);
         updatedChunks.add(id);

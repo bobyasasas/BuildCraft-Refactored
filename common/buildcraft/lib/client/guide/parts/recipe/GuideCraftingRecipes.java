@@ -31,12 +31,10 @@ public enum GuideCraftingRecipes implements IStackRecipes {
 
     private static final boolean USE_INDEX = true;
 
-    // private Map<Item, Set<Recipe>> inputIndexMap, outputIndexMap;
     private Map<Item, Set<Recipe<?>>> inputIndexMap, outputIndexMap;
 
     @Override
     public List<GuidePartFactory> getUsages(@Nonnull ItemStack target) {
-//        final Iterable<Recipe> recipes;
         final Iterable<? extends Recipe<?>> recipes;
         if (USE_INDEX) {
             generateInputIndex();
@@ -48,12 +46,10 @@ public enum GuideCraftingRecipes implements IStackRecipes {
             if (Minecraft.getInstance().level == null) {
                 return Lists.newArrayList();
             }
-//            recipes = ForgeRegistries.RECIPES;
             recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING);
         }
 
         List<GuidePartFactory> list = new ArrayList<>();
-//        for (Recipe recipe : recipes)
         for (Recipe<?> recipe : recipes) {
             if (checkRecipeUses(recipe, target)) {
                 GuidePartFactory factory = GuideCraftingFactory.getFactory(recipe);
@@ -75,7 +71,6 @@ public enum GuideCraftingRecipes implements IStackRecipes {
     private void generateInputIndex() {
         if (inputIndexMap == null) {
             inputIndexMap = new IdentityHashMap<>();
-//            for (Recipe recipe : ForgeRegistries.RECIPES)
             if (Minecraft.getInstance().level == null) {
                 return;
             }
@@ -85,7 +80,6 @@ public enum GuideCraftingRecipes implements IStackRecipes {
         }
     }
 
-    // private void generateInputIndex0(Recipe recipe)
     private void generateInputIndex0(Recipe<?> recipe) {
         for (Ingredient ing : recipe.getIngredients()) {
             generateIngredientIndex(recipe, ing, inputIndexMap);
@@ -99,7 +93,6 @@ public enum GuideCraftingRecipes implements IStackRecipes {
     }
 
     private static void appendIndex(ItemStack stack, Recipe<?> recipe, Map<Item, Set<Recipe<?>>> indexMap) {
-//        Set<Recipe> list = indexMap.get(stack.getItem());
         Set<Recipe<?>> list = indexMap.get(stack.getItem());
         if (list == null) {
             list = new LinkedHashSet<>();
@@ -140,7 +133,6 @@ public enum GuideCraftingRecipes implements IStackRecipes {
 
     @Override
     public List<GuidePartFactory> getRecipes(@Nonnull ItemStack target) {
-//        final Iterable<Recipe> recipes;
         final Iterable<? extends Recipe<?>> recipes;
         if (USE_INDEX) {
             generateOutputIndex();
@@ -153,12 +145,10 @@ public enum GuideCraftingRecipes implements IStackRecipes {
             if (Minecraft.getInstance().level == null) {
                 return Lists.newArrayList();
             }
-//            recipes = ForgeRegistries.RECIPES;
             recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING);
         }
 
         List<GuidePartFactory> list = new ArrayList<>();
-//        for (Recipe recipe : recipes)
         for (Recipe<?> recipe : recipes) {
             if (checkRecipeOutputs(recipe, target)) {
                 GuidePartFactory factory = GuideCraftingFactory.getFactory(recipe);
@@ -176,14 +166,12 @@ public enum GuideCraftingRecipes implements IStackRecipes {
             if (Minecraft.getInstance().level == null) {
                 return;
             }
-//            for (Recipe recipe : ForgeRegistries.RECIPES)
             for (Recipe<?> recipe : Minecraft.getInstance().level.getRecipeManager().getRecipes()) {
                 generateOutputIndex0(recipe);
             }
         }
     }
 
-    // private void generateOutputIndex0(IRecipe recipe)
     private void generateOutputIndex0(Recipe<?> recipe) {
         if (recipe instanceof IRecipeViewable) {
             ChangingItemStack changing = ((IRecipeViewable) recipe).getRecipeOutputs();
@@ -201,7 +189,6 @@ public enum GuideCraftingRecipes implements IStackRecipes {
         }
     }
 
-    // private static boolean checkRecipeOutputs(IRecipe recipe, ItemStack target)
     private static boolean checkRecipeOutputs(Recipe<?> recipe, ItemStack target) {
         if (recipe instanceof IRecipeViewable) {
             ChangingItemStack changing = ((IRecipeViewable) recipe).getRecipeOutputs();
@@ -210,7 +197,6 @@ public enum GuideCraftingRecipes implements IStackRecipes {
             }
         } else {
             ItemStack out = StackUtil.asNonNull(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()));
-//            if (OreDictionary.itemMatches(target, out, false) || OreDictionary.itemMatches(out, target, false))
             if (Ingredient.of(target).test(out) || Ingredient.of(out).test(target)) {
                 return true;
             }

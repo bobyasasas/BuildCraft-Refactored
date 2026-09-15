@@ -51,7 +51,6 @@ public class AIRobotLoadFluids extends AIRobot {
         }
     }
 
-    // public static int load(EntityRobotBase robot, DockingStation station, IFluidFilter filter, boolean doLoad)
     public static int load(EntityRobotBase robot, DockingStation station, IFluidFilter filter, IFluidHandler.FluidAction doLoad) {
         if (station == null) {
             return 0;
@@ -66,28 +65,23 @@ public class AIRobotLoadFluids extends AIRobot {
             return 0;
         }
 
-//        Direction side = station.getFluidInputSide().face;
 
-//        FluidStack drainable = handler.drain(side, FluidContainerRegistry.BUCKET_VOLUME, false);
         FluidStack drainable = handler.drain(FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
         if (drainable == null || drainable.isEmpty() || !filter.matches(drainable)) {
             return 0;
         }
 
         drainable = drainable.copy();
-//        int filled = robot.fill(null, drainable, doLoad);
         int filled = robot.getCapability(CapUtil.CAP_FLUIDS).orElse(null).fill(drainable, doLoad);
 
         if (filled > 0 && doLoad.execute()) {
             drainable.setAmount(filled);
-//            handler.drain(side, drainable, true);
             handler.drain(drainable, IFluidHandler.FluidAction.EXECUTE);
         }
         return filled;
     }
 
     @Override
-    // public int getEnergyCost()
     public long getPowerCost() {
         return 8 * MjAPI.MJ / 10;
     }

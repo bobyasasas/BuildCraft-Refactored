@@ -42,7 +42,6 @@ public class TileSpringOil extends BlockEntity implements IDebuggable, ITileOilS
     @Override
     public void onPumpOil(GameProfile profile, BlockPos oilPos) {
         if (profile == null) {
-            // BCLog.logger.warn("Unknown owner for pump at " + pump.getPos());
             return;
         }
         PlayerPumpInfo info = pumpProgress.computeIfAbsent(profile, PlayerPumpInfo::new);
@@ -50,9 +49,7 @@ public class TileSpringOil extends BlockEntity implements IDebuggable, ITileOilS
         info.sourcesPumped++;
 
         // BCLog.logger.info("Pumped " + info.sourcesPumped + " / " + totalSources + " at " + oilPos + " (for " +
-        // System.identityHashCode(this) + ", "+getPos()+")");
         if (info.sourcesPumped >= totalSources * 7 / 8) {
-            // BCLog.logger.info("Pumped nearly all oil blocks!");
             if (oilPos.equals(getBlockPos().above())) {
                 AdvancementUtil.unlockAdvancement(profile.getId(), ADVANCEMENT_PUMP_LARGE_OIL_WELL);
             }
@@ -70,7 +67,6 @@ public class TileSpringOil extends BlockEntity implements IDebuggable, ITileOilS
     }
 
     @Override
-//    public CompoundTag writeToNBT(CompoundTag nbt) {
     public void saveAdditional(CompoundTag nbt) {
         super.saveAdditional(nbt);
         nbt.putInt("totalSources", totalSources);
@@ -82,18 +78,14 @@ public class TileSpringOil extends BlockEntity implements IDebuggable, ITileOilS
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-//        left.add("totalSources = " + totalSources);
         left.add(Component.literal("totalSources = " + totalSources));
         boolean added = false;
         for (PlayerPumpInfo info : pumpProgress.values()) {
             if (!added) {
-//                left.add("Player Progress:");
                 left.add(Component.literal("Player Progress:"));
                 added = true;
             }
-//            left.add("  " + info.profile.getName() + " = " + info.sourcesPumped + " ( " + (level.getGameTime() - info.lastPumpTick) / 20 + "s )");
             left.add(Component.literal("  " + info.profile.getName() + " = " + info.sourcesPumped + " ( " + (level.getGameTime() - info.lastPumpTick) / 20 + "s )"));
         }
     }

@@ -27,7 +27,6 @@ public class BlockMarkerVolume extends BlockMarkerBase {
     }
 
     @Override
-//    public TileBC_Neptune createTileEntity(Level worldIn, BlockState state)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
         return BCCoreBlocks.markerVolumeTile.get().create(pos, state);
     }
@@ -38,7 +37,6 @@ public class BlockMarkerVolume extends BlockMarkerBase {
     }
 
     @Override
-//    public void updateTick(Level world, BlockPos pos, BlockState state, Random rand)
     public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource rand) {
         checkSignalState(world, pos);
     }
@@ -58,7 +56,6 @@ public class BlockMarkerVolume extends BlockMarkerBase {
     }
 
     @Override
-//    public boolean onBlockActivated(Level world, BlockPos pos, BlockState state, Player player, InteractionHand hand, Direction side, float hitX, float hitY, float hitZ)
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!world.isClientSide) {
             BlockEntity tile = world.getBlockEntity(pos);

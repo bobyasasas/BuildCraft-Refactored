@@ -69,7 +69,6 @@ public class JsonModelPart {
     private static JsonQuad[] readCuboid(JsonObject obj) {
         float[] from = readFloatPositionSmaller(obj, "from");
         float[] to = readFloatPositionSmaller(obj, "to");
-//        boolean shade = JsonUtils.getBoolean(obj, "shade", false);
         boolean shade = GsonHelper.getAsBoolean(obj, "shade", false);
 
         if (obj.has("faces")) {

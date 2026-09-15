@@ -24,14 +24,11 @@ public class GuiImageButton extends GuiAbstractButton {
     private final int u, v, baseU, baseV;
     private final ResourceLocation texture;
 
-    // public GuiImageButton(BuildCraftGui gui, int id, int x, int y, int size, ResourceLocation texture, int u, int v)
     public GuiImageButton(BuildCraftGui gui, int id, DoubleSupplier x, DoubleSupplier y, DoubleSupplier size, ResourceLocation texture, int u, int v) {
         this(gui, id, x, y, size, texture, 0, 0, u, v);
     }
 
-    // public GuiImageButton(BuildCraftGui gui, int id, int x, int y, int size, ResourceLocation texture, int baseU, int baseV, int u, int v)
     public GuiImageButton(BuildCraftGui gui, int id, DoubleSupplier x, DoubleSupplier y, DoubleSupplier size, ResourceLocation texture, int baseU, int baseV, int u, int v) {
-        // super(gui, "" + id, new GuiRectangle(x, y, size, size));
         super(gui, "" + id, new AreaCallable(x, y, size, size));
         this.u = u;
         this.v = v;
@@ -46,21 +43,14 @@ public class GuiImageButton extends GuiAbstractButton {
             return;
         }
 
-//        gui.mc.renderEngine.bindTexture(texture);
-//        SpriteUtil.bindTexture(texture);
 
-//        GlStateManager.color(1, 1, 1, 1);
         RenderUtil.color(1, 1, 1, 1);
-//        GlStateManager.enableAlpha();
         RenderUtil.enableAlpha();
-//        GlStateManager.disableBlend();
         RenderUtil.disableBlend();
 
         int buttonState = getButtonState();
 
-//        GuiUtil.drawTexturedModalRect(getX(), getY(), baseU + buttonState * getWidth(), baseV, getWidth(), getHeight());
         GuiUtil.drawTexturedModalRect(guiGraphics, texture, getX(), getY(), baseU + buttonState * getWidth(), baseV, getWidth(), getHeight());
-//        GuiUtil.drawTexturedModalRect(getX() + 1, getY() + 1, u, v, getWidth() - 2, getHeight() - 2);
         GuiUtil.drawTexturedModalRect(guiGraphics, texture, getX() + 1, getY() + 1, u, v, getWidth() - 2, getHeight() - 2);
     }
 

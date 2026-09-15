@@ -76,7 +76,6 @@ public enum PatternParameterCenter implements IStatementParameter {
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("direction.center." + ordinal());
         return Component.translatable("direction.center." + ordinal());
     }
 
@@ -92,7 +91,6 @@ public enum PatternParameterCenter implements IStatementParameter {
 
     @Override
     public IStatementParameter rotateLeft() {
-        // return new PatternParameterCenter(shiftLeft[direction % 9]);
         return this;
     }
 

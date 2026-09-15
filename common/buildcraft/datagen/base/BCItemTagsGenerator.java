@@ -125,7 +125,6 @@ public class BCItemTagsGenerator extends ItemTagsProvider {
         addAllOptional(tag(OreDictionaryTags.pipeItemVoid), BCTransportItems.pipeItemVoid.values().stream().map(reg -> reg));
         addAllOptional(tag(OreDictionaryTags.pipeFluidVoid), BCTransportItems.pipeFluidVoid.values().stream().map(reg -> reg));
         addAllOptional(tag(OreDictionaryTags.pipeItemObsidian), BCTransportItems.pipeItemObsidian.values().stream().map(reg -> reg));
-//        addAllOptional(tag(OreDictionaryTags.pipeFluidObsidian), BCTransportItems.pipeFluidObsidian.values().stream().map(reg -> reg));
         addAllOptional(tag(OreDictionaryTags.pipeItemLapis), BCTransportItems.pipeItemLapis.values().stream().map(reg -> reg));
         addAllOptional(tag(OreDictionaryTags.pipeItemDaizuli), BCTransportItems.pipeItemDaizuli.values().stream().map(reg -> reg));
         addAllOptional(tag(OreDictionaryTags.pipeItemEmzuli), BCTransportItems.pipeItemEmzuli.values().stream().map(reg -> reg));
@@ -133,7 +132,6 @@ public class BCItemTagsGenerator extends ItemTagsProvider {
     }
 
     private static void addAllOptional(TagAppender<Item> tag, Stream<RegistryObject<?>> allToAdd) {
-        // Sort by id so the generated tag json is deterministic (sources are HashMaps)
         allToAdd.sorted((a, b) -> a.getId().toString().compareTo(b.getId().toString()))
             .forEach(reg -> tag.addOptional(reg.getId()));
     }

@@ -33,11 +33,8 @@ public class ItemGuideNote extends ItemBC_Neptune implements MenuProvider {
     }
 
     @Override
-//    public ActionResult<ItemStack> onItemRightClick(Level world, Player player, InteractionHand hand)
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-//        player.openGui(BCLib.INSTANCE, 1, world, 0, 0, 0);
         MessageUtil.serverOpenItemGui(player, this);
-//        return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
     }
 
@@ -46,7 +43,6 @@ public class ItemGuideNote extends ItemBC_Neptune implements MenuProvider {
         return this.getDisplayName();
     }
 
-    // TODO Calen GuideNote gui not impl in 1.12.2
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int p_39954_, Inventory p_39955_, Player p_39956_) {

@@ -58,14 +58,10 @@ public class TileEngineIron_BC8 extends TileEngineBase_BC8 implements IBCTileMen
     public static final double COOLDOWN_RATE = 0.05;
     public static final int MAX_COOLANT_PER_TICK = 40;
 
-    // Calen FIXED: renamed tanks to match I18n
-    // public final Tank tankFuel = new Tank("fuel", MAX_FLUID, this, this::isValidFuel);
     public final Tank tankFuel = new Tank("tankFuel", MAX_FLUID, this, this::isValidFuel);
-    // public final Tank tankCoolant = new Tank("coolant", MAX_FLUID, this, this::isValidCoolant)
     public final Tank tankCoolant = new Tank("tankCoolant", MAX_FLUID, this, this::isValidCoolant) {
         @Override
         protected FluidGetResult map(ItemStack stack, int space) {
-//            ISolidCoolant coolant = BuildcraftFuelRegistry.coolant.getSolidCoolant(stack);
             ISolidCoolant coolant = BuildcraftFuelRegistry.coolant.getSolidCoolant(TileEngineIron_BC8.this.level, stack);
             if (coolant == null) {
                 return super.map(stack, space);
@@ -77,7 +73,6 @@ public class TileEngineIron_BC8 extends TileEngineBase_BC8 implements IBCTileMen
             return new FluidGetResult(StackUtil.EMPTY, fluidCoolant);
         }
     };
-    // public final Tank tankResidue = new Tank("residue", MAX_FLUID, this, this::isResidue);
     public final Tank tankResidue = new Tank("tankResidue", MAX_FLUID, this, this::isResidue);
     private final IFluidHandlerAdv fluidHandler = new InternalFluidHandler();
 
@@ -108,7 +103,6 @@ public class TileEngineIron_BC8 extends TileEngineBase_BC8 implements IBCTileMen
     // TileEntity overrides
 
     @Override
-//    public CompoundTag writeToNBT(CompoundTag nbt)
     public void saveAdditional(CompoundTag nbt) {
         super.saveAdditional(nbt);
         nbt.putInt("penaltyCooling", penaltyCooling);
@@ -117,7 +111,6 @@ public class TileEngineIron_BC8 extends TileEngineBase_BC8 implements IBCTileMen
     }
 
     @Override
-//    public void readFromNBT(CompoundTag nbt)
     public void load(CompoundTag nbt) {
         super.load(nbt);
         penaltyCooling = nbt.getInt("penaltyCooling");
@@ -155,19 +148,15 @@ public class TileEngineIron_BC8 extends TileEngineBase_BC8 implements IBCTileMen
         }
         if (!current.isEmpty()) {
             if (EntityUtil.getWrenchHand(player) != null) {
-//                return false;
                 return InteractionResult.PASS;
             }
             if (current.getItem() instanceof IItemPipe) {
-//                return false;
                 return InteractionResult.PASS;
             }
         }
         if (!level.isClientSide) {
-//            BCEnergyGuis.ENGINE_IRON.openGUI(player, getPos());
             MessageUtil.serverOpenTileGui(player, this);
         }
-//        return true;
         return InteractionResult.SUCCESS;
     }
 
@@ -196,7 +185,6 @@ public class TileEngineIron_BC8 extends TileEngineBase_BC8 implements IBCTileMen
     @Override
     public boolean isBurning() {
         FluidStack fuel = tankFuel.getFluid();
-//        return fuel != null && fuel.getAmount() > 0 && penaltyCooling == 0 && isRedstonePowered;
         return !fuel.isEmpty() && fuel.getAmount() > 0 && penaltyCooling == 0 && isRedstonePowered;
     }
 
@@ -204,10 +192,8 @@ public class TileEngineIron_BC8 extends TileEngineBase_BC8 implements IBCTileMen
     protected void burn() {
         final FluidStack fuel = this.tankFuel.getFluid();
         if (currentFuel == null || !currentFuel.getFluid().isFluidEqual(fuel)) {
-//            currentFuel = BuildcraftFuelRegistry.fuel.getFuel(fuel);
             currentFuel = BuildcraftFuelRegistry.fuel.getFuel(level, fuel);
         }
-//        if (fuel == null || currentFuel == null)
         if (fuel.isEmpty() || currentFuel == null) {
             return;
         }
@@ -231,11 +217,9 @@ public class TileEngineIron_BC8 extends TileEngineBase_BC8 implements IBCTileMen
                                 FluidStack residueFluid = dirtyFuel.getResidue().copy();
                                 residueAmount += residueFluid.getAmount() / 1000.0;
                                 if (residueAmount >= 1) {
-//                                    residueFluid.setAmount(MathHelper.floor(residueAmount));
                                     residueFluid.setAmount(Mth.floor(residueAmount));
                                     residueAmount -= tankResidue.fill(residueFluid, IFluidHandler.FluidAction.EXECUTE);
                                 }
-//                                else if (tankResidue.getFluid() == null)
                                 else if (tankResidue.getFluid().isEmpty()) {
                                     residueFluid.setAmount(0);
                                     tankResidue.setFluid(residueFluid);
@@ -277,22 +261,18 @@ public class TileEngineIron_BC8 extends TileEngineBase_BC8 implements IBCTileMen
         }
 
         if (target != heat) {
-            // coolEngine(target)
             {
                 double coolingBuffer = 0;
                 double extraHeat = heat - target;
 
                 if (extraHeat > 0) {
-                    // fillCoolingBuffer();
                     {
                         if (tankCoolant.getFluidAmount() > 0) {
                             float coolPerMb =
-//                                    BuildcraftFuelRegistry.coolant.getDegreesPerMb(tankCoolant.getFluid(), (float) heat);
                                     BuildcraftFuelRegistry.coolant.getDegreesPerMb(this.level, tankCoolant.getFluid(), (float) heat);
                             if (coolPerMb > 0) {
                                 int coolantAmount = Math.min(MAX_COOLANT_PER_TICK, tankCoolant.getFluidAmount());
                                 float cooling = coolPerMb;
-                                // cooling /= getBiomeTempScalar();
                                 coolingBuffer += coolantAmount * cooling;
                                 tankCoolant.drain(coolantAmount, IFluidHandler.FluidAction.EXECUTE);
                             }
@@ -301,11 +281,6 @@ public class TileEngineIron_BC8 extends TileEngineBase_BC8 implements IBCTileMen
                     // end
                 }
 
-                // if (coolingBuffer >= extraHeat) {
-                // coolingBuffer -= extraHeat;
-                // heat -= extraHeat;
-                // return;
-                // }
 
                 heat -= coolingBuffer;
                 coolingBuffer = 0.0f;
@@ -365,12 +340,10 @@ public class TileEngineIron_BC8 extends TileEngineBase_BC8 implements IBCTileMen
     // Fluid related
 
     private boolean isValidFuel(FluidStack fluid) {
-//        return BuildcraftFuelRegistry.fuel.getFuel(fluid) != null;
         return BuildcraftFuelRegistry.fuel.getFuel(level, fluid) != null;
     }
 
     private boolean isValidCoolant(FluidStack fluid) {
-//        return BuildcraftFuelRegistry.coolant.getCoolant(fluid) != null;
         return BuildcraftFuelRegistry.coolant.getCoolant(this.level, fluid) != null;
     }
 
@@ -408,9 +381,6 @@ public class TileEngineIron_BC8 extends TileEngineBase_BC8 implements IBCTileMen
 
         // 1.18.2: divided into 3 methods
 //        @Override
-//        public IFluidTankProperties[] getTankProperties() {
-//            return properties;
-//        }
 
         @Override
         public int getTanks() {
@@ -429,7 +399,6 @@ public class TileEngineIron_BC8 extends TileEngineBase_BC8 implements IBCTileMen
         }
 
         @Override
-//        public int fill(FluidStack resource, boolean doFill)
         public int fill(FluidStack resource, FluidAction doFill) {
             int filled = tankFuel.fill(resource, doFill);
             if (filled == 0) {
@@ -439,19 +408,16 @@ public class TileEngineIron_BC8 extends TileEngineBase_BC8 implements IBCTileMen
         }
 
         @Override
-//        public FluidStack drain(FluidStack resource, boolean doDrain)
         public FluidStack drain(FluidStack resource, FluidAction doDrain) {
             return tankResidue.drain(resource, doDrain);
         }
 
         @Override
-//        public FluidStack drain(int maxDrain, boolean doDrain)
         public FluidStack drain(int maxDrain, FluidAction doDrain) {
             return tankResidue.drain(maxDrain, doDrain);
         }
 
         @Override
-//        public FluidStack drain(IFluidFilter filter, int maxDrain, boolean doDrain)
         public FluidStack drain(IFluidFilter filter, int maxDrain, FluidAction doDrain) {
             return tankResidue.drain(filter, maxDrain, doDrain);
         }

@@ -212,7 +212,6 @@ public class VecUtil {
         return d1 * d1 + d2 * d2 + d3 * d3;
     }
 
-    // Calen 1.18.2: from 1.8.9
 
     /** Factory that converts an integer vector to a double vector. */
     public static Vec3 convert(Vec3i vec3i) {

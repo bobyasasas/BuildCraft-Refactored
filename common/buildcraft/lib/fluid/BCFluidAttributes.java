@@ -13,7 +13,6 @@ import javax.annotation.Nullable;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-// Calen add
 public class BCFluidAttributes extends FluidType {
     private final int colour, light, dark;
     private final ResourceLocation overlayTexture;
@@ -105,7 +104,6 @@ public class BCFluidAttributes extends FluidType {
             return getBareLocalizedName();
         }
         Component name = getBareLocalizedName();
-//        return Component.literal(LocaleUtil.localize("buildcraft.fluid.heat_" + heat, name));
         return Component.translatable(BCEnergyFluids.FLUID_TRANSLATION_PREFIX + heat, name);
     }
 
@@ -115,7 +113,6 @@ public class BCFluidAttributes extends FluidType {
     }
 
     public Component getBareLocalizedName() {
-//        return super.getLocalizedName(stack);
         return Component.translatable(getDescriptionId());
     }
 

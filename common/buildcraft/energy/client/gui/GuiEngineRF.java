@@ -46,9 +46,7 @@ public class GuiEngineRF extends GuiBC8<ContainerEngineRF> {
 
     public GuiEngineRF(ContainerEngineRF container, Inventory inventory, Component component) {
         super(container, inventory, component);
-//        xSize = SIZE_X;
         imageWidth = SIZE_X;
-//        ySize = SIZE_Y;
         imageHeight = SIZE_Y;
         mainGui.shownElements.add(new LedgerEngine(mainGui, container.tile, true));
         mainGui.shownElements.add(
@@ -103,26 +101,19 @@ public class GuiEngineRF extends GuiBC8<ContainerEngineRF> {
     protected void drawBackgroundLayer(float partialTicks, GuiGraphics guiGraphics) {
         ICON_GUI.drawAt(mainGui.rootElement, guiGraphics);
         double rfHeight = 60.0 * container.tile.getCurrentRF() / TileEngineRF.MAX_RF;
-        // double scale = new ScaledResolution(mc).getScaleFactor();
         double scale = minecraft.getWindow().getGuiScale();
         rfHeight = (Math.round(rfHeight * scale)) / scale;
         ICON_RF.drawCutInside(new GuiRectangle(31, 18 + 60 - rfHeight, 6, rfHeight).offset(mainGui.rootElement), guiGraphics);
 
         int x = getGuiLeft();
         int y = getGuiTop();
-        // itemRender.renderItemAndEffectIntoGUI(new ItemStack(BCCoreItems.gearIron.get()), x + 78, y + 22);
         guiGraphics.renderItem(new ItemStack(BCCoreItems.gearIron.get()), x + 78, y + 22);
-        // itemRender.renderItemAndEffectIntoGUI(new ItemStack(BCCoreItems.gearGold.get()), x + 101, y + 22);
         guiGraphics.renderItem(new ItemStack(BCCoreItems.gearGold.get()), x + 101, y + 22);
 
-        // GlStateManager.disableDepth();
         RenderUtil.disableDepth();
-        // GlStateManager.color(1, 1, 1, 0.65f);
         RenderUtil.color(1, 1, 1, 0.65f);
         ICON_OVERLAY.drawAt(mainGui.rootElement.offset(57, 18), guiGraphics);
-        // GlStateManager.color(1, 1, 1, 1f);
         RenderUtil.color(1, 1, 1, 1f);
-        // GlStateManager.enableDepth();
         RenderUtil.enableDepth();
     }
 
@@ -132,12 +123,10 @@ public class GuiEngineRF extends GuiBC8<ContainerEngineRF> {
         int strWidth = font.width(str);
         double titleX = mainGui.rootElement.getCenterX() - strWidth / 2;
         double titleY = mainGui.rootElement.getY() + 6;
-        // fontRenderer.drawString(str, (int) titleX, (int) titleY, 0x404040);
         guiGraphics.drawString(font, str, (int) titleX, (int) titleY, 0x404040, false);
 
         double invX = mainGui.rootElement.getX() + 8;
         double invY = mainGui.rootElement.getY() + SIZE_Y - 96;
-        // fontRenderer.drawString(LocaleUtil.localize("gui.inventory"), (int) invX, (int) invY, 0x404040);
         guiGraphics.drawString(font, LocaleUtil.localize("gui.inventory"), (int) invX, (int) invY, 0x404040, false);
     }
 }

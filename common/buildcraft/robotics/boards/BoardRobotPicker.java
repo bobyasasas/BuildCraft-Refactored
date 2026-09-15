@@ -40,7 +40,6 @@ public class BoardRobotPicker extends RedstoneBoardRobot {
     public void delegateAIEnded(AIRobot ai) {
         if (ai instanceof AIRobotFetchItem) {
             if (ai.success()) {
-                // if we find an item - that may have been cancelled.
                 // let's try to get another one
                 fetchNewItem();
             } else if (robot.containsItems()) {

@@ -35,14 +35,12 @@ public class AIRobotHarvest extends AIRobot {
         }
 
         if (delay++ > 20) {
-            // if (!BuildCraftAPI.getWorldProperty("harvestable").get(robot.level, blockFound))
             if (!CropManager.isMature(robot.level(), robot.level().getBlockState(blockFound), blockFound)) {
                 setSuccess(false);
                 terminate();
                 return;
             }
             NonNullList<ItemStack> drops = NonNullList.create();
-            // if (!CropManager.harvestCrop(robot.level, blockFound, drops))
             CropManager.HarvestResult result = CropManager.harvestCrop(robot.level(), blockFound, robot.getMainHandItem(), drops);
             if (result == CropManager.HarvestResult.FAIL) {
                 setSuccess(false);

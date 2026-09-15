@@ -16,9 +16,7 @@ import java.util.List;
 public class GuideText extends GuidePart {
     public final PageLine text;
 
-    // public GuideText(GuiGuide gui, String text)
     public GuideText(GuiGuide gui, String textKey, Component text) {
-//        this(gui, new PageLine(0, text, false));
         this(gui, new PageLine(0, textKey, text, false));
     }
 

@@ -5,7 +5,6 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-// Calen
 public class ListMatchHandlerFood extends ListMatchHandler {
     @Override
     public boolean matches(Type type, @Nonnull ItemStack stack, @Nonnull ItemStack target, boolean precise) {

@@ -81,7 +81,6 @@ public enum XmlPageLoader implements IPageLoaderText {
 
         @Override
         public GuidePart createNew(GuiGuide gui) {
-//            return new GuideText(gui, Component.literal(text));
             return new GuideText(gui, text, Component.literal(text));
         }
     }
@@ -165,11 +164,8 @@ public enum XmlPageLoader implements IPageLoaderText {
                 }
                 // FIXME: This doesn't really work properly! We will need to use the same system that the rest of the
                 // xml does for this...
-                // (So basically generate colour tags around everything that we want to change)
                 // TODO: Move this outside of this method! (We might need to do it directly in the main loadPage so that
-                // everything is simpler)
                 // and then we only need a map of lang name to a def class with all of the formatting defs.
-                // (And customisable syntax highlighting? Why?)
                 str = str.replace("{", ChatFormatting.DARK_GREEN + "{" + ChatFormatting.RESET);
                 str = str.replace("}", ChatFormatting.DARK_GREEN + "}" + ChatFormatting.RESET);
                 str = str.replaceAll("\"(.+)\"", ChatFormatting.DARK_BLUE + "$0" + ChatFormatting.RESET);
@@ -202,8 +198,6 @@ public enum XmlPageLoader implements IPageLoaderText {
 
     private static GuidePageFactory loadPage0(BufferedReader reader, ResourceLocation name, PageEntry<?> entry, ProfilerFiller prof) throws IOException, InvalidInputDataException {
         // Needs to support:
-        // - start/end tags (such as <lore></lore>)
-        // - nested tags (such as <lore>Spooky<bold> Skeletons</bold></lore>)
         // full tag set:
         // - Multi-nestling
         // - - <lore>
@@ -211,7 +205,6 @@ public enum XmlPageLoader implements IPageLoaderText {
         // - - <hint>
         // - - <note>
         // - - <recipes>
-        // - Compressed into single (text)
         // - - <bold>
         // - - <italic>
         // - - <underline>
@@ -697,14 +690,10 @@ public enum XmlPageLoader implements IPageLoaderText {
     }
 
     public static GuidePartFactory chapter(String after, int level) {
-//        return (gui) -> new GuideChapterWithin(gui, level, LocaleUtil.localize(after));
-//        return (gui) -> new GuideChapterWithin(gui, level, Component.translatable(after));
         return (gui) -> new GuideChapterWithin(gui, level, after, Component.translatable(after));
     }
 
     public static GuidePartFactory translate(String text) {
-//        return gui -> new GuideText(gui, new PageLine(0, Component.literal(LocaleUtil.localize(text)), false));
-//        return gui -> new GuideText(gui, new PageLine(0, Component.translatable(text), false));
         return gui -> new GuideText(gui, new PageLine(0, text, Component.translatable(text), false));
     }
 
@@ -738,7 +727,6 @@ public enum XmlPageLoader implements IPageLoaderText {
             return null;
         }
         ItemStack stack = null;
-//        Item item = Item.byId(Integer.parseInt(id.trim()));
         Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(id.trim()));
         if (item != null) {
             stack = new ItemStack(item);
@@ -758,25 +746,14 @@ public enum XmlPageLoader implements IPageLoaderText {
         }
 
         if (data != null) {
-//            try {
-//                int meta = Integer.parseInt(data.trim());
-//                if (meta == -1) {
 //                    // Use oredict
-//                    meta = OreDictionary.WILDCARD_VALUE;
-//                }
-//                stack = new ItemStack(stack.getItem(), stack.getCount(), meta);
-//            } catch (NumberFormatException nfe) {
-//                BCLog.logger.warn("[lib.guide.loader.xml] " + data + " was not a valid number: " + nfe.getMessage());
-//            }
             throw new RuntimeException("[lib.guide.loader.xml] Found meta data [" + data + "] in tag [" + tag + "] but meta data is not supported in this ms version.");
         }
 
         if (nbt != null) {
             try {
-//                stack.setTag(JsonToNBT.getTagFromJson(nbt));
                 stack.setTag(TagParser.parseTag(nbt));
             }
-//            catch (NBTException e)
             catch (CommandSyntaxException e) {
                 BCLog.logger.warn("[lib.guide.loader.xml] " + nbt + " was not a valid nbt tag: " + e.getMessage());
             }

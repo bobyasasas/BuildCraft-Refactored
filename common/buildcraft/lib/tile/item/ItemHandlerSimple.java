@@ -25,7 +25,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ItemHandlerSimple extends AbstractInvItemTransactor implements IItemHandlerModifiable, IItemHandlerAdv, INBTSerializable<CompoundTag> {
-    // Function-called stuff (helpers etc)
     private StackInsertionChecker checker;
     private StackInsertionFunction inserter;
 
@@ -35,7 +34,6 @@ public class ItemHandlerSimple extends AbstractInvItemTransactor implements IIte
     // Actual item stacks used
     public final NonNullList<ItemStack> stacks;
 
-    // Transactor speedup (small)
     private int firstUsed = Integer.MAX_VALUE;
 
     public ItemHandlerSimple(int size) {

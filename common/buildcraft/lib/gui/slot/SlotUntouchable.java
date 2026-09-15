@@ -19,13 +19,11 @@ public class SlotUntouchable extends SlotBase implements IPhantomSlot {
     }
 
     @Override
-//    public boolean isItemValid(@Nonnull ItemStack itemstack)
     public boolean mayPlace(@Nonnull ItemStack itemstack) {
         return false;
     }
 
     @Override
-//    public boolean canTakeStack(Player par1EntityPlayer)
     public boolean mayPickup(Player par1EntityPlayer) {
         return false;
     }

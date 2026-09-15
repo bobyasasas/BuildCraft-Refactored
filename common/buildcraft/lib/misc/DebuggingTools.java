@@ -28,7 +28,6 @@ public class DebuggingTools {
     private static class EventHook {
         @SubscribeEvent
         public void worldLoadEvent(LevelEvent.Load load) {
-//            load.getWorld().addEventListener(new WorldListener());
             LocalBlockUpdateNotifier.instance(load.getLevel()).registerSubscriberForUpdateNotifications(new WorldListener());
         }
     }
@@ -36,7 +35,6 @@ public class DebuggingTools {
     // private static class WorldListener extends WorldEventListenerAdapter
     private static class WorldListener implements ILocalBlockUpdateSubscriber {
         @Override
-//        public void markBlockRangeForRenderUpdate(int x1, int y1, int z1, int x2, int y2, int z2)
         public void setWorldUpdated(Level world, BlockPos pos) {
             StackTraceElement[] elements = new Throwable().getStackTrace();
             String[] bc = new String[elements.length];
@@ -47,7 +45,6 @@ public class DebuggingTools {
                 bc[bcIndex++] = ste.getClassName() + " # " + ste.getMethodName() + " : " + ste.getLineNumber();
             }
             if (bcIndex > 0) {
-//                BCLog.logger.info("[lib.debug.world] markBlockRangeForRenderUpdate(" + x1 + ", " + y1 + ", " + z1 + ", " + x2 + ", " + y2 + ", " + z2 + ")");
                 BCLog.logger.info("[lib.debug.world] markBlockRangeForRenderUpdate(" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ")");
                 for (int i = 0; i < bcIndex; i++) {
                     BCLog.logger.info("[lib.debug.world]   at " + bc[i]);

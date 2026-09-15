@@ -32,7 +32,6 @@ public class RenderPipeHolder implements BlockEntityRenderer<TilePipeHolder> {
     }
 
     @Override
-//    public void renderTileEntityFast(TilePipeHolder pipe, double x, double y, double z, float partialTicks, int destroyStage, float partial, BufferBuilder buffer)
     public void render(TilePipeHolder pipe, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         Minecraft.getInstance().getProfiler().push("bc");
         Minecraft.getInstance().getProfiler().push("pipe");
@@ -51,7 +50,6 @@ public class RenderPipeHolder implements BlockEntityRenderer<TilePipeHolder> {
         Minecraft.getInstance().getProfiler().pop();
     }
 
-    // private static void renderPluggables(TilePipeHolder pipe, double x, double y, double z, float partialTicks, BufferBuilder bb)
     public void renderPluggables(TilePipeHolder pipe, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         VertexConsumer buffer = bufferSource.getBuffer(Sheets.translucentCullBlockSheet());
         for (Direction face : Direction.VALUES) {
@@ -94,13 +92,11 @@ public class RenderPipeHolder implements BlockEntityRenderer<TilePipeHolder> {
         }
     }
 
-    // private static <B extends PipeBehaviour> void renderBehaviour(B behaviour, double x, double y, double z, float partialTicks, BufferBuilder bb)
     private static <B extends PipeBehaviour> void renderBehaviour(B behaviour, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         VertexConsumer buffer = bufferSource.getBuffer(Sheets.translucentCullBlockSheet());
         IPipeBehaviourRenderer<B> renderer = PipeRegistryClient.getBehaviourRenderer(behaviour);
         if (renderer != null) {
             Minecraft.getInstance().getProfiler().push(behaviour.getClass().getName());
-//            renderer.render(behaviour, x, y, z, partialTicks, bb);
             renderer.render(behaviour, partialTicks, poseStack, buffer, combinedLight, combinedOverlay);
             Minecraft.getInstance().getProfiler().pop();
         }

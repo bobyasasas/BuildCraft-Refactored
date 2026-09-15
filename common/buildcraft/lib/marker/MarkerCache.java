@@ -33,7 +33,6 @@ public abstract class MarkerCache<S extends MarkerSubCache<?>> {
     }
 
     public static void registerCache(MarkerCache<?> cache) {
-//        if (Loader.instance().hasReachedState(LoaderState.POSTINITIALIZATION))
         if (ModLoadingContext.get().getActiveContainer().getCurrentState().ordinal() >= ModLoadingStage.COMPLETE.ordinal()) {
             throw new IllegalStateException("Registered too late!");
         }
@@ -58,7 +57,6 @@ public abstract class MarkerCache<S extends MarkerSubCache<?>> {
         }
     }
 
-    // public static void onPlayerJoinWorld(EntityPlayerMP player)
     public static void onPlayerJoinWorld(ServerPlayer player) {
         for (MarkerCache<?> cache : CACHES) {
             Level world = player.level();

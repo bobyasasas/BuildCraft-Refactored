@@ -32,7 +32,6 @@ public class BlockBuilder extends BlockBCTile_Neptune<TileBuilder> implements IB
 
     public BlockBuilder(String idBC, BlockBehaviour.Properties properties) {
         super(idBC, properties);
-//        setDefaultState(getDefaultState().withProperty(SNAPSHOT_TYPE, EnumOptionalSnapshotType.NONE));
         registerDefaultState(
                 defaultBlockState()
                         .setValue(SNAPSHOT_TYPE, EnumOptionalSnapshotType.NONE)
@@ -62,22 +61,17 @@ public class BlockBuilder extends BlockBCTile_Neptune<TileBuilder> implements IB
     // Others
 
     @Override
-//    public TileBC_Neptune createTileEntity(World world, IBlockState state)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
         return new TileBuilder(pos, state);
     }
 
     @Override
-//    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, Player player, InteractionHand hand, Direction side, float hitX, float hitY, float hitZ)
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!world.isClientSide) {
-//            BCBuildersGuis.BUILDER.openGUI(player, pos);
-            // Calen
             if (world.getBlockEntity(pos) instanceof TileBuilder tile) {
                 MessageUtil.serverOpenTileGui(player, tile);
             }
         }
-//        return true;
         return InteractionResult.SUCCESS;
     }
 

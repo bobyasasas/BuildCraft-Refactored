@@ -23,10 +23,8 @@ public abstract class ItemAddon extends ItemBC_Neptune {
 
     public abstract Addon createAddon();
 
-    // TODO Calen: how to use Addon?
     @SuppressWarnings("NullableProblems")
     @Override
-//    public ActionResult<ItemStack> onItemRightClick(Level world, Player player, InteractionHand hand)
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         if (world.isClientSide) {
             return new InteractionResultHolder<>(InteractionResult.PASS, player.getItemInHand(hand));

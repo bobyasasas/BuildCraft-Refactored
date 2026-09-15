@@ -15,7 +15,6 @@ public enum PipeBlockColours implements BlockColor {
     INSTANCE;
 
     @Override
-//    public int colorMultiplier(BlockState state, @Nullable IBlockAccess world, @Nullable BlockPos pos, int tintIndex) {
     public int getColor(BlockState state, @Nullable BlockAndTintGetter world, @Nullable BlockPos pos, int tintIndex) {
         if (world != null && pos != null) {
             BlockEntity tile = world.getBlockEntity(pos);

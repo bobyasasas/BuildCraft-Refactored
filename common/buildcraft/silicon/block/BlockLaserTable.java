@@ -36,9 +36,6 @@ public class BlockLaserTable extends BlockBCTile_Neptune<TileLaserTableBase> imp
     }
 
 //    @Override
-//    public boolean isOpaqueCube(IBlockState state) {
-//        return false;
-//    }
 
     @Override
     public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
@@ -51,17 +48,10 @@ public class BlockLaserTable extends BlockBCTile_Neptune<TileLaserTableBase> imp
     }
 
 //    @Override
-//    public boolean isFullCube(BlockState state) {
-//        return false;
-//    }
 
 //    @Override
-//    public BlockRenderLayer getBlockLayer() {
-//        return BlockRenderLayer.CUTOUT;
-//    }
 
     @Override
-//    public TileBC_Neptune createTileEntity(Level world, BlockState state)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
         switch (type) {
             case ASSEMBLY_TABLE:
@@ -81,36 +71,19 @@ public class BlockLaserTable extends BlockBCTile_Neptune<TileLaserTableBase> imp
     private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 9.0D, 16.0D);
 
     @Override
-//    public AxisAlignedBB getBoundingBox(BlockState state, IBlockAccess source, BlockPos pos)
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-//    public boolean onBlockActivated(Level world, BlockPos pos, BlockState state, Player player, InteractionHand hand, Direction side, float hitX, float hitY, float hitZ)
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-//        switch(type) {
 //            case ASSEMBLY_TABLE:
-//                if (!world.isRemote) {
-//                    BCSiliconGuis.ASSEMBLY_TABLE.openGUI(player, pos);
-//                }
-//                return true;
 //            case ADVANCED_CRAFTING_TABLE:
-//                if (!world.isRemote) {
-//                    BCSiliconGuis.ADVANCED_CRAFTING_TABLE.openGUI(player, pos);
-//                }
-//                return true;
 //            case INTEGRATION_TABLE:
-//                if (!world.isRemote) {
-//                    BCSiliconGuis.INTEGRATION_TABLE.openGUI(player, pos);
-//                }
-//                return true;
 //            case CHARGING_TABLE:
 //            case PROGRAMMING_TABLE:
-//        }
         if (!world.isClientSide) {
             if (world.getBlockEntity(pos) instanceof IBCTileMenuProvider tile) {
-//                BCSiliconGuis.ADVANCED_CRAFTING_TABLE.openGUI(player, pos, state);
                 MessageUtil.serverOpenTileGui(player, tile, pos);
                 return InteractionResult.SUCCESS;
             }

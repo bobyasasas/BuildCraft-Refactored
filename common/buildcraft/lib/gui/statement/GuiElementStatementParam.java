@@ -105,7 +105,6 @@ public class GuiElementStatementParam extends GuiElementSimple
             if (currentPlayer == null) {
                 heldStack = ItemStack.EMPTY;
             } else {
-//                heldStack = currentPlayer.inventory.getItemStack();
                 heldStack = currentPlayer.containerMenu.getCarried();
             }
 
@@ -141,7 +140,6 @@ public class GuiElementStatementParam extends GuiElementSimple
             if (currentPlayer == null) {
                 heldStack = ItemStack.EMPTY;
             } else {
-//                heldStack = currentPlayer.inventory.getItemStack();
                 heldStack = currentPlayer.containerMenu.getCarried();
             }
 

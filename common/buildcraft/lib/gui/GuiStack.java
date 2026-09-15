@@ -19,15 +19,10 @@ public class GuiStack implements ISimpleDrawable {
 
     @Override
     public void drawAt(GuiGraphics guiGraphics, double x, double y) {
-//        GlStateManager.color(1, 1, 1);
         RenderUtil.color(1, 1, 1);
-//        RenderHelper.enableGUIStandardItemLighting();
         RenderUtil.enableGUIStandardItemLighting();
-//        Minecraft.getMinecraft().getRenderItem().renderItemIntoGUI(stack, (int) x, (int) y);
         guiGraphics.renderFakeItem(stack, (int) x, (int) y);
-//        RenderHelper.disableStandardItemLighting();
         RenderUtil.disableStandardItemLighting();
-//        GlStateManager.color(1, 1, 1);
         RenderUtil.color(1, 1, 1);
     }
 }

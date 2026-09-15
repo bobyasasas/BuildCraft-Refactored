@@ -54,7 +54,6 @@ import java.util.List;
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
 public class FakeWorld extends IFakeWorld {
-    // private static final ResourceKey<Biome> BIOME = Biomes.PLAINS;
     @SuppressWarnings("WeakerAccess")
     public static final BlockPos BLUEPRINT_OFFSET = new BlockPos(0, 127, 0);
     public static final ResourceKey<DimensionType> DIMENSION_TYPE_KEY = ResourceKey.create(Registries.DIMENSION_TYPE, ResourceLocation.tryBuild(BCBuilders.MODID, "fake"));
@@ -69,9 +68,6 @@ public class FakeWorld extends IFakeWorld {
     @SuppressWarnings("WeakerAccess")
     public FakeWorld() {
 //        super(
-//                new SaveHandlerMP(),
-//                new WorldInfo(
-//                        new WorldSettings(
 //                                0,
 //                                GameType.CREATIVE,
 //                                true,
@@ -80,15 +76,9 @@ public class FakeWorld extends IFakeWorld {
 //                        ),
 //                        "fake"
 //                ),
-//                new WorldProvider() {
 //                    @Override
-//                    public DimensionType getDimensionType() {
-//                        return DimensionType.OVERWORLD;
-//                    }
 //                },
-//                new Profiler(),
 //                true
-//        );
         super(
                 LEVEL_DATA,
                 ResourceKey.create(
@@ -152,12 +142,7 @@ public class FakeWorld extends IFakeWorld {
         return this.getChunkAt(p_46716_).getBlockEntity(p_46716_, LevelChunk.EntityCreationType.IMMEDIATE);
     }
 
-    // Calen: only in ServerLevel
 //    @Override
-//    public BlockPos getSpawnPoint()
-//    public BlockPos getSharedSpawnPos() {
-//        return BLUEPRINT_OFFSET;
-//    }
 
     @Override
 
@@ -171,7 +156,6 @@ public class FakeWorld extends IFakeWorld {
     }
 
     @Override
-//    protected IChunkProvider createChunkProvider()
     public FakeChunkProvider getChunkSource() {
         return this.chunkProvider;
     }
@@ -192,15 +176,11 @@ public class FakeWorld extends IFakeWorld {
     }
 
     @Override
-//    protected boolean isChunkLoaded(int x, int z, boolean allowEmpty)
     public boolean hasChunk(int v, int z) {
         return true;
     }
 
 //    @Override
-//    public Holder<Biome> getBiome(BlockPos pos) {
-//        return ForgeRegistries.BIOMES.getValue(BIOME.location());
-//    }
 
     @Override
     public Holder<Biome> getUncachedNoiseBiome(int p_204159_, int p_204160_, int p_204161_) {
@@ -208,9 +188,6 @@ public class FakeWorld extends IFakeWorld {
     }
 
 //    @Override
-//    public Biome getBiomeForCoordsBody(BlockPos pos) {
-//        return BIOME;
-//    }
 
 
     @Override

@@ -385,14 +385,11 @@ public class NbtSquisherTester {
         System.in.read();
         watchWhole.start();
 
-        // NbtSquisher.profiler.profilingEnabled = true;
         NbtSquisher.profiler.push("root");
-        // NbtSquisher.debugBuffer = PrintingByteBuf::new;
         for (int i = 0; i < 100; i++) {
             System.out.println("Starting test " + (i + 1));
             all[i] = test(true, tester.nbt);
             System.out.println("Finished test " + (i + 1));
-            // NbtSquisher.debugBuffer = null;
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -412,7 +409,6 @@ public class NbtSquisherTester {
 
         NbtSquisher.profiler.pop();
         if (NbtSquisher.profiler instanceof ActiveProfiler activeProfiler) {
-//            ProfilerUtil.printProfilerResults(NbtSquisher.profiler, "root.write");
             ProfilerUtil.printProfilerResults(activeProfiler, "root.write");
         }
         watchWhole.stop();

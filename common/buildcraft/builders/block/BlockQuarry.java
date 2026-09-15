@@ -62,19 +62,15 @@ public class BlockQuarry extends BlockBCTile_Neptune<TileQuarry> implements IBlo
         properties.addAll(BuildCraftProperties.CONNECTED_MAP.values());
     }
 
-    // private boolean isConnected(IBlockAccess world, BlockPos pos, IBlockState state, Direction side)
     private boolean isConnected(LevelAccessor world, BlockPos pos, BlockState state, Direction side) {
         Direction facing = side;
-//        if (Arrays.asList(Direction.HORIZONTALS).contains(facing))
         if (Arrays.asList(Direction.BY_2D_DATA).contains(facing)) {
 //            facing = Direction.getHorizontal(
             facing = Direction.from2DDataValue(
-//                    side.getHorizontalIndex() + 2 + state.getValue(getFacingProperty()).getHorizontalIndex()
                     side.get2DDataValue() + 2 + state.getValue(getFacingProperty()).get2DDataValue()
             );
         }
         BlockEntity tile = world.getBlockEntity(pos.relative(facing));
-//        return tile != null && tile.hasCapability(CapUtil.CAP_ITEMS, facing.getOpposite());
         return tile != null && tile.getCapability(CapUtil.CAP_ITEMS, facing.getOpposite()).isPresent();
     }
 
@@ -93,9 +89,7 @@ public class BlockQuarry extends BlockBCTile_Neptune<TileQuarry> implements IBlo
     }
 
     @Override
-//    public TileBC_Neptune createTileEntity(World world, IBlockState state)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
-//        return new TileQuarry();
         return new TileQuarry(pos, state);
     }
 
@@ -105,9 +99,7 @@ public class BlockQuarry extends BlockBCTile_Neptune<TileQuarry> implements IBlo
     }
 
     @Override
-//    public void breakBlock(World world, BlockPos pos, IBlockState state)
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-        // Calen: onRemove will be called when chest/shulkerbox placed nearby, without newState.getBlock() == state.getBlock(), the frame will be rebuilt
         if (newState.getBlock() == state.getBlock()) {
             return; // Just a block state change
         }
@@ -119,39 +111,28 @@ public class BlockQuarry extends BlockBCTile_Neptune<TileQuarry> implements IBlo
                 }
             }
         }
-//        super.breakBlock(world, pos, state);
         super.onRemove(state, world, pos, newState, isMoving);
     }
 
     @Override
-//    public SoundType getSoundType(IBlockState state, World world, BlockPos pos, @Nullable Entity entity)
     public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @org.jetbrains.annotations.Nullable Entity entity) {
         return SoundType.ANVIL;
     }
 
     @Override
-//    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-//        super.onBlockPlacedBy(world, pos, state, placer, stack);
         super.setPlacedBy(world, pos, state, placer, stack);
         if (placer instanceof Player) {
             AdvancementUtil.unlockAdvancement((Player) placer, ADVANCEMENT);
         }
     }
 
-    // Calen: selected shape
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         VoxelShape shape = super.getShape(state, world, pos, context);
-//        if (world.getBlockEntity(pos) instanceof TileQuarry tile)
-//        {
-//            return Shapes.or(shape, tile.getCollisionBoxes().toArray(new VoxelShape[0]));
-//        }
         return shape;
-//        return Block.box(-5, 0, -5, 20, 10, 20);
     }
 
-    // Calen: from BCBuildersEventDist#onGetCollisionBoxesForQuarry
     @Override
     public VoxelShape getInteractionShape(BlockState state, BlockGetter world, BlockPos pos) {
         VoxelShape shape = super.getInteractionShape(state, world, pos);

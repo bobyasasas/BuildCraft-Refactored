@@ -37,7 +37,6 @@ public class ActionMachineControl extends BCStatement implements IActionExternal
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("gate.action.machine." + mode.name().toLowerCase(Locale.ROOT));
         return Component.translatable("gate.action.machine." + mode.name().toLowerCase(Locale.ROOT));
     }
 

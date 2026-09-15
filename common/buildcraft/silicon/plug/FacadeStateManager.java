@@ -78,40 +78,29 @@ public enum FacadeStateManager implements IFacadeRegistry {
         return validFacadeStates.get(state);
     }
 
-    // public static void receiveInterModComms(IMCMessage message)
     public static void receiveInterModComms(IMCMessage messageOuter, BcImcMessage messageInner) {
         String id = messageOuter.method();
         if (FacadeAPI.IMC_FACADE_DISABLE.equals(id)) {
-//            if (!message.isResourceLocationMessage()) {
 //                BCLog.logger.warn("[facade.imc] Received an invalid IMC message from " + message.getSender() + " - "
-//                        + id + " should have a resourcelocation value, not a " + message);
-//                return;
-//            }
             ResourceLocation loc = messageInner.getResourceLocationValue();
-//            Block block = Block.REGISTRY.getObject(loc);
             Block block = ForgeRegistries.BLOCKS.getValue(loc);
             if (block == Blocks.AIR || block == null) {
 //                BCLog.logger.warn("[facade.imc] Received an invalid IMC message from " + message.getSender() + " - "
                 BCLog.logger.warn("[facade.imc] Received an invalid IMC message from " + messageOuter.senderModId() + " - "
-//                        + id + " should have a valid block target, not " + block + " (" + message + ")");
                         + id + " should have a valid block target [" + loc + "], not " + block + " (" + messageInner + ")");
                 return;
             }
-//            disabledBlocks.put(block, message.getSender());
             disabledBlocks.put(block, messageOuter.senderModId());
         } else if (FacadeAPI.IMC_FACADE_CUSTOM.equals(id)) {
             if (!messageInner.isNBTMessage()) {
 //                BCLog.logger.warn("[facade.imc] Received an invalid IMC message from " + message.getSender() + " - "
                 BCLog.logger.warn("[facade.imc] Received an invalid IMC message from " + messageOuter.senderModId() + " - "
-//                        + id + " should have an nbt value, not a " + message);
                         + id + " should have an nbt value, not a " + messageInner);
                 return;
             }
             CompoundTag nbt = messageInner.getNBTValue();
             String regName = nbt.getString(FacadeAPI.NBT_CUSTOM_BLOCK_REG_KEY);
-//            int meta = nbt.getInt(FacadeAPI.NBT_CUSTOM_BLOCK_META);
             BlockState state = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), nbt.getCompound(FacadeAPI.NBT_CUSTOM_BLOCK_META));
-//            ItemStack stack = new ItemStack(nbt.getCompound(FacadeAPI.NBT_CUSTOM_ITEM_STACK));
             ItemStack stack = ItemStack.of(nbt.getCompound(FacadeAPI.NBT_CUSTOM_ITEM_STACK));
             if (regName.isEmpty()) {
 //                BCLog.logger.warn("[facade.imc] Received an invalid IMC message from " + message.getSender() + " - "
@@ -126,16 +115,13 @@ public enum FacadeStateManager implements IFacadeRegistry {
                         + id + " should have a valid ItemStack stored in " + FacadeAPI.NBT_CUSTOM_ITEM_STACK);
                 return;
             }
-//            Block block = Block.REGISTRY.getObject(new ResourceLocation(regName));
             Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(regName));
             if (block == Blocks.AIR || block == null) {
 //                BCLog.logger.warn("[facade.imc] Received an invalid IMC message from " + message.getSender() + " - "
                 BCLog.logger.warn("[facade.imc] Received an invalid IMC message from " + messageOuter.senderModId() + " - "
-//                        + id + " should have a valid block target, not " + block + " (" + message + ")");
                         + id + " should have a valid block target [" + regName + "], not " + block + " (" + messageInner + ")");
                 return;
             }
-//            BlockState state = block.getStateFromMeta(meta);
             customBlocks.put(state, stack);
         }
     }
@@ -158,13 +144,9 @@ public enum FacadeStateManager implements IFacadeRegistry {
         if (block instanceof IFluidBlock || block instanceof LiquidBlock) {
             return new InteractionResultHolder<>(InteractionResult.FAIL, "it is a fluid block");
         }
-        // Calen
         if (block instanceof ChorusFlowerBlock) {
             return new InteractionResultHolder<>(InteractionResult.FAIL, "it is ChorusFlowerBlock");
         }
-        // if (block instanceof BlockSlime) {
-        // return "it is a slime block";
-        // }
         if (block instanceof GlassBlock || block instanceof StainedGlassBlock) {
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, "");
         }
@@ -180,17 +162,13 @@ public enum FacadeStateManager implements IFacadeRegistry {
      * </ul>
      */
     private static InteractionResultHolder<String> isValidFacadeState(BlockState state) {
-//        if (state.getBlock().hasTileEntity(state))
         if (state.hasBlockEntity()) {
             return new InteractionResultHolder<>(InteractionResult.FAIL, "it has a tile entity");
         }
-//        if (state.getRenderType() != EnumBlockRenderType.MODEL)
         if (state.getRenderShape() != RenderShape.MODEL) {
             return new InteractionResultHolder<>(InteractionResult.FAIL, "it doesn't have a normal model");
         }
-//        if (!state.isFullCube())
         VoxelShape shape = state.getCollisionShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
-//        if (shape.isEmpty() || !shape.bounds().equals(Shapes.block().bounds()))
         if (shape.isEmpty() || shape != Shapes.block()) {
             return new InteractionResultHolder<>(InteractionResult.FAIL, "it isn't a full cube");
         }
@@ -204,11 +182,7 @@ public enum FacadeStateManager implements IFacadeRegistry {
             return stack;
         }
         Block block = state.getBlock();
-//        Item item = Item.getItemFromBlock(block);
         ItemStack item = block.getCloneItemStack(EmptyBlockGetter.INSTANCE, BlockPos.ZERO, state);
-//        if (item == Items.AIR) {
-//            item = block.getItemDropped(state, new Random(0), 0);
-//        }
         return item;
     }
 
@@ -222,9 +196,7 @@ public enum FacadeStateManager implements IFacadeRegistry {
         Stopwatch watch = Stopwatch.createStarted();
 
         for (Block block : ForgeRegistries.BLOCKS) {
-            // scanBlock(block);
 
-            // Calen: Too many scanned facades will waste lots of memory and even cause client fail to connect to server
             // So we only scan config allowed blocks
             if (BCSiliconConfig.isFacadeBlockIdAllowedInCreativeModTabByConfig(block)) {
                 scanBlock(block);
@@ -241,7 +213,6 @@ public enum FacadeStateManager implements IFacadeRegistry {
         FacadeSwapRecipe.genRecipes();
     }
 
-    // private static void scanBlock(Block block)
     public static void scanBlock(Block block) {
         try {
             if (!DEBUG && KNOWN_INVALID_REPORTED_MODS.contains(BlockUtil.getRegistryName(block).getNamespace())) {
@@ -279,10 +250,6 @@ public enum FacadeStateManager implements IFacadeRegistry {
             Map<BlockState, ItemStack> usedStates = new HashMap<>();
             Map<ItemStackKey, Map<Property<?>, Comparable<?>>> varyingProperties = new HashMap<>();
             for (BlockState state : block.getStateDefinition().getPossibleStates()) {
-                // state = block.getStateFromMeta(block.getMetaFromState(state));
-                // if (!checkedStates.add(state)) {
-                // continue;
-                // }
                 if (result.getResult() != InteractionResult.SUCCESS) {
                     result = isValidFacadeState(state);
                     if (result.getResult() == InteractionResult.SUCCESS) {
@@ -323,10 +290,7 @@ public enum FacadeStateManager implements IFacadeRegistry {
                     vars = varsFinal;
                     varyingProperties.put(stackKey, vars);
                 } else {
-//                    for (Entry<Property<?>, Comparable<?>> entry : state.getProperties().entrySet())
                     for (Property<?> prop : state.getProperties()) {
-//                        IProperty<?> prop = entry.getKey();
-//                        Comparable<?> value = entry.getValue();
                         Comparable<?> value = state.getValue(prop);
                         if (vars.get(prop) != value) {
                             vars.put(prop, null);
@@ -334,7 +298,6 @@ public enum FacadeStateManager implements IFacadeRegistry {
                     }
                 }
 
-                // Calen
                 if (block == Blocks.NOTE_BLOCK) {
                     if (!BCSiliconConfig.differStatesOfNoteBlockForFacade) {
                         break;
@@ -415,7 +378,6 @@ public enum FacadeStateManager implements IFacadeRegistry {
             message += "\n  Class = " + property.getClass();
             message += "\n  Method not overriden: Property.parseValue(String)";
             RuntimeException exception = new RuntimeException(message, error);
-//            if (BCLib.DEV || !BCLib.MC_VERSION.equals("1.12.2"))
             if (BCLib.DEV || !BCLib.MC_VERSION.equals("1.18.2")) {
                 throw exception;
             } else {
@@ -444,7 +406,6 @@ public enum FacadeStateManager implements IFacadeRegistry {
                 message += "\n  Value class (parsed) = " + (parsed == null ? null : parsed.getClass());
                 if (optional == null) {
                     // Massive issue
-//                    message += "\n  Property.parseValue() -> Null com.google.common.base.Optional!!";
                     message += "\n  Property.parseValue() -> Null java.util.Optional!!";
                 }
                 message += "\n";
@@ -452,7 +413,6 @@ public enum FacadeStateManager implements IFacadeRegistry {
                 // or in a dev environment
                 // as this really needs to be fixed
                 RuntimeException exception = new RuntimeException(message);
-//                if (BCLib.DEV || !BCLib.MC_VERSION.equals("1.12.2"))
                 if (BCLib.DEV || !BCLib.MC_VERSION.equals("1.18.2")) {
                     throw exception;
                 } else {

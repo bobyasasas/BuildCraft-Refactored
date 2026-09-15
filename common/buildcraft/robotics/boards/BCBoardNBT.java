@@ -20,10 +20,8 @@ import java.util.Map;
 
 public class BCBoardNBT extends RedstoneBoardRobotNBT {
     public static final Map<String, BCBoardNBT> REGISTRY = new HashMap<String, BCBoardNBT>();
-    // private final ResourceLocation texture;
     private final ResourceLocation robotTexture;
     private final ResourceLocation robotItemTexture;
-    // Calen 1.18.2
     private final ResourceLocation robotTextureFullLocation;
     private final ResourceLocation robotId;
     private final ResourceLocation id;
@@ -36,7 +34,6 @@ public class BCBoardNBT extends RedstoneBoardRobotNBT {
     public BCBoardNBT(String id, String name, Class<? extends RedstoneBoardRobot> board, String boardType) {
         this.id = new ResourceLocation(id);
         this.boardType = boardType;
-        // this.upperName = name.substring(0, 1).toUpperCase() + name.substring(1);
         String upperName = name.substring(0, 1).toUpperCase() + name.substring(1);
         while (upperName.contains("_")) {
             int index = upperName.indexOf('_');
@@ -45,7 +42,6 @@ public class BCBoardNBT extends RedstoneBoardRobotNBT {
             }
         }
         this.upperName = upperName;
-        // this.texture = new ResourceLocation(DefaultProps.TEXTURE_PATH_ROBOTS + "/robot_" + name + ".png");
         this.robotTexture = new ResourceLocation("buildcraftrobotics:entities/robot_" + name);
         this.robotItemTexture = new ResourceLocation("buildcraftrobotics:item/robot/robot_" + name);
         this.robotTextureFullLocation = new ResourceLocation("buildcraftrobotics:textures/entities/robot_" + name + ".png");
@@ -70,9 +66,7 @@ public class BCBoardNBT extends RedstoneBoardRobotNBT {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-//    public void addInformation(ItemStack stack, Player player, List list, boolean advanced)
     public void addInformation(ItemStack stack, @Nullable Level world, List<Component> list, TooltipFlag flag) {
-        // list.add(new TextComponent(ChatFormatting.BOLD.toString()).append(new TranslatableComponent("buildcraft.boardRobot" + this.upperName)));
         list.add(Component.translatable("buildcraft.boardRobot" + upperName + ".desc"));
     }
 
@@ -91,7 +85,6 @@ public class BCBoardNBT extends RedstoneBoardRobotNBT {
         return robotTexture;
     }
 
-    // Calen 1.18.2
     @Override
     public ResourceLocation getRobotItemTexture() {
         return robotItemTexture;
@@ -108,16 +101,11 @@ public class BCBoardNBT extends RedstoneBoardRobotNBT {
     }
 
     @Override
-    // public String getItemModelLocation()
     public String getBoardTexture() {
-        // return "buildcraftrobotics:board/" + boardType;
         return "buildcraftrobotics:item/board/" + boardType;
     }
 
 //    @Override
-//    public String getDisplayName() {
-//        return LocaleUtil.localize("buildcraft.boardRobot" + upperName);
-//    }
 
     @Override
     public Component getDisplayNameComponent() {

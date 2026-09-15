@@ -21,7 +21,6 @@ public class PageLinkStatement extends PageLink {
 
     public final IStatement statement;
     public final List<Component> tooltip;
-    // public final String searchText;
     public final Component searchText;
     public final String textKey;
 
@@ -32,12 +31,10 @@ public class PageLinkStatement extends PageLink {
         if (tip.isEmpty()) {
             String uniqueTag = statement.getUniqueTag();
             this.tooltip = ImmutableList.of(Component.literal(uniqueTag));
-//            this.searchText = uniqueTag.toLowerCase(Locale.ROOT);
             this.searchText = Component.literal(uniqueTag);
             this.textKey = statement.getDescriptionKey().toLowerCase(Locale.ROOT);
         } else {
             this.tooltip = tip;
-//            String joinedTooltip = joinedTooltip_StrList.stream().collect(Collectors.joining(" ", "", ""));
             MutableComponent joinedTooltip = Component.literal("");
             for (int i = 0; i < tip.size(); i++) {
                 joinedTooltip = joinedTooltip.append(tip.get(i));
@@ -45,7 +42,6 @@ public class PageLinkStatement extends PageLink {
                     joinedTooltip.append(Component.literal(" "));
                 }
             }
-//            this.searchText = TextFormatting.getTextWithoutFormattingCodes(joinedTooltip).toLowerCase(Locale.ROOT);
             this.searchText = joinedTooltip;
             this.textKey = ChatFormatting.stripFormatting(statement.getTooltipKey().stream().collect(Collectors.joining("_", "", "")).toLowerCase(Locale.ROOT));
         }
@@ -58,12 +54,10 @@ public class PageLinkStatement extends PageLink {
         List<String> tooltipKeys = statement.getTooltipKey();
         Component title = tooltip.isEmpty() ? Component.literal(statement.getUniqueTag()) : tooltip.get(0);
         String titleKey = tooltipKeys.isEmpty() ? statement.getDescriptionKey() : tooltipKeys.get(0);
-//        return new PageLine(icon, icon, 2, title, true);
         return new PageLine(icon, icon, 2, titleKey, title, true);
     }
 
     @Override
-//    public String getSearchName()
     public Component getSearchName() {
         return searchText;
     }

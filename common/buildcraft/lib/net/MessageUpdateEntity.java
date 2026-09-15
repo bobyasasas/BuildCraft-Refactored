@@ -13,7 +13,6 @@ import java.util.UUID;
 
 public class MessageUpdateEntity implements IMessage {
     private UUID uuid;
-    // private PacketBufferBC payload;
     public PacketBufferBC payload;
 
     @SuppressWarnings("unused")

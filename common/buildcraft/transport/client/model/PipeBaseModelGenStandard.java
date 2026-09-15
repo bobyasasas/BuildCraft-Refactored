@@ -42,20 +42,14 @@ public enum PipeBaseModelGenStandard implements IPipeBaseModelGen {
     private static final Map<PipeDefinition, TextureAtlasSprite[]> SPRITES = new IdentityHashMap<>();
 
     @Override
-//    public void onTextureStitchPre(TextureStitchEvent.Pre event)
     public void onTextureStitchPre() {
         SPRITES.clear();
         for (PipeDefinition def : PipeApi.pipeRegistry.getAllRegisteredPipes()) {
             TextureAtlasSprite[] array = new TextureAtlasSprite[def.textures.length];
-//            for (int i = 0; i < array.length; i++) {
-//                String name = def.textures[i];
-//                event.addSprite(new ResourceLocation(name));
-//            }
             SPRITES.put(def, array);
         }
     }
 
-    // Calen 1.20.1
     @Override
     public void onDatagenTextureRegister(Consumer<ResourceLocation> consumer) {
         for (PipeDefinition def : PipeApi.pipeRegistry.getAllRegisteredPipes()) {
@@ -274,7 +268,6 @@ public enum PipeBaseModelGenStandard implements IPipeBaseModelGen {
 
     private static TextureAtlasSprite getSprite(TextureAtlasSprite[] array, int index) {
         if (array == null || index < 0 || index >= array.length) {
-//            return Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
             return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(MissingTextureAtlasSprite.getLocation());
         }
         return array[index];

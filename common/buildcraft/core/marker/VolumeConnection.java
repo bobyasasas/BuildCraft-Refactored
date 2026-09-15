@@ -165,7 +165,6 @@ public class VolumeConnection extends MarkerConnection<VolumeConnection> {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void renderInWorld(PoseStack poseStack) {
-//        LaserBoxRenderer.renderLaserBoxStatic(box, BuildCraftLaserManager.MARKER_VOLUME_CONNECTED, true);
         LaserBoxRenderer.renderLaserBoxStatic(box, BuildCraftLaserManager.MARKER_VOLUME_CONNECTED, poseStack.last(), true);
     }
 }

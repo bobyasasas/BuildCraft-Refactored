@@ -57,13 +57,11 @@ public class BCTransportConfig {
     private static ConfigCategory<Boolean> propDisableStrictDaizuliItemPipeLogic;
 
     public static void preInit() {
-//        Configuration config = BCCoreConfig.config;
         BCModules module = BCModules.TRANSPORT;
         config = new Configuration(module);
         createProps();
 
         reloadConfig();
-//        MinecraftForge.EVENT_BUS.register(BCTransportConfig.class);
         BCConfig.registerReloadListener(module, BCTransportConfig::reloadConfig);
     }
 
@@ -130,7 +128,6 @@ public class BCTransportConfig {
                         world,
                         "kinesisLossMode", PowerLossMode.LOSSLESS);
 
-        // Calen 1.20.1
         propDisableStrictDaizuliItemPipeLogic = config
                 .define(general,
                         "The logic of the daizuli item pipe: " +
@@ -140,9 +137,7 @@ public class BCTransportConfig {
                         "pipes.disableStrictDaizuliItemPipeLogic", false);
     }
 
-    // public static void reloadConfig(EnumRestartRequirement restarted)
     public static void reloadConfig() {
-//        if (EnumRestartRequirement.WORLD.hasBeenRestarted(restarted)) {
         mjPerMillibucket = propMjPerMillibucket.get();
         if (mjPerMillibucket < MJ_REQ_MILLIBUCKET_MIN) {
             mjPerMillibucket = MJ_REQ_MILLIBUCKET_MIN;
@@ -226,14 +221,5 @@ public class BCTransportConfig {
     }
 
 //    @SubscribeEvent
-//    public static void onConfigChange(OnConfigChangedEvent cce) {
-//        if (BCModules.isBcMod(cce.getModID())) {
-//            EnumRestartRequirement req = EnumRestartRequirement.NONE;
-//            if (Loader.instance().isInState(LoaderState.AVAILABLE)) {
 //                // The loaders state will be LoaderState.SERVER_STARTED when we are in a world
-//                req = EnumRestartRequirement.WORLD;
-//            }
-//            reloadConfig(req);
-//        }
-//    }
 }

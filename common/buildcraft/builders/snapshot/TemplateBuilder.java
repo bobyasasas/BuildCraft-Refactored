@@ -63,7 +63,6 @@ public class TemplateBuilder extends SnapshotBuilder<ITileForTemplateBuilder> {
                 tile.getOwner(),
                 tile.getBuilderPos()
         );
-//        fakePlayer.setHeldItem(fakePlayer.getActiveHand(), placeTask.items.get(0));
         fakePlayer.setItemInHand(fakePlayer.getUsedItemHand(), placeTask.items.get(0));
         return TemplateApi.templateRegistry.handle(
                 tile.getWorldBC(),

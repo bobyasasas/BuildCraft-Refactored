@@ -21,7 +21,6 @@ public class TriggerItemsTraversing extends BCStatement implements ITriggerInter
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("gate.trigger.pipe.containsItems");
         return Component.translatable("gate.trigger.pipe.containsItems");
     }
 

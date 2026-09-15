@@ -46,7 +46,6 @@ public final class SchematicBlockAir implements ISchematicBlock {
     }
 
     @Override
-//    public boolean buildWithoutChecks(Level world, BlockPos blockPos)
     public boolean buildWithoutChecks(IFakeWorld world, BlockPos blockPos) {
         return true;
     }

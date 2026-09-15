@@ -62,7 +62,6 @@ public class FluidUtilBC {
         }
         if (drained > 0) {
             FluidStack actuallyDrained = tank.drain(drained, FluidAction.EXECUTE);
-//            if (actuallyDrained == null || actuallyDrained.getAmount() != drained)
             if (actuallyDrained == null || actuallyDrained.isEmpty() || actuallyDrained.getAmount() != drained) {
                 String strWorking = StringUtilBC.fluidToString(working);
                 String strActual = StringUtilBC.fluidToString(actuallyDrained);
@@ -94,7 +93,6 @@ public class FluidUtilBC {
         return (a == null && b == null) || (a != null && a.isFluidEqual(b) && a.getAmount() == b.getAmount());
     }
 
-    // Calen: use areFluidsEqualIgnoringStillOrFlow in 1.18.2
     @Deprecated(forRemoval = true)
     public static boolean areFluidsEqual(Fluid a, Fluid b) {
         if (a == null || b == null) {
@@ -103,7 +101,6 @@ public class FluidUtilBC {
         return getRegistryName(a).toString().equals(getRegistryName(b).toString());
     }
 
-    // Calen
     public static boolean areFluidsEqualIgnoringStillOrFlow(Fluid a, Fluid b) {
         if (a == null || b == null) {
             return a == b;
@@ -124,7 +121,6 @@ public class FluidUtilBC {
     @Nullable
     public static FluidStack move(IFluidHandler from, IFluidHandler to, int max) {
         if (from == null || to == null) {
-//            return null;
             return StackUtil.EMPTY_FLUID;
         }
         FluidStack toDrainPotential;
@@ -134,26 +130,21 @@ public class FluidUtilBC {
         } else {
             toDrainPotential = from.drain(max, FluidAction.SIMULATE);
         }
-//        if (toDrainPotential == null)
         if (toDrainPotential.isEmpty()) {
             return StackUtil.EMPTY_FLUID;
         }
         int accepted = to.fill(toDrainPotential.copy(), FluidAction.SIMULATE);
         if (accepted <= 0) {
-//            return null;
             return StackUtil.EMPTY_FLUID;
         }
         FluidStack toDrain = new FluidStack(toDrainPotential, accepted);
         if (accepted < toDrainPotential.getAmount()) {
             toDrainPotential = from.drain(toDrain, FluidAction.SIMULATE);
-//            if (toDrainPotential == null || toDrainPotential.getAmount() < accepted)
             if (toDrainPotential.isEmpty() || toDrainPotential.getAmount() < accepted) {
-//                return null;
                 return StackUtil.EMPTY_FLUID;
             }
         }
         FluidStack drained = from.drain(toDrain.copy(), FluidAction.EXECUTE);
-//        if (drained == null || toDrain.getAmount() != drained.getAmount() || !toDrain.isFluidEqual(drained))
         if (drained.isEmpty() || toDrain.getAmount() != drained.getAmount() || !toDrain.isFluidEqual(drained)) {
             String detail = "(To Drain = " + StringUtilBC.fluidToString(toDrain);
             detail += ",\npotential drain = " + StringUtilBC.fluidToString(toDrainPotential) + ")";
@@ -197,11 +188,9 @@ public class FluidUtilBC {
         }
         boolean changed = true;
         FluidStack moved;
-//        if ((moved = FluidUtilBC.move(flItem, fluidHandler)) != null)
         if (!(moved = FluidUtilBC.move(flItem, fluidHandler)).isEmpty()) {
             SoundUtil.playBucketEmpty(world, pos, moved);
         }
-//        else if ((moved = FluidUtilBC.move(fluidHandler, flItem)) != null)
         else if (!(moved = FluidUtilBC.move(fluidHandler, flItem)).isEmpty()) {
             SoundUtil.playBucketFill(world, pos, moved);
         } else {
@@ -210,20 +199,16 @@ public class FluidUtilBC {
 
         if (changed && replace) {
             if (single) {
-                // if it was the single item, replace with changed one
                 player.setItemInHand(hand, flItem.getContainer());
             } else {
-                // if it was part of stack, shrink stack and give / drop the new one
                 held.shrink(1);
                 ItemHandlerHelper.giveItemToPlayer(player, flItem.getContainer());
             }
-//            player.inventoryContainer.detectAndSendChanges();
             player.inventoryMenu.broadcastChanges();
         }
         return InteractionResult.SUCCESS;
     }
 
-    // Calen
     public static Fluid getItemFromRegistryName(String name) {
         return getItemFromRegistryName(new ResourceLocation(name));
     }

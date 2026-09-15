@@ -40,16 +40,11 @@ public class OilStructureFeature extends Structure {
 
     @Override
     public Optional<GenerationStub> findGenerationPoint(GenerationContext context) {
-//        int minHeight = context.heightAccessor().getMinBuildHeight();
-//        int maxHeight = context.heightAccessor().getMaxBuildHeight();
         ChunkPos chunkPos = context.chunkPos();
         int chunkX = chunkPos.x;
         int chunkZ = chunkPos.z;
 
-//        int x = chunkX * 16 + 8;
-//        int z = chunkZ * 16 + 8;
 
-//        for (int cdx = -MAX_CHUNK_RADIUS; cdx <= MAX_CHUNK_RADIUS; cdx++)
         int cx = chunkX;
         int cz = chunkZ;
 
@@ -61,7 +56,7 @@ public class OilStructureFeature extends Structure {
         int zForGen = cz * 16 + 8 + rand.nextInt(16);
         Holder<Biome> biome = context.chunkGenerator().getBiomeSource().getNoiseBiome(
                 QuartPos.fromBlock(xForGen),
-                QuartPos.fromBlock(63), // Calen: 63?
+                QuartPos.fromBlock(63),
                 QuartPos.fromBlock(zForGen),
                 context.randomState().sampler()
         );
@@ -70,7 +65,6 @@ public class OilStructureFeature extends Structure {
             return Optional.empty();
         }
         OilFeatureConfiguration.Info info = new OilFeatureConfiguration.Info(type, rand, xForGen, zForGen);
-//        OilFeatureConfiguration.add(context.chunkPos(), info);
         return onTopOfChunkCenter(context, Heightmap.Types.WORLD_SURFACE_WG, (structurePiecesBuilder) -> {
             OilGenerator.generatePieces(structurePiecesBuilder, context, info);
         });

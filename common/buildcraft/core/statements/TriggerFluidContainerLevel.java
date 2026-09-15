@@ -43,7 +43,6 @@ public class TriggerFluidContainerLevel extends BCStatement implements ITriggerE
 
     @Override
     public Component getDescription() {
-//        return String.format(LocaleUtil.localize("gate.trigger.fluidlevel.below"), (int) (type.level * 100));
         return Component.translatable("gate.trigger.fluidlevel.below", (int) (type.level * 100));
     }
 
@@ -67,25 +66,18 @@ public class TriggerFluidContainerLevel extends BCStatement implements ITriggerE
             }
         }
 
-//        IFluidTankProperties[] tankPropertiesArray = handler.getTankProperties();
         int tankPropertiesArray = handler.getTanks();
-//        if (tankPropertiesArray == null || tankPropertiesArray.length == 0)
         if (tankPropertiesArray == 0) {
             return false;
         }
 
-//        for (IFluidTankProperties tankProperties : tankPropertiesArray)
         for (int i = 0; i < tankPropertiesArray; i++) {
-//            if (tankProperties == null) { continue; }
-//            FluidStack fluid = tankProperties.getContents();
             FluidStack fluid = handler.getFluidInTank(i);
-//            if (fluid == null)
             if (fluid.isEmpty()) {
                 return searchedFluid == null || handler.fill(searchedFluid, IFluidHandler.FluidAction.SIMULATE) > 0;
             }
 
             if (searchedFluid == null || searchedFluid.isFluidEqual(fluid)) {
-//                float percentage = fluid.amount / (float) tankProperties.getCapacity();
                 float percentage = fluid.getAmount() / (float) handler.getTankCapacity(i);
                 return percentage < type.level;
             }

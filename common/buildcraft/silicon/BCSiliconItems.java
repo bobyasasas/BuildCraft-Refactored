@@ -34,7 +34,6 @@ public class BCSiliconItems {
 
     public static RegistryObject<ItemGateCopier> gateCopier;
 
-    // public static RegistryObject<ItemPluggableGate> plugGate;
     public static final Map<GateVariant, RegistryObject<ItemPluggableGate>> variantGateMap = new HashMap<>();
     public static RegistryObject<ItemPluggableLens> plugLens;
     public static RegistryObject<ItemPluggableSimple> plugPulsar;
@@ -54,7 +53,6 @@ public class BCSiliconItems {
         gateCopier = HELPER.addItem("item.gate_copier", ItemPropertiesCreator.common1(), ItemGateCopier::new);
 
         // Gates
-//        plugGate = HELPER.addItem("item.plug.gate", ItemPropertiesCreator.common64(), ItemPluggableGate::new);
         GateVariant gateVariant = new GateVariant(new CompoundTag());
         String registryId = TagManager.getTag("item.plug.gate", TagManager.EnumTagType.REGISTRY_NAME).replace(BCSilicon.MODID + ":", "");
         RegistryObject<ItemPluggableGate> plug = HELPER.addItem("item.plug.gate", registryId, ItemPropertiesCreator.common64(), (idBC, prop) -> new ItemPluggableGate(idBC, prop, gateVariant));

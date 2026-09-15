@@ -45,7 +45,6 @@ public class JsonVariableModel extends JsonVariableObject {
         return deserialize(from, fnCtx, new ResourceLoaderContext());
     }
 
-    // Calen 1.20.1
     public static JsonVariableModel datagenDeserialize(ResourceLocation from, FunctionContext fnCtx, ExistingFileHelper fileHelper)
             throws JsonParseException, IOException {
         return datagenDeserialize(from, fnCtx, new ResourceLoaderContext(), fileHelper);
@@ -60,7 +59,6 @@ public class JsonVariableModel extends JsonVariableObject {
         }
     }
 
-    // Calen 1.20.1
     public static JsonVariableModel datagenDeserialize(ResourceLocation from, FunctionContext fnCtx, ResourceLoaderContext ctx, ExistingFileHelper fileHelper)
             throws JsonParseException, IOException {
         try (InputStreamReader isr = ctx.datagenStartLoading(from, fileHelper)) {
@@ -102,15 +100,11 @@ public class JsonVariableModel extends JsonVariableObject {
 
         if (obj.has("values")) {
             fnCtx = new FunctionContext(fnCtx);
-//            putVariables(JsonUtils.getJsonObject(obj, "values"), fnCtx);
             putVariables(GsonHelper.getAsJsonObject(obj, "values"), fnCtx);
         }
 
         if (obj.has("parent")) {
-//            String parentName = JsonUtils.getString(obj, "parent");
             String parentName = GsonHelper.getAsString(obj, "parent");
-            // Calen 1.20.1: if the json file end with .json, the file will be loaded by mc and cause an exception
-//            parentName += ".json";
             parentName += ".jsonbc";
             ResourceLocation from = new ResourceLocation(parentName);
             JsonVariableModel parent;
@@ -120,31 +114,25 @@ public class JsonVariableModel extends JsonVariableObject {
                 throw new JsonParseException("Didn't find the parent '" + parentName + "'!", e);
             }
             ambf = parent.ambientOcclusion;
-//            if (!JsonUtils.getBoolean(obj, "textures_reset", false))
             if (!GsonHelper.getAsBoolean(obj, "textures_reset", false)) {
                 textures.putAll(parent.textures);
             }
             variables.putAll(parent.variables);
-//            if (!JsonUtils.getBoolean(obj, "cutout_replace", false))
             if (!GsonHelper.getAsBoolean(obj, "cutout_replace", false)) {
                 Collections.addAll(cutout, parent.cutoutElements);
             }
-//            if (!JsonUtils.getBoolean(obj, "translucent_replace", false))
             if (!GsonHelper.getAsBoolean(obj, "translucent_replace", false)) {
                 Collections.addAll(translucent, parent.translucentElements);
             }
-//            if (!JsonUtils.getBoolean(obj, "rules_replace", false))
             if (!GsonHelper.getAsBoolean(obj, "rules_replace", false)) {
                 Collections.addAll(rulesP, parent.rules);
             }
         }
 
-//        ambientOcclusion = JsonUtils.getBoolean(obj, "ambientocclusion", ambf);
         ambientOcclusion = GsonHelper.getAsBoolean(obj, "ambientocclusion", ambf);
         deserializeTextures(obj.get("textures"));
         if (obj.has("variables")) {
             fnCtx = new FunctionContext(fnCtx);
-//            putVariables(JsonUtils.getJsonObject(obj, "variables"), fnCtx);
             putVariables(GsonHelper.getAsJsonObject(obj, "variables"), fnCtx);
         }
         finaliseVariables();
@@ -170,7 +158,6 @@ public class JsonVariableModel extends JsonVariableObject {
         rules = rulesP.toArray(new JsonModelRule[rulesP.size()]);
     }
 
-    // Calen 1.20.1
     public JsonVariableModel(JsonObject obj, FunctionContext fnCtx, ResourceLoaderContext ctx, ExistingFileHelper fileHelper)
             throws JsonParseException {
         boolean ambf = false;
@@ -182,15 +169,11 @@ public class JsonVariableModel extends JsonVariableObject {
 
         if (obj.has("values")) {
             fnCtx = new FunctionContext(fnCtx);
-//            putVariables(JsonUtils.getJsonObject(obj, "values"), fnCtx);
             putVariables(GsonHelper.getAsJsonObject(obj, "values"), fnCtx);
         }
 
         if (obj.has("parent")) {
-//            String parentName = JsonUtils.getString(obj, "parent");
             String parentName = GsonHelper.getAsString(obj, "parent");
-            // Calen 1.20.1: if the json file end with .json, the file will be loaded by mc and cause an exception
-//            parentName += ".json";
             parentName += ".jsonbc";
             ResourceLocation from = new ResourceLocation(parentName);
             JsonVariableModel parent;
@@ -200,31 +183,25 @@ public class JsonVariableModel extends JsonVariableObject {
                 throw new JsonParseException("Didn't find the parent '" + parentName + "'!", e);
             }
             ambf = parent.ambientOcclusion;
-//            if (!JsonUtils.getBoolean(obj, "textures_reset", false))
             if (!GsonHelper.getAsBoolean(obj, "textures_reset", false)) {
                 textures.putAll(parent.textures);
             }
             variables.putAll(parent.variables);
-//            if (!JsonUtils.getBoolean(obj, "cutout_replace", false))
             if (!GsonHelper.getAsBoolean(obj, "cutout_replace", false)) {
                 Collections.addAll(cutout, parent.cutoutElements);
             }
-//            if (!JsonUtils.getBoolean(obj, "translucent_replace", false))
             if (!GsonHelper.getAsBoolean(obj, "translucent_replace", false)) {
                 Collections.addAll(translucent, parent.translucentElements);
             }
-//            if (!JsonUtils.getBoolean(obj, "rules_replace", false))
             if (!GsonHelper.getAsBoolean(obj, "rules_replace", false)) {
                 Collections.addAll(rulesP, parent.rules);
             }
         }
 
-//        ambientOcclusion = JsonUtils.getBoolean(obj, "ambientocclusion", ambf);
         ambientOcclusion = GsonHelper.getAsBoolean(obj, "ambientocclusion", ambf);
         deserializeTextures(obj.get("textures"));
         if (obj.has("variables")) {
             fnCtx = new FunctionContext(fnCtx);
-//            putVariables(JsonUtils.getJsonObject(obj, "variables"), fnCtx);
             putVariables(GsonHelper.getAsJsonObject(obj, "variables"), fnCtx);
         }
         finaliseVariables();
@@ -264,7 +241,6 @@ public class JsonVariableModel extends JsonVariableObject {
         if (ModelHolderRegistry.DEBUG) {
             BCLog.logger.info("[lib.model] The model " + modelLocation + " requires these sprites:");
         }
-        // Calen: Engine textures are loaded here
         ReloadSource srcModel = new ReloadSource(modelLocation, SourceType.MODEL);
         for (Entry<String, JsonTexture> entry : textures.entrySet()) {
             JsonTexture lookup = entry.getValue();
@@ -309,7 +285,6 @@ public class JsonVariableModel extends JsonVariableObject {
     private TexturedFace lookupTexture(String lookup) {
         int attempts = 0;
         JsonTexture texture = new JsonTexture(lookup);
-//        TextureAtlasSprite sprite;
         LazyLoadedValue<TextureAtlasSprite> sprite;
         while (texture.location.startsWith("#") && attempts < 10) {
             JsonTexture tex = textures.get(texture.location);
@@ -318,8 +293,6 @@ public class JsonVariableModel extends JsonVariableObject {
             attempts++;
         }
         lookup = texture.location;
-//        sprite = Minecraft.getInstance().getTextureManager().getAtlasSprite(lookup);
-//        sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(lookup));
         String _lookup = lookup;
         sprite = new LazyLoadedValue(() -> Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(_lookup)));
         TexturedFace face = new TexturedFace();

@@ -38,7 +38,6 @@ public class BCCoreBlocks {
     public static RegistryObject<BlockEngine_BC8> engineCreative;
     public static RegistryObject<BlockSpring> springWater;
     public static RegistryObject<BlockSpring> springOil;
-    // public static RegistryObject<BlockDecoration> decorated;
     public static final Map<EnumDecoratedBlock, RegistryObject<BlockDecoration>> decoratedMap = new HashMap<>();
     public static RegistryObject<BlockMarkerVolume> markerVolume;
     public static RegistryObject<BlockMarkerPath> markerPath;
@@ -58,7 +57,6 @@ public class BCCoreBlocks {
                     .sound(SoundType.STONE)
                     .randomTicks();
 
-    // Calen: static initialize for energy module access
     static {
         springWater = HELPER.addBlockAndItem(
                 "block.spring.water",
@@ -115,7 +113,6 @@ public class BCCoreBlocks {
                 TagManager.getTag("block.engine.bc." + type.getSerializedName(), TagManager.EnumTagType.UNLOCALIZED_NAME)
         )) {
             String id = "block.engine.bc." + type.getSerializedName();
-//            engine = HELPER.addBlockAndItem(id, ENGINE_PROPERTIES, (idBC, properties) -> new BlockEngine_BC8(idBC, properties, type), ItemEngine_BC8::new);
             engine = HELPER.addBlockAndItem(id,
                     BlockPropertiesCreator.metal()
                             .strength(5.0F, 10.0F)

@@ -76,12 +76,9 @@ public class GuiElementStatementVariant extends GuiElementSimple implements IMen
     @Override
     public void drawBackground(float partialTicks, GuiGraphics guiGraphics) {
         PoseStack poseStack = guiGraphics.pose();
-//        GlStateManager.pushMatrix();
         poseStack.pushPose();
         // Render above items in the players inventory
-//        GlStateManager.translate(0, 0, 1000);
         poseStack.translate(0, 0, 1000);
-//        GlStateManager.color(1, 1, 1);
         RenderUtil.color(1, 1, 1);
         SELECTION_HOVER.draw(this, guiGraphics);
         iteratePossible((pos, slot) ->
@@ -90,7 +87,6 @@ public class GuiElementStatementVariant extends GuiElementSimple implements IMen
             double y = pos.getY();
             GuiElementStatementSource.drawGuiSlot(slot, guiGraphics, x, y);
         });
-//        GlStateManager.popMatrix();
         poseStack.popPose();
     }
 

@@ -16,15 +16,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class HudSingleSchematic extends HudRenderer {
     @Override
-//    protected void renderImpl(Minecraft mc, EntityPlayerSP player)
     protected void renderImpl(Minecraft mc, LocalPlayer player) {
 
     }
 
     @Override
-//    protected boolean shouldRender(Minecraft mc, EntityPlayerSP player)
     protected boolean shouldRender(Minecraft mc, LocalPlayer player) {
-//        ItemStack stack = player.getHeldItemMainhand();
         ItemStack stack = player.getMainHandItem();
         return false;
     }

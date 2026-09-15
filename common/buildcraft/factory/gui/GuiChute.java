@@ -19,16 +19,12 @@ public class GuiChute extends GuiBC8<ContainerChute> {
 
     public GuiChute(ContainerChute container, Inventory inventory, Component component) {
         super(container, inventory, component);
-//        xSize = SIZE_X;
         imageWidth = SIZE_X;
-//        ySize = SIZE_Y;
         imageHeight = SIZE_Y;
     }
 
     @Override
-//    protected void drawBackgroundLayer(float partialTicks)
     protected void drawBackgroundLayer(float partialTicks, GuiGraphics guiGraphics) {
-//        ICON_GUI.drawAt(mainGui.rootElement);
         ICON_GUI.drawAt(mainGui.rootElement, guiGraphics);
     }
 }

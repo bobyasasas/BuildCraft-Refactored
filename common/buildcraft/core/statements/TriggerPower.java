@@ -33,7 +33,6 @@ public class TriggerPower extends BCStatement implements ITriggerInternal, ITrig
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("gate.trigger.machine.energyStored." + (high ? "high" : "low"));
         return Component.translatable("gate.trigger.machine.energyStored." + (high ? "high" : "low"));
     }
 
@@ -65,7 +64,6 @@ public class TriggerPower extends BCStatement implements ITriggerInternal, ITrig
     }
 
     public static boolean isTriggeringTile(BlockEntity tile, Direction face) {
-//        return tile.getCapability(MjAPI.CAP_READABLE, face) != null;
         return tile.getCapability(MjAPI.CAP_READABLE, face).isPresent();
     }
 

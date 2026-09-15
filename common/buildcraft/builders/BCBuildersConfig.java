@@ -46,22 +46,16 @@ public class BCBuildersConfig {
     static ConfigCategory<Boolean> internalStencilCrashTest;
 
     public static void preInit() {
-//        Configuration config = BCCoreConfig.config;
         BCModules module = BCModules.BUILDERS;
         config = new Configuration(module);
         createProps();
 
-//        BCCoreConfig.config.getCategory("internal").setShowInGui(false);
-//        BCCoreConfig.saveConfigs();
-//        reloadConfig(EnumRestartRequirement.GAME);
         reloadConfig();
-//        BCCoreConfig.addReloadListener(BCBuildersConfig::reloadConfig);
         BCConfig.registerReloadListener(module, BCBuildersConfig::reloadConfig);
     }
 
     public static void createProps() {
         EnumRestartRequirement none = EnumRestartRequirement.NONE;
-//        EnumRestartRequirement game = EnumRestartRequirement.GAME;
 
         String general = "general";
         String display = "display";
@@ -126,7 +120,6 @@ public class BCBuildersConfig {
                         "force_disable_stencil", false);
     }
 
-    // public static void reloadConfig(EnumRestartRequirement restarted)
     public static void reloadConfig() {
         bptStoreExternalThreshold = propBptStoreExternalThreshold.get();
         quarryFrameMinHeight = propQuarryFrameMinHeight.get();

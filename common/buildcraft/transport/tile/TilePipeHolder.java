@@ -192,10 +192,6 @@ public class TilePipeHolder extends TileBC_Neptune implements IPipeHolder, IDebu
             if (pipe.flow instanceof IFlowItems && BCModules.SILICON.isLoaded()) {
                 eventBus.registerHandler(FilterEventHandler.class);
             }
-//            int meta = stack.getMetadata();
-//            if (meta > 0 && meta <= 16) {
-//                pipe.setColour(EnumDyeColor.byMetadata(meta - 1));
-//            }
             pipe.setColour(itemPipe.getColour());
         }
         scheduleRenderUpdate();
@@ -205,17 +201,12 @@ public class TilePipeHolder extends TileBC_Neptune implements IPipeHolder, IDebu
         }
     }
 
-    // Calen
     private boolean chunkUnloaded = false;
 
     @Override
-//    public void invalidate()
     public void setRemoved() {
-//        super.invalidate();
         super.setRemoved();
         eventBus.fireEvent(new PipeEventTileState.Invalidate(this));
-//        wireManager.invalidate();
-        // Calen: #setRemoved will be called when chunk unload in 1.18.2, but 1.12.2 not
         // wireManager.invalidate() will cause [lib.tile] Ghost-loading tile at ...
         if (!chunkUnloaded) {
             wireManager.invalidate();
@@ -223,22 +214,17 @@ public class TilePipeHolder extends TileBC_Neptune implements IPipeHolder, IDebu
     }
 
     @Override
-//    public void validate()
     public void clearRemoved() {
-//        super.validate();
         super.clearRemoved();
         eventBus.fireEvent(new PipeEventTileState.Validate(this));
         wireManager.validate();
-        // Calen
         chunkUnloaded = false;
     }
 
     @Override
-//    public void onChunkUnload()
     public void onChunkUnloaded() {
         super.onChunkUnloaded();
         eventBus.fireEvent(new PipeEventTileState.ChunkUnload(this));
-        // Calen
         chunkUnloaded = true;
     }
 
@@ -309,12 +295,10 @@ public class TilePipeHolder extends TileBC_Neptune implements IPipeHolder, IDebu
 
         if (!Arrays.equals(redstoneValues, oldRedstoneValues)) {
             Block block = level.getBlockState(worldPosition).getBlock();
-//            level.notifyNeighborsOfStateChange(worldPosition, block, true);
             level.updateNeighborsAt(worldPosition, block);
             for (int i = 0; i < 6; i++) {
                 Direction face = Direction.VALUES[i];
                 if (oldRedstoneValues[i] != redstoneValues[i]) {
-//                    level.notifyNeighborsOfStateChange(worldPosition.relative(face), block, true);
                     level.updateNeighborsAt(worldPosition.relative(face), block);
                 }
             }
@@ -557,10 +541,8 @@ public class TilePipeHolder extends TileBC_Neptune implements IPipeHolder, IDebu
     @Override
     public int getRedstoneInput(Direction side) {
         if (side == null) {
-//            return level.isBlockIndirectlyGettingPowered(worldPosition);
             return level.getBestNeighborSignal(worldPosition);
         } else {
-//            return level.getRedstonePower(worldPosition.relative(side), side);
             return level.getSignal(worldPosition.relative(side), side);
         }
     }
@@ -590,11 +572,9 @@ public class TilePipeHolder extends TileBC_Neptune implements IPipeHolder, IDebu
             PipePluggable plug = getPluggable(facing);
             if (plug != null) {
                 LazyOptional<T> cap = plug.getCapability(capability);
-//                if (cap != null)
                 if (cap.isPresent()) {
                     return cap;
                 }
-//                if (plug.isBlocking()) return null;
                 if (plug.isBlocking()) return LazyOptional.empty();
             }
         }
@@ -610,33 +590,23 @@ public class TilePipeHolder extends TileBC_Neptune implements IPipeHolder, IDebu
     // Client side stuffs
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
         if (pipe == null) {
-//            left.add("Pipe = null");
             left.add(Component.literal("Pipe = null"));
         } else {
-//            left.add("Pipe:");
             left.add(Component.literal("Pipe:"));
             pipe.getDebugInfo(left, right, side);
         }
-//        left.add("Parts:");
         left.add(Component.literal("Parts:"));
         wireManager.parts
-//                .forEach((part, color) -> left.add(" - " + part + " = " + color + " = " + wireManager.isPowered(part)));
                 .forEach((part, color) -> left.add(Component.literal(" - " + part + " = " + color + " = " + wireManager.isPowered(part))));
-//        left.add("All wire systems in world count = " + (level.isClientSide ? 0 : wireManager.getWireSystems().wireSystems.size()));
         left.add(Component.literal("All wire systems in world count = " + (level.isClientSide ? 0 : wireManager.getWireSystems().wireSystems.size())));
         if (unknownData != null) {
-//            left.add(unknownData.toString());
             left.add(Component.literal(unknownData.toString()));
         }
     }
 
 //    @Override
-//    public boolean hasFastRenderer() {
-//        return true;
-//    }
 
     @Nonnull
     @Override

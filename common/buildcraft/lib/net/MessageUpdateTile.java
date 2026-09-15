@@ -20,7 +20,6 @@ import java.io.IOException;
 
 public class MessageUpdateTile implements IMessage {
     private BlockPos pos;
-    // private PacketBufferBC payload;
     public PacketBufferBC payload;
 
     @SuppressWarnings("unused")

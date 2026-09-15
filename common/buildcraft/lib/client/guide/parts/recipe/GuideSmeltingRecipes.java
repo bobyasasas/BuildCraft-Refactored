@@ -30,42 +30,21 @@ public enum GuideSmeltingRecipes implements IStackRecipes {
         if (Minecraft.getInstance().level == null) {
             return Lists.newArrayList();
         }
-//        Map<ItemStack, ItemStack> recipes;
         List<SmeltingRecipe> recipes;
-//        Map<ItemStack, ItemStack> old = FurnaceRecipes.instance().getSmeltingList();
         List<SmeltingRecipe> old = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeType.SMELTING);
-//        recipes = new TreeMap<>(Comparator.comparing(ItemStack::getDisplayName));
-//        recipes = new ArrayList<>();
-//        recipes.putAll(old);
         recipes = old;
-        // Calen: no meta in 1.18.2
-//        if (stack.getMetadata() == OreDictionary.WILDCARD_VALUE) {
-//            List<GuidePartFactory> list = new ArrayList<>();
-//            for (Entry<ItemStack, ItemStack> recipe : recipes.entrySet()) {
-//                if (StackUtil.doesEitherStackMatch(stack, StackUtil.asNonNull(recipe.getValue()))//
-//                        || StackUtil.doesEitherStackMatch(stack, StackUtil.asNonNull(recipe.getKey()))) {
-//                    list.add(new GuideSmeltingFactory(recipe.getKey(), recipe.getValue()));
-//                }
-//            }
-//            return list;
-//        }
 
-//        ItemStack result = FurnaceRecipes.instance().getSmeltingResult(stack);
         SmeltingRecipe recipe = recipes.stream().filter((r) -> {
             return r.getIngredients().stream().anyMatch(i -> i.test(stack));
         }).findFirst().orElse(null);
 
-//        if (!result.isEmpty())
         if (recipe != null) {
-//            return ImmutableList.of(new GuideSmeltingFactory(stack, result));
             return ImmutableList.of(new GuideSmeltingFactory(recipe.getIngredients(), recipe.getResultItem(Minecraft.getInstance().level.registryAccess())));
         }
 
         if (stack.getItem() == Items.FURNACE) {
             List<GuidePartFactory> list = new ArrayList<>();
-//            for (Entry<ItemStack, ItemStack> recipe : recipes.entrySet())
             for (SmeltingRecipe recipe_i : recipes) {
-//                list.add(new GuideSmeltingFactory(recipe.getKey(), recipe.getValue()));
                 list.add(new GuideSmeltingFactory(recipe_i.getIngredients(), recipe_i.getResultItem(Minecraft.getInstance().level.registryAccess())));
             }
             return list;
@@ -81,11 +60,8 @@ public enum GuideSmeltingRecipes implements IStackRecipes {
         if (Minecraft.getInstance().level == null) {
             return list;
         }
-//        for (Entry<ItemStack, ItemStack> entry : FurnaceRecipes.instance().getSmeltingList().entrySet())
         for (SmeltingRecipe recipe : Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeType.SMELTING)) {
-//            ItemStack input = StackUtil.asNonNull(entry.getKey());
             NonNullList<Ingredient> input = recipe.getIngredients();
-//            ItemStack output = StackUtil.asNonNull(entry.getValue());
             ItemStack output = recipe.getResultItem(Minecraft.getInstance().level.registryAccess());
             if (StackUtil.doesEitherStackMatch(stack, output)) {
                 list.add(new GuideSmeltingFactory(input, output));

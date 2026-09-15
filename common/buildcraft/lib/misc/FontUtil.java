@@ -6,7 +6,6 @@ import net.minecraft.client.gui.Font;
 import java.util.Arrays;
 import java.util.List;
 
-// Calen from 1.12.2 FontRenderer
 public class FontUtil {
     /**
      * Breaks a string into a list of pieces where the width of each line is always less than or equal to the provided
@@ -54,7 +53,6 @@ public class FontUtil {
                 case ' ':
                     l = k;
                 default:
-//                    j += this.getCharWidth(c0);
                     j += font.width(String.valueOf(c0));
 
                     if (flag) {

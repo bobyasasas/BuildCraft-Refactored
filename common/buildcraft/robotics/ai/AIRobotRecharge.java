@@ -19,9 +19,6 @@ public class AIRobotRecharge extends AIRobot {
     @Override
     public void start() {
         robot.getRegistry().releaseResources(robot);
-//        robot.motionX = 0;
-//        robot.motionY = 0;
-//        robot.motionZ = 0;
         robot.setDeltaMovement(0, 0, 0);
 
         startDelegateAI(new AIRobotSearchAndGotoStation(robot, new IStationFilter() {
@@ -33,14 +30,12 @@ public class AIRobotRecharge extends AIRobot {
     }
 
     @Override
-    // public int getEnergyCost()
     public long getPowerCost() {
         return 0;
     }
 
     @Override
     public void update() {
-        // if (robot.getPower() >= EntityRobotBase.MAX_ENERGY - 500)
         if (robot.getPower() >= EntityRobotBase.MAX_POWER - 500 * MjAPI.MJ) {
             terminate();
         }

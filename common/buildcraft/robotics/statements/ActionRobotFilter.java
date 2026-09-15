@@ -25,7 +25,6 @@ public class ActionRobotFilter extends BCStatement implements IActionInternal {
 
     public ActionRobotFilter() {
         super("buildcraft:robot.work_filter");
-        // setBuildCraftLocation("robotics", "triggers/action_robot_filter");
     }
 
     @Override
@@ -130,10 +129,8 @@ public class ActionRobotFilter extends BCStatement implements IActionInternal {
                 } else {
                     for (ItemStack stack : param.getStacks()) {
                         if (stack != null) {
-                            // FluidStack fluid = FluidContainerRegistry.getFluidForFilledItem(stack);
                             FluidStack fluid = new FluidBucketWrapper(stack).getFluid();
 
-                            // if (fluid != null && filter.matches(fluid))
                             if (!fluid.isEmpty() && filter.matches(fluid)) {
                                 actionFound = true;
                                 break;

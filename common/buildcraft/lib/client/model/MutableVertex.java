@@ -43,7 +43,6 @@ public class MutableVertex {
     public float tex_u, tex_v;
     /** The light of this vertex. Should be in the range 0-15. */
     public byte light_block, light_sky;
-    // Calen
     public int overlay;
 
     public MutableVertex() {
@@ -104,7 +103,6 @@ public class MutableVertex {
         data[offset + 5] = Float.floatToRawIntBits(tex_v);
         // TEX_2S
         data[offset + 6] = lightc();
-        // Calen: NORMAL_3B + ELEMENT_PADDING 1B -> 1 Int
         data[offset + 7] = normalToPackedInt();
     }
 
@@ -120,7 +118,6 @@ public class MutableVertex {
         data[offset + 5] = Float.floatToRawIntBits(tex_v);
         // ELEMENT_UV2 Light 2 Short -> 1 int
         data[offset + 6] = lightc();
-        // Calen: NORMAL_3B + ELEMENT_PADDING 1B -> 1 Int
         data[offset + 7] = normalToPackedInt();
     }
 
@@ -136,7 +133,6 @@ public class MutableVertex {
         tex_v = Float.intBitsToFloat(data[offset + 5]);
         // TEX_2S
         lighti(data[offset + 6]);
-//        normalf(0, 1, 0);
         // NORMAL_3B
         normali(data[offset + 7]);
     }
@@ -152,7 +148,6 @@ public class MutableVertex {
         tex_u = Float.intBitsToFloat(data[offset + 4]);
         tex_v = Float.intBitsToFloat(data[offset + 5]);
         // TEX_2S
-//        lightf(1, 1);
         lighti(data[offset + 6]);
         // NORMAL_3B
         normali(data[offset + 7]);
@@ -160,32 +155,13 @@ public class MutableVertex {
 
     // Rendering
 
-    // public void render(BufferBuilder bb)
     public void render(PoseStack.Pose pose, VertexConsumer vertexConsumer) {
-//        VertexFormat vf = bb.getVertexFormat();
-//        if (vf == DefaultVertexFormats.BLOCK) {
-//            renderAsBlock(bb);
-//        } else {
-//            for (VertexFormatElement vfe : vf.getElements()) {
-//                if (vfe.getUsage() == EnumUsage.POSITION) renderPosition(bb);
-//                else if (vfe.getUsage() == EnumUsage.NORMAL) renderNormal(bb);
-//                else if (vfe.getUsage() == EnumUsage.COLOR) renderColour(bb);
-//                else if (vfe.getUsage() == EnumUsage.UV) {
-//                    if (vfe.getIndex() == 0) renderTex(bb);
-//                    else if (vfe.getIndex() == 1) renderLightMap(bb);
-//                }
-//            }
-//            bb.endVertex();
-//        }
         renderAsBlock(pose, vertexConsumer);
     }
 
-    // Calen
     public void renderPositionColour(VertexConsumer vertexConsumer) {
-//        renderPosition(vertexConsumer, pose.pose());
         renderPositionWithoutPose(vertexConsumer);
         renderColour(vertexConsumer);
-//        renderNormal(pose.normal(), vertexConsumer);
         renderNormalWithoutPose(vertexConsumer);
         vertexConsumer.endVertex();
     }
@@ -194,9 +170,7 @@ public class MutableVertex {
      * {@link DefaultVertexFormat#BLOCK}.
      * <p>
      * Slight performance increase over {@link #render(PoseStack.Pose, VertexConsumer)}. */
-//    public void renderAsBlock(BufferBuilder bb)
     public void renderAsBlock(PoseStack.Pose lastMatrix, VertexConsumer buffer) {
-//        buffer.vertex(poseStack.last().pose(), position_x, position_y, position_z); // Calen test
 
         renderPosition(buffer, lastMatrix.pose());
         renderColour(buffer);
@@ -207,15 +181,11 @@ public class MutableVertex {
         buffer.endVertex();
     }
 
-    // public void renderPosition(BufferBuilder bb)
     public void renderPosition(VertexConsumer bb, org.joml.Matrix4f matrix4f) {
-//        bb.pos(position_x, position_y, position_z);
         bb.vertex(matrix4f, position_x, position_y, position_z);
     }
 
-    // Calen 1.20.1
     public void renderPositionWithoutPose(VertexConsumer bb) {
-//        bb.pos(position_x, position_y, position_z);
         bb.vertex(position_x, position_y, position_z);
     }
 
@@ -223,12 +193,10 @@ public class MutableVertex {
         bb.normal(normal, normal_x, normal_y, normal_z);
     }
 
-    // Calen 1.20.1
     public void renderNormalWithoutPose(VertexConsumer bb) {
         bb.normal(normal_x, normal_y, normal_z);
     }
 
-    // public void renderColour(BufferBuilder bb)
     public void renderColour(VertexConsumer bb) {
         bb.color(colour_r, colour_g, colour_b, colour_a);
     }
@@ -242,11 +210,9 @@ public class MutableVertex {
     }
 
     public void renderLightMap(VertexConsumer bb) {
-//        bb.lightmap(light_sky << 4, light_block << 4);
         bb.uv2(lightc());
     }
 
-    // Calen add
     public void renderOverlay(VertexConsumer bb) {
         bb.overlayCoords(overlay);
     }
@@ -409,20 +375,17 @@ public class MutableVertex {
 
     public MutableVertex lightf(float block, float sky) {
         return lighti((byte) (block * 0xF), (byte) (sky * 0xF));
-//        return lighti((short) (((int) (block * 0xF)) << 4), (short) (((int) (sky * 0xF)) << 4));
     }
 
     public MutableVertex lighti(int combined) {
         return lighti((byte) (combined >> 4), (byte) (combined >> 20));
     }
 
-    // Calen add
     public MutableVertex overlay(int overlayIn) {
         overlay = overlayIn;
         return this;
     }
 
-    // public MutableVertex maxLighti(int block, int sky)
     public MutableVertex lighti(byte block, byte sky) {
         light_block = (byte) block;
         light_sky = (byte) sky;
@@ -430,7 +393,6 @@ public class MutableVertex {
     }
 
     public MutableVertex maxLighti(byte block, byte sky) {
-//        return lighti(Math.max(block, light_block), Math.max(sky, light_sky));
         return lighti((byte) Math.max(block, light_block), (byte) Math.max(sky, light_sky));
     }
 
@@ -439,7 +401,6 @@ public class MutableVertex {
     }
 
     public int lightc() {
-        // Calen FIX: BC 1.12.2 made a mistake!
         // without (), + will be calculated before <<
         return (light_block << 4) + (light_sky << 20);
     }
@@ -521,27 +482,21 @@ public class MutableVertex {
 
     /** Rotates around the X axis by angle. */
     public void rotateX(float angle) {
-//        float cos = MathHelper.cos(angle);
         float cos = Mth.cos(angle);
-//        float sin = MathHelper.sin(angle);
         float sin = Mth.sin(angle);
         rotateDirectlyX(cos, sin);
     }
 
     /** Rotates around the Y axis by angle. */
     public void rotateY(float angle) {
-//        float cos = MathHelper.cos(angle);
         float cos = Mth.cos(angle);
-//        float sin = MathHelper.sin(angle);
         float sin = Mth.sin(angle);
         rotateDirectlyY(cos, sin);
     }
 
     /** Rotates around the Z axis by angle. */
     public void rotateZ(float angle) {
-//        float cos = MathHelper.cos(angle);
         float cos = Mth.cos(angle);
-//        float sin = MathHelper.sin(angle);
         float sin = Mth.sin(angle);
         rotateDirectlyZ(cos, sin);
     }

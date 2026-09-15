@@ -27,12 +27,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import java.util.List;
 
 public class BlockFiller extends BlockBCTile_Neptune<TileFiller> implements IBlockWithFacing, IBlockWithTickableTE<TileFiller> {
-    // public static final IProperty<EnumFillerPattern> PATTERN = BuildCraftProperties.FILLER_PATTERN;
 
-    // public BlockFiller(Material material, String id)
     public BlockFiller(String idBC, BlockBehaviour.Properties properties) {
         super(idBC, properties);
-        // setDefaultState(getDefaultState().withProperty(PATTERN, EnumFillerPattern.NONE));
     }
 
     // BlockState
@@ -40,39 +37,32 @@ public class BlockFiller extends BlockBCTile_Neptune<TileFiller> implements IBlo
     @Override
     protected void addProperties(List<Property<?>> properties) {
         super.addProperties(properties);
-        // properties.add(PATTERN);
     }
 
     @Override
     public BlockState getActualState(BlockState state, LevelAccessor world, BlockPos pos, BlockEntity tile) {
         if (tile instanceof TileFiller filler) {
-            // return state.withProperty(PATTERN, EnumFillerPattern.NONE); // FIXME
         }
         return state;
     }
     // Others
 
     @Override
-//    public TileBC_Neptune createTileEntity(World world, IBlockState state)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
         return new TileFiller(pos, state);
     }
 
     @Override
-//    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, Player player, InteractionHand hand, Direction side, float hitX, float hitY, float hitZ)
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         BlockEntity tile = world.getBlockEntity(pos);
         if (tile instanceof TileFiller filler) {
             if (!filler.hasBox()) {
-//                return false;
                 return InteractionResult.FAIL;
             }
             if (!world.isClientSide) {
-//            BCBuildersGuis.FILLER.openGUI(player, pos);
                 MessageUtil.serverOpenTileGui(player, filler);
             }
         }
-//        return true;
         return InteractionResult.SUCCESS;
     }
 

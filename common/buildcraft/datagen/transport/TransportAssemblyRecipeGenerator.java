@@ -25,11 +25,8 @@ public class TransportAssemblyRecipeGenerator extends RecipeProvider {
     protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
         if (BCTransportItems.wire != null) {
             for (DyeColor color : ColourUtil.COLOURS) {
-//                String name = String.format("wire-%s", color.getUnlocalizedName());
                 String name = String.format("wire_%s", color.getSerializedName());
-//                ImmutableSet<IngredientStack> input = ImmutableSet.of(IngredientStack.of(Tags.Items.DUSTS_REDSTONE), IngredientStack.of(ColourUtil.getDyeName(color)));
                 ImmutableSet<IngredientStack> input = ImmutableSet.of(IngredientStack.of(Tags.Items.DUSTS_REDSTONE), IngredientStack.of(color.getTag()));
-//                AssemblyRecipeRegistry.register(new AssemblyRecipeBasic(name, 10_000 * MjAPI.MJ, input, new ItemStack(BCTransportItems.wire, 8, color.getMetadata())));
                 ItemStack wireStack = new ItemStack(BCTransportItems.wire.get(), 8);
                 ColourUtil.addColourTagToStack(wireStack, color);
                 AssemblyRecipeBuilder.basic(10_000 * MjAPI.MJ, input, wireStack).save(consumer, BCTransport.MODID, name);

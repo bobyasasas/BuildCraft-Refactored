@@ -39,9 +39,7 @@ public class GuiElectronicLibrary extends GuiBC8<ContainerElectronicLibrary> {
 
     public GuiElectronicLibrary(ContainerElectronicLibrary container, Inventory inventory, Component component) {
         super(container, inventory, component);
-//        xSize = SIZE_X;
         imageWidth = SIZE_X;
-//        ySize = SIZE_Y;
         imageHeight = SIZE_Y;
         IGuiPosition buttonPos = mainGui.rootElement.offset(174, 109);
         delButton = new GuiButtonDrawable(mainGui, "del", buttonPos, StandardSpriteButtons.EIGHTH_BUTTON_DRAWABLE);
@@ -62,11 +60,8 @@ public class GuiElectronicLibrary extends GuiBC8<ContainerElectronicLibrary> {
     }
 
     @Override
-//    protected void drawBackgroundLayer(float partialTicks)
     protected void drawBackgroundLayer(float partialTicks, GuiGraphics guiGraphics) {
         ICON_GUI.drawAt(mainGui.rootElement, guiGraphics);
-        // Calen FIX Issue#4694: the white overlay of the progress down arrow does not appear in 1.12.2
-//        drawProgress(RECT_PROGRESS_DOWN, ICON_PROGRESS_DOWN, poseStack, -container.tile.deltaProgressDown.getDynamic(partialTicks), 1);
         drawProgressRightToLeft(RECT_PROGRESS_DOWN, ICON_PROGRESS_DOWN, guiGraphics, container.tile.deltaProgressDown.getDynamic(partialTicks), 1);
         drawProgress(RECT_PROGRESS_UP, ICON_PROGRESS_UP, guiGraphics, container.tile.deltaProgressUp.getDynamic(partialTicks), 1);
         iterateSnapshots((i, rect, key) ->
@@ -90,7 +85,6 @@ public class GuiElectronicLibrary extends GuiBC8<ContainerElectronicLibrary> {
     @Override
     protected void drawForegroundLayer(GuiGraphics guiGraphics) {
         String title = LocaleUtil.localize(BCBuildersBlocks.library.get().getDescriptionId());
-//        font.draw(title, guiLeft + (xSize - fontRenderer.getStringWidth(title)) / 2, guiTop + 10, 0x404040);
         guiGraphics.drawString(font, title, leftPos + (float) (imageWidth - font.width(title)) / 2, topPos + 10, 0x404040, false);
     }
 

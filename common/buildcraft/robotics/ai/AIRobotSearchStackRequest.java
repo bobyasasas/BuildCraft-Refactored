@@ -92,7 +92,6 @@ public class AIRobotSearchStackRequest extends AIRobot {
         }
 
         for (int i = 0; i < provider.getRequestsCount(); i++) {
-            // if (provider.getRequest(i) == null)
             if (provider.getRequest(i).isEmpty()) {
                 continue;
             }

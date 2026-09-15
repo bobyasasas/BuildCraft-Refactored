@@ -136,7 +136,6 @@ public class NbtRuleCharacterizationTester {
     @Test
     public void jsonSelectorFullFormChecksBaseAndEveryNbtCondition() {
         // Characterization baseline, not a correctness claim: the rule format spells the equality operation "="
-        // (Java-style "==" throws "Compare operation not found")
         JsonSelector selector = RULE_GSON.fromJson(
             "{\"base\": \"woot\", \"nbt\": [{\"key\": [\"a\", \"d\"], \"operation\": \"=\", \"value\": 7}]}",
             JsonSelector.class);

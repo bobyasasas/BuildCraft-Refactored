@@ -37,14 +37,12 @@ import java.util.function.Consumer;
 //    name = "BuildCraft Builders",
 //    version = BCLib.VERSION,
 //    dependencies = "required-after:buildcraftcore@[" + BCLib.VERSION + "]"
-//)
 @Mod(BCBuilders.MODID)
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 //@formatter:on
 public class BCBuilders {
     public static final String MODID = "buildcraftbuilders";
 
-    // @Mod.Instance(MODID)
     public static BCBuilders INSTANCE = null;
 
     public BCBuilders() {
@@ -52,7 +50,6 @@ public class BCBuilders {
     }
 
     @SubscribeEvent
-//    public static void preInit(FMLPreInitializationEvent evt)
     public static void preInit(FMLConstructModEvent evt) {
         BCLibRegistries.fmlPreInit(); // this should be called in BCLib#<clinit> before BCTransport#preInit called, but sometimes the order is incorrect?
 
@@ -65,7 +62,6 @@ public class BCBuilders {
         BCBuildersStatements.preInit();
         BCBuildersSchematics.preInit();
 
-//        NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, BCBuilQeventdersProxy.getProxy());
 
         BCBuildersProxy.getProxy().fmlPreInit();
 
@@ -73,7 +69,6 @@ public class BCBuilders {
     }
 
     @SubscribeEvent
-//    public static void init(FMLInitializationEvent evt)
     public static void init(FMLCommonSetupEvent evt) {
         BCBuildersProxy.getProxy().fmlInit();
         BCBuildersRegistries.init();
@@ -82,7 +77,6 @@ public class BCBuilders {
     }
 
     @SubscribeEvent
-//    public static void postInit(FMLPostInitializationEvent evt)
     public static void postInit(FMLLoadCompleteEvent evt) {
         BCBuildersConfig.saveConfigs();
         BCBuildersProxy.getProxy().fmlPostInit();
@@ -92,7 +86,6 @@ public class BCBuilders {
 
     @SubscribeEvent
     @OnlyIn(Dist.DEDICATED_SERVER)
-//    public static void onServerStarting(FMLServerStartingEvent event)
     public static void onServerStarting(FMLDedicatedServerSetupEvent event) {
         GlobalSavedDataSnapshots.reInit(Dist.DEDICATED_SERVER);
     }
@@ -128,48 +121,27 @@ public class BCBuilders {
     static {
         startBatch();
         // Items
-//        registerTag("item.schematic.single").reg("schematic_single").locale("schematicSingle").model("schematic_single/");
         registerTag("item.schematic.single").reg("schematic_single").locale("schematicSingle");
-//        registerTag("item.snapshot").reg("snapshot").locale("snapshot").model("snapshot/");
         registerTag("item.snapshot.blueprint").reg("snapshot_blueprint").locale("snapshot");
-//        registerTag("item.snapshot.blueprint.clean").reg("snapshot_blueprint_clean").locale("snapshot").model("snapshot/");
-//        registerTag("item.snapshot.blueprint.used").reg("snapshot_blueprint_used").locale("snapshot").model("snapshot/");
         registerTag("item.snapshot.template").reg("snapshot_template").locale("snapshot");
-//        registerTag("item.snapshot.template.clean").reg("snapshot_template_clean").locale("snapshot").model("snapshot/");
-//        registerTag("item.snapshot.template.used").reg("snapshot_template_used").locale("snapshot").model("snapshot/");
-//        registerTag("item.filler_planner").reg("filler_planner").oldReg("filling_planner").locale("buildcraft.filler_planner").model("filler_planner");
         registerTag("item.filler_planner").reg("filler_planner").locale("buildcraft.filler_planner");
         // Item Blocks
         registerTag("item.block.architect").reg("architect").locale("architectBlock");
-//                .model("architect");
         registerTag("item.block.builder").reg("builder").locale("builderBlock");
-//                .model("builder");
         registerTag("item.block.filler").reg("filler").locale("fillerBlock");
-//                .model("filler");
         registerTag("item.block.library").reg("library").locale("libraryBlock");
-//                .model("library");
         registerTag("item.block.replacer").reg("replacer").locale("replacerBlock");
-//                .model("replacer");
         registerTag("item.block.frame").reg("frame").locale("frameBlock");
-//                .model("frame");
         registerTag("item.block.quarry").reg("quarry").locale("quarryBlock");
-//                .model("quarry");
         registerTag("item.block.marker.construction").reg("marker_construction").locale("constructionMarkerBlock");
         // Blocks
         registerTag("block.architect").reg("architect").locale("architectBlock");
-//                .model("architect");
         registerTag("block.builder").reg("builder").locale("builderBlock");
-//                .model("builder");
         registerTag("block.filler").reg("filler").locale("fillerBlock");
-//                .model("filler");
         registerTag("block.library").reg("library").locale("libraryBlock");
-//                .model("library");
         registerTag("block.replacer").reg("replacer").locale("replacerBlock");
-//                .model("replacer");
         registerTag("block.frame").reg("frame").locale("frameBlock");
-//                .model("frame");
         registerTag("block.quarry").reg("quarry").locale("quarryBlock");
-//                .model("quarry");
         registerTag("block.marker.construction").reg("marker_construction").locale("constructionMarkerBlock");
         // Tiles
         registerTag("tile.architect").reg("architect");
@@ -180,22 +152,18 @@ public class BCBuilders {
         registerTag("tile.quarry").reg("quarry");
         registerTag("tile.marker.construction").reg("marker_construction");
 
-//        endBatch(TagManager.prependTags("buildcraftbuilders:", EnumTagType.REGISTRY_NAME, EnumTagType.MODEL_LOCATION).andThen(TagManager.setTab("buildcraft.main")));
         endBatch(TagManager.prependTags("buildcraftbuilders:", EnumTagType.REGISTRY_NAME).andThen(TagManager.setTab("buildcraft.main")));
     }
 
     private static TagEntry registerTag(String id) {
-//        return TagManager.registerTag(id);
         return tagManager.registerTag(id);
     }
 
     private static void startBatch() {
-//        TagManager.startBatch();
         tagManager.startBatch();
     }
 
     private static void endBatch(Consumer<TagEntry> consumer) {
-//        TagManager.endBatch(consumer);
         tagManager.endBatch(consumer);
     }
 }

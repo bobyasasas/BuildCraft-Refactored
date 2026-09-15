@@ -8,10 +8,8 @@ import java.util.Set;
 
 public interface IContentsNode {
 
-    // String getSearchName();
     Component getSearchName();
 
-    // Calen
     String getKey();
 
     boolean isVisible();

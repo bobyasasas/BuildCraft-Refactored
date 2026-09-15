@@ -19,18 +19,8 @@ public class BlockEngine_BC8 extends BlockEngineBase_BC8<EnumEngineType> {
     }
 
 //    @Override
-//    public Property<EnumEngineType> getEngineProperty() {
-//        return BuildCraftProperties.ENGINE_TYPE;
-//    }
 
 //    @Override
-//    public EnumEngineType getEngineType(int meta) {
-//        return EnumEngineType.fromMeta(meta);
-//    }
 
 //    @Override
-//    public String getUnlocalizedName() {
-////        return TagManager.getTag("block.engine.bc." + engine.unlocalizedTag, TagManager.EnumTagType.UNLOCALIZED_NAME);
-//        return TagManager.getTag("block.engine.bc." + this.engineType.unlocalizedTag, TagManager.EnumTagType.UNLOCALIZED_NAME);
-//    }
 }

@@ -28,21 +28,17 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RobotRegistry extends SavedData implements IRobotRegistry {
 
     protected Level world;
-    // protected final HashMap<StationIndex, DockingStation> stations = new HashMap<StationIndex, DockingStation>();
     protected final Map<StationIndex, DockingStation> stations = new ConcurrentHashMap<StationIndex, DockingStation>();
 
     private long nextRobotID = Long.MIN_VALUE;
 
     private final LongObjectHashMap<EntityRobot> robotsLoaded = new LongObjectHashMap<EntityRobot>();
-    // private final HashSet<EntityRobot> robotsLoadedSet = new HashSet<EntityRobot>();
     private final HashSet<EntityRobot> robotsLoadedSet = new HashSet<EntityRobot>();
     private final HashMap<ResourceId, Long> resourcesTaken = new HashMap<ResourceId, Long>();
     private final LongObjectHashMap<HashSet<ResourceId>> resourcesTakenByRobot = new LongObjectHashMap<HashSet<ResourceId>>();
     private final LongObjectHashMap<HashSet<StationIndex>> stationsTakenByRobot = new LongObjectHashMap<HashSet<StationIndex>>();
 
-    // public RobotRegistry(String id)
     public RobotRegistry() {
-        // super(id);
     }
 
     @Override
@@ -56,13 +52,11 @@ public class RobotRegistry extends SavedData implements IRobotRegistry {
 
     @Override
     public void registerRobot(EntityRobotBase robot) {
-        // markDirty();
         setDirty();
 
         if (robot.getRobotId() == EntityRobotBase.NULL_ROBOT_ID) {
             ((EntityRobot) robot).setUniqueRobotId(getNextRobotId());
         }
-        // if (robotsLoaded.containsItem(robot.getRobotId()))
         if (robotsLoaded.containsKey(robot.getRobotId())) {
             BCLog.logger.warn("Robot with id %d was not unregistered properly", robot.getRobotId());
         }
@@ -90,7 +84,6 @@ public class RobotRegistry extends SavedData implements IRobotRegistry {
 
     @Override
     public void killRobot(EntityRobotBase robot) {
-        // markDirty();
         setDirty();
 
         releaseResources(robot, true);
@@ -99,7 +92,6 @@ public class RobotRegistry extends SavedData implements IRobotRegistry {
 
     @Override
     public void unloadRobot(EntityRobotBase robot) {
-        // markDirty();
         setDirty();
 
         releaseResources(robot, false, true);
@@ -128,7 +120,6 @@ public class RobotRegistry extends SavedData implements IRobotRegistry {
 
         long robotId = resourcesTaken.get(resourceId);
 
-        // if (robotsLoaded.containsKey(robotId) && !((EntityRobot) robotsLoaded.get(robotId)).isDead)
         if (robotsLoaded.containsKey(robotId) && robotsLoaded.get(robotId).isAlive()) {
             return robotId;
         } else {
@@ -152,7 +143,6 @@ public class RobotRegistry extends SavedData implements IRobotRegistry {
 
     @Override
     public synchronized boolean take(ResourceId resourceId, EntityRobotBase robot) {
-        // markDirty();
         setDirty();
 
         return take(resourceId, robot.getRobotId());
@@ -164,7 +154,6 @@ public class RobotRegistry extends SavedData implements IRobotRegistry {
             return false;
         }
 
-        // markDirty();
         setDirty();
 
         if (!resourcesTaken.containsKey(resourceId)) {
@@ -188,7 +177,6 @@ public class RobotRegistry extends SavedData implements IRobotRegistry {
             return;
         }
 
-        // markDirty();
         setDirty();
 
         if (resourcesTaken.containsKey(resourceId)) {
@@ -209,7 +197,6 @@ public class RobotRegistry extends SavedData implements IRobotRegistry {
     }
 
     private synchronized void releaseResources(EntityRobotBase robot, boolean forceAll, boolean resetEntities) {
-        // markDirty();
         setDirty();
 
         if (resourcesTakenByRobot.containsKey(robot.getRobotId())) {
@@ -265,7 +252,6 @@ public class RobotRegistry extends SavedData implements IRobotRegistry {
 
     @Override
     public synchronized void registerStation(DockingStation station) {
-        // markDirty();
         setDirty();
 
         StationIndex index = new StationIndex(station);
@@ -279,7 +265,6 @@ public class RobotRegistry extends SavedData implements IRobotRegistry {
 
     @Override
     public synchronized void removeStation(DockingStation station) {
-        // markDirty();
         setDirty();
 
         StationIndex index = new StationIndex(station);
@@ -403,13 +388,11 @@ public class RobotRegistry extends SavedData implements IRobotRegistry {
     public void onChunkUnload(ChunkEvent.Unload e) {
         if (e.getLevel() == this.world) {
             for (EntityRobot robot : new ArrayList<EntityRobot>(robotsLoadedSet)) {
-                // if (!e.getWorld().loadedEntityList.contains(robot))
                 if (e.getLevel() instanceof Level && !((ServerLevel) e.getLevel()).getChunkSource().chunkMap.entityMap.values().stream().anyMatch(trackedEntity -> trackedEntity.entity == robot)) {
                     robot.onChunkUnload();
                 }
             }
             for (DockingStation station : new ArrayList<DockingStation>(stations.values())) {
-                // if (!world.isBlockLoaded(station.getPos()))
                 if (!world.isLoaded(station.getPos())) {
                     station.onChunkUnload();
                 }
@@ -420,7 +403,6 @@ public class RobotRegistry extends SavedData implements IRobotRegistry {
     /** This function is a wrapper for markDirty(), done this way due to obfuscation issues. */
     @Override
     public void registryMarkDirty() {
-        // markDirty();
         setDirty();
     }
 }

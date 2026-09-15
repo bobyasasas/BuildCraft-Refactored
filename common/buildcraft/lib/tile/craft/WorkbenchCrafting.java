@@ -60,7 +60,6 @@ public class WorkbenchCrafting extends TransientCraftingContainer {
     }
 
     @Override
-//    public ItemStack getStackInSlot(int index)
     public ItemStack getItem(int index) {
         return isBlueprintDirty ? invBlueprint.getStackInSlot(index) : super.getItem(index);
     }
@@ -115,8 +114,6 @@ public class WorkbenchCrafting extends TransientCraftingContainer {
             areMaterialsDirty = false;
             switch (recipeType) {
                 case INGREDIENTS:
-                    // cachedHasRequirements = hasIngredients();
-                    // break;
                 case EXACT_STACKS: {
                     cachedHasRequirements = hasExactStacks();
                     break;
@@ -142,7 +139,6 @@ public class WorkbenchCrafting extends TransientCraftingContainer {
 
         switch (recipeType) {
             case INGREDIENTS:
-                // return craftByIngredients();
             case EXACT_STACKS: {
                 return craftExact();
             }
@@ -163,15 +159,9 @@ public class WorkbenchCrafting extends TransientCraftingContainer {
                     req.setCount(1);
                 }
                 ItemStackKey key = new ItemStackKey(req);
-                // required.adjustOrPutValue(key, count, count);
                 required.addTo(key, count);
             }
         }
-//        return required.forEachEntry((stack, count) -> {
-//            ArrayStackFilter filter = new ArrayStackFilter(stack.baseStack);
-//            ItemStack inInventory = invMaterials.extract(filter, count, count, true);
-//            return !inInventory.isEmpty() && inInventory.getCount() == count;
-//        });
         return required.object2IntEntrySet().stream().allMatch(entry -> {
             ItemStackKey stack = entry.getKey();
             int count = entry.getIntValue();
@@ -184,7 +174,6 @@ public class WorkbenchCrafting extends TransientCraftingContainer {
     /** Implementation of {@link #craft()}, assuming nothing about the current recipe. */
     private boolean craftExact() {
         // 4 steps:
-        // - Move everything out of this inventory (Just to check: state correction operation)
         // - Attempt to move every exact item from invMaterials to this inventory
         // - Call normal crafting stuffs
         // - Move everything from the inventory back to materials
@@ -212,7 +201,6 @@ public class WorkbenchCrafting extends TransientCraftingContainer {
         if (!currentRecipe.matches(this, tile.getLevel())) {
             return false;
         }
-//        ItemStack result = currentRecipe.getCraftingResult(this);
         ItemStack result = currentRecipe.getResultItem(tile.getLevel().registryAccess());
         if (result.isEmpty()) {
             // what?
@@ -237,7 +225,6 @@ public class WorkbenchCrafting extends TransientCraftingContainer {
                 if (inSlot.isEmpty()) {
                     setItem(s, remaining);
                 }
-//                else if (ItemStack.areItemsEqual(inSlot, remaining) && ItemStack.areItemStackTagsEqual(inSlot, remaining))
                 else if (StackUtil.isSameItemSameDamageSameTag(inSlot, remaining)) {
                     remaining.grow(inSlot.getCount());
                     setItem(s, remaining);
@@ -251,7 +238,6 @@ public class WorkbenchCrafting extends TransientCraftingContainer {
         }
 
         // Step 4
-        // Some ingredients really need to be removed (like empty buckets)
         for (int s = 0; s < getContainerSize(); s++) {
             ItemStack inSlot = super.removeItemNoUpdate(s);
             if (!inSlot.isEmpty()) {
@@ -285,7 +271,6 @@ public class WorkbenchCrafting extends TransientCraftingContainer {
         }
 
         @Override
-//        public boolean canInteractWith(Player playerIn)
         public boolean stillValid(Player playerIn) {
             return false;
         }
@@ -298,7 +283,6 @@ public class WorkbenchCrafting extends TransientCraftingContainer {
         }
 
         @Override
-//        public void onCraftMatrixChanged(IInventory inventoryIn)
         public void slotsChanged(Container inventoryIn) {
             // NO-OP
         }

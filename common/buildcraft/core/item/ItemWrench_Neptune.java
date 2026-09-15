@@ -26,7 +26,6 @@ public class ItemWrench_Neptune extends ItemBC_Neptune implements IToolWrench {
 
     public ItemWrench_Neptune(String idBC, Item.Properties properties) {
         super(idBC, properties);
-//        setMaxStackSize(1);
     }
 
     @Override
@@ -37,14 +36,11 @@ public class ItemWrench_Neptune extends ItemBC_Neptune implements IToolWrench {
     @Override
     public void wrenchUsed(Player player, InteractionHand hand, ItemStack wrench, HitResult rayTrace) {
         AdvancementUtil.unlockAdvancement(player, ADVANCEMENT);
-//        player.swingArm(hand);
         player.swing(hand);
     }
 
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
-        // Calen: if here is false, player.isShiftKeyDown() in PipeBehaviourLapis#onPipeActivate will always return false
-//        return false;
         return true;
     }
 
@@ -75,7 +71,6 @@ public class ItemWrench_Neptune extends ItemBC_Neptune implements IToolWrench {
     }
 
     @Override
-////    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
     public InteractionResult useOn(UseOnContext ctx) {
         Player player = ctx.getPlayer();
         Level world = ctx.getLevel();
@@ -88,9 +83,6 @@ public class ItemWrench_Neptune extends ItemBC_Neptune implements IToolWrench {
         double hitZ = vec3Pos.z;
 
         // FIXME: Disabled world check as it doesn't allow us to swing the player's arm!
-        // if (world.isRemote) {
-        // return EnumActionResult.PASS;
-        // }
         BlockState state = world.getBlockState(pos);
         InteractionResult result = CustomRotationHelper.INSTANCE.attemptRotateBlock(world, pos, state, side);
         if (result == InteractionResult.SUCCESS) {

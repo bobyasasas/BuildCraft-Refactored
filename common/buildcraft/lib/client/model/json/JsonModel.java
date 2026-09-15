@@ -29,7 +29,6 @@ public class JsonModel {
         return deserialize(from, new ResourceLoaderContext());
     }
 
-    // Calen 1.20.1
     public static JsonModel datagenDeserialize(ResourceLocation from, ExistingFileHelper fileHelper) throws JsonParseException, IOException {
         return datagenDeserialize(from, new ResourceLoaderContext(), fileHelper);
     }
@@ -42,7 +41,6 @@ public class JsonModel {
         }
     }
 
-    // Calen 1.20.1
     public static JsonModel datagenDeserialize(ResourceLocation from, ResourceLoaderContext ctx, ExistingFileHelper fileHelper) throws JsonParseException, IOException {
         try (InputStreamReader isr = ctx.datagenStartLoading(from, fileHelper)) {
             return new JsonModel(new Gson().fromJson(isr, JsonObject.class), ctx);
@@ -83,7 +81,6 @@ public class JsonModel {
     }
 
     public JsonModel(JsonObject obj, ResourceLoaderContext ctx) throws JsonParseException, IOException {
-//        ambientOcclusion = JsonUtils.getBoolean(obj, "ambientocclusion", false);
         ambientOcclusion = GsonHelper.getAsBoolean(obj, "ambientocclusion", false);
         textures = JsonUtil.getSubAsImmutableMap(obj, "textures", new TypeToken<HashMap<String, String>>() {
         });

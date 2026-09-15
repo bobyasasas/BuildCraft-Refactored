@@ -23,7 +23,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-// Calen: never used in 1.12.2
 public class StatementParameterRedstoneLevel implements IStatementParameter {
     public final int level;
     private final int minLevel, maxLevel;

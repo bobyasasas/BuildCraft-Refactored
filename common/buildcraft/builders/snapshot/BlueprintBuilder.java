@@ -108,7 +108,6 @@ public class BlueprintBuilder extends SnapshotBuilder<ITileForBlueprintBuilder> 
                                 ) &&
                                 FluidUtilBC.mergeSameFluids(requiredFluids).stream()
                                         .allMatch(stack ->
-//                                                        FluidUtilBC.areFluidStackEqual(stack, tile.getTankManager().drain(stack, false))
                                                         FluidUtilBC.areFluidStackEqual(stack, tile.getTankManager().drain(stack, FluidAction.SIMULATE))
                                         )
                 )
@@ -126,7 +125,6 @@ public class BlueprintBuilder extends SnapshotBuilder<ITileForBlueprintBuilder> 
                                                                 )
                                                         ),
                                                 FluidUtilBC.mergeSameFluids(requiredFluids).stream()
-//                                                        .map(fluidStack -> tile.getTankManager().drain(fluidStack, !simulate))
                                                         .map(fluidStack -> tile.getTankManager().drain(fluidStack, simulate ? FluidAction.SIMULATE : FluidAction.EXECUTE))
                                                         .map(fluidStack ->
                                                         {
@@ -231,7 +229,6 @@ public class BlueprintBuilder extends SnapshotBuilder<ITileForBlueprintBuilder> 
             return super.tick();
         }
         tile.getWorldBC().getProfiler().push("entitiesWithinBox");
-//        List<Entity> entitiesWithinBox = tile.getWorldBC().getEntitiesWithinAABB(
         List<Entity> entitiesWithinBox = tile.getWorldBC().getEntitiesOfClass(
                 Entity.class,
                 getBuildingInfo().box.getBoundingBox(),
@@ -242,9 +239,7 @@ public class BlueprintBuilder extends SnapshotBuilder<ITileForBlueprintBuilder> 
         List<ISchematicEntity> toSpawn = getBuildingInfo().entities.stream()
                 .filter(schematicEntity ->
                                 entitiesWithinBox.stream()
-//                                        .map(Entity::getPositionVector)
                                         .map(Entity::position)
-//                                        .map(schematicEntity.getPos().add(new Vec3(getBuildingInfo().offsetPos))::distanceTo)
                                         .map(schematicEntity.getPos().add(Vec3.atLowerCornerOf(getBuildingInfo().offsetPos))::distanceTo)
                                         .noneMatch(distance -> distance < MAX_ENTITY_DISTANCE)
                 )
@@ -273,9 +268,7 @@ public class BlueprintBuilder extends SnapshotBuilder<ITileForBlueprintBuilder> 
                                 entity != null &&
                                         getBuildingInfo().entities.stream()
                                                 .map(ISchematicEntity::getPos)
-//                                                .map(new Vec3(getBuildingInfo().offsetPos)::add)
                                                 .map(Vec3.atLowerCornerOf(getBuildingInfo().offsetPos)::add)
-//                                                .map(entity.getPositionVector()::distanceTo)
                                                 .map(entity.position()::distanceTo)
                                                 .noneMatch(distance -> distance < MAX_ENTITY_DISTANCE) &&
                                         SchematicEntityManager.getSchematicEntity(new SchematicEntityContext(
@@ -291,7 +284,6 @@ public class BlueprintBuilder extends SnapshotBuilder<ITileForBlueprintBuilder> 
                 return false;
             } else {
                 tile.getWorldBC().getProfiler().push("kill");
-//                toKill.forEach(Entity::setDead);
                 toKill.forEach(Entity::kill);
                 tile.getWorldBC().getProfiler().pop();
             }
@@ -364,7 +356,6 @@ public class BlueprintBuilder extends SnapshotBuilder<ITileForBlueprintBuilder> 
         buffer.writeInt(remainingDisplayRequired.size());
         remainingDisplayRequired.forEach(stack ->
         {
-//            buffer.writeItemStack(stack);
             buffer.writeItemStack(stack, false);
             buffer.writeInt(stack.getCount());
         });
@@ -377,19 +368,12 @@ public class BlueprintBuilder extends SnapshotBuilder<ITileForBlueprintBuilder> 
         IntStream.range(0, buffer.readInt()).mapToObj(i ->
         {
             ItemStack stack;
-            // Calen: no Exception
-//            try {
-//                stack = buffer.readItemStack();
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
             stack = buffer.readItem();
             stack.setCount(buffer.readInt());
             return stack;
         }).forEach(remainingDisplayRequired::add);
     }
 
-    // Calen 1.18.2 for robot builder
     public List<ItemStack>[] getRemainingDisplayRequiredBlocks() {
         return remainingDisplayRequiredBlocks;
     }

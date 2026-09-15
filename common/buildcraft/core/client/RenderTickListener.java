@@ -85,16 +85,12 @@ public class RenderTickListener {
     }
 
     @SubscribeEvent
-//    public static void renderOverlay(RenderGameOverlayEvent.Text event)
     public static void renderOverlay(CustomizeGuiOverlayEvent.DebugText event) {
         Minecraft mc = Minecraft.getInstance();
         IDebuggable debuggable = ClientDebuggables.getDebuggableObject(mc.hitResult);
         if (debuggable != null) {
-//            List<String> clientLeft = new ArrayList<>();
-//            List<String> clientRight = new ArrayList<>();
             List<Component> clientLeft = new ArrayList<>();
             List<Component> clientRight = new ArrayList<>();
-//            debuggable.getDebugInfo(clientLeft, clientRight, mc.hitResult.sideHit);
             if (mc.hitResult instanceof BlockHitResult blockHitResult) {
                 debuggable.getDebugInfo(clientLeft, clientRight, blockHitResult.getDirection());
             } else {
@@ -104,7 +100,6 @@ public class RenderTickListener {
             String headerSecond = DIFF_HEADER_FORMATTING + "CLIENT:";
             appendDiff(event.getLeft(), ClientDebuggables.SERVER_LEFT, clientLeft, headerFirst, headerSecond);
             appendDiff(event.getRight(), ClientDebuggables.SERVER_RIGHT, clientRight, headerFirst, headerSecond);
-//            debuggable.getClientDebugInfo(event.getLeft(), event.getRight(), mc.objectMouseOver.sideHit);
             if (mc.hitResult instanceof BlockHitResult blockHitResult) {
                 debuggable.getClientDebugInfo(event.getLeft(), event.getRight(), blockHitResult.getDirection());
             } else {
@@ -113,23 +108,18 @@ public class RenderTickListener {
         }
     }
 
-    // private static void appendDiff(List<String> dest, List<String> first, List<String> second, String headerFirst, String headerSecond)
     private static void appendDiff(List<String> dest, List<Component> first, List<Component> second, String headerFirst, String headerSecond) {
         dest.add("");
         dest.add(headerFirst);
-//        dest.addAll(first);
         dest.addAll(first.stream().map(Component::getString).toList());
         dest.add("");
         dest.add(headerSecond);
         if (first.size() != second.size()) {
             // no diffing
-//            dest.addAll(second);
             dest.addAll(second.stream().map(Component::getString).toList());
         } else {
             for (int l = 0; l < first.size(); l++) {
-//                String shownLine = first.get(l);
                 String shownLine = first.get(l).getString();
-//                String diffLine = second.get(l);
                 String diffLine = second.get(l).getString();
                 if (shownLine.equals(diffLine)) {
                     dest.add(diffLine);
@@ -146,7 +136,6 @@ public class RenderTickListener {
 
     @SubscribeEvent
     public static void renderLast(RenderLevelStageEvent event) {
-        // Calen: AFTER_TRANSLUCENT_BLOCKS is the correct state for this render
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
             return;
         }
@@ -167,7 +156,6 @@ public class RenderTickListener {
         mc.getProfiler().push("bc");
         mc.getProfiler().push("renderWorld");
 
-        // Calen: push and translate by camera
         DetachedRenderer.fromWorldOriginPre(player, partialTicks, poseStack, camera);
 
         Item mainHandItem = mainHand.getItem();
@@ -179,7 +167,6 @@ public class RenderTickListener {
             renderMarkerConnector(world, player, poseStack);
         }
 
-        // Calen: pop
         DetachedRenderer.fromWorldOriginPost(poseStack);
 
         mc.getProfiler().pop();
@@ -193,13 +180,11 @@ public class RenderTickListener {
             IBox box = ItemMapLocation.getPointBox(stack);
             if (box != null) {
                 Vec3[][] vectors = MAP_LOCATION_POINT[face.ordinal()];
-//                GL11.glTranslated(box.min().getX(), box.min().getY(), box.min().getZ());
                 poseStack.pushPose();
                 poseStack.translate(box.min().getX(), box.min().getY(), box.min().getZ());
                 for (Vec3[] vec : vectors) {
                     LaserData_BC8 laser =
                             new LaserData_BC8(BuildCraftLaserManager.STRIPES_WRITE, vec[0], vec[1], 1 / 16.0);
-//                    LaserRenderer_BC8.renderLaserStatic(laser);
                     LaserRenderer_BC8.renderLaserStatic(laser, poseStack.last());
                 }
                 poseStack.popPose();
@@ -210,7 +195,6 @@ public class RenderTickListener {
             IBox box = ItemMapLocation.getAreaBox(stack);
             LAST_RENDERED_MAP_LOC.reset();
             LAST_RENDERED_MAP_LOC.initialize(box);
-//            LaserBoxRenderer.renderLaserBoxStatic(LAST_RENDERED_MAP_LOC, BuildCraftLaserManager.STRIPES_WRITE, true);
             LaserBoxRenderer.renderLaserBoxStatic(LAST_RENDERED_MAP_LOC, BuildCraftLaserManager.STRIPES_WRITE, poseStack.last(), true);
 
         } else if (type == MapLocationType.PATH) {
@@ -271,7 +255,6 @@ public class RenderTickListener {
         }
         profiler.popPush("render");
         for (LaserData_BC8 laser : toRender) {
-//            LaserRenderer_BC8.renderLaserStatic(laser);
             LaserRenderer_BC8.renderLaserStatic(laser, poseStack.last());
         }
         profiler.pop();

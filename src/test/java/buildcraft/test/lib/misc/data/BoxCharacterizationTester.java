@@ -54,7 +54,6 @@ public class BoxCharacterizationTester {
     public void containsUsesHalfOpenBoundsOnTheMaxSide() {
         Box box = new Box(new BlockPos(0, 0, 0), new BlockPos(2, 2, 2));
         Assert.assertTrue(box.contains(new BlockPos(0, 0, 0)));
-        // the max corner itself is still inside (AABB is max + 1)
         Assert.assertTrue(box.contains(new BlockPos(2, 2, 2)));
         Assert.assertFalse(box.contains(new BlockPos(3, 2, 2)));
         Assert.assertFalse(box.contains(new BlockPos(-1, 0, 0)));

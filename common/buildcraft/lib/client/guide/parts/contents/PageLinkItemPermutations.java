@@ -32,8 +32,6 @@ public final class PageLinkItemPermutations extends PageLink {
         {
             List<GuidePart> parts = new ArrayList<>();
 
-//            Profiler prof = new Profiler();
-//            prof.profilingEnabled = true;
             ProfilerFiller prof = ProfilerUtil.newProfiler();
             for (ItemStack stack : permutations) {
                 parts.add(PageLinkItemStack.create(true, stack, prof).createGuidePart(gui));

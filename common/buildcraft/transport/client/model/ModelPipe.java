@@ -48,23 +48,13 @@ public enum ModelPipe implements BakedModel {
      */
     @NotNull
     @Override
-//    public List<BakedQuad> getQuads(IBlockState state, Direction side, long rand)
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, @Nullable RenderType renderType) {
         if (side != null) {
             return ImmutableList.of();
         }
 
-//        TilePipeHolder tile = null;
-//        if (state instanceof IExtendedBlockState) {
-//            IExtendedBlockState ext = (IExtendedBlockState) state;
-//            WeakReference<TilePipeHolder> ref = ext.getValue(BlockPipeHolder.PROP_TILE);
-//            if (ref != null) {
-//                tile = ref.get();
-//            }
-//        }
         TilePipeHolder tile = extraData.get(BlockPipeHolder.PROP_TILE);
 
-//        BlockRenderLayer layer = MinecraftForgeClient.getRenderLayer();
         RenderType layer = renderType;
 
         if (tile == null || tile.getPipe() == null) {
@@ -74,15 +64,6 @@ public enum ModelPipe implements BakedModel {
             return PipeModelCacheBase.cacheCutout.bake(new PipeBaseCutoutKey(PipeModelKey.DEFAULT_KEY));
         }
 
-        // Calen:if only bake translucent, the colorless pipe texture will disappear
-////        if (layer == BlockRenderLayer.TRANSLUCENT)
-//        if (layer == RenderType.translucent()) {
-//            PipeAllTranslucentKey realKey = new PipeAllTranslucentKey(tile);
-//            return PipeModelCacheAll.cacheTranslucent.bake(realKey);
-//        } else {
-//            PipeAllCutoutKey realKey = new PipeAllCutoutKey(tile);
-//            return PipeModelCacheAll.cacheCutout.bake(realKey);
-//        }
 
         List<BakedQuad> translucent = PipeModelCacheAll.cacheTranslucent.bake(new PipeAllTranslucentKey(tile));
         List<BakedQuad> cutout = PipeModelCacheAll.cacheCutout.bake(new PipeAllCutoutKey(tile));
@@ -93,7 +74,6 @@ public enum ModelPipe implements BakedModel {
     }
 
     @Override
-//    public boolean isAmbientOcclusion()
     public boolean useAmbientOcclusion() {
         return false;
     }
@@ -104,27 +84,21 @@ public enum ModelPipe implements BakedModel {
     }
 
     @Override
-//    public boolean isBuiltInRenderer()
     public boolean isCustomRenderer() {
         return false;
     }
 
-    // Calen: if missingno, the particle when entity falls onto the pipe, the particle will be missingno
     @Override
-//    public TextureAtlasSprite getParticleTexture()
     public TextureAtlasSprite getParticleIcon() {
-//        return Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
         return SpriteUtil.white();
     }
 
     @Override
-//    public ItemCameraTransforms getItemCameraTransforms()
     public ItemTransforms getTransforms() {
         return ModelItemSimple.TRANSFORM_DEFAULT;
     }
 
     @Override
-//    public ItemOverrideList getOverrides()
     public ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
     }

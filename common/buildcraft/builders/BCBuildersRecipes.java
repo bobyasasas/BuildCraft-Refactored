@@ -9,21 +9,6 @@ package buildcraft.builders;
 public class BCBuildersRecipes {
     public static void init() {
 
-//        if (BCBuildersItems.schematicSingle != null) {
-//            ItemStack out = new ItemStack(BCBuildersItems.schematicSingle, 4);
-//            ShapelessOreRecipe recipe = new ShapelessOreRecipe(out, paper, paper, "gemLapis");
-//            GameRegistry.addRecipe(recipe);
-//        }
 
-        // if (BCBuildersItems.template != null) {
-        // ItemStack out = new ItemStack(BCBuildersItems.template);
-        // RecipeBuilderShaped recipe = new RecipeBuilderShaped(out);
-        // recipe.add("ppp");
-        // recipe.add("pip");
-        // recipe.add("ppp");
-        // recipe.map('i', "dyeBlack");
-        // recipe.map('p', paper);
-        // GameRegistry.addRecipe(recipe.build());
-        // }
     }
 }

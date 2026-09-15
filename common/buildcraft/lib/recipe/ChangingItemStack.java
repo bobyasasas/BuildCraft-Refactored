@@ -29,8 +29,6 @@ public final class ChangingItemStack extends ChangingObject<ItemStackKey> {
     /** Creates a stack list that iterates through all of the given stacks. This does NOT check possible variants.
      *
      * @param stacks The list to iterate through. */
-//    public ChangingItemStack(NonNullList<ItemStack> stacks)
-    // Calen: ? is ItemStack or Ingredient
     public ChangingItemStack(NonNullList<?> stacks) {
         super(makeListArray(stacks));
     }
@@ -43,15 +41,11 @@ public final class ChangingItemStack extends ChangingObject<ItemStackKey> {
         super(makeStackArray(stack));
     }
 
-    // public ChangingItemStack(String oreId)
     public ChangingItemStack(TagKey<Item> oreId) {
-//        this(OreDictionary.getOres(oreId));
         this(NonNullList.of(ForgeRegistries.ITEMS.tags().getTag(oreId).stream().map(ItemStack::new).toArray(ItemStack[]::new)));
     }
 
-    // private static ItemStackKey[] makeListArray(NonNullList<ItemStack> stacks)
     private static ItemStackKey[] makeListArray(NonNullList<?> items) {
-//        return makeStackArray(stacks.toArray(new ItemStack[0]));
         List<ItemStack> ret = Lists.newArrayList();
         for (Object ele : items) {
             if (ele instanceof ItemStack stack) {
@@ -62,7 +56,6 @@ public final class ChangingItemStack extends ChangingObject<ItemStackKey> {
                 throw new RuntimeException("[lib.guide.recipe] Recipe items should be ItemStack or Ingredient!");
             }
         }
-//        return makeStackArray(stacks.toArray(new ItemStack[0]));
         return makeStackArray(ret.toArray(new ItemStack[0]));
     }
 
@@ -70,7 +63,6 @@ public final class ChangingItemStack extends ChangingObject<ItemStackKey> {
         if (stack.isEmpty()) {
             return new ItemStackKey[] { ItemStackKey.EMPTY };
         }
-//        if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE)
         if (stack.getDamageValue() == Short.MAX_VALUE) {
             NonNullList<ItemStack> subs = NonNullList.create();
             ItemUtil.fillItemCategory(stack.getItem(), CreativeModeTabs.SEARCH, subs);

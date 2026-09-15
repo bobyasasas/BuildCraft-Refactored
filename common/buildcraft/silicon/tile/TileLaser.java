@@ -77,7 +77,6 @@ public class TileLaser extends TileBC_Neptune implements ITickable, IDebuggable,
     }
 
     @Override
-//    public void setWorldUpdated(Level world, BlockPos eventPos, BlockState oldState, BlockState newState, int flags)
     public void setWorldUpdated(Level world, BlockPos eventPos) {
         this.worldHasUpdated = true;
     }
@@ -266,12 +265,7 @@ public class TileLaser extends TileBC_Neptune implements ITickable, IDebuggable,
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-//        left.add("battery = " + battery.getDebugString());
-//        left.add("target = " + targetPos);
-//        left.add("laser = " + laserPos);
-//        left.add("average = " + LocaleUtil.localizeMjFlow(averageClient == 0 ? (long) avgPower.getAverage() : averageClient));
         left.add(Component.literal("battery = " + battery.getDebugString()));
         left.add(Component.literal("target = " + targetPos));
         left.add(Component.literal("laser = " + laserPos));
@@ -279,9 +273,7 @@ public class TileLaser extends TileBC_Neptune implements ITickable, IDebuggable,
     }
 
     @Override
-//    public void validate()
     public void clearRemoved() {
-//        super.validate();
         super.clearRemoved();
         if (!level.isClientSide) {
             LocalBlockUpdateNotifier.instance(level).registerSubscriberForUpdateNotifications(this);
@@ -289,9 +281,7 @@ public class TileLaser extends TileBC_Neptune implements ITickable, IDebuggable,
     }
 
     @Override
-//    public void invalidate()
     public void setRemoved() {
-//        super.invalidate();
         super.setRemoved();
         if (!level.isClientSide) {
             LocalBlockUpdateNotifier.instance(level).removeSubscriberFromUpdateNotifications(this);

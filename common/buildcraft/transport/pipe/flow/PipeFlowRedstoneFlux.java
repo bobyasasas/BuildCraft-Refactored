@@ -202,7 +202,6 @@ public class PipeFlowRedstoneFlux extends PipeFlow implements IFlowRedstoneFlux,
             for (Direction face : Direction.VALUES) {
                 Section s = sections.get(face);
                 s.clientDisplayFlowLast = s.clientDisplayFlow;
-                // double diff = s.displayFlow.value * 2.4 * face.getAxisDirection().getOffset();
                 double diff = s.displayFlow.value * 2.4 * face.getAxisDirection().getStep();
                 s.clientDisplayFlow += 16 + diff;
                 s.clientDisplayFlow %= 16;
@@ -349,15 +348,12 @@ public class PipeFlowRedstoneFlux extends PipeFlow implements IFlowRedstoneFlux,
             }
         }
 
-        // if (tracker.markTimeIfDelay(pipe.getHolder().getPipeWorld())) {
         if (didChange) {
             sendPayload(NET_POWER_AMOUNTS);
         }
-        // }
     }
 
     private void step() {
-        // long now = pipe.getHolder().getPipeWorld().getTotalWorldTime();
         long now = pipe.getHolder().getPipeWorld().getGameTime();
         if (currentWorldTime != now) {
             currentWorldTime = now;
@@ -396,7 +392,6 @@ public class PipeFlowRedstoneFlux extends PipeFlow implements IFlowRedstoneFlux,
         double max = 0;
         for (Section s : sections.values()) {
             double value = s.displayPower / (double) MjAPI.MJ;
-            // value = MathUtil.interp(partialTicks, value, value);
             max = Math.max(max, value);
         }
         return max;

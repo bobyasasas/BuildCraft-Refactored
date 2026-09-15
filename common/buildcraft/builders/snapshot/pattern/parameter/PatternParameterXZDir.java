@@ -62,10 +62,8 @@ public enum PatternParameterXZDir implements IStatementParameter {
         if (nbt.contains("dir", Tag.TAG_ANY_NUMERIC)) {
             // Older versions
             int d = nbt.getByte("dir") + 2;
-//            dir = Direction.getHorizontal(d);
             dir = Direction.from2DDataValue(d);
         } else {
-//            dir = Direction.getHorizontal(nbt.getByte("d"));
             dir = Direction.from2DDataValue(nbt.getByte("d"));
         }
         PatternParameterXZDir param = map.get(dir);
@@ -77,7 +75,6 @@ public enum PatternParameterXZDir implements IStatementParameter {
 
     @Override
     public void writeToNbt(CompoundTag nbt) {
-//        nbt.putByte("d", (byte) dir.getHorizontalIndex());
         nbt.putByte("d", (byte) dir.get2DDataValue());
     }
 
@@ -100,7 +97,6 @@ public enum PatternParameterXZDir implements IStatementParameter {
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("direction." + dir.getName());
         return Component.translatable("direction." + dir.getName());
     }
 
@@ -116,7 +112,6 @@ public enum PatternParameterXZDir implements IStatementParameter {
 
     @Override
     public IStatementParameter rotateLeft() {
-//        return get(dir.rotateY());
         return get(dir.getClockWise());
     }
 

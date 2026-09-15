@@ -28,11 +28,9 @@ import java.util.List;
 public class BlockArchitectTable extends BlockBCTile_Neptune<TileArchitectTable> implements IBlockWithFacing, IBlockWithTickableTE<TileArchitectTable> {
     public static final Property<Boolean> PROP_VALID = BuildCraftProperties.VALID;
 
-//    private static final int META_VALID_INDEX = 4;
 
     public BlockArchitectTable(String idBC, BlockBehaviour.Properties properties) {
         super(idBC, properties);
-//        setDefaultState(getDefaultState().withProperty(PROP_VALID, Boolean.TRUE));
         registerDefaultState(
                 defaultBlockState()
                         .setValue(PROP_VALID, Boolean.TRUE)
@@ -46,35 +44,21 @@ public class BlockArchitectTable extends BlockBCTile_Neptune<TileArchitectTable>
     }
 
 //    @Override
-//    public IBlockState getStateFromMeta(int meta) {
-//        IBlockState state = super.getStateFromMeta(meta);
-//        state = state.withProperty(PROP_VALID, (meta & META_VALID_INDEX) == 0);
-//        return state;
-//    }
 
 //    @Override
-//    public int getMetaFromState(IBlockState state) {
-//        return super.getMetaFromState(state) | (state.getValue(PROP_VALID) ? 0 : META_VALID_INDEX);
-//    }
 
     @Override
-//    public TileBC_Neptune createTileEntity(World world, IBlockState state)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
-//        return new TileArchitectTable();
         return new TileArchitectTable(pos, state);
     }
 
     @Override
-//    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, Player player, InteractionHand hand, Direction side, float hitX, float hitY, float hitZ)
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!world.isClientSide) {
-//            BCBuildersGuis.ARCHITECT.openGUI(player, pos);
-            // Calen
             if (world.getBlockEntity(pos) instanceof TileArchitectTable tile) {
                 MessageUtil.serverOpenTileGui(player, tile);
             }
         }
-//        return true;
         return InteractionResult.SUCCESS;
     }
 

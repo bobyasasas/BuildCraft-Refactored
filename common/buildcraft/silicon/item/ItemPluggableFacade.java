@@ -48,8 +48,6 @@ import java.util.concurrent.TimeUnit;
 public class ItemPluggableFacade extends ItemBC_Neptune implements IItemPluggable, IFacadeItem {
     public ItemPluggableFacade(String idBC, Item.Properties properties) {
         super(idBC, properties);
-//        setMaxDamage(0);
-//        setHasSubtypes(true);
     }
 
     @Nonnull
@@ -119,7 +117,6 @@ public class ItemPluggableFacade extends ItemBC_Neptune implements IItemPluggabl
                 subItems.add(createItemStack(inst));
 
                 for (FacadeBlockStateInfo info : FacadeStateManager.validFacadeStates.values()) {
-                    // Calen
                     if (!BCSiliconConfig.isFacadeBlockIdAllowedInCreativeModTabByConfig(info.state.getBlock())) {
                         continue;
                     }
@@ -145,21 +142,16 @@ public class ItemPluggableFacade extends ItemBC_Neptune implements IItemPluggabl
     }
 
     @Override
-//    public String getItemStackDisplayName(ItemStack stack)
     public Component getName(ItemStack stack) {
         FacadeInstance fullState = getStates(stack);
         if (fullState.type == FacadeType.Basic) {
-//            String displayName = getFacadeStateDisplayName(fullState.phasedStates[0]);
             Component displayName = getFacadeStateDisplayName(fullState.phasedStates[0]);
-//            return super.getItemStackDisplayName(stack) + ": " + displayName;
             return ((MutableComponent) super.getName(stack)).append(": ").append(displayName);
         } else {
-//            return LocaleUtil.localize("item.FacadePhased.name");
             return Component.translatable("item.FacadePhased.name");
         }
     }
 
-    // public static String getFacadeStateDisplayName(FacadePhasedState state)
     public static Component getFacadeStateDisplayName(FacadePhasedState state) {
         ItemStack assumedStack = state.stateInfo.requiredStack;
         return assumedStack.getDisplayName();
@@ -167,22 +159,18 @@ public class ItemPluggableFacade extends ItemBC_Neptune implements IItemPluggabl
 
     @OnlyIn(Dist.CLIENT)
     @Override
-//    public void addInformation(ItemStack stack, Level world, List<String> tooltip, ITooltipFlag flag)
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
         FacadeInstance states = getStates(stack);
         if (states.type == FacadeType.Phased) {
-//            String stateString = LocaleUtil.localize("item.FacadePhased.state");
             FacadePhasedState defaultState = null;
             for (FacadePhasedState state : states.phasedStates) {
                 if (state.activeColour == null) {
                     defaultState = state;
                     continue;
                 }
-//                tooltip.add(String.format(stateString, LocaleUtil.localizeColour(state.activeColour), getFacadeStateDisplayName(state)));
                 tooltip.add(Component.translatable("item.FacadePhased.state", LocaleUtil.localizeColour(state.activeColour), getFacadeStateDisplayName(state)));
             }
             if (defaultState != null) {
-//                tooltip.add(1, String.format(LocaleUtil.localize("item.FacadePhased.state_default"), getFacadeStateDisplayName(defaultState)));
                 tooltip.add(1, Component.translatable("item.FacadePhased.state_default", getFacadeStateDisplayName(defaultState)));
             }
         } else {

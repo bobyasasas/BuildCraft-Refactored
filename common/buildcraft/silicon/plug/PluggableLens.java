@@ -51,7 +51,6 @@ public class PluggableLens extends PipePluggable {
     public final DyeColor colour;
     public final boolean isFilter;
 
-    // Manual constructor (called by the specific item pluggable code)
 
     public PluggableLens(PluggableDefinition def, IPipeHolder holder, Direction side, DyeColor colour,
                          boolean isFilter) {
@@ -116,13 +115,9 @@ public class PluggableLens extends PipePluggable {
     @Override
     @OnlyIn(Dist.CLIENT)
     public PluggableModelKey getModelRenderKey(RenderType layer) {
-//        switch (layer) {
 //            case CUTOUT:
 //            case TRANSLUCENT:
-//                return new KeyPlugLens(layer, side, colour, isFilter);
 //            default:
-//                return null;
-//        }
         if (layer == RenderType.cutout() || layer == RenderType.translucent()) {
             return new KeyPlugLens(layer, side, colour, isFilter);
         } else {

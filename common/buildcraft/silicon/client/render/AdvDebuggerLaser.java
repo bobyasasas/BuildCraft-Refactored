@@ -45,15 +45,11 @@ public class AdvDebuggerLaser implements DetachedRenderer.IDetachedRenderer {
         if (pos == null || face == null) {
             return;
         }
-//        BufferBuilder bb = Tessellator.getInstance().getBuffer();
-//        bb.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-        VertexConsumer bb = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(Sheets.translucentCullBlockSheet()); // Calen: if RenderType.SOLID, cuboids will look not 3D
+        VertexConsumer bb = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(Sheets.translucentCullBlockSheet());
         VolumeUtil.iterateCone(player.level(), pos, face, 6, true, (world, start, p, visible) ->
         {
             int colour = visible ? COLOUR_VISIBLE : COLOUR_NOT_VISIBLE;
-//            DebugRenderHelper.renderSmallCuboid(poseStack, bb, p, colour);
             DebugRenderHelper.renderSmallCuboid(poseStack, bb, p, colour);
         });
-//        Tessellator.getInstance().draw();
     }
 }

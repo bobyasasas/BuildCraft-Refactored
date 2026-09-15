@@ -57,7 +57,6 @@ public class JsonGuiElement extends JsonVariableObject {
             this.context = new FunctionContext(context);
             this.types = typeLookup;
 
-//            String str = JsonUtils.getString(json, "type", null);
             String str = GsonHelper.getAsString(json, "type", null);
             if (str != null) {
                 JsonGuiElement parent = typeLookup.get(str);

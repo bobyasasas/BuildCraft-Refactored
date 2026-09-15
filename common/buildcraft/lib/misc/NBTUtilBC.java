@@ -197,7 +197,6 @@ public final class NBTUtilBC {
         return list;
     }
 
-    // Calen Add
     public static ListTag writeBooleanArray(boolean[] data) {
         ListTag list = new ListTag();
         for (boolean d : data) {

@@ -62,7 +62,6 @@ public class BCTransportModels {
     public static final IPluggableStaticBaker<KeyPlugPowerAdaptor> BAKER_PLUG_POWER_ADAPTOR;
 
     static {
-        // Calen: to ensure ExpressionCompat ENUM_FACING = new NodeType<>("Facing", Direction.UP); runned, or will cause IllegalArgumentException: Unknown NodeType class net.minecraft.core.Direction
         ExpressionCompat.setup();
 
         BLOCKER = getStaticModel("plugs/blocker");
@@ -88,14 +87,12 @@ public class BCTransportModels {
 
     public static void fmlPreInit() {
         // 1.18.2: following events are IModBusEvent
-//        MinecraftForge.EVENT_BUS.register(BCTransportModels.class);
         IEventBus modEventBus = ((FMLModContainer) ModList.get().getModContainerById(BCTransport.MODID).get()).getEventBus();
         modEventBus.register(BCTransportModels.class);
     }
 
     public static void fmlInit() {
         // Moved to #onTesrReg
-//        ClientRegistry.bindTileEntitySpecialRenderer(TilePipeHolder.class, new RenderPipeHolder());
 
         PipeApiClient.registry.registerBaker(KeyPlugBlocker.class, BAKER_PLUG_BLOCKER);
         PipeApiClient.registry.registerBaker(KeyPlugPowerAdaptor.class, BAKER_PLUG_POWER_ADAPTOR);
@@ -117,10 +114,8 @@ public class BCTransportModels {
         RegistryUtil.regTesrIfTilePresent(BCTransportBlocks.pipeHolderTile, RenderPipeHolder::new);
     }
 
-    // Calen 1.20.1
     private static final List<Runnable> spriteTasks = Lists.newLinkedList();
 
-    // Calen 1.20.1
     @SubscribeEvent
     public static void onTextureStitchEvent$Post(TextureStitchEvent.Post event) {
         if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
@@ -145,9 +140,7 @@ public class BCTransportModels {
             }
             return bakedModel;
         }));
-//        putModel(event, "plug_blocker", "inventory", new ModelPluggableItem(BLOCKER.getCutoutQuads()));
         putModel(event, "plug_blocker", "inventory", new ModelPluggableItem(spriteTasks::add, new LazyLoadedValue<>(() -> BLOCKER.getCutoutQuads())));
-//        putModel(event, "plug_power_adaptor", "inventory", new ModelPluggableItem(POWER_ADAPTER.getCutoutQuads()));
         putModel(event, "plug_power_adaptor", "inventory", new ModelPluggableItem(spriteTasks::add, new LazyLoadedValue<>(() -> POWER_ADAPTER.getCutoutQuads())));
     }
 

@@ -50,8 +50,6 @@ public class ItemMarkerConstruction extends ItemBlockBC_Neptune {
 
                 if (tile1 != tile2 && tile2 != null) {
                     if (tile2 instanceof TileArchitectTable || tile2 instanceof TileMarkerConstruction || tile2 instanceof TileBuilder) {
-                        // TODO Calen addSubBlueprint!!!
-                        // architect.addSubBlueprint(tile2);
 
                         nbt.remove("x");
                         nbt.remove("y");
@@ -69,7 +67,6 @@ public class ItemMarkerConstruction extends ItemBlockBC_Neptune {
     }
 
     @Override
-    // public boolean onItemUse(ItemStack marker, EntityPlayer player, Level world, BlockPos pos, EnumFacing facing, float par8, float par9, float par10)
     public InteractionResult useOn(UseOnContext context) {
         Level world = context.getLevel();
         BlockPos pos = context.getClickedPos();

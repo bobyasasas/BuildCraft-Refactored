@@ -20,7 +20,6 @@ public class TransportBlockLoot extends BlockLootSubProvider {
         dropSelf(BCTransportBlocks.filteredBuffer.get());
     }
 
-    // Calen: without these: IllegalStateException: Missing loottable 'minecraft:blocks/stone' for 'minecraft:stone'
     private final Set<Block> knownBlocks = new HashSet<>();
 
     @Override

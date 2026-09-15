@@ -71,7 +71,6 @@ public abstract class PipeBehaviourDiamond extends PipeBehaviour {
     public boolean onPipeActivate(Player player, HitResult trace, float hitX, float hitY, float hitZ,
             EnumPipePart part) {
         if (!player.level().isClientSide) {
-//            BCTransportGuis.PIPE_DIAMOND.openGui(player, pipe.getHolder().getPipePos());
             MessageUtil.serverOpenTileGui(player, pipe.getHolder(), pipe.getHolder().getPipePos());
         }
         return true;

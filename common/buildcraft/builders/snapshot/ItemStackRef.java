@@ -21,7 +21,6 @@ import java.util.Optional;
 public class ItemStackRef {
     private final NbtRef<StringTag> item;
     private final NbtRef<IntTag> amount;
-    //    private final NbtRef<IntTag> meta;
     private final NbtRef<CompoundTag> tagCompound;
 
     public ItemStackRef(NbtRef<StringTag> item,
@@ -30,7 +29,6 @@ public class ItemStackRef {
                         NbtRef<CompoundTag> tagCompound) {
         this.item = item;
         this.amount = amount;
-//        this.meta = meta;
         this.tagCompound = tagCompound;
     }
 
@@ -49,10 +47,6 @@ public class ItemStackRef {
                         .flatMap(ref -> ref.get(nbt))
                         .map(IntTag::getAsInt)
                         .orElse(1)
-//            Optional.ofNullable(meta)
-//                .flatMap(ref -> ref.get(nbt))
-//                .map(IntTag::getAsInt)
-//                .orElse(0)
         );
         Optional.ofNullable(tagCompound)
                 .flatMap(ref -> ref.get(nbt))

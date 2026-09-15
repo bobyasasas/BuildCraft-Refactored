@@ -57,13 +57,11 @@ public enum ModelGateItem implements BakedModel {
     }
 
     @Override
-//    public List<BakedQuad> getQuads(BlockState state, Direction side, long rand)
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand) {
         return ImmutableList.of();
     }
 
     @Override
-//    public boolean isAmbientOcclusion()
     public boolean useAmbientOcclusion() {
         return false;
     }
@@ -74,19 +72,16 @@ public enum ModelGateItem implements BakedModel {
     }
 
     @Override
-//    public boolean isBuiltInRenderer()
     public boolean isCustomRenderer() {
         return false;
     }
 
     @Override
-//    public TextureAtlasSprite getParticleTexture()
     public TextureAtlasSprite getParticleIcon() {
         return null;
     }
 
     @Override
-//    public ItemCameraTransforms getItemCameraTransforms()
     public ItemTransforms getTransforms() {
         return ModelItemSimple.TRANSFORM_PLUG_AS_ITEM_BIGGER;
     }
@@ -100,11 +95,9 @@ public enum ModelGateItem implements BakedModel {
         public static final GateOverride GATE_OVERRIDE = new GateOverride();
 
         private GateOverride() {
-//            super(ImmutableList.of());
         }
 
         @Override
-//        public BakedModel handleItemState(BakedModel originalModel, ItemStack stack, Level world, LivingEntity entity)
         public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int p_173469_) {
             GateVariant variant = ItemPluggableGate.getVariant(StackUtil.asNonNull(stack));
             return new ModelItemSimple(getQuads(variant), ModelItemSimple.TRANSFORM_PLUG_AS_ITEM_BIGGER, false);

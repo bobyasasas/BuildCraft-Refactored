@@ -85,7 +85,6 @@ public final class PatternSpherePart extends Pattern implements IFillerPatternSh
 
         Vec3 max = new Vec3(filledTemplate.getMax().getX(), filledTemplate.getMax().getY(), filledTemplate.getMax().getZ());
         center = VecUtil.scale(max, 0.5);
-//        radius = center.addVector(0.5, 0.5, 0.5);
         radius = center.add(0.5, 0.5, 0.5);
 
         innerSides.add(facing.face);

@@ -144,7 +144,7 @@ public abstract class BCFluid extends ForgeFlowingFluid {
         BlockPos blockpos1 = /*here different from FlowingFluid*/ isGas ? pos.below() : pos.above();
         BlockState blockstate2 = world.getBlockState(blockpos1);
         FluidState fluidstate2 = blockstate2.getFluidState();
-        Direction d = isGas ? Direction.DOWN : Direction.UP; // Calen add
+        Direction d = isGas ? Direction.DOWN : Direction.UP;
         if (!fluidstate2.isEmpty() && fluidstate2.getType().isSame(this) && this.canPassThroughWall(/*here different from FlowingFluid*/ d, world, pos, state, blockpos1, blockstate2)) {
             return this.getFlowing(8, true);
         } else {
@@ -311,7 +311,6 @@ public abstract class BCFluid extends ForgeFlowingFluid {
     /** To protect water block */
     @Override
     protected boolean canHoldFluid(BlockGetter p_75973_, BlockPos p_75974_, BlockState p_75975_, Fluid p_75976_) {
-        // Calen: for oil spread on water and not replace water
         if (p_75973_.getFluidState(p_75974_).is(FluidTags.WATER)) {
             return false;
         }

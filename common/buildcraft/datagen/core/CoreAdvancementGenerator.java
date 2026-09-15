@@ -156,7 +156,6 @@ public class CoreAdvancementGenerator extends BCBaseAdvancementGenerator {
                 .save(consumer, NAMESPACE + ":paper");
         // goggles
         Advancement goggles = Advancement.Builder.advancement().display(
-                        // TODO Calen goggles texture
 //                        BCCoreItems.GOOGLES.get(),
                         Items.IRON_HELMET,
                         Component.translatable("advancements.buildcraftcore.goggles.title"),

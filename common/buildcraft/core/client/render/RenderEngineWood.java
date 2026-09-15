@@ -16,7 +16,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class RenderEngineWood<T extends TileEngineRedstone_BC8> extends RenderEngine_BC8<TileEngineRedstone_BC8> {
-//    public static final RenderEngineWood INSTANCE = new RenderEngineWood();
 
     public RenderEngineWood(BlockEntityRendererProvider.Context context) {
         super(context);

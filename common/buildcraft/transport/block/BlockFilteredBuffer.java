@@ -32,10 +32,8 @@ public class BlockFilteredBuffer extends BlockBCTile_Neptune<TileFilteredBuffer>
     }
 
     @Override
-//    public boolean onBlockActivated(Level world, BlockPos pos, BlockState state, Player player, InteractionHand hand, Direction side, float hitX, float hitY, float hitZ)
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!world.isClientSide) {
-//            BCTransportGuis.FILTERED_BUFFER.openGui(player, pos);
             if (world.getBlockEntity(pos) instanceof TileFilteredBuffer tile) {
                 MessageUtil.serverOpenTileGui(player, tile);
             }

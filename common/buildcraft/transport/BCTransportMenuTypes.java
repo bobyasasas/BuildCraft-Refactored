@@ -21,7 +21,6 @@ import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.ForgeRegistries;
 
-// Calen: instead of BCTransportProxy in 1.12.2
 // For Client
 public class BCTransportMenuTypes {
     public static final MenuType<ContainerDiamondPipe> PIPE_DIAMOND = IForgeMenuType.create((windowId, inv, data) ->
@@ -29,11 +28,9 @@ public class BCTransportMenuTypes {
                 if (inv.player.level().getBlockEntity(data.readBlockPos()) instanceof TilePipeHolder tile && tile.getPipe().behaviour instanceof PipeBehaviourDiamond diamond) {
                     MessageUtil.clientHandleUpdateTileMsgBeforeOpen(tile, data);
 
-                    // Calen 1.18.2: moved from ContainerGate#<init>
                     // Server call in PluggableGate#onPluggableActivate to make MessageUpdateTile
                     tile.onPlayerOpen(inv.player);
 
-                    // Calen: Refresh the PipeBehaviour object
                     diamond = (PipeBehaviourDiamond) tile.getPipe().behaviour;
                     return new ContainerDiamondPipe(BCTransportMenuTypes.PIPE_DIAMOND, windowId, inv.player, diamond);
                 } else {
@@ -46,11 +43,9 @@ public class BCTransportMenuTypes {
                 if (inv.player.level().getBlockEntity(data.readBlockPos()) instanceof TilePipeHolder tile && tile.getPipe().behaviour instanceof PipeBehaviourWoodDiamond woodDiamond) {
                     MessageUtil.clientHandleUpdateTileMsgBeforeOpen(tile, data);
 
-                    // Calen 1.18.2: moved from ContainerGate#<init>
                     // Server call in PluggableGate#onPluggableActivate to make MessageUpdateTile
                     tile.onPlayerOpen(inv.player);
 
-                    // Calen: Refresh the PipeBehaviour object
                     woodDiamond = (PipeBehaviourWoodDiamond) tile.getPipe().behaviour;
                     return new ContainerDiamondWoodPipe(BCTransportMenuTypes.PIPE_DIAMOND_WOOD, windowId, inv.player, woodDiamond);
                 } else {
@@ -63,11 +58,9 @@ public class BCTransportMenuTypes {
                 if (inv.player.level().getBlockEntity(data.readBlockPos()) instanceof TilePipeHolder tile && tile.getPipe().behaviour instanceof PipeBehaviourEmzuli emzuli) {
                     MessageUtil.clientHandleUpdateTileMsgBeforeOpen(tile, data);
 
-                    // Calen 1.18.2: moved from ContainerGate#<init>
                     // Server call in PluggableGate#onPluggableActivate to make MessageUpdateTile
                     tile.onPlayerOpen(inv.player);
 
-                    // Calen: Refresh the PipeBehaviour object
                     emzuli = (PipeBehaviourEmzuli) tile.getPipe().behaviour;
                     return new ContainerEmzuliPipe_BC8(BCTransportMenuTypes.PIPE_EMZULI, windowId, inv.player, emzuli);
                 } else {

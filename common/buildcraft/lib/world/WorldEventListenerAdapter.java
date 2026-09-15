@@ -16,20 +16,8 @@ public abstract class WorldEventListenerAdapter implements GameEventListener {
 //                                  @Nonnull BlockPos pos,
 //                                  @Nonnull BlockState oldState,
 //                                  @Nonnull BlockState newState,
-//                                  int flags)
-//    {
-//    }
-//
 //    @Override
-//    public void notifyLightSet(@Nonnull BlockPos pos)
-//    {
-//    }
-//
 //    @Override
-//    public void markBlockRangeForRenderUpdate(int x1, int y1, int z1, int x2, int y2, int z2)
-//    {
-//    }
-//
 //    @Override
 //    public void playSoundToAllNearExcept(@Nullable Player player,
 //                                         @Nonnull SoundEvent sound,
@@ -38,15 +26,7 @@ public abstract class WorldEventListenerAdapter implements GameEventListener {
 //                                         double y,
 //                                         double z,
 //                                         float volume,
-//                                         float pitch)
-//    {
-//    }
-//
 //    @Override
-//    public void playRecord(@Nonnull SoundEvent sound, @Nonnull BlockPos pos)
-//    {
-//    }
-//
 //    @Override
 //    public void spawnParticle(int particleID,
 //                              boolean ignoreRange,
@@ -56,10 +36,6 @@ public abstract class WorldEventListenerAdapter implements GameEventListener {
 //                              double xSpeed,
 //                              double ySpeed,
 //                              double zSpeed,
-//                              @Nonnull int... parameters)
-//    {
-//    }
-//
 //    @Override
 //    public void spawnParticle(int id,
 //                              boolean ignoreRange,
@@ -70,32 +46,9 @@ public abstract class WorldEventListenerAdapter implements GameEventListener {
 //                              double xSpeed,
 //                              double ySpeed,
 //                              double zSpeed,
-//                              @Nonnull int... parameters)
-//    {
-//    }
-//
 //    @Override
-//    public void onEntityAdded(@Nonnull Entity entity)
-//    {
-//    }
-//
 //    @Override
-//    public void onEntityRemoved(@Nonnull Entity entity)
-//    {
-//    }
-//
 //    @Override
-//    public void broadcastSound(int soundID, @Nonnull BlockPos pos, int data)
-//    {
-//    }
-//
 //    @Override
-//    public void playEvent(@Nullable Player player, int type, @Nonnull BlockPos blockPos, int data)
-//    {
-//    }
-//
 //    @Override
-//    public void sendBlockBreakProgress(int breakerId, @Nonnull BlockPos pos, int progress)
-//    {
-//    }
 }

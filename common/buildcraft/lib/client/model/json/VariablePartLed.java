@@ -16,7 +16,6 @@ public class VariablePartLed extends VariablePartCuboidBase {
     private static final VariableFaceData FACE_DATA = new VariableFaceData();
 
     static {
-//        FACE_DATA.sprite = ModelLoader.White.INSTANCE;
         FACE_DATA.sprite = new LazyLoadedValue<>(White::instance);
         FACE_DATA.uvs.minU = 1 / 16.0f;
         FACE_DATA.uvs.minV = 2 / 16.0f;

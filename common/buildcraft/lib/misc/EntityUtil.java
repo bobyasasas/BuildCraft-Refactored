@@ -81,18 +81,14 @@ public class EntityUtil {
     }
 
     @Nonnull
-//    public static ItemStack getArrowStack(EntityArrow arrow)
     public static ItemStack getArrowStack(AbstractArrow arrow) {
         // FIXME: Replace this with an invocation of arrow.getArrowStack
-        // (but its protected so we can't)
-//        if (arrow instanceof EntitySpectralArrow)
         if (arrow instanceof SpectralArrow) {
             return new ItemStack(Items.SPECTRAL_ARROW);
         }
         return new ItemStack(Items.ARROW);
     }
 
-    // Calen 1.20.1
     public static EntityType<?> getItemFromRegistryName(String name) {
         return getItemFromRegistryName(new ResourceLocation(name));
     }

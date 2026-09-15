@@ -71,7 +71,6 @@ public class GuiIcon implements ISimpleDrawable {
         draw(sprite, guiGraphics, x, y, x + drawnWidth, y + drawnHeight);
     }
 
-    // public void drawCustomQuad(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
     public void drawCustomQuad(GuiGraphics guiGraphics, double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
         PoseStack poseStack = guiGraphics.pose();
 
@@ -83,73 +82,28 @@ public class GuiIcon implements ISimpleDrawable {
         double vMin = sprite.getInterpV(0);
         double vMax = sprite.getInterpV(1);
 
-        // Unfortunately we cannot use the vertex buffer directly (as it doesn't allow for texture4f)
-//        GL11.glBegin(GL11.GL_QUADS);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader); // Calen: without this, the texture will not appear
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuilder();
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
-//        double[] q = calcQ(x1, y1, x2, y2, x3, y3, x4, y4);
 
-//        vertDirect(poseStack, bufferbuilder, x1, y1, uMin * q[0], vMax * q[0], 0, q[0]);
-//        vertDirect(poseStack, bufferbuilder, x2, y2, uMax * q[1], vMax * q[1], 0, q[1]);
-//        vertDirect(poseStack, bufferbuilder, x3, y3, uMax * q[2], vMin * q[2], 0, q[2]);
-//        vertDirect(poseStack, bufferbuilder, x4, y4, uMin * q[3], vMin * q[3], 0, q[3]);
 
         Matrix4f pose = poseStack.last().pose();
-//        bufferbuilder.vertex(pose, (float) x1, (float) y2, 0).uv((float) uMin, (float) vMax).endVertex();
-//        bufferbuilder.vertex(pose, (float) x2, (float) y2, 0).uv((float) uMax, (float) vMax).endVertex();
-//        bufferbuilder.vertex(pose, (float) x2, (float) y1, 0).uv((float) uMax, (float) vMin).endVertex();
-//        bufferbuilder.vertex(pose, (float) x1, (float) y1, 0).uv((float) uMin, (float) vMin).endVertex();
         bufferbuilder.vertex(pose, (float) x1, (float) y1, 0).uv((float) uMin, (float) vMax).endVertex();
         bufferbuilder.vertex(pose, (float) x2, (float) y2, 0).uv((float) uMax, (float) vMax).endVertex();
         bufferbuilder.vertex(pose, (float) x3, (float) y3, 0).uv((float) uMax, (float) vMin).endVertex();
         bufferbuilder.vertex(pose, (float) x4, (float) y4, 0).uv((float) uMin, (float) vMin).endVertex();
 
-//        GL11.glEnd();
         tessellator.end();
     }
 
 //    private static double[] calcQ(double x1, double y1, double x2, double y2, double x3, double y3, double x4,
-//                                  double y4) {
 //        // Method contents taken from http://www.bitlush.com/posts/arbitrary-quadrilaterals-in-opengl-es-2-0
 //        // (or github https://github.com/bitlush/android-arbitrary-quadrilaterals-in-opengl-es-2-0 if the site is down)
 //        // this code is by Keith Wood
-//
-//        double ax = x3 - x1;
-//        double ay = y3 - y1;
-//        double bx = x4 - x2;
-//        double by = y4 - y2;
-//
-//        double cross = ax * by - ay * bx;
-//
-//        if (cross != 0) {
-//            double cy = y1 - y2;
-//            double cx = x1 - x2;
-//
-//            double s = (ax * cy - ay * cx) / cross;
-//
-//            if (s > 0 && s < 1) {
-//                double t = (bx * cy - by * cx) / cross;
-//
-//                if (t > 0 && t < 1) {
-//                    double q0 = 1 / (1 - t);
-//                    double q1 = 1 / (1 - s);
-//                    double q2 = 1 / t;
-//                    double q3 = 1 / s;
-//                    return new double[] { q0, q1, q2, q3 };
-//                }
-//            }
-//        }
 //        // in case (for some reason) some of the input was wrong then we will fail back to default rendering
-//        return new double[] { 1, 1, 1, 1 };
-//    }
 
-//    private static void vertDirect(double x, double y, double s, double t, double r, double q) {
-//        GL11.glTexCoord4d(s, t, r, q);
-//        GL11.glVertex2d(x, y);
-//    }
 
     public void drawCutInside(IGuiArea element, GuiGraphics guiGraphics) {
         drawCutInside(guiGraphics, element.getX(), element.getY(), element.getWidth(), element.getHeight());
@@ -177,9 +131,7 @@ public class GuiIcon implements ISimpleDrawable {
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderUtil.enableBlend();
-//        Tessellator tess = Tessellator.getInstance();
         Tesselator tess = Tesselator.getInstance();
-//        BufferBuilder vb = tess.getBuffer();
         BufferBuilder vb = tess.getBuilder();
         vb.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
@@ -189,7 +141,6 @@ public class GuiIcon implements ISimpleDrawable {
         vertex(pose, vb, xMax, yMin, uMax, vMin);
         vertex(pose, vb, xMin, yMin, uMin, vMin);
 
-//        tess.draw();
         tess.end();
     }
 
@@ -212,11 +163,9 @@ public class GuiIcon implements ISimpleDrawable {
         double uMax = sprite.getInterpU(1);
         double vMax = sprite.getInterpV(1);
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader); // Calen: this should be here or the bg will not appear <- From GuiComponent#innerBlit
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderUtil.enableBlend();
-//        Tessellator tess = Tessellator.getInstance();
         Tesselator tess = Tesselator.getInstance();
-//        BufferBuilder vb = tess.getBuffer();
         BufferBuilder vb = tess.getBuilder();
         vb.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
@@ -226,7 +175,6 @@ public class GuiIcon implements ISimpleDrawable {
         vertex(pose, vb, xMax, yMin, uMax, vMin);
         vertex(pose, vb, xMin, yMin, uMin, vMin);
 
-//        tess.draw();
         tess.end();
     }
 

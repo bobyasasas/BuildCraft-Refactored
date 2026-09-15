@@ -37,9 +37,7 @@ public class JsonTexture {
 
     public JsonTexture(JsonObject obj) {
         try {
-//            location = JsonUtils.getString(obj, "location");
             location = GsonHelper.getAsString(obj, "location");
-//            JsonArray uvs = JsonUtils.getJsonArray(obj, "uv");
             JsonArray uvs = GsonHelper.getAsJsonArray(obj, "uv");
             if (uvs.size() != 4) {
                 throw new JsonSyntaxException("Must have 4 elements (uMin, vMin, uMax, vMax)");

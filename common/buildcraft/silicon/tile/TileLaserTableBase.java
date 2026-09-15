@@ -63,7 +63,6 @@ public abstract class TileLaserTableBase extends TileBC_Neptune implements ILase
 
     @Override
     public boolean isInvalidTarget() {
-//        return isInvalid();
         return isRemoved();
     }
 
@@ -122,11 +121,8 @@ public abstract class TileLaserTableBase extends TileBC_Neptune implements ILase
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-//        left.add("power - " + LocaleUtil.localizeMj(power));
         left.add(Component.literal("power - ").append(LocaleUtil.localizeMjComponent(power)));
-//        left.add("target - " + LocaleUtil.localizeMj(getTarget()));
         left.add(Component.literal("target - ").append(LocaleUtil.localizeMjComponent(getTarget())));
     }
 

@@ -71,18 +71,18 @@ public class BCEnergyModels {
                 "buildcraftenergy:models/tile/engine_stone.jsonbc",
                 fnCtx
         );
-        BlockEngine_BC8.setModel(EnumEngineType.STONE, ENGINE_STONE); // Calen
+        BlockEngine_BC8.setModel(EnumEngineType.STONE, ENGINE_STONE);
         ENGINE_IRON = new ModelHolderVariable(
 //                "buildcraftenergy:models/block/engine_iron.json",
                 "buildcraftenergy:models/tile/engine_iron.jsonbc",
                 fnCtx
         );
-        BlockEngine_BC8.setModel(EnumEngineType.IRON, ENGINE_IRON); // Calen
+        BlockEngine_BC8.setModel(EnumEngineType.IRON, ENGINE_IRON);
         ENGINE_RF = new ModelHolderVariable(
                 "buildcraftenergy:models/tile/engine_rf.jsonbc",
                 fnCtx
         );
-        BlockEngine_BC8.setModel(EnumEngineType.RF, ENGINE_RF); // Calen
+        BlockEngine_BC8.setModel(EnumEngineType.RF, ENGINE_RF);
         MJ_DYNAMO = new ModelHolderVariable(
                 "buildcraftenergy:models/tile/mj_dynamo.jsonbc",
                 fnCtx
@@ -91,7 +91,6 @@ public class BCEnergyModels {
 
     public static void fmlPreInit() {
         // 1.18.2: following events are IModBusEvent
-//        MinecraftForge.EVENT_BUS.register(BCEnergyModels.class);
         IEventBus modEventBus = ((FMLModContainer) ModList.get().getModContainerById(BCEnergy.MODID).get()).getEventBus();
         modEventBus.register(BCEnergyModels.class);
     }
@@ -107,16 +106,11 @@ public class BCEnergyModels {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void onModelRegistry(ModelEvent.RegisterAdditional event) {
-//        for (BCFluid fluid : BCEnergyFluids.allFluids) {
-//            ModelLoader.setCustomStateMapper(fluid.getBlock(), b -> Collections.emptyMap());
-//        }
         ChristmasHandler.regBucketNoFlipModel(event);
     }
 
-    // Calen 1.20.1
     private static final List<Runnable> spriteTasks = Lists.newLinkedList();
 
-    // Calen 1.20.1
     @SubscribeEvent
     public static void onTextureStitchEvent$Post(TextureStitchEvent.Post event) {
         if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {

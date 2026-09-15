@@ -135,7 +135,6 @@ public class ExpressionOpsCharacterizationTester {
 
     @Test
     public void stringConcatenationAcrossTypesViaAndOperator() throws InvalidExpressionException {
-        // "&" on strings is concatenation, and every operand is cast to its string form ("1", "0.5", "true")
         Assert.assertEquals("a10.5true", compileString("'a' & 1 & 0.5 & true").evaluate());
         Assert.assertEquals("a1", compileString("'a' + 1").evaluate());
     }

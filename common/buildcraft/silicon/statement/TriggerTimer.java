@@ -44,7 +44,6 @@ public class TriggerTimer extends BCStatement implements ITriggerInternal {
 
     @Override
     public Component getDescription() {
-        // return LocaleUtil.localize("gate.trigger.timer", duration.duration);
         return Component.translatable("gate.trigger.timer", duration.duration);
     }
 
@@ -56,7 +55,6 @@ public class TriggerTimer extends BCStatement implements ITriggerInternal {
     @Override
     public boolean isTriggerActive(IStatementContainer source, IStatementParameter[] parameters) {
         Level world = source.getTile().getLevel();
-        // return world.getTotalWorldTime() % (20 * duration.duration) == 0;
         return world.getGameTime() % (20 * duration.duration) == 0;
     }
 

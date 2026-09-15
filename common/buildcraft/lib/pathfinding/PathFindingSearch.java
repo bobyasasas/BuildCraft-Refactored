@@ -15,12 +15,10 @@ import net.minecraft.world.level.Level;
 
 import java.util.*;
 
-// Calen 1.18.2 from 1.8.9
 public class PathFindingSearch implements IIterableAlgorithm {
 
     public static final int PATH_ITERATIONS = 1000;
 
-    // private static final HashMap<Integer, HashSet<BlockPos>> reservations = new HashMap<Integer, HashSet<BlockPos>>();
     private static final HashMap<ResourceKey<Level>, HashSet<BlockPos>> reservations = new HashMap<ResourceKey<Level>, HashSet<BlockPos>>();
 
     private Level world;
@@ -84,9 +82,7 @@ public class PathFindingSearch implements IIterableAlgorithm {
             return false;
         }
         synchronized (reservations) {
-            // if (reservations.containsKey(world.provider.getDimensionId()))
             if (reservations.containsKey(world.dimension())) {
-                // HashSet<BlockPos> dimReservations = reservations.get(world.provider.getDimensionId());
                 HashSet<BlockPos> dimReservations = reservations.get(world.dimension());
                 if (dimReservations.contains(block)) {
                     return false;
@@ -105,7 +101,6 @@ public class PathFindingSearch implements IIterableAlgorithm {
     }
 
     private boolean isLoadedChunk(int x, int z) {
-        // return world.getChunkProvider().chunkExists(x >> 4, z >> 4);
         return world.getChunkSource().hasChunk(x >> 4, z >> 4);
     }
 
@@ -154,12 +149,9 @@ public class PathFindingSearch implements IIterableAlgorithm {
 
     private boolean reserve(BlockPos block) {
         synchronized (reservations) {
-            // if (!reservations.containsKey(world.provider.getDimensionId()))
             if (!reservations.containsKey(world.dimension())) {
-                // reservations.put(world.provider.getDimensionId(), new HashSet<BlockPos>());
                 reservations.put(world.dimension(), new HashSet<BlockPos>());
             }
-            // HashSet<BlockPos> dimReservations = reservations.get(world.provider.getDimensionId());
             HashSet<BlockPos> dimReservations = reservations.get(world.dimension());
             if (dimReservations.contains(block)) {
                 return false;
@@ -171,9 +163,7 @@ public class PathFindingSearch implements IIterableAlgorithm {
 
     public void unreserve(BlockPos block) {
         synchronized (reservations) {
-            // if (reservations.containsKey(world.provider.getDimensionId()))
             if (reservations.containsKey(world.dimension())) {
-                // reservations.get(world.provider.getDimensionId()).remove(block);
                 reservations.get(world.dimension()).remove(block);
             }
         }

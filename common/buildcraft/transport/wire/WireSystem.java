@@ -178,8 +178,6 @@ public final class WireSystem {
 
     public boolean isPlayerWatching(ServerPlayer player) {
         if (player.level() instanceof ServerLevel world) {
-//            return getChunkPosesAsStream().map(chunkPos -> world.getPlayerChunkMap().getEntry(chunkPos.x, chunkPos.z))
-//                    .anyMatch(playerChunkMapEntry -> playerChunkMapEntry != null && playerChunkMapEntry.containsPlayer(player));
             return getChunkPosesAsStream().map(
                             chunkPos -> world.getChunkSource().chunkMap.getPlayers(chunkPos, /*pBoundaryOnly*/ false)
                     )

@@ -32,13 +32,9 @@ public enum EnumTraversalExpense {
         if (world.isEmptyBlock(pos)) {
             return AIR;
         }
-//        Material mat = state.getMaterial();
-//        if (mat.isLiquid())
         if (BlockUtil.isFluidBlock(state)) {
             return FLUID;
         }
-//        Block block = state.getBlock();
-//        if (block.isPassable(world, pos))
         if (state.isPathfindable(world, pos, PathComputationType.LAND)) {
             return AIR;
         }

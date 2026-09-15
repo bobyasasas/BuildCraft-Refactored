@@ -17,23 +17,7 @@ public class UnlistedNonNullProperty<V> {
     }
 
 //    @Override
-//    public String getName() {
-//        return name;
-//    }
-//
 //    @Override
-//    public boolean isValid(V value) {
-//        return value != null;
-//    }
-//
-//    @SuppressWarnings("unchecked")
 //    @Override
-//    public Class getType() {
-//        return Object.class;
-//    }
-//
 //    @Override
-//    public String valueToString(V value) {
-//        return value.toString();
-//    }
 }

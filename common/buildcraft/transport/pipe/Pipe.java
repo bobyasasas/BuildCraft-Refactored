@@ -75,9 +75,7 @@ public final class Pipe implements IPipe, IDebuggable {
         for (Direction face : Direction.VALUES) {
             int data = (connectionData >>> (face.ordinal() * 2)) & 0b11;
             // The only important aspect of this is the pipe type
-            // as the texture index is just used at the client (which is updated in the first tick)
             // and the distance is only used on the server for item pipe travel times.
-            // (which is minor enough that it doesn't really matter)
             if (data == 0b01) {
                 connected.put(face, DEFAULT_CONNECTION_DISTANCE);
                 types.put(face, ConnectedType.PIPE);
@@ -168,12 +166,6 @@ public final class Pipe implements IPipe, IDebuggable {
 
             behaviour.readPayload(buffer, side, ctx);
 
-//            PipeModelKey model = getModel();
-//            if (!model.equals(lastModel)) {
-//                lastModel = model;
-//                getHolder().scheduleRenderUpdate();
-//            }
-            // Calen: when world loading, TilePipeHolder#getNeighbourTile -> [lib.tile] Ghost-loading tile at ...
             getHolder().runWhenWorldNotNull(
                     () ->
                     {
@@ -226,9 +218,6 @@ public final class Pipe implements IPipe, IDebuggable {
     // Caps
 
 //    @Override
-//    public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
-//        return getCapability(capability, facing) != null;
-//    }
 
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {
@@ -246,7 +235,6 @@ public final class Pipe implements IPipe, IDebuggable {
     public void onTick() {
         if (updateMarked) {
             // Ensure that the behaviour and flow *always* get valid connection data
-            // (for example if we just read from disk)
             updateConnections();
         }
         behaviour.onTick();
@@ -286,7 +274,6 @@ public final class Pipe implements IPipe, IDebuggable {
                 if (oBehaviour == null) {
                     continue;
                 }
-//                PipePluggable oPlug = oTile.getCapability(PipeApi.CAP_PLUG, facing.getOpposite());
                 PipePluggable oPlug = oTile.getCapability(PipeApi.CAP_PLUG, facing.getOpposite()).orElse(null);
                 if (oPlug == null || !oPlug.isBlocking()) {
                     if (canPipesConnect(facing, this, oPipe)) {
@@ -330,11 +317,8 @@ public final class Pipe implements IPipe, IDebuggable {
     }
 
     public void addDrops(NonNullList<ItemStack> toDrop, int fortune) {
-        // Calen: reg different item objects for different colours
-//        Item item = (Item) PipeApi.pipeRegistry.getItemForPipe(definition);
         Item item = (Item) PipeApi.pipeRegistry.getItemForPipe(definition, colour);
         if (item != null) {
-//            toDrop.add(new ItemStack(item, 1, colour == null ? 0 : 1 + colour.ordinal()));
             toDrop.add(new ItemStack(item, 1));
         }
         flow.addDrops(toDrop, fortune);
@@ -418,35 +402,25 @@ public final class Pipe implements IPipe, IDebuggable {
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-//        left.add("Colour = " + colour);
         left.add(Component.literal("Colour = " + colour));
-//        left.add("Definition = " + definition.identifier);
         left.add(Component.literal("Definition = " + definition.identifier));
         if (behaviour instanceof IDebuggable) {
-//            left.add("Behaviour:");
             left.add(Component.literal("Behaviour:"));
             ((IDebuggable) behaviour).getDebugInfo(left, right, side);
-//            left.add("");
             left.add(Component.literal(""));
         } else {
-//            left.add("Behaviour = " + behaviour.getClass());
             left.add(Component.literal("Behaviour = " + behaviour.getClass()));
         }
 
         if (flow instanceof IDebuggable) {
-//            left.add("Flow:");
             left.add(Component.literal("Flow:"));
             ((IDebuggable) flow).getDebugInfo(left, right, side);
-//            left.add("");
             left.add(Component.literal(""));
         } else {
-//            left.add("Flow = " + flow.getClass());
             left.add(Component.literal("Flow = " + flow.getClass()));
         }
         for (Direction face : Direction.VALUES) {
-//            right.add(face + " = " + types.get(face) + ", " + getConnectedDist(face));
             right.add(Component.literal(face + " = " + types.get(face) + ", " + getConnectedDist(face)));
         }
     }

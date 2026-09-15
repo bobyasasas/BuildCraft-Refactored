@@ -29,9 +29,7 @@ public final class InventoryIterator {
      * @param side
      * @return Iterable */
     public static Iterable<IInvSlot> getIterable(Container inv, Direction side) {
-        // if (inv instanceof ISidedInventory)
         if (inv instanceof WorldlyContainer) {
-            // return new InventoryIteratorSided((ISidedInventory) inv, side);
             return new InventoryIteratorSided((WorldlyContainer) inv, side);
         }
 

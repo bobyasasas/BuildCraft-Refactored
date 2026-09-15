@@ -140,12 +140,10 @@ public enum ModelPipeItem implements BakedModel {
     }
 
     @Override
-    // public List<BakedQuad> getQuads(IBlockState state, Direction side, long rand)
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand) {
         return ImmutableList.of();
     }
 
-    // private static List<BakedQuad> getQuads(PipeFaceTex center, PipeFaceTex top, PipeFaceTex bottom, TextureAtlasSprite[] sprites, int colour, EnumPipeColourType colourType)
     private static List<BakedQuad> getQuads(PipeFaceTex center, PipeFaceTex top, PipeFaceTex bottom, TextureAtlasSprite[] sprites, DyeColor rColour, EnumPipeColourType colourType) {
         List<BakedQuad> quads = new ArrayList<>();
 
@@ -157,9 +155,7 @@ public enum ModelPipeItem implements BakedModel {
             addQuads(QUADS_DIFFERENT[INDEX_TOP], sprites, quads, top);
         }
 
-//        if (colour > 0 && colour <= 16)
         if (rColour != null) {
-//            DyeColor rColour = DyeColor.byId(colour - 1);
             int rgb = 0xFF_00_00_00 | ColourUtil.swapArgbToAbgr(ColourUtil.getLightHex(rColour));
             if (colourType == EnumPipeColourType.TRANSLUCENT) {
                 TextureAtlasSprite sprite = BCTransportSprites.PIPE_COLOUR.getSprite();
@@ -182,7 +178,6 @@ public enum ModelPipeItem implements BakedModel {
             int colour = face.getColour(i);
             int spriteIndex = face.getTexture(i);
             TextureAtlasSprite sprite = getSprite(sprites, spriteIndex);
-            // Calen: when reloading resource packs, sprite may be null and cause NPE
             if (sprite == null) {
                 continue;
             }
@@ -221,7 +216,6 @@ public enum ModelPipeItem implements BakedModel {
     }
 
     @Override
-//    public boolean isAmbientOcclusion()
     public boolean useAmbientOcclusion() {
         return false;
     }
@@ -232,26 +226,21 @@ public enum ModelPipeItem implements BakedModel {
     }
 
     @Override
-//    public boolean isBuiltInRenderer()
     public boolean isCustomRenderer() {
         return false;
     }
 
     @Override
-//    public TextureAtlasSprite getParticleTexture()
     public TextureAtlasSprite getParticleIcon() {
         return null;
     }
 
     @Override
-//    public ItemCameraTransforms getItemCameraTransforms()
     public ItemTransforms getTransforms() {
-//        return ItemCameraTransforms.DEFAULT;
         return ModelItemSimple.TRANSFORM_DEFAULT;
     }
 
     @Override
-//    public ItemOverrideList getOverrides()
     public ItemOverrides getOverrides() {
         return PipeItemOverride.PIPE_OVERRIDE;
     }
@@ -260,11 +249,9 @@ public enum ModelPipeItem implements BakedModel {
         public static final PipeItemOverride PIPE_OVERRIDE = new PipeItemOverride();
 
         public PipeItemOverride() {
-//            super(rl,ImmutableList.of());
         }
 
         @Override
-//        public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity)
         public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int p_173469_) {
             Item item = stack.getItem();
             PipeFaceTex center = PipeFaceTex.NO_SPRITE;

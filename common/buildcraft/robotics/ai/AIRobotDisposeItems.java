@@ -33,15 +33,12 @@ public class AIRobotDisposeItems extends AIRobot {
                     terminate();
                 }
             } else {
-                // for (IInvSlot slot : InventoryIterator.getIterable(robot))
                 for (IInvSlot slot : InventoryIterator.getIterable(robot.getCapability(CapUtil.CAP_ITEMS).orElse(null))) {
-                    // if (slot.getStackInSlot() != null)
                     if (!slot.getStackInSlot().isEmpty()) {
                         final ItemEntity entity = new ItemEntity(robot.level(), robot.getX(), robot.getY(), robot.getZ(), slot.getStackInSlot());
 
                         robot.level().addFreshEntity(entity);
 
-                        // slot.setStackInSlot(null);
                         slot.setStackInSlot(StackUtil.EMPTY);
                     }
                 }

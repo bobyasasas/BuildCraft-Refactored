@@ -35,29 +35,23 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-// Calen: Thread safety is a terrible problem in 1.18.2 if sub mods load together
 public class MessageManager {
     public static final boolean DEBUG = BCDebugging.shouldDebugLog("lib.messages");
 
     private static final Map<IBuildCraftMod, PerModHandler> MOD_HANDLERS;
-    // private static final Map<Class<? extends IMessage>, PerMessageInfo<?>> MESSAGE_HANDLERS = new HashMap<>();
     private static final Map<Class<? extends IMessage>, PerMessageInfo<?>> MESSAGE_HANDLERS = new ConcurrentHashMap<>();
 
     static {
-        // Calen: Thread Safety -> IllegalArgumentException: NetworkDirection Channel {buildcraftcore:default} already registered
-//        MOD_HANDLERS = new TreeMap<>(MessageManager::compareMods);
         MOD_HANDLERS = new ConcurrentSkipListMap<>(MessageManager::compareMods);
     }
 
     static class PerModHandler {
         final IBuildCraftMod module;
-        // final SimpleNetworkWrapper netWrapper;
         final SimpleChannel netWrapper;
         final SortedMap<Class<? extends IMessage>, PerMessageInfo<?>> knownMessages;
 
         PerModHandler(IBuildCraftMod module) {
             this.module = module;
-//            this.netWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(module.getModId());
             this.netWrapper = NetworkRegistry.newSimpleChannel(
                     new ResourceLocation(module.getModId(), "default"),
                     () -> BCCore.MOD_VERSION,
@@ -186,8 +180,6 @@ public class MessageManager {
 
         Class<I> msgClass = info.messageClass;
 
-//        handler.netWrapper.registerMessage(wrapHandler(info.clientHandler, msgClass), msgClass, id, Side.CLIENT);
-//        handler.netWrapper.registerMessage(wrapHandler(info.serverHandler, msgClass), msgClass, id, Side.SERVER);
         handler.netWrapper.messageBuilder(msgClass, id, null)
                 .encoder(I::toBytes)
                 .decoder((buf) -> IMessage.staticFromBytes(msgClass, buf))
@@ -214,7 +206,6 @@ public class MessageManager {
         if (messageHandler == null) {
             return (message, context) ->
             {
-//                if (context.side == Dist.DEDICATED_SERVER)
                 if (context.getDirection() == NetworkDirection.PLAY_TO_SERVER) {
                     // Bad/Buggy client
                     Player player = context.getSender();
@@ -258,7 +249,6 @@ public class MessageManager {
      *
      * @param message The message to send */
     public static void sendToAll(IMessage message) {
-//        getSimpleNetworkWrapper(message).sendToAll(message);
         getSimpleNetworkWrapper(message).send(PacketDistributor.ALL.noArg(), message);
     }
 
@@ -268,7 +258,6 @@ public class MessageManager {
      * @param message The message to send
      * @param player The player to send it to */
     public static void sendTo(IMessage message, ServerPlayer player) {
-//        getSimpleNetworkWrapper(message).sendTo(message, player);
         getSimpleNetworkWrapper(message).send(PacketDistributor.PLAYER.with(() -> player), message);
     }
 
@@ -280,7 +269,6 @@ public class MessageManager {
      *            send */
 
     public static void sendToAllAround(IMessage message, PacketDistributor.TargetPoint point) {
-//        getSimpleNetworkWrapper(message).sendToAllAround(message, point);
         getSimpleNetworkWrapper(message).send(PacketDistributor.NEAR.with(() -> point), message);
     }
 
@@ -289,9 +277,7 @@ public class MessageManager {
      *
      * @param message The message to send
      * @param dimensionId The dimension id to target */
-//    public static void sendToDimension(IMessage message, int dimensionId)
     public static void sendToDimension(IMessage message, ResourceKey<Level> dimensionId) {
-//        getSimpleNetworkWrapper(message).sendToDimension(message, dimensionId);
         getSimpleNetworkWrapper(message).send(PacketDistributor.DIMENSION.with(() -> dimensionId), message);
     }
 
@@ -302,9 +288,7 @@ public class MessageManager {
         getSimpleNetworkWrapper(message).sendToServer(message);
     }
 
-    // Calen 1.18.2 form 1.8 for robotics
     public static void sendToEntity(IMessage message, Entity entity) {
-//        getSimpleNetworkWrapper(message).sendTo(message, player);
         getSimpleNetworkWrapper(message).send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), message);
     }
 }

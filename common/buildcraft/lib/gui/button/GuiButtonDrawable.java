@@ -50,11 +50,8 @@ public final class GuiButtonDrawable extends GuiAbstractButton {
             return;
         }
 
-//        GlStateManager.color(1, 1, 1, 1);
         RenderUtil.color(1, 1, 1, 1);
-//        GlStateManager.enableAlpha();
         RenderUtil.enableAlpha();
-//        GlStateManager.disableBlend();
         RenderUtil.disableBlend();
 
         if (enabled) {

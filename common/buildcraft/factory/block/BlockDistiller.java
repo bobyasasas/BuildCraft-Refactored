@@ -30,15 +30,11 @@ public class BlockDistiller extends BlockBCTile_Neptune<TileDistiller_BC8> imple
     }
 
     @Override
-//    public TileBC_Neptune createTileEntity(Level worldIn, BlockState state)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
         return BCFactoryBlocks.distillerTile.get().create(pos, state);
     }
 
 //    @Override
-//    public boolean isOpaqueCube(IBlockState state) {
-//        return false;
-//    }
 
     @Override
     public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
@@ -51,12 +47,8 @@ public class BlockDistiller extends BlockBCTile_Neptune<TileDistiller_BC8> imple
     }
 
 //    @Override
-//    public boolean isFullCube(IBlockState state) {
-//        return false;
-//    }
 
     @Override
-//    public InteractionResult onBlockActivated(Level world, BlockPos pos, BlockState state, Player player, InteractionHand hand, Direction facing, float hitX, float hitY, float hitZ)
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         Direction facing = hitResult.getDirection();
         float hitX = hitResult.getBlockPos().getX();
@@ -71,8 +63,4 @@ public class BlockDistiller extends BlockBCTile_Neptune<TileDistiller_BC8> imple
 
     // 1.18.2: moved to BCFactory#registerRecipeSerializers
 //    @Override
-//    @SideOnly(Side.CLIENT)
-//    public BlockRenderLayer getBlockLayer() {
-//        return BlockRenderLayer.CUTOUT;
-//    }
 }

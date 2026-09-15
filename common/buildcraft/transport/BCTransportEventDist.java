@@ -21,7 +21,6 @@ public enum BCTransportEventDist {
 
     @SubscribeEvent
     public void onWorldTick(TickEvent.LevelTickEvent event) {
-//        if (!event.world.isRemote && event.world.getMinecraftServer() != null)
         if (!event.level.isClientSide && event.level.getServer() != null) {
             WorldSavedDataWireSystems.get(event.level).tick();
         }
@@ -41,17 +40,13 @@ public enum BCTransportEventDist {
     @OnlyIn(Dist.CLIENT)
     public void onTextureStitch(TextureStitchEvent.Post event) {
         // 1.18.2: no longer use GlList
-//        PipeWireRenderer.clearWireCache();
     }
 
     @SubscribeEvent
-//    public void onBlockPlace(BlockEvent.PlaceEvent event)
     public void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
-        // event.setCanceled(true);
     }
 
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event) {
-        // event.setCanceled(true);
     }
 }

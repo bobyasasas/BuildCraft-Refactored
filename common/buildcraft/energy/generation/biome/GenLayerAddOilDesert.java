@@ -21,7 +21,6 @@ public class GenLayerAddOilDesert extends GenLayerBiomeReplacer {
     private static final double NOISE_FIELD_SCALE = 0.001;
     private static final double NOISE_FIELD_THRESHOLD = 0.7;
 
-    // private static final List<BiomeDictionary.Type> REQUIRED_TYPES = Arrays.asList(BiomeDictionary.Type.HOT, BiomeDictionary.Type.DRY, BiomeDictionary.Type.SANDY);
     private static final List<TagKey<Biome>> REQUIRED_TYPES = Arrays.asList(Biomes.IS_HOT, Biomes.IS_DRY, Biomes.IS_SANDY);
 
     public GenLayerAddOilDesert(long worldSeed, long seed/*, GenLayer parent*/) {
@@ -29,7 +28,6 @@ public class GenLayerAddOilDesert extends GenLayerBiomeReplacer {
     }
 
     public static Holder<Biome> getOilBiomeId() {
-//        return Biome.getIdForBiome(BiomeOilDesert.INSTANCE);
         return ForgeRegistries.BIOMES.getHolder(BCBiomeRegistry.RESOURCE_KEY_BIOME_OIL_DESERT).orElse(null);
     }
 
@@ -56,7 +54,6 @@ public class GenLayerAddOilDesert extends GenLayerBiomeReplacer {
         if (biome == null) {
             return false;
         }
-//        return BiomeDictionary.getTypes(biome).containsAll(REQUIRED_TYPES);
         return REQUIRED_TYPES.stream().anyMatch(biome::is);
     }
 }

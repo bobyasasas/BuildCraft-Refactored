@@ -62,17 +62,13 @@ public class RulesLoader {
     public static void loadAll() {
         RULES.clear();
         READ_DOMAINS.clear();
-//        for (ModContainer modContainer : Loader.instance().getModList())
         ModList.get().forEachModContainer((domain, modContainer) ->
         {
-//            String domain = modContainer.getModId();
             if (!READ_DOMAINS.contains(domain)) {
                 String base = "assets/" + domain + "/compat/buildcraft/builders/";
                 if (modContainer.getMod() == null) {
-//                    continue;
                     return;
                 }
-//                InputStream inputStream = modContainer.getMod().getClass().getClassLoader().getResourceAsStream(
                 InputStream inputStream = modContainer.getMod().getClass().getResourceAsStream(
                         base + "index.json"
                 );
@@ -130,7 +126,6 @@ public class RulesLoader {
                                                                 base ->
                                                                 {
                                                                     boolean complex = base.contains("[");
-//                                                    return Block.getBlockFromName(
                                                                     return ForgeRegistries.BLOCKS.getValue(
                                                                             new ResourceLocation(
                                                                                     complex
@@ -148,7 +143,6 @@ public class RulesLoader {
                                                                                             )
                                                                                             .map(nameValue -> nameValue.split("="))
                                                                                             .allMatch(nameValue ->
-//                                                                                                            blockState.getPropertyKeys().stream()
                                                                                                             blockState.getProperties().stream()
                                                                                                                     .filter(property -> property.getName().equals(nameValue[0]))
                                                                                                                     .findFirst()

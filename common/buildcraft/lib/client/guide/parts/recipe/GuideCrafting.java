@@ -76,7 +76,6 @@ public class GuideCrafting extends GuidePartItem {
     }
 
     @Override
-//    public PagePosition renderIntoArea(int x, int y, int width, int height, PagePosition current, int index)
     public PagePosition renderIntoArea(GuiGraphics guiGraphics, int x, int y, int width, int height, PagePosition current, int index) {
         if (current.pixel + PIXEL_HEIGHT > height) {
             current = current.newPage();
@@ -84,11 +83,8 @@ public class GuideCrafting extends GuidePartItem {
         x += OFFSET.x;
         y += OFFSET.y + current.pixel;
         if (current.page == index) {
-//            CRAFTING_GRID.drawAt(x, y);
             CRAFTING_GRID.drawAt(guiGraphics, x, y);
             // Render the item
-//            GlStateManager.enableRescaleNormal();
-//            RenderHelper.enableGUIStandardItemLighting();
             RenderUtil.enableGUIStandardItemLighting();
             for (int itemX = 0; itemX < input.length; itemX++) {
                 for (int itemY = 0; itemY < input[itemX].length; itemY++) {
@@ -99,16 +95,13 @@ public class GuideCrafting extends GuidePartItem {
 
             drawItemStack(guiGraphics, output.get(), x + (int) OUT_POSITION.x, y + (int) OUT_POSITION.y);
 
-//            RenderHelper.disableStandardItemLighting();
             RenderUtil.disableStandardItemLighting();
-//            GlStateManager.disableRescaleNormal();
         }
         current = current.nextLine(PIXEL_HEIGHT, height);
         return current;
     }
 
     @Override
-//    public PagePosition handleMouseClick(int x, int y, int width, int height, PagePosition current, int index, int mouseX, int mouseY)
     public PagePosition handleMouseClick(GuiGraphics guiGraphics, int x, int y, int width, int height, PagePosition current, int index, double mouseX, double mouseY) {
         if (current.pixel + PIXEL_HEIGHT > height) {
             current = current.newPage();

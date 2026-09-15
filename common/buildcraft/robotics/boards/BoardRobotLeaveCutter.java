@@ -26,15 +26,12 @@ public class BoardRobotLeaveCutter extends BoardRobotGenericBreakBlock {
     }
 
     @Override
-    // public boolean isExpectedTool(ItemStack stack)
     public boolean isExpectedTool(@Nonnull ItemStack stack) {
-        // return stack != null && stack.getItem() instanceof ShearsItem;
         return !stack.isEmpty() && stack.getItem() instanceof ShearsItem;
     }
 
     @Override
     public boolean isExpectedBlock(Level world, BlockPos pos) {
-        // return BuildCraftAPI.getWorldProperty("leaves").get(world, pos);
         return world.getBlockState(pos).is(BlockTags.LEAVES);
     }
 

@@ -35,7 +35,6 @@ public class ResourceLoaderContext {
         return new InputStreamReader(res.open(), StandardCharsets.UTF_8);
     }
 
-    // Calen 1.20.1
     public InputStreamReader datagenStartLoading(ResourceLocation location, ExistingFileHelper fileHelper) throws IOException {
         if (!loaded.add(location)) {
             throw new JsonSyntaxException("Already loaded " + location + " from " + loadingStack.peek());

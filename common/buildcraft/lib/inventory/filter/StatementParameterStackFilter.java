@@ -25,7 +25,6 @@ public class StatementParameterStackFilter extends ArrayStackOrListFilter {
             }
         }
 
-//        stacks = tmp.toArray(new ItemStack[tmp.size()]);
         stacks = NonNullList.create();
         stacks.addAll(tmp);
     }

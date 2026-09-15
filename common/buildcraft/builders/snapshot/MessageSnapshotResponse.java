@@ -26,29 +26,12 @@ public class MessageSnapshotResponse implements IMessage {
     @Override
     public void toBytes(FriendlyByteBuf buf) {
 
-//        byte[] bytes = NbtSquisher.squishBuildCraftV1(Snapshot.writeToNBT(snapshot));
-//        buf.writeInt(bytes.length);
-//        buf.writeBytes(bytes);
-//        try {
-//            CompressedStreamTools.write(Snapshot.writeToNBT(snapshot), new ByteBufOutputStream(buf));
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-        // Calen: no Exception
-//        try {
-//            CompressedStreamTools.writeCompressed(Snapshot.writeToNBT(snapshot), new ByteBufOutputStream(buf));
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
         buf.writeNbt(Snapshot.writeToNBT(snapshot));
     }
 
     @Override
     public void fromBytes(FriendlyByteBuf buf) {
         try {
-//            snapshot = Snapshot.readFromNBT(NbtSquisher.expand(buf.readBytes(buf.readInt()).array()));
-//            snapshot = Snapshot.readFromNBT(CompressedStreamTools.read(new ByteBufInputStream(buf), NBTSizeTracker.INFINITE));
-//            snapshot = Snapshot.readFromNBT(CompressedStreamTools.readCompressed(new ByteBufInputStream(buf)));
             snapshot = Snapshot.readFromNBT(buf.readNbt());
         } catch (IOException e) {
             throw new RuntimeException(e);

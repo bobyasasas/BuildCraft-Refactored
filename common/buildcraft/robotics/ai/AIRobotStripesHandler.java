@@ -53,24 +53,16 @@ public class AIRobotStripesHandler extends AIRobot implements IStripesActivator 
         useCycles++;
 
         if (useCycles > 60) {
-            // ItemStack stack = robot.getHeldItem();
             ItemStack stack = robot.getMainHandItem();
 
-            // Direction direction = Direction.NORTH;
 
             Player player = FakePlayerProvider.INSTANCE.getFakePlayer((ServerLevel) robot.level(), FakePlayerProvider.NULL_PROFILE, useToBlock);
-            // player.rotationPitch = 0;
             player.setYRot(180);
-            // player.rotationYaw = 180;
             player.setXRot(180);
 
-            // for (IStripesHandler handler : PipeManager.stripesHandlers)
             for (IStripesHandlerItem handler : PipeApi.stripeRegistry.getItemHandlers().values().stream().flatMap(Collection::stream).toList()) {
-                // if (handler.getType() == StripesHandlerType.ITEM_USE && handler.shouldHandle(stack))
                 if (handler instanceof IStripesHandlerItem) {
-                    // if (handler.handle(robot.worldObj, useToBlock, direction, stack, player, this))
                     if (Arrays.stream(Direction.values()).anyMatch(direction -> handler.handle(robot.level(), useToBlock.relative(direction.getOpposite()), direction, stack, player, this))) {
-                        // robot.setItemInUse(StackUtil.EMPTY);
                         robot.setItemInUse(player.getMainHandItem());
                         terminate();
                         return;
@@ -87,14 +79,12 @@ public class AIRobotStripesHandler extends AIRobot implements IStripesActivator 
     }
 
     @Override
-    // public int getEnergyCost()
     public long getPowerCost() {
         return 15 * MjAPI.MJ / 10;
     }
 
     @Override
     public boolean sendItem(ItemStack stack, Direction direction) {
-        // InvUtils.dropItems(robot.level, stack, VecUtil.getPos(robot));
         InventoryUtil.drop(robot.level(), VecUtil.getPos(robot), stack);
         return true;
     }

@@ -40,11 +40,9 @@ public class PageEntryExternal extends PageValueType<String> {
 
     @Override
     public Component getTitle(String value) {
-//        return Component.literal(value);
         return Component.translatable(value);
     }
 
-    // Calen
 
     @Override
     public String getTitleKey(String value) {

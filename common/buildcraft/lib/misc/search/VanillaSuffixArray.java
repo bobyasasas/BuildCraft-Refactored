@@ -19,14 +19,11 @@ public final class VanillaSuffixArray<T> implements ISuffixArray<T> {
     }
 
     @Override
-//    public void add(T obj, String name)
     public void add(T obj, Component name) {
-//        vanillaSuffixArray.add(obj, name);
         vanillaSuffixArray.add(obj, name.getString());
     }
 
     @Override
-//    public void generate(Profiler prof)
     public void generate(ProfilerFiller prof) {
         vanillaSuffixArray.generate();
     }

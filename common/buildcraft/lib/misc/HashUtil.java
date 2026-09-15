@@ -39,7 +39,6 @@ public class HashUtil {
         Class<?>[] expectedParams = { DataOutput.class };
         Method read = null;
         for (Method m : methods) {
-            // Target is NbtBase.write(DataOutput output)
             Class<?>[] params = m.getParameterTypes();
             if (Arrays.equals(expectedParams, params)) {
                 if (read != null) {
@@ -67,7 +66,6 @@ public class HashUtil {
 
     public static byte[] computeHash(CompoundTag nbt) {
         // Order is important here - we have to use a stable algorithm for the order
-        // (Otherwise we depend on the order that HashMap assigns us)
         try (DigestOutputStream dos = createDigestStream()) {
 
             writeStableCompound(nbt, new DataOutputStream(dos));
@@ -128,7 +126,6 @@ public class HashUtil {
 
     private static void writeStableList(ListTag nbt, DataOutput out) throws IOException {
         // We have to intercept lists as they might contain compounds
-        // (Although normal lists are already stable)
         int type;
         if (nbt.isEmpty()) {
             type = 0;

@@ -30,9 +30,7 @@ public enum BCLibEventDistModBus {
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-//    public void modelBake(ModelBakeEvent event)
     public void modelBake(ModelEvent.BakingCompleted event) {
-//        SpriteHolderRegistry.exportTextureMap();
         SpriteHolderRegistry.exportTextureMap((TextureAtlas) Minecraft.getInstance().textureManager.getTexture(TextureAtlas.LOCATION_BLOCKS));
         SpriteHolderRegistry.exportTextureMap(FluidRenderer.FROZEN_ATLAS);
         LaserRenderer_BC8.clearModels();
@@ -42,25 +40,13 @@ public enum BCLibEventDistModBus {
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-//    public void textureStitchPre(TextureStitchEvent.Pre event)
     public void textureStitchPre(ModelEvent.ModifyBakingResult event) {
         ReloadManager.INSTANCE.preReloadResources();
-//        TextureMap map = event.getMap();
-//        TextureAtlas map = event.getAtlas();
-//        SpriteHolderRegistry.onTextureStitchPre(map);
         SpriteHolderRegistry.onTextureStitchPre();
-//        ModelHolderRegistry.onTextureStitchPre(map, event);
         ModelHolderRegistry.onTextureStitchPre();
     }
 
-//    @SubscribeEvent(priority = EventPriority.LOWEST)
-//    @OnlyIn(Dist.CLIENT)
-//    public void textureStitchPreLow(TextureStitchEvent.Pre event)
-//    public void textureStitchPreLow(ModelEvent.ModifyBakingResult event) {
-//        FluidRenderer.onTextureStitchPre(event.getAtlas());
-//    }
 
-    // Calen 1.20.1
     public static void onDatagenTextureRegister(Consumer<ResourceLocation> consumer, ExistingFileHelper fileHelper) {
         SpriteHolderRegistry.onDatagenTextureRegister(consumer, fileHelper);
         ModelHolderRegistry.onDatagenTextureRegister(consumer, fileHelper);
@@ -69,14 +55,7 @@ public enum BCLibEventDistModBus {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public void textureStitchPost(TextureStitchEvent.Post event) {
-//        // Calen: from subscriber of TextureStitchEvent.Pre
-//        FluidRenderer.onTextureStitchPre();
-//        ReloadManager.INSTANCE.preReloadResources();
-//        TextureAtlas map = event.getAtlas();
-//        SpriteHolderRegistry.onTextureStitchPre();
-//        ModelHolderRegistry.onTextureStitchPre(map);
 
-        // Calen should not map.location().equals(TextureAtlas.LOCATION_BLOCKS)
         // or the engine texture will not be loaded
         SpriteHolderRegistry.onTextureStitchPost(event);
         FluidRenderer.onTextureStitchPost(event);

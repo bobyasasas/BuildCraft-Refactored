@@ -46,7 +46,6 @@ public class AIRobotPumpBlock extends AIRobot {
         } else {
             FluidStack fluidStack = BlockUtil.drainBlock(robot.level(), blockToPump, IFluidHandler.FluidAction.SIMULATE);
             if (fluidStack != null) {
-//                if (robot.fill(null, fluidStack, true) > 0)
                 if (robot.getCapability(CapUtil.CAP_FLUIDS).orElse(null).fill(fluidStack, IFluidHandler.FluidAction.EXECUTE) > 0) {
                     BlockUtil.drainBlock(robot.level(), blockToPump, IFluidHandler.FluidAction.EXECUTE);
                 }
@@ -57,7 +56,6 @@ public class AIRobotPumpBlock extends AIRobot {
     }
 
     @Override
-    // public int getEnergyCost()
     public long getPowerCost() {
         return 5 * MjAPI.MJ / 10;
     }

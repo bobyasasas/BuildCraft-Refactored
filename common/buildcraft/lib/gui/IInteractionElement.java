@@ -9,11 +9,9 @@ public interface IInteractionElement extends IGuiElement {
     }
 
     /** This is called EVEN IF the mouse is not inside your width and height! */
-//    default void onMouseDragged(int button, long ticksSinceClick) {}
     default void onMouseDragged(int button) {
     }
 
-    // Calen 1.18.2
     /** This is called EVEN IF the mouse is not inside your width and height! */
     default void onMouseScrolled(double delta) {
     }
@@ -28,7 +26,6 @@ public interface IInteractionElement extends IGuiElement {
      *         interaction events won't happen (for example if the player presses {@link InputConstants#KEY_ESCAPE escape} and
      *         this returns true then the gui won't be closed). It is <i>highly</i> recommended that you close something
      *         if {@link InputConstants#KEY_ESCAPE escape} is pressed. */
-//    default boolean onKeyPress(char typedChar, int keyCode)
     default boolean onKeyPress(int typedChar, int keyCode, int modifiers) {
         return false;
     }

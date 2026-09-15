@@ -20,27 +20,20 @@ public abstract class AIRobotGoto extends AIRobot {
 
     protected void setDestination(EntityRobotBase robot, Vec3 dest) {
         next = dest;
-        // dir = next.subtract(robot.posX, robot.posY, robot.posZ);
         dir = next.subtract(robot.position());
 
-        // double magnitude = dir.lengthVector();
         double magnitude = dir.length();
 
         if (magnitude != 0) {
-            // dir = VecUtil.multiply(dir, 1 / magnitude);
             dir = VecUtil.scale(dir, 1 / magnitude);
         } else {
             dir = new Vec3(0, 0, 0);
         }
 
-//        robot.motionX = dir.x / 10f;
-//        robot.motionY = dir.y / 10f;
-//        robot.motionZ = dir.z / 10f;
         robot.setDeltaMovement(dir.x / 10f, dir.y / 10f, dir.z / 10f);
     }
 
     @Override
-    // public int getEnergyCost()
     public long getPowerCost() {
         return 3 * MjAPI.MJ / 10;
     }

@@ -10,18 +10,12 @@ public class MutableQuadTest {
 
     @Test
     public void testRotations() {
-//        for (EnumFacing from : EnumFacing.VALUES)
         for (Direction from : Direction.values()) {
-//            for (EnumFacing to : EnumFacing.VALUES)
             for (Direction to : Direction.values()) {
-//                Vec3i vec = from.getDirectionVec();
                 Vec3i vec = from.getNormal();
                 MutableQuad q = new MutableQuad();
                 q.vertex_0.positionf(vec.getX(), vec.getY(), vec.getZ());
                 q.rotate(from, to, 0, 0, 0);
-//                float ex = to.getFrontOffsetX();
-//                float ey = to.getFrontOffsetY();
-//                float ez = to.getFrontOffsetZ();
                 float ex = to.getStepX();
                 float ey = to.getStepY();
                 float ez = to.getStepZ();

@@ -12,7 +12,6 @@ import net.minecraft.core.Direction;
 
 public class KeyPlugTimer extends PluggableModelKey {
     public KeyPlugTimer(Direction side) {
-        // super(BlockRenderLayer.CUTOUT, side);
         super(RenderType.cutout(), side);
     }
 }

@@ -39,18 +39,11 @@ public class DockingStationPipe extends DockingStation implements IRequestProvid
         }
 
         @Override
-        // public int injectItem(ItemStack stack, boolean doAdd, EnumFacing from, EnumDyeColor color)
         public ItemStack injectItem(ItemStack stack, boolean doAdd, Direction from, DyeColor color, double speed) {
-            // if (doAdd) {
-            //     Vec3 vec = VecUtil.convertCenter(getPos()).add(VecUtil.convert(side, 0.2));
-            //     TravellingItem item = TravellingItem.make(vec, stack);
 
-            //     ((PipeTransportItems) ((Pipe<?>) getPipe().getPipe()).transport).injectItem(item, from);
-            // }
             if (getPipe().getPipe().getFlow() instanceof PipeFlowItems) {
                 return ((PipeFlowItems) getPipe().getPipe().getFlow()).injectItem(stack, doAdd, from, color, speed);
             }
-            // return stack.stackSize;
             return stack;
         }
     };
@@ -91,7 +84,6 @@ public class DockingStationPipe extends DockingStation implements IRequestProvid
 
     @Override
     public IInjectable getItemOutput() {
-        // if (getPipe().getPipeType() != IPipeTile.PipeType.ITEM)
         if (getPipe().getPipe().getDefinition().flowType != PipeApi.flowItems) {
             return null;
         }
@@ -106,30 +98,22 @@ public class DockingStationPipe extends DockingStation implements IRequestProvid
 
     @Override
     public Container getItemInput() {
-        // if (getPipe().getPipeType() != IPipeTile.PipeType.ITEM)
         if (getPipe().getPipe().getDefinition().flowType != PipeApi.flowItems) {
             return null;
         }
 
-        // if (!(getPipe().getPipe() instanceof PipeItemsWood))
         if (!(getPipe().getPipe().getDefinition() == BCTransportPipes.woodItem)) {
             return null;
         }
 
-        // int meta = ((BlockEntity) getPipe()).getBlockMetadata();
-        // Direction dir = Direction.getFront(meta);
         Direction dir = ((PipeBehaviourWood) getPipe().getPipe().getBehaviour()).getCurrentDir();
 
-        // Calen 1.18.2: the pipe not connected to a container will have null direction
         if (dir == null) {
             return null;
         }
 
-        // BlockEntity connectedTile = getPipe().getPipeWorld().getBlockEntity(getPos().offset(VecUtil.convertFloor(dir)));
         BlockEntity connectedTile = getPipe().getPipeWorld().getBlockEntity(getPos().relative(dir));
-        // if (connectedTile instanceof IInventory)
         if (connectedTile instanceof Container) {
-            // return InventoryWrapper.getWrappedInventory(connectedTile);
             return (Container) connectedTile;
         }
 
@@ -138,43 +122,33 @@ public class DockingStationPipe extends DockingStation implements IRequestProvid
 
     @Override
     public EnumPipePart getItemInputSide() {
-        // if (getPipe().getPipeType() != IPipeTile.PipeType.ITEM)
         if (getPipe().getPipe().getDefinition().flowType != PipeApi.flowItems) {
             return EnumPipePart.CENTER;
         }
 
-        // if (!(getPipe().getPipe() instanceof PipeItemsWood))
         if (!(getPipe().getPipe().getDefinition() == BCTransportPipes.woodItem)) {
             return EnumPipePart.CENTER;
         }
 
-        // int meta = ((BlockEntity) getPipe()).getBlockMetadata();
-        // return EnumPipePart.fromMeta(meta).opposite();
         return EnumPipePart.fromFacing(((PipeBehaviourWood) getPipe().getPipe().getBehaviour()).getCurrentDir()).opposite();
     }
 
     @Override
     public IFluidHandler getFluidInput() {
-        // if (getPipe().getPipeType() != IPipeTile.PipeType.FLUID)
         if (getPipe().getPipe().getDefinition().flowType != PipeApi.flowFluids) {
             return null;
         }
 
-        // if (!(getPipe().getPipe() instanceof PipeFluidsWood))
         if (!(getPipe().getPipe().getDefinition() == BCTransportPipes.woodFluid)) {
             return null;
         }
 
-        // int meta = ((BlockEntity) getPipe()).getBlockMetadata();
-        // Direction dir = Direction.getFront(meta);
         Direction dir = ((PipeBehaviourWood) getPipe().getPipe().getBehaviour()).getCurrentDir();
 
-        // Calen 1.18.2: the pipe not connected to a container will have null direction
         if (dir == null) {
             return null;
         }
 
-        // BlockEntity connectedTile = getPipe().getPipeWorld().getBlockEntity(getPos().offset(VecUtil.convertFloor(dir)));
         BlockEntity connectedTile = getPipe().getPipeWorld().getBlockEntity(getPos().relative(dir));
         if (connectedTile instanceof IFluidHandler) {
             return (IFluidHandler) connectedTile;
@@ -185,29 +159,23 @@ public class DockingStationPipe extends DockingStation implements IRequestProvid
 
     @Override
     public EnumPipePart getFluidInputSide() {
-        // if (getPipe().getPipeType() != IPipeTile.PipeType.FLUID)
         if (getPipe().getPipe().getDefinition().flowType != PipeApi.flowFluids) {
             return EnumPipePart.CENTER;
         }
 
-        // if (!(getPipe().getPipe() instanceof PipeFluidsWood))
         if (!(getPipe().getPipe().getDefinition() == BCTransportPipes.woodFluid)) {
             return EnumPipePart.CENTER;
         }
 
-        // int meta = ((BlockEntity) getPipe()).getBlockMetadata();
-        // return EnumPipePart.fromMeta(meta).opposite();
         return EnumPipePart.fromFacing(((PipeBehaviourWood) getPipe().getPipe().getBehaviour()).getCurrentDir()).opposite();
     }
 
     @Override
     public IFluidHandler getFluidOutput() {
-        // if (getPipe().getPipeType() != IPipeTile.PipeType.FLUID)
         if (getPipe().getPipe().getDefinition().flowType != PipeApi.flowFluids) {
             return null;
         }
 
-        // return (IFluidHandler) ((Pipe<?>) getPipe().getPipe()).transport;
         return (getPipe().getPipe().getFlow()).getCapability(CapUtil.CAP_FLUIDS, side).orElse(null);
     }
 
@@ -218,14 +186,12 @@ public class DockingStationPipe extends DockingStation implements IRequestProvid
 
     @Override
     public boolean providesPower() {
-        // return getPipe().getPipeType() == IPipeTile.PipeType.POWER;
         return getPipe().getPipe().getDefinition().flowType == PipeApi.flowPower;
     }
 
     @Override
     public IRequestProvider getRequestProvider() {
         for (Direction dir : Direction.values()) {
-            // BlockEntity nearbyTile = getPipe().getPipeWorld().getBlockEntity(getPos().offset(VecUtil.convertFloor(dir)));
             BlockEntity nearbyTile = getPipe().getPipeWorld().getBlockEntity(getPos().relative(dir));
             if (nearbyTile instanceof IRequestProvider) {
                 return (IRequestProvider) nearbyTile;
@@ -239,8 +205,6 @@ public class DockingStationPipe extends DockingStation implements IRequestProvid
         if (getPipe() == null || getPipe().getPipe() == null) {
             return false;
         }
-        // TODO Calen: is this right?
-        // return ((Pipe<?>) getPipe().getPipe()).isInitialized();
         return true;
     }
 
@@ -291,12 +255,7 @@ public class DockingStationPipe extends DockingStation implements IRequestProvid
             return StackUtil.EMPTY;
         }
 
-        // EnumFacing side = EnumFacing.getFront(facing);
         Direction side = Direction.from3DDataValue(facing);
-        // IGate gate = getPipe().getPipe().getGate(side);
-//        if (gate == null) {
-//            return null;
-//        }
         PipePluggable plug = getPipe().getPluggable(side);
         IGate gate = null;
         if (plug instanceof IGateProvider) {
@@ -340,12 +299,8 @@ public class DockingStationPipe extends DockingStation implements IRequestProvid
     @Nonnull
     @Override
     public ItemStack offerItem(int slot, ItemStack stack) {
-        // int consumed = injectablePipe.injectItem(stack, true, side.getOpposite(), null);
         ItemStack notConsumed = injectablePipe.injectItem(stack, true, side, null, 0);
-        // if (stack.getCount() > consumed.getCount())
         if (notConsumed.getCount() > 0) {
-//            ItemStack newStack = stack.copy();
-//            newStack.shrink(consumed);
             return notConsumed.copy();
         }
         return StackUtil.EMPTY;

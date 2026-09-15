@@ -41,7 +41,6 @@ public class RenderSnapshotBuilder {
 //            double z,
 //            float partialTicks,
 //            BufferBuilder bb
-//    )
     public static <T extends ITileForSnapshotBuilder> void render(
             SnapshotBuilder<T> snapshotBuilder,
             Level world,
@@ -72,7 +71,6 @@ public class RenderSnapshotBuilder {
 //                        world.getCombinedLight(new BlockPos(pos), 0),
 //                        Direction.SOUTH,
 //                        bb
-//                );
                 ItemRenderUtil.renderItemStack(
                         item,
                         RenderUtil.getCombinedLight(world, BlockPos.containing(pos)),
@@ -92,7 +90,6 @@ public class RenderSnapshotBuilder {
                 robotPos = snapshotBuilder.prevRobotPos.add(robotPos.subtract(snapshotBuilder.prevRobotPos).scale(partialTicks));
             }
 
-//            bb.setTranslation(x - tilePos.getX(), y - tilePos.getY(), z - tilePos.getZ());
             poseStack.translate(-tilePos.getX(), -tilePos.getY(), -tilePos.getZ());
 
             int i = 0;
@@ -108,7 +105,6 @@ public class RenderSnapshotBuilder {
                                         BCBuildersSprites.ROBOT.getInterpV(8 / 64D)
                                 )
                         )
-//                        .lighti(world.getCombinedLight(new BlockPos(robotPos), 0))
                         .lighti(RenderUtil.getCombinedLight(world, BlockPos.containing(robotPos)))
                         .render(poseStack.last(), bb);
                 i++;
@@ -134,7 +130,6 @@ public class RenderSnapshotBuilder {
             }
         }
 
-//        bb.setTranslation(0, 0, 0);
         poseStack.popPose();
     }
 }

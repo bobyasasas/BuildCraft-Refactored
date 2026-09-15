@@ -23,9 +23,7 @@ public class GuiFillerPlanner extends GuiBC8<ContainerFillerPlanner> {
         BuildCraftJsonGui jsonGui = (BuildCraftJsonGui) mainGui;
         preLoad(jsonGui);
         jsonGui.load();
-//        xSize = jsonGui.getSizeX();
         imageWidth = jsonGui.getSizeX();
-//        ySize = jsonGui.getSizeY();
         imageHeight = jsonGui.getSizeY();
     }
 
@@ -45,9 +43,7 @@ public class GuiFillerPlanner extends GuiBC8<ContainerFillerPlanner> {
     }
 
     @Override
-//    public void updateScreen()
     public void containerTick() {
-//        super.updateScreen();
         super.containerTick();
         SPRITE_PATTERN.delegate = container.getPatternStatementClient().get().getSprite();
     }

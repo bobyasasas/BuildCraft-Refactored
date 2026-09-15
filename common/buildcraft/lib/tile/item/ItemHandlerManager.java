@@ -114,13 +114,6 @@ public class ItemHandlerManager implements ICapabilityProvider, INBTSerializable
     }
 
 //    @Override
-//    public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
-//        if (capability == CapUtil.CAP_ITEMS) {
-//            Wrapper wrapper = wrappers.get(EnumPipePart.fromFacing(facing));
-//            return wrapper.combined != null;
-//        }
-//        return false;
-//    }
 
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {

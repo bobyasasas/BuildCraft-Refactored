@@ -40,14 +40,12 @@ import java.util.function.Consumer;
 //    name = "BuildCraft Robotics",
 //    version = BCLib.VERSION,
 //    dependencies = "required-after:buildcraftcore@[" + BCLib.VERSION + "]"
-//)
 @Mod(BCRobotics.MODID)
 @Mod.EventBusSubscriber(modid = BCRobotics.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 //@formatter:on
 public class BCRobotics {
     public static final String MODID = "buildcraftrobotics";
 
-    // @Mod.Instance(MODID)
     public static BCRobotics INSTANCE = null;
 
     private static CreativeTabManager.CreativeTabBC tabBoards;
@@ -58,7 +56,6 @@ public class BCRobotics {
     }
 
     @SubscribeEvent
-//    public static void preInit(FMLPreInitializationEvent evt)
     public static void preInit(FMLConstructModEvent evt) {
         BCLibRegistries.fmlPreInit(); // this should be called in BCLib#<clinit> before BCTransport#preInit called, but sometimes the order is incorrect?
 
@@ -110,18 +107,15 @@ public class BCRobotics {
 
         BCRoboticsProxy.getProxy().fmlPreInit();
 
-//        NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, BCRoboticsProxy.getProxy());
     }
 
     @SubscribeEvent
-//    public static void init(FMLInitializationEvent evt)
     public static void init(FMLCommonSetupEvent evt) {
         BCRoboticsProxy.getProxy().fmlInit();
 //        BCRoboticsRecipes.init(); // 1.18.2: datagen
     }
 
     @SubscribeEvent
-//    public static void postInit(FMLPostInitializationEvent evt)
     public static void postInit(FMLLoadCompleteEvent evt) {
         BCRoboticsProxy.getProxy().fmlPostInit();
 
@@ -146,7 +140,6 @@ public class BCRobotics {
         event.registerSpriteSet(BCRoboticsParticleTypes.robot.get(), EntityRobotEnergyParticle.Factory::new);
     }
 
-    // Calen: for thread safety
     private static final TagManager tagManager = new TagManager();
 
 
@@ -161,13 +154,10 @@ public class BCRobotics {
 
         // Item Blocks
         registerTag("item.block.zone_planner").reg("zone_planner").locale("zonePlannerBlock");
-//                .model("zone_planner");
         registerTag("item.block.requester").reg("requester").locale("requester");
 
         // Blocks
-//        registerTag("block.zone_planner").reg("zone_planner").oldReg("zonePlannerBlock").locale("zonePlannerBlock").model("zone_planner");
         registerTag("block.zone_planner").reg("zone_planner").locale("zonePlannerBlock");
-//                .model("zone_planner");
         registerTag("block.requester").reg("requester").locale("requester");
 
         // Tiles
@@ -177,22 +167,18 @@ public class BCRobotics {
         // Entities
         registerTag("entity.robot").reg("robot");
 
-//        endBatch(TagManager.prependTags("buildcraftrobotics:", EnumTagType.REGISTRY_NAME, EnumTagType.MODEL_LOCATION).andThen(TagManager.setTab("buildcraft.main")));
         endBatch(TagManager.prependTags("buildcraftrobotics:", EnumTagType.REGISTRY_NAME).andThen(TagManager.setTab("buildcraft.main")));
     }
 
     private static TagEntry registerTag(String id) {
-//        return TagManager.registerTag(id);
         return tagManager.registerTag(id);
     }
 
     private static void startBatch() {
-//        TagManager.startBatch();
         tagManager.startBatch();
     }
 
     private static void endBatch(Consumer<TagEntry> consumer) {
-//        TagManager.endBatch(consumer);
         tagManager.endBatch(consumer);
     }
 }

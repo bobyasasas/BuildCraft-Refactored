@@ -25,20 +25,16 @@ public class CommandVersion extends BCSubCommandBase {
                     if (sender == null) {
                         return 0;
                     }
-//                    ForgeVersion.CheckResult result = ForgeVersion.getResult(BCLib.MOD_CONTAINER);
                     CheckResult result = VersionChecker.getResult(BCLib.MOD_CONTAINER.getModInfo());
                     if (result.status() == Status.FAILED) {
                         sender.sendSystemMessage(Component.translatable("command.buildcraft.version.failed"));
                         return 0;
                     }
 
-//                    Style style = new Style();
                     Style style = Style.EMPTY;
                     if (result.status() == Status.OUTDATED) {
-//                        style.setColor(ChatFormatting.RED);
                         style.withColor(ChatFormatting.RED);
                     } else {
-//                        style.setColor(ChatFormatting.GREEN);
                         style.withColor(ChatFormatting.GREEN);
                     }
 
@@ -50,16 +46,13 @@ public class CommandVersion extends BCSubCommandBase {
                     String currentVersion = BCLib.VERSION;
                     if (currentVersion.startsWith("$")) {
                         currentVersion = "?.??.??";
-//                        style.setColor(ChatFormatting.GRAY);
                         style.withColor(ChatFormatting.GRAY);
                     }
 
                     Object[] textArgs = { currentVersion, MCPVersion.getMCVersion(), result.target() };
-//                    sender.sendMessage(Component.literalTranslation("command.buildcraft.version", textArgs).setStyle(style));
                     sender.sendSystemMessage(Component.translatable("command.buildcraft.version", textArgs).setStyle(style));
 
                     if (currentVersion.contains("-pre")) {
-//                        sender.sendMessage(Component.literalTranslation("command.buildcraft.version.prerelease"));
                         sender.sendSystemMessage(Component.translatable("command.buildcraft.version.prerelease"));
                     }
                     return 0;

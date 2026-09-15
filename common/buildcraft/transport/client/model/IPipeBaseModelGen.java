@@ -27,10 +27,8 @@ public interface IPipeBaseModelGen {
 
     TextureAtlasSprite[] getItemSprites(PipeDefinition def);
 
-    // void onTextureStitchPre(TextureStitchEvent.Pre event);
     void onTextureStitchPre();
 
-    // Calen 1.20.1
     public void onDatagenTextureRegister(Consumer<ResourceLocation> consumer);
 
     void onTextureStitchPost(TextureStitchEvent.Post event);

@@ -35,7 +35,6 @@ public class ColourUtil {
 
     public static final DyeColor[] COLOURS = DyeColor.values();
 
-    // Calen: damage = 15 - id !!!
     private static final String[] NAMES = { //
             "Black", "Red", "Green", "Brown", //
             "Blue", "Purple", "Cyan", "LightGray", //
@@ -153,22 +152,18 @@ public class ColourUtil {
     }
 
     public static String getDyeName(DyeColor colour) {
-//        return DYES[colour.getDyeDamage()];
         return DYES[15 - colour.getId()];
     }
 
     public static String getName(DyeColor colour) {
-//        return NAMES[colour.getDyeDamage()];
         return NAMES[15 - colour.getId()];
     }
 
     public static int getDarkHex(DyeColor colour) {
-//        return DARK_HEX[colour.getDyeDamage()];
         return DARK_HEX[15 - colour.getId()];
     }
 
     public static int getLightHex(DyeColor colour) {
-//        return LIGHT_HEX[colour.getDyeDamage()];
         return LIGHT_HEX[15 - colour.getId()];
     }
 
@@ -193,12 +188,9 @@ public class ColourUtil {
         }
     }
 
-    // Calen
     public static MutableComponent getTextFullTooltipComponent(MutableComponent base, @Nullable DyeColor colour) {
         if (BCLibConfig.useColouredLabels) {
             ChatFormatting formatColour = convertColourToTextFormat(colour);
-//            return base.append(Component.literal(formatColour.toString() + getTextFormatForBlack(formatColour))).append(Component.translatable(LocaleUtil.getColorTranslateKey(colour)))
-//                    .append(Component.literal(ChatFormatting.RESET.toString()));
             if (formatColour == null) {
                 return base.append(Component.translatable(LocaleUtil.getColorTranslateKey(colour)))
                         .append(Component.literal(ChatFormatting.RESET.toString()));
@@ -212,13 +204,10 @@ public class ColourUtil {
         }
     }
 
-    // Calen
     public static MutableComponent getTextFullTooltipComponent(String translationKey, @Nullable DyeColor colour) {
         MutableComponent v;
         if (BCLibConfig.useColouredLabels) {
             ChatFormatting formatColour = convertColourToTextFormat(colour);
-//            return base.append(Component.literal(formatColour.toString() + getTextFormatForBlack(formatColour))).append(Component.translatable(LocaleUtil.getColorTranslateKey(colour)))
-//                    .append(Component.literal(ChatFormatting.RESET.toString()));
             if (formatColour == null) {
                 v = Component.translatable(LocaleUtil.getColorTranslateKey(colour))
                         .append(Component.literal(ChatFormatting.RESET.toString()));
@@ -233,13 +222,10 @@ public class ColourUtil {
         return Component.translatable(translationKey, v);
     }
 
-    // Calen
     public static String getTextFullTooltipString(String translationKey, @Nullable DyeColor colour) {
         String colorStr;
         if (BCLibConfig.useColouredLabels) {
             ChatFormatting formatColour = convertColourToTextFormat(colour);
-//            return base.append(Component.literal(formatColour.toString() + getTextFormatForBlack(formatColour))).append(Component.translatable(LocaleUtil.getColorTranslateKey(colour)))
-//                    .append(Component.literal(ChatFormatting.RESET.toString()));
             if (formatColour == null) {
                 colorStr = Component.translatable(LocaleUtil.getColorTranslateKey(colour)).getString()
                         + ChatFormatting.RESET.toString();
@@ -278,7 +264,6 @@ public class ColourUtil {
     /** Similar to {@link #getTextFullTooltip(DyeColor)}, but outputs a string specifically designed for
      * {@link SpecialColourFontRenderer}. MUST be the first string used! */
     public static String getTextFullTooltipSpecial(DyeColor colour) {
-        // Calen
         if (colour == null) {
             return "";
         }
@@ -306,7 +291,6 @@ public class ColourUtil {
     }
 
     public static MutableComponent getTextFullTooltipSpecialComponent(DyeColor colour) {
-        // Calen
         if (colour == null) {
             return Component.literal("");
         }
@@ -351,7 +335,6 @@ public class ColourUtil {
         }
     }
 
-    // Calen
     public static Component getTextFullTooltipComponent(Direction face) {
         if (BCLibConfig.useColouredLabels) {
             ChatFormatting formatColour = convertFaceToTextFormat(face);
@@ -391,9 +374,7 @@ public class ColourUtil {
     }
 
     /** Converts an {@link DyeColor} into an equivalent {@link ChatFormatting} for display. */
-//    public static ChatFormatting convertColourToTextFormat(DyeColor colour)
     public static ChatFormatting convertColourToTextFormat(@Nullable DyeColor colour) {
-//        return COLOUR_TO_FORMAT[colour.ordinal()];
         return colour == null ? null : COLOUR_TO_FORMAT[colour.ordinal()];
     }
 
@@ -446,7 +427,6 @@ public class ColourUtil {
         return ALL_FORMAT_MATCHER.matcher(string).replaceAll("");
     }
 
-    // Calen
     public static ItemStack addColourTagToStack(ItemStack stack, DyeColor colour) {
         CompoundTag tag = new CompoundTag();
         tag.putString("colour", colour.getName());

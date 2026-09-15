@@ -71,7 +71,6 @@ public class TileAssemblyTable extends TileLaserTableBase implements IAssemblyCr
     private void updateRecipes() {
         //TODO: rework this to not iterate over every recipe every tick
         int count = recipesStates.size();
-//        for (AssemblyRecipe recipe : AssemblyRecipeRegistry.REGISTRY.values())
         for (IAssemblyRecipe recipe : AssemblyRecipeRegistry.getAll(level)) {
             Set<ItemStack> outputs = recipe.getOutputs(inv.stacks);
             for (ItemStack out : outputs) {
@@ -222,14 +221,9 @@ public class TileAssemblyTable extends TileLaserTableBase implements IAssemblyCr
         recipesStates.clear();
         ListTag recipesStatesTag = nbt.getList("recipes_states", Tag.TAG_COMPOUND);
         for (int i = 0; i < recipesStatesTag.size(); i++) {
-//            CompoundTag entryTag = recipesStatesTag.getCompound(i);
             CompoundTag entryTag = recipesStatesTag.getCompound(i).copy();
             String name = entryTag.getString("recipe");
             if (entryTag.contains("output")) {
-                // Calen: Here this.level is null. lookup recipes -> NPE
-//                AssemblyInstruction instruction = lookupRecipe(name, ItemStack.of(entryTag.getCompound("output")));
-//                if (instruction != null)
-//                    recipesStates.put(instruction, EnumAssemblyRecipeState.values()[entryTag.getInt("state")]);
                 runWhenWorldNotNull(() ->
                         {
                             AssemblyInstruction instruction = lookupRecipe(name, ItemStack.of(entryTag.getCompound("output")));
@@ -290,20 +284,15 @@ public class TileAssemblyTable extends TileLaserTableBase implements IAssemblyCr
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
         super.getDebugInfo(left, right, side);
-//        left.add("recipes - " + recipesStates.size());
         left.add(Component.literal("recipes - " + recipesStates.size()));
-//        left.add("target - " + LocaleUtil.localizeMj(getTarget()));
         left.add(Component.literal("target - ").append(LocaleUtil.localizeMjComponent(getTarget())));
     }
 
     @Nullable
     private AssemblyInstruction lookupRecipe(String name, ItemStack output) {
-//        AssemblyRecipe recipe = AssemblyRecipeRegistry.REGISTRY.get(new ResourceLocation(name));
         Optional<IAssemblyRecipe> recipe = AssemblyRecipeRegistry.getAll(level).stream().filter(r -> r.getId().equals(new ResourceLocation(name))).findFirst();
-//        return recipe != null ? new AssemblyInstruction(recipe, output) : null;
         return recipe.map(assemblyRecipe -> new AssemblyInstruction(assemblyRecipe, output)).orElse(null);
     }
 
@@ -337,7 +326,6 @@ public class TileAssemblyTable extends TileLaserTableBase implements IAssemblyCr
         return new ContainerAssemblyTable(BCSiliconMenuTypes.ASSEMBLY_TABLE, id, player, this);
     }
 
-    // Calen: to show current recipe
     @Override
     public ItemStack getAssemblyResult() {
         AssemblyInstruction recipe = this.getActiveRecipe();

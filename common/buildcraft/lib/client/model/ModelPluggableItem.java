@@ -24,18 +24,9 @@ import java.util.function.Consumer;
 
 public class ModelPluggableItem implements BakedModel {
 
-    // private final List<BakedQuad> quads;
     private List<BakedQuad> quads;
 
-    // public ModelPluggableItem(MutableQuad[]... quads)
     public ModelPluggableItem(Consumer<Runnable> consumerRunOnTextureStitchEvent$Post, LazyLoadedValue<MutableQuad[]>... lazyLoadedQuads) {
-//        ImmutableList.Builder<BakedQuad> list = ImmutableList.builder();
-//        for (MutableQuad[] qa : quads) {
-//            for (MutableQuad q : qa) {
-//                list.add(q.toBakedItem());
-//            }
-//        }
-//        this.quads = list.build();
 
         consumerRunOnTextureStitchEvent$Post.accept(
                 () -> {
@@ -53,13 +44,11 @@ public class ModelPluggableItem implements BakedModel {
     }
 
     @Override
-//    public List<BakedQuad> getQuads(BlockState state, Direction side, long rand)
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand) {
         return side == null ? quads : ImmutableList.of();
     }
 
     @Override
-//    public boolean isAmbientOcclusion()
     public boolean useAmbientOcclusion() {
         return false;
     }
@@ -70,27 +59,22 @@ public class ModelPluggableItem implements BakedModel {
     }
 
     @Override
-//    public boolean isBuiltInRenderer()
     public boolean isCustomRenderer() {
         return false;
     }
 
     @Override
-//    public TextureAtlasSprite getParticleTexture()
     public TextureAtlasSprite getParticleIcon() {
         return null;
     }
 
     @Override
-//    public ItemCameraTransforms getItemCameraTransforms()
     public ItemTransforms getTransforms() {
         return ModelItemSimple.TRANSFORM_PLUG_AS_ITEM;
     }
 
     @Override
-//    public ItemOverrideList getOverrides()
     public ItemOverrides getOverrides() {
-//        return ItemOverrideList.NONE;
         return ItemOverrides.EMPTY;
     }
 

@@ -22,13 +22,9 @@ public class PacketBufferBcTest {
         buffer.writeBoolean(true);
 
         byte[] expected = {
-                // writeInt(49)
                 0, 0, 0, 49,
-                // flag(true, false, true)
                 1 + 4,
-                // writeShort(95)
                 0, 95,
-                // writeByte(11)
                 11
 
         };

@@ -37,7 +37,6 @@ public class ItemFragileFluidContainer extends ItemBC_Neptune implements IItemFl
 
     public ItemFragileFluidContainer(String idBC, Item.Properties properties) {
         super(idBC, properties);
-//        setMaxStackSize(1);
     }
 
     @Override
@@ -51,47 +50,35 @@ public class ItemFragileFluidContainer extends ItemBC_Neptune implements IItemFl
     }
 
     @Override
-//    public String getItemStackDisplayName(ItemStack stack)
     public Component getName(ItemStack stack) {
         FluidStack fluid = getFluid(stack);
 
-//        String localized;
         Component localized;
 
         if (fluid == null) {
-//            localized = "ERROR! NULL FLUID!";
             localized = Component.literal("ERROR! NULL FLUID!");
         } else if (fluid.getRawFluid() instanceof BCFluid bcFluid) {
-//            BCFluid bcFluid = (BCFluid) fluid.getRawFluid();
             if (((BCFluidAttributes) bcFluid.getFluidType()).isHeatable()) {
                 // Add the heatable bit to the end of the name
-//                localized = bcFluid.getBareLocalizedName(fluid);
                 localized = bcFluid.getFluidType().getDescription(fluid);
-//                String whole = LocaleUtil.localize(getUnlocalizedName() + ".name", localized);
-//                return whole + LocaleUtil.localize("buildcraft.fluid.heat_" + bcFluid.getHeatValue());
                 return Component.translatable(getDescriptionId(stack), localized);
             } else {
-//                localized = fluid.getDisplayName().getString();
                 localized = fluid.getDisplayName();
             }
         } else {
-//            localized = fluid.getDisplayName().getString();
             localized = fluid.getDisplayName();
         }
-//        return Component.literal(LocaleUtil.localize(this.getDescriptionId(stack), localized));
         return Component.translatable(this.getDescriptionId(stack), localized);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-//    public void addInformation(ItemStack stack, @Nullable Level worldIn, List<String> tooltip, ITooltipFlag flagIn)
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         CompoundTag fluidTag = stack.getTagElement("fluid");
         if (fluidTag != null) {
             FluidStack fluid = FluidStack.loadFluidStackFromNBT(fluidTag);
             if (fluid != null && fluid.getAmount() > 0) {
-//                tooltip.add(LocaleUtil.localizeFluidStaticAmount(fluid.amount, MAX_FLUID_HELD));
                 tooltip.add(LocaleUtil.localizeFluidStaticAmountComponent(fluid.getAmount(), MAX_FLUID_HELD));
             }
         }
@@ -147,12 +134,8 @@ public class ItemFragileFluidContainer extends ItemBC_Neptune implements IItemFl
         }
 
 //        @Override
-//        public boolean hasCapability(Capability<?> capability, Direction facing) {
-//            return getCapability(capability, facing).isPresent();
-//        }
 
         @Override
-//        public <T> T getCapability(Capability<T> capability, Direction facing)
         public <T> LazyOptional<T> getCapability(@Nonnull final Capability<T> capability, final @Nullable Direction side) {
             if (capability == ForgeCapabilities.FLUID_HANDLER_ITEM
                     || capability == CapUtil.CAP_FLUIDS) {
@@ -163,10 +146,6 @@ public class ItemFragileFluidContainer extends ItemBC_Neptune implements IItemFl
 
         // 1.18.2: divided into 3 methods
 //        @Override
-//        public IFluidTankProperties[] getTankProperties() {
-//            return new IFluidTankProperties[] {
-//                    new FluidTankProperties(getFluid(container), MAX_FLUID_HELD, false, true) };
-//        }
 
         @Override
         public int getTanks() {

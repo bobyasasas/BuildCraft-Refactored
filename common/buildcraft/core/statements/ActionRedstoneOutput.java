@@ -35,7 +35,6 @@ public class ActionRedstoneOutput extends BCStatement implements IActionInternal
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("gate.action.redstone.signal");
         return Component.translatable("gate.action.redstone.signal");
     }
 

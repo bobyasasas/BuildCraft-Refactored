@@ -90,13 +90,9 @@ public final class BlockUtil {
         }
 
         // Use the (old) method as not all mods have converted to the new one
-        // (and the old method calls the new one internally)
-//        List<ItemStack> drops = block.getDrops(world, pos, state, 0);
         Player fakePlayer = BuildCraftAPI.fakePlayerProvider.getFakePlayer(world, owner, pos);
-//        float dropChance = ForgeEventFactory.fireBlockHarvesting(drops, world, pos, state, 0, 1.0F, false, fakePlayer);
 
         LootParams.Builder lootparams$builder = (new LootParams.Builder(world))
-//                .withRandom(world.random)
                 .withLuck(fakePlayer.getLuck())
                 .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
                 .withParameter(LootContextParams.TOOL, fakePlayer.getMainHandItem())
@@ -106,11 +102,6 @@ public final class BlockUtil {
         List<ItemStack> drops = state.getDrops(lootparams$builder);
 
         NonNullList<ItemStack> returnList = NonNullList.create();
-//        for (ItemStack s : drops) {
-//            if (world.rand.nextFloat() <= dropChance) {
-//                returnList.add(s);
-//            }
-//        }
         returnList.addAll(drops);
         return returnList;
     }
@@ -147,10 +138,8 @@ public final class BlockUtil {
         }
 
         // set blockState
-//        state.getBlock().onBlockHarvested(world, pos, state, fakePlayer);
         state.getBlock().onDestroyedByPlayer(state, world, pos, fakePlayer, true, world.getFluidState(pos));
         // drop
-//        state.getBlock().harvestBlock(world, fakePlayer, pos, state, world.getBlockEntity(pos), tool);
         state.getBlock().playerDestroy(world, fakePlayer, pos, state, world.getBlockEntity(pos), tool);
         // Don't drop items as we do that ourselves
         world.destroyBlock(pos, /* dropBlock = */ false);
@@ -268,16 +257,11 @@ public final class BlockUtil {
             return false;
         }
 
-        // Calen: still/flow -> 1.12.2 same fluid different block / 1.18.2 different fluid same block
-//        if (block == Blocks.LAVA || block == Blocks.FLOWING_LAVA)
         if (block == Blocks.LAVA) {
             return false;
         }
-//        else if (block instanceof IFluidBlock && ((IFluidBlock) block).getFluid() != null)
         else if (block instanceof IFluidBlock fluidBlock && fluidBlock.getFluid() != null) {
-//            Fluid f = ((IFluidBlock) block).getFluid();
             Fluid f = fluidBlock.getFluid();
-//            if (f.getDensity(world, pos) >= 3000)
             if (f.getFluidType().getDensity(state.getFluidState(), world, pos) >= 3000) {
                 return false;
             }
@@ -289,11 +273,7 @@ public final class BlockUtil {
     public static float getBlockHardnessMining(Level world, BlockPos pos, BlockState state, GameProfile owner) {
         if (world instanceof ServerLevel) {
             Player fakePlayer = BuildCraftAPI.fakePlayerProvider.getFakePlayer((ServerLevel) world, owner);
-//            float relativeHardness = state.getPlayerRelativeBlockHardness(fakePlayer, world, pos);
-//            float relativeHardness = state.getDestroySpeed(world, pos);
             boolean canDestroy = state.canEntityDestroy(world, pos, fakePlayer);
-//            if (relativeHardness <= 0.0F)
-//            if (relativeHardness < 0.0F)
             if (!canDestroy) {
                 // Forge's getPlayerRelativeBlockHardness hook returns 0.0F if the hardness is < 0.0F.
                 return -1.0F;
@@ -312,7 +292,6 @@ public final class BlockUtil {
 
     /** Returns true if a block cannot be harvested without a tool. */
     public static boolean isToughBlock(Level world, BlockPos pos) {
-//        return !world.getBlockState(pos).getMaterial().isToolNotRequired();
         return world.getBlockState(pos).requiresCorrectToolForDrops();
     }
 
@@ -322,14 +301,11 @@ public final class BlockUtil {
 
     public static boolean isFullFluidBlock(BlockState state, Level world, BlockPos pos) {
         Block block = state.getBlock();
-//        if (block instanceof IFluidBlock)
         if (block instanceof IFluidBlock) {
             FluidStack fluid = ((IFluidBlock) block).drain(world, pos, IFluidHandler.FluidAction.SIMULATE);
-//            return fluid == null || fluid.getAmount() > 0;
             return !fluid.isEmpty() || fluid.getAmount() > 0;
         } else if (block instanceof LiquidBlock) {
             int level = state.getValue(LiquidBlock.LEVEL);
-//            return level == 0;
             return level == 8;
         }
         return false;
@@ -347,23 +323,11 @@ public final class BlockUtil {
     }
 
     public static Fluid getFluid(Level world, BlockPos pos) {
-//        FluidStack fluid = drainBlock(world, pos, false);
         FluidStack fluid = drainBlock(world, pos, IFluidHandler.FluidAction.SIMULATE);
-//        return fluid != null ? fluid.getFluid() : null;
         return (fluid == null || fluid.isEmpty()) ? null : fluid.getFluid();
     }
 
     public static Fluid getFluidWithFlowing(Level world, BlockPos pos) {
-//        IBlockState blockState = world.getBlockState(pos);
-//        Block block = blockState.getBlock();
-//        if (block == Blocks.FLOWING_WATER) {
-//            return FluidRegistry.WATER;
-//        }
-//        if (block == Blocks.FLOWING_LAVA) {
-//            return FluidRegistry.LAVA;
-//        }
-//        return getFluid(block);
-        // Calen: this may be better
         Fluid ret = world.getFluidState(pos).getType();
         return (ret == null || ret instanceof EmptyFluid) ? null : ret;
     }
@@ -372,28 +336,12 @@ public final class BlockUtil {
         if (block instanceof IFluidBlock fluidBlock) {
             return fluidBlock.getFluid();
         }
-//        return FluidRegistry.lookupFluidForBlock(block);
         return null;
     }
 
     public static Fluid getFluidWithoutFlowing(BlockState state) {
         Block block = state.getBlock();
-//        if (block instanceof BlockFluidClassic) {
-//            if (((BlockFluidClassic) block).isSourceBlock(new SingleBlockAccess(state), SingleBlockAccess.POS)) {
-//                return getFluid(block);
-//            }
-//        }
         if (block instanceof LiquidBlock) {
-//            if (state.getValue(BlockLiquid.LEVEL) != 0) {
-//                return null;
-//            }
-//            if (block == Blocks.WATER || block == Blocks.FLOWING_WATER) {
-//                return FluidRegistry.WATER;
-//            }
-//            if (block == Blocks.LAVA || block == Blocks.FLOWING_LAVA) {
-//                return FluidRegistry.LAVA;
-//            }
-//            return FluidRegistry.lookupFluidForBlock(block);
             FluidState fluidState = state.getFluidState();
             Fluid fluid = fluidState.getType();
             if (fluid != null && !(fluid instanceof EmptyFluid) && fluid.isSource(fluidState)) {
@@ -405,11 +353,9 @@ public final class BlockUtil {
 
     public static Fluid getFluidWithFlowing(Block block) {
         Fluid fluid = null;
-//        if (block == Blocks.LAVA || block == Blocks.FLOWING_LAVA)
         if (block == Blocks.LAVA) {
             fluid = Fluids.LAVA;
         }
-//        else if (block == Blocks.WATER || block == Blocks.FLOWING_WATER)
         else if (block == Blocks.WATER) {
             fluid = Fluids.WATER;
         } else if (block instanceof IFluidBlock) {
@@ -452,7 +398,6 @@ public final class BlockUtil {
 
     /** Create an explosion which only affects a single block. */
     public static void explodeBlock(Level world, BlockPos pos) {
-//        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
         if (world.isClientSide) {
             return;
         }
@@ -461,7 +406,6 @@ public final class BlockUtil {
         double y = pos.getY() + 0.5;
         double z = pos.getZ() + 0.5;
 
-//        Explosion explosion = new Explosion(world, null, x, y, z, 3f, false, false);
         Explosion explosion = new Explosion(world, null, x, y, z, 3f, false, BlockInteraction.KEEP);
         explosion.getToBlow().add(pos);
         explosion.finalizeExplosion(true); // 不破坏方块
@@ -502,7 +446,6 @@ public final class BlockUtil {
     }
 
     public static boolean useItemOnBlock(Level world, Player player, ItemStack stack, BlockPos pos, Direction direction) {
-//        boolean done = stack.getItem().onItemUseFirst(player, world, pos, direction, 0.5F, 0.5F, 0.5F, InteractionHand.MAIN_HAND) == InteractionResult.SUCCESS;
         UseOnContext ctx = new UseOnContext(
                 world,
                 player,
@@ -525,7 +468,6 @@ public final class BlockUtil {
     }
 
     public static void onComparatorUpdate(Level world, BlockPos pos, Block block) {
-//        world.updateComparatorOutputLevel(pos, block);
         world.updateNeighbourForOutputSignal(pos, block);
     }
 
@@ -536,32 +478,9 @@ public final class BlockUtil {
      * @param inv
      * @return
      */
-    // public static TileEntityChest getOtherDoubleChest(TileEntity inv)
     public static ChestBlockEntity getOtherDoubleChest(BlockEntity inv) {
         if (inv instanceof ChestBlockEntity) {
             ChestBlockEntity chest = (ChestBlockEntity) inv;
-//
-//            TileEntityChest adjacent = null;
-//
-//            chest.checkForAdjacentChests();
-//
-//            if (chest.adjacentChestXNeg != null) {
-//                adjacent = chest.adjacentChestXNeg;
-//            }
-//
-//            if (chest.adjacentChestXPos != null) {
-//                adjacent = chest.adjacentChestXPos;
-//            }
-//
-//            if (chest.adjacentChestZNeg != null) {
-//                adjacent = chest.adjacentChestZNeg;
-//            }
-//
-//            if (chest.adjacentChestZPos != null) {
-//                adjacent = chest.adjacentChestZPos;
-//            }
-//
-//            return adjacent;
 
             Level world = inv.getLevel();
             BlockState thisState = inv.getBlockState();
@@ -675,7 +594,6 @@ public final class BlockUtil {
         };
     }
 
-    // Calen
     public static Block getBlockFromRegistryName(String name) {
         return getBlockFromRegistryName(new ResourceLocation(name));
     }

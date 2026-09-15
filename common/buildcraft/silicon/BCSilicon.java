@@ -53,14 +53,12 @@ import java.util.function.Consumer;
 //        dependencies = "required-after:buildcraftcore@[" + BCLib.VERSION + "];"
 //                // Pluggable registration needs to happen *after* the transport registries have been set
 //                + "after:buildcrafttransport"
-//)
 //@formatter:on
 @Mod(BCSilicon.MODID)
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BCSilicon {
     public static final String MODID = "buildcraftsilicon";
 
-    // @Mod.Instance(MODID)
     public static BCSilicon INSTANCE = null;
 
     private static CreativeTabBC tabPlugs;
@@ -86,8 +84,6 @@ public class BCSilicon {
         BCSiliconItems.preInit();
         BCSiliconStatements.preInit();
 
-//        NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, BCSiliconProxy.getProxy());
-//
         BCSiliconProxy.getProxy().fmlPreInit();
     }
 
@@ -105,12 +101,10 @@ public class BCSilicon {
         if (BCSiliconItems.plugFacade != null) {
             FacadeBlockStateInfo state = FacadeStateManager.previewState;
             FacadeInstance inst = FacadeInstance.createSingle(state, false);
-//            tabFacades.setItem(BCSiliconItems.plugFacade.createItemStack(inst));
             tabFacades.setItemStack(() -> BCSiliconItems.plugFacade.get().createItemStack(inst));
         }
 
         if (!BCModules.TRANSPORT.isLoaded()) {
-//            tabPlugs.setItem(BCSiliconItems.plugGate);
             tabPlugs.setItem(BCSiliconItems.variantGateMap.get(new GateVariant(new CompoundTag())));
         }
 
@@ -118,10 +112,8 @@ public class BCSilicon {
     }
 
     @SubscribeEvent
-//    public static void onImcEvent(IMCEvent imc)
     public static void onImcEvent(InterModProcessEvent imc) {
 
-//        for (InterModComms.IMCMessage message : imc.getMessages())
         InterModComms.getMessages(MODID).forEach(message ->
         {
             Object inner = message.messageSupplier().get();
@@ -163,7 +155,6 @@ public class BCSilicon {
         ItemBlockRenderTypes.setRenderLayer(BCSiliconBlocks.assemblyTable.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BCSiliconBlocks.advancedCraftingTable.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BCSiliconBlocks.integrationTable.get(), RenderType.cutout());
-        // Calen: 1.12.2 not impl……
         ItemBlockRenderTypes.setRenderLayer(BCSiliconBlocks.chargingTable.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BCSiliconBlocks.programmingTable.get(), RenderType.translucent());
 
@@ -176,67 +167,37 @@ public class BCSilicon {
         startBatch();
         // Items
         registerTag("item.chipset.redstone").reg("chipset_redstone").locale("chipset_redstone");
-//                .model("chipset_redstone/");
         registerTag("item.chipset.iron").reg("chipset_iron").locale("chipset_iron");
-//                .model("chipset_redstone/");
         registerTag("item.chipset.gold").reg("chipset_gold").locale("chipset_gold");
-//                .model("chipset_redstone/");
         registerTag("item.chipset.quartz").reg("chipset_quartz").locale("chipset_quartz");
-//                .model("chipset_redstone/");
         registerTag("item.chipset.diamond").reg("chipset_diamond").locale("chipset_diamond");
-//                .model("chipset_redstone/");
         registerTag("item.redstone_crystal").reg("redstone_crystal").locale("redstoneCrystal");
         registerTag("item.gate_copier").reg("gate_copier").locale("gateCopier");
-//                .model("gatecopier_");
         registerTag("item.plug.gate").reg("plug_gate").locale("gate")
-//                .model("pluggable/gate")
                 .tab("buildcraft.plugs");
-//                .oldReg("plug_gate");
         registerTag("item.plug.lens").reg("plug_lens").locale("lens")
-//                .model("pluggable/lens")
                 .tab("buildcraft.plugs");
-//                .oldReg("plug_lens");
         registerTag("item.plug.pulsar").reg("plug_pulsar").locale("pulsar")
-//                .model("plug_pulsar")
                 .tab("buildcraft.plugs");
-//                .oldReg("plug_pulsar");
         registerTag("item.plug.light_sensor").reg("plug_light_sensor").locale("light_sensor")
-//                .model("plug_light_sensor")
                 .tab("buildcraft.plugs");
-//                .oldReg("plug_light_sensor");
         registerTag("item.plug.timer").reg("plug_timer").locale("timer")
-//                .model("plug_timer")
                 .tab("buildcraft.plugs");
-//                .oldReg("plug_timer");
         registerTag("item.plug.facade").reg("plug_facade").locale("Facade")
-//                .model("plug_facade")
                 .tab("buildcraft.facades");
-//                .oldReg("plug_facade");
         // Item Blocks
         registerTag("item.block.laser").reg("laser").locale("laserBlock");
-//                .model("laser");
         registerTag("item.block.assembly_table").reg("assembly_table").locale("assemblyTableBlock");
-//                .model("assembly_table");
         registerTag("item.block.advanced_crafting_table").reg("advanced_crafting_table").locale("assemblyWorkbenchBlock");
-//                .model("advanced_crafting_table");
         registerTag("item.block.integration_table").reg("integration_table").locale("integrationTableBlock");
-//                .model("integration_table");
         registerTag("item.block.charging_table").reg("charging_table").locale("chargingTableBlock");
-//                .model("charging_table");
         registerTag("item.block.programming_table").reg("programming_table").locale("programmingTableBlock");
-//                .model("programming_table");
         // Blocks
-//        registerTag("block.laser").reg("laser").oldReg("laserBlock").locale("laserBlock").model("laser");
         registerTag("block.laser").reg("laser").locale("laserBlock");
-//        registerTag("block.assembly_table").reg("assembly_table").oldReg("assemblyTableBlock").locale("assemblyTableBlock").model("assembly_table");
         registerTag("block.assembly_table").reg("assembly_table").locale("assemblyTableBlock");
-//        registerTag("block.advanced_crafting_table").reg("advanced_crafting_table").oldReg("advancedCraftingTableBlock").locale("assemblyWorkbenchBlock").model("advanced_crafting_table");
         registerTag("block.advanced_crafting_table").reg("advanced_crafting_table").locale("assemblyWorkbenchBlock");
-//        registerTag("block.integration_table").reg("integration_table").oldReg("integrationTableBlock").locale("integrationTableBlock").model("integration_table");
         registerTag("block.integration_table").reg("integration_table").locale("integrationTableBlock");
-//        registerTag("block.charging_table").reg("charging_table").oldReg("chargingTableBlock").locale("chargingTableBlock").model("charging_table");
         registerTag("block.charging_table").reg("charging_table").locale("chargingTableBlock");
-//        registerTag("block.programming_table").reg("programming_table").oldReg("programmingTableBlock").locale("programmingTableBlock").model("programming_table");
         registerTag("block.programming_table").reg("programming_table").locale("programmingTableBlock");
         // Tiles
         registerTag("tile.laser").reg("laser");
@@ -246,7 +207,6 @@ public class BCSilicon {
         registerTag("tile.charging_table").reg("charging_table");
         registerTag("tile.programming_table").reg("programming_table");
 
-//        endBatch(TagManager.prependTags("buildcraftsilicon:", EnumTagType.REGISTRY_NAME, EnumTagType.MODEL_LOCATION)
         endBatch(TagManager.prependTags("buildcraftsilicon:", EnumTagType.REGISTRY_NAME)
                 .andThen(TagManager.setTab("buildcraft.main"))
         );
@@ -254,18 +214,14 @@ public class BCSilicon {
 
 
     private static TagEntry registerTag(String id) {
-//        return TagManager.registerTag(id);
         return tagManager.registerTag(id);
     }
 
     private static void startBatch() {
-//        TagManager.startBatch();
         tagManager.startBatch();
     }
 
-    // Calen: the batch often causes Exception...
     private static void endBatch(Consumer<TagEntry> consumer) {
-//        TagManager.endBatch(consumer);
         tagManager.endBatch(consumer);
     }
 }

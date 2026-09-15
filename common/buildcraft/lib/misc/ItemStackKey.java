@@ -41,9 +41,6 @@ public class ItemStackKey {
         if (baseStack.getItem() != other.baseStack.getItem()) {
             return false;
         }
-//        if (baseStack.getMetadata() != other.baseStack.getMetadata()) {
-//            return false;
-//        }
         return baseStack.serializeNBT().equals(other.baseStack.serializeNBT());
     }
 

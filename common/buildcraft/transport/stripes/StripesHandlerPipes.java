@@ -30,7 +30,6 @@ public class StripesHandlerPipes implements IStripesHandlerItem {
             // Item pipe: request extending on end of tick
             if (PipeApi.extensionManager.requestPipeExtension(world, pos, direction, activator, stack.copy())) {
                 // No items should be sent back immediately, handled by the pipe extension manager later
-//                player.inventory.clear();
                 player.getInventory().clearContent();
                 return true;
             }

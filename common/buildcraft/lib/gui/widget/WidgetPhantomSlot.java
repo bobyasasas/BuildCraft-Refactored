@@ -30,7 +30,7 @@ import java.util.List;
 /** Defines a widget that represents a phantom slot. */
 public class WidgetPhantomSlot extends Widget_Neptune<ContainerBC_Neptune> {
     private static final byte NET_CLIENT_TO_SERVER_CLICK = 0;
-    private static final byte NET_CLIENT_TO_SERVER_STACK = 1; // Calen 1.20.1
+    private static final byte NET_CLIENT_TO_SERVER_STACK = 1;
     private static final byte NET_SERVER_TO_CLIENT_ITEM = 0;
 
     private static final byte CLICK_FLAG_SHIFT = 1;
@@ -64,16 +64,13 @@ public class WidgetPhantomSlot extends Widget_Neptune<ContainerBC_Neptune> {
         if (clone) {
             if (container.player.isCreative()) {
                 ItemStack get = getStack();
-//                if (!get.isEmpty() && container.player.inventory.getItemStack().isEmpty())
                 if (!get.isEmpty() && container.player.containerMenu.getCarried().isEmpty()) {
-//                    container.player.inventory.setItemStack(get.copy());
                     container.player.containerMenu.setCarried(get.copy());
                 }
             }
         } else if (shift) {
             setStack(StackUtil.EMPTY, true);
         } else {
-//            ItemStack toSet = container.player.inventory.getItemStack();
             ItemStack toSet = container.player.containerMenu.getCarried();
             if (toSet.isEmpty()) {
                 setStack(StackUtil.EMPTY, true);
@@ -125,7 +122,6 @@ public class WidgetPhantomSlot extends Widget_Neptune<ContainerBC_Neptune> {
     protected void onSetStack() {
     }
 
-    // Calen 1.20.1
     public void clientSetStackToServer(ItemStack stack) {
         this.sendWidgetData(buffer ->
         {
@@ -144,11 +140,8 @@ public class WidgetPhantomSlot extends Widget_Neptune<ContainerBC_Neptune> {
 
         @Override
         public void drawForeground(GuiGraphics guiGraphics, float partialTicks) {
-//            RenderHelper.enableGUIStandardItemLighting();
             RenderUtil.enableGUIStandardItemLighting();
-//            gui.mc.getRenderItem().renderItemAndEffectIntoGUI(getStack(), (int) getX(), (int) getY());
             guiGraphics.renderFakeItem(getStack(), (int) getX(), (int) getY());
-//            RenderHelper.disableStandardItemLighting();
             RenderUtil.disableStandardItemLighting();
             if (contains(gui.mouse) && shouldDrawHighlight()) {
                 GuiUtil.drawRect(guiGraphics, this, 0x70_FF_FF_FF);
@@ -169,12 +162,9 @@ public class WidgetPhantomSlot extends Widget_Neptune<ContainerBC_Neptune> {
             if (contains(gui.mouse)) {
                 byte flags = 0;
                 if (button == 1) flags |= CLICK_FLAG_SINGLE;
-//                if (GuiScreen.isShiftKeyDown()) flags |= CLICK_FLAG_SHIFT;
                 if (Screen.hasShiftDown()) {
                     flags |= CLICK_FLAG_SHIFT;
                 }
-                // Calen: should not -100 in 1.18.2
-//                if (gui.mc.gameSettings.keyBindPickBlock.isActiveAndMatches(button - 100))
                 if (gui.mc.options.keyPickItem.isActiveAndMatches(InputConstants.Type.MOUSE.getOrCreate(button))) {
                     flags |= CLICK_FLAG_CLONE;
                     BCLog.logger.info("clone");

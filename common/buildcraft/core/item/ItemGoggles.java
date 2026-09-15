@@ -19,15 +19,10 @@ import java.util.function.Consumer;
 
 //public class ItemGoggles extends ArmorItem implements IItemBuildCraft, ISpecialArmor
 public class ItemGoggles extends ArmorItem implements IItemBuildCraft {
-    // private static final ArmorProperties HELMET_PROPERTIES = new ArmorProperties(0, 0, 0);
-    // private static final Item.Properties HELMET_PROPERTIES = new Item.Properties().;
     private final String idBC;
-    // private final String nameSpace;
-    // private final ResourceLocation id;
 
     public ItemGoggles(String idBC, Item.Properties properties) {
         super(ArmorMaterials.CHAIN, Type.HELMET, properties);
-//        super(ArmorMaterials.CHAIN, 0, EquipmentSlot.HEAD);
         this.idBC = idBC;
         init();
     }
@@ -37,7 +32,6 @@ public class ItemGoggles extends ArmorItem implements IItemBuildCraft {
         return idBC;
     }
 
-    // Calen
     private String unlocalizedName;
 
     @Override
@@ -51,24 +45,18 @@ public class ItemGoggles extends ArmorItem implements IItemBuildCraft {
     }
 
 //    @Override
-//    public ArmorProperties getProperties(LivingEntity player, @Nonnull ItemStack armor, DamageSource source, double damage, int slot) {
-//        return HELMET_PROPERTIES;
-//    }
 
     @Override
-//    public int getArmorDisplay(Player player, @Nonnull ItemStack armor, int slot)
     public int getDamage(ItemStack stack) {
         return 0;
     }
 
     @Override
-//    public void damageArmor(LivingEntity entity, @Nonnull ItemStack stack, DamageSource source, int damage, int slot)
     public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
         // Invulnerable goggles
         return 0;
     }
 
-    // Calen 1.20.1
     public ResourceLocation getRegistryName() {
         return ForgeRegistries.ITEMS.getKey(this);
     }

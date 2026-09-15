@@ -84,14 +84,12 @@ public abstract class BoardRobotGenericSearchBlock extends RedstoneBoardRobot {
         for (StatementSlot slot : robot.getLinkedStation().getActiveActions()) {
             if (slot.statement instanceof ActionRobotFilter) {
                 for (IStatementParameter p : slot.parameters) {
-                    // if (p != null && p instanceof StatementParameterItemStack)
                     if (p instanceof StatementParameterItemStack) {
                         StatementParameterItemStack param = (StatementParameterItemStack) p;
                         ItemStack stack = param.getItemStack();
 
                         if (stack != null && stack.getItem() instanceof BlockItem) {
                             BlockItem item = (BlockItem) stack.getItem();
-                            // blockFilter.add(item.block.getStateFromMeta(stack.getMetadata()));
                             blockFilter.add(item.getBlock().defaultBlockState());
                         }
                     }

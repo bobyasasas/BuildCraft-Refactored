@@ -57,7 +57,6 @@ public enum ModelFacadeItem implements BakedModel {
             quads.add(quad.toBakedItem());
         }
 
-//        if (BCModules.TRANSPORT.isLoaded() && key.state.isFullBlock() && !key.isHollow)
         if (BCModules.TRANSPORT.isLoaded() && key.state.getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO) == Shapes.block() && !key.isHollow) {
             for (MutableQuad quad : BCTransportModels.BLOCKER.getCutoutQuads()) {
                 quads.add(quad.toBakedItem());
@@ -68,13 +67,11 @@ public enum ModelFacadeItem implements BakedModel {
 
     @NotNull
     @Override
-//    public List<BakedQuad> getQuads(BlockState state, Direction side, long rand)
     public List<BakedQuad> getQuads(@Nullable BlockState p_119123_, @Nullable Direction p_119124_, RandomSource rand) {
         return ImmutableList.of();
     }
 
     @Override
-//    public boolean isAmbientOcclusion()
     public boolean useAmbientOcclusion() {
         return false;
     }
@@ -85,19 +82,16 @@ public enum ModelFacadeItem implements BakedModel {
     }
 
     @Override
-//    public boolean isBuiltInRenderer()
     public boolean isCustomRenderer() {
         return false;
     }
 
     @Override
-//    public TextureAtlasSprite getParticleTexture()
     public TextureAtlasSprite getParticleIcon() {
         return null;
     }
 
     @Override
-//    public ItemCameraTransforms getItemCameraTransforms()
     public ItemTransforms getTransforms() {
         return ModelItemSimple.TRANSFORM_PLUG_AS_BLOCK;
     }
@@ -111,11 +105,9 @@ public enum ModelFacadeItem implements BakedModel {
         public static final FacadeOverride FACADE_OVERRIDE = new FacadeOverride();
 
         private FacadeOverride() {
-//            super(ImmutableList.of());
         }
 
         @Override
-//        public BakedModel handleItemState(BakedModel originalModel, ItemStack stack, Level world, LivingEntity entity)
         public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int p_173469_) {
             FacadeInstance inst = ItemPluggableFacade.getStates(stack);
             FacadePhasedState state = inst.getCurrentStateForStack();

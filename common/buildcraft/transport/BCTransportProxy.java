@@ -19,7 +19,6 @@ import net.minecraftforge.fml.loading.FMLLoader;
 
 //public abstract class BCTransportProxy implements IGuiHandler
 public abstract class BCTransportProxy {
-    // @SidedProxy(modId = BCTransport.MODID)
     private static BCTransportProxy proxy;
 
     public static BCTransportProxy getProxy() {
@@ -37,66 +36,8 @@ public abstract class BCTransportProxy {
     }
 
 //    @Override
-//    public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
-//        BCTransportGuis gui = BCTransportGuis.get(id);
-//        if (gui == null) return null;
-//        TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
-//
-//        switch (gui) {
-//            case FILTERED_BUFFER: {
-//                if (tile instanceof TileFilteredBuffer) {
-//                    TileFilteredBuffer filteredBuffer = (TileFilteredBuffer) tile;
-//                    return new ContainerFilteredBuffer_BC8(player, filteredBuffer);
-//                }
-//                break;
-//            }
-//            case PIPE_DIAMOND: {
-//                if (tile instanceof IPipeHolder) {
-//                    IPipeHolder holder = (IPipeHolder) tile;
-//                    IPipe pipe = holder.getPipe();
-//                    if (pipe == null) return null;
-//                    PipeBehaviour behaviour = pipe.getBehaviour();
-//                    if (behaviour instanceof PipeBehaviourDiamond) {
-//                        PipeBehaviourDiamond diaPipe = (PipeBehaviourDiamond) behaviour;
-//                        return new ContainerDiamondPipe(player, diaPipe);
-//                    }
-//                }
-//                break;
-//            }
-//            case PIPE_DIAMOND_WOOD: {
-//                if (tile instanceof IPipeHolder) {
-//                    IPipeHolder holder = (IPipeHolder) tile;
-//                    IPipe pipe = holder.getPipe();
-//                    if (pipe == null) return null;
-//                    PipeBehaviour behaviour = pipe.getBehaviour();
-//                    if (behaviour instanceof PipeBehaviourWoodDiamond) {
-//                        PipeBehaviourWoodDiamond diaPipe = (PipeBehaviourWoodDiamond) behaviour;
-//                        return new ContainerDiamondWoodPipe(player, diaPipe);
-//                    }
-//                }
-//                break;
-//            }
-//            case PIPE_EMZULI: {
-//                if (tile instanceof IPipeHolder) {
-//                    IPipeHolder holder = (IPipeHolder) tile;
-//                    IPipe pipe = holder.getPipe();
-//                    if (pipe == null) return null;
-//                    PipeBehaviour behaviour = pipe.getBehaviour();
-//                    if (behaviour instanceof PipeBehaviourEmzuli) {
-//                        PipeBehaviourEmzuli emPipe = (PipeBehaviourEmzuli) behaviour;
-//                        return new ContainerEmzuliPipe_BC8(player, emPipe);
-//                    }
-//                }
-//                break;
-//            }
-//        }
-//        return null;
-//    }
 
 //    @Override
-//    public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
-//        return null;
-//    }
 
     public void fmlPreInit() {
         MessageManager.registerMessageClass(BCModules.TRANSPORT, MessageWireSystems.class, Dist.CLIENT);
@@ -111,12 +52,10 @@ public abstract class BCTransportProxy {
     }
 
     @SuppressWarnings("unused")
-//    @OnlyIn(Dist.DEDICATED_SERVER)
     public static class ServerProxy extends BCTransportProxy {
     }
 
     @SuppressWarnings("unused")
-//    @OnlyIn(Dist.CLIENT)
     public static class ClientProxy extends BCTransportProxy {
         @Override
         public void fmlPreInit() {
@@ -144,61 +83,5 @@ public abstract class BCTransportProxy {
         }
 
 //        @Override
-//        public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
-//            BCTransportGuis gui = BCTransportGuis.get(id);
-//            if (gui == null) {
-//                return null;
-//            }
-//            TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
-//            switch (gui) {
-//                case FILTERED_BUFFER: {
-//                    if (tile instanceof TileFilteredBuffer) {
-//                        TileFilteredBuffer filteredBuffer = (TileFilteredBuffer) tile;
-//                        return new GuiFilteredBuffer(new ContainerFilteredBuffer_BC8(player, filteredBuffer));
-//                    }
-//                    break;
-//                }
-//                case PIPE_DIAMOND: {
-//                    if (tile instanceof IPipeHolder) {
-//                        IPipeHolder holder = (IPipeHolder) tile;
-//                        IPipe pipe = holder.getPipe();
-//                        if (pipe == null) return null;
-//                        PipeBehaviour behaviour = pipe.getBehaviour();
-//                        if (behaviour instanceof PipeBehaviourDiamond) {
-//                            PipeBehaviourDiamond diaPipe = (PipeBehaviourDiamond) behaviour;
-//                            return new GuiDiamondPipe(player, diaPipe);
-//                        }
-//                    }
-//                    break;
-//                }
-//                case PIPE_DIAMOND_WOOD: {
-//                    if (tile instanceof IPipeHolder) {
-//                        IPipeHolder holder = (IPipeHolder) tile;
-//                        IPipe pipe = holder.getPipe();
-//                        if (pipe == null) return null;
-//                        PipeBehaviour behaviour = pipe.getBehaviour();
-//                        if (behaviour instanceof PipeBehaviourWoodDiamond) {
-//                            PipeBehaviourWoodDiamond diaPipe = (PipeBehaviourWoodDiamond) behaviour;
-//                            return new GuiDiamondWoodPipe(player, diaPipe);
-//                        }
-//                    }
-//                    break;
-//                }
-//                case PIPE_EMZULI: {
-//                    if (tile instanceof IPipeHolder) {
-//                        IPipeHolder holder = (IPipeHolder) tile;
-//                        IPipe pipe = holder.getPipe();
-//                        if (pipe == null) return null;
-//                        PipeBehaviour behaviour = pipe.getBehaviour();
-//                        if (behaviour instanceof PipeBehaviourEmzuli) {
-//                            PipeBehaviourEmzuli emzPipe = (PipeBehaviourEmzuli) behaviour;
-//                            return new GuiEmzuliPipe_BC8(player, emzPipe);
-//                        }
-//                    }
-//                    break;
-//                }
-//            }
-//            return null;
-//        }
     }
 }

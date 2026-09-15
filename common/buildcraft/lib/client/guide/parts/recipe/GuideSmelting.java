@@ -35,7 +35,6 @@ public class GuideSmelting extends GuidePartItem {
     private final ItemStack furnace;
     private final int hash;
 
-    // public GuideSmelting(GuiGuide gui, @Nonnull ItemStack input, @Nonnull ItemStack output)
     public GuideSmelting(GuiGuide gui, @Nonnull NonNullList<Ingredient> input, @Nonnull ItemStack output) {
         super(gui);
         this.input = new ChangingItemStack(input);
@@ -61,7 +60,6 @@ public class GuideSmelting extends GuidePartItem {
     }
 
     @Override
-//    public GuidePart.PagePosition renderIntoArea(int x, int y, int width, int height, GuidePart.PagePosition current, int index)
     public GuidePart.PagePosition renderIntoArea(GuiGraphics guiGraphics, int x, int y, int width, int height, GuidePart.PagePosition current, int index) {
         if (current.pixel + PIXEL_HEIGHT > height) {
             current = current.newPage();
@@ -69,27 +67,21 @@ public class GuideSmelting extends GuidePartItem {
         x += OFFSET.x;
         y += OFFSET.y + current.pixel;
         if (current.page == index) {
-//            SMELTING_ICON.drawAt(x, y);
             SMELTING_ICON.drawAt(guiGraphics, x, y);
             // Render the item
-//            GlStateManager.enableRescaleNormal();
-//            RenderHelper.enableGUIStandardItemLighting();
             RenderUtil.enableGUIStandardItemLighting();
 
             drawItemStack(guiGraphics, input.get(), x + (int) IN_POS.x, y + (int) IN_POS.y);
             drawItemStack(guiGraphics, output.get(), x + (int) OUT_POS.x, y + (int) OUT_POS.y);
             drawItemStack(guiGraphics, furnace, x + (int) FURNACE_POS.x, y + (int) FURNACE_POS.y);
 
-//            RenderHelper.disableStandardItemLighting();
             RenderUtil.disableStandardItemLighting();
-//            GlStateManager.disableRescaleNormal();
         }
         current = current.nextLine(PIXEL_HEIGHT, height);
         return current;
     }
 
     @Override
-//    public GuidePart.PagePosition handleMouseClick(int x, int y, int width, int height, GuidePart.PagePosition current, int index, int mouseX, int mouseY)
     public PagePosition handleMouseClick(GuiGraphics guiGraphics, int x, int y, int width, int height, PagePosition current, int index, double mouseX, double mouseY) {
         if (current.pixel + PIXEL_HEIGHT > height) {
             current = current.newPage();

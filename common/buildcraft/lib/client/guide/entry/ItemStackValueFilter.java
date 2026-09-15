@@ -12,7 +12,6 @@ public class ItemStackValueFilter {
     public final boolean matchMeta;
 
     public ItemStackValueFilter(ItemStack stack) {
-//        this(new ItemStackKey(stack), stack.getHasSubtypes(), false);
         this(new ItemStackKey(stack), false, false);
     }
 

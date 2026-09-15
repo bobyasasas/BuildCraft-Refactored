@@ -138,13 +138,10 @@ public class BCEnergyFluids {
         String fullName = name + "_heat_" + heat;
         int tempAdjustedViscosity = baseViscosity * (4 - heat) / 4;
         int boilAdjustedDensity = density * (heat >= boilPoint ? -1 : 1);
-        // Calen 1.20.1: isGaseous is defined by density in FluidType#isLighterThanAir()
-        // def.setGaseous(def.getDensity() < 0)
         if (boilAdjustedDensity < 0 && !allowGas) {
             boilAdjustedDensity = 1;
         }
 
-//        String fluidTexture = "buildcraftenergy:fluids/" + fullName;
         String fluidTexture = "buildcraftenergy:block/fluid/" + fullName;
         BCFluidRegistryContainer fluidRegistryContainer = new BCFluidRegistryContainer();
         allFluids.add(fluidRegistryContainer);
@@ -162,9 +159,6 @@ public class BCEnergyFluids {
                 .tickRate(tempAdjustedViscosity / 200)
                 // Distance that the fluid will travel: 1->16
                 // Higher heat values travel a little further
-                // 1.12.2: block.setQuantaPerBlock(baseQuanta + (baseQuanta > 6 ? heat : heat / 2));
-                // 1.12.2 max = 16 Block#setQuantaPerBlock(range)
-                // 1.18.2 max = 8 Properties#levelDecreasePerBlock(decrease)
                 .levelDecreasePerBlock(8 / Math.min((baseQuanta + (baseQuanta > 6 ? heat : heat / 2)) / 2, 8));
 
         // Attributes
@@ -172,26 +166,16 @@ public class BCEnergyFluids {
                         new ResourceLocation(fluidTexture + STILL_SUFFIX),
                         new ResourceLocation(fluidTexture + FLOW_SUFFIX)
                 )
-                // def.setHeat(heat)
                 .setHeat(heat)
-                // def.setHeatable(true)
                 .setHeatable(true)
-                // def.setColour(texLight, texDark)
                 .setColour(texLight, texDark)
-                // Calen: if use color filter on white texture of water, here should be Water Overlay
-                // if the texture is colored, [.overlay(WATER_OVERLAY) and .color(0xFFFFFFFF)] will make the fluid block looks white behind glass block
                 .overlay(null)
 //                // 1.12.2: BCFluid#colour
-//                .color(0xFFFFFFFF)
-                // def.setUnlocalizedName(name)
                 .descriptionId(HEAT_TRANSLATION_PREFIX + name)
                 .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
                 .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
-                // def.setTemperature(300 + 20 * heat)
                 .temperature(300 + 20 * heat)
-                // def.setDensity(boilAdjustedDensity)
                 .density(boilAdjustedDensity)
-                // def.setViscosity(tempAdjustedViscosity)
                 .viscosity(tempAdjustedViscosity);
         fluidRegistryContainer.setFluidType(attributeBuilder.build());
 
@@ -240,7 +224,6 @@ public class BCEnergyFluids {
                 .liquid()
                 .forceSolidOff()
                 .pushReaction(PushReaction.DESTROY)
-                // def.setMapColour(getMapColor(texDark))
                 .mapColor(getMapColor(texDark))
                 .noCollission()
                 .randomTicks()
@@ -248,7 +231,6 @@ public class BCEnergyFluids {
                 .replaceable() // if not replaceable, <Create> mod's HosePulley will not be able to enter the oil block
                 .noLootTable();
         if (flammable) {
-            // def.setFlammable(flammable)
             blockProp.ignitedByLava();
         }
         RegistryObject<BCFluidBlock> block = blockRegister.register(
@@ -256,21 +238,16 @@ public class BCEnergyFluids {
                 () -> new BCFluidBlock(
                         fluidRegistryContainer::getStill,
                         blockProp,
-                        // block.setSticky(sticky)
                         sticky,
                         fluidRegistryContainer
                 )
         );
         fluidRegistryContainer.setBlock(block);
 
-        // TODO Calen setLightOpacity???
-//        block.setLightOpacity(3);
         return still;
     }
 
-    // private static MapColor getMapColor(int color)
     private static MapColor getMapColor(int color) {
-//        MapColor bestMapColor = MapColor.BLACK;
         MapColor bestMapColor = MapColor.COLOR_BLACK;
         int currentDifference = Integer.MAX_VALUE;
 
@@ -278,17 +255,12 @@ public class BCEnergyFluids {
         int g = (color >> 8) & 0xFF;
         int b = color & 0xFF;
 
-//        for (MapColor mapColor : MapColor.COLORS)
         for (MapColor mapColor : MapColor.MATERIAL_COLORS) {
-//            if (mapColor == null || mapColor.colorValue == 0)
             if (mapColor == null || mapColor.col == 0) {
                 continue;
             }
-//            int mr = (mapColor.colorValue >> 16) & 0xFF;
             int mr = (mapColor.col >> 16) & 0xFF;
-//            int mg = (mapColor.colorValue >> 8) & 0xFF;
             int mg = (mapColor.col >> 8) & 0xFF;
-//            int mb = mapColor.colorValue & 0xFF;
             int mb = mapColor.col & 0xFF;
 
             int dr = mr - r;

@@ -23,7 +23,6 @@ public abstract class Pattern extends BCStatement implements IFillerPattern, IAc
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize(desc);
         return Component.translatable(desc);
     }
 

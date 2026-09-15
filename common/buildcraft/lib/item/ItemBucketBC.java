@@ -16,7 +16,6 @@ import java.util.function.Supplier;
 
 public class ItemBucketBC extends BucketItem {
     public ItemBucketBC(Supplier<? extends Fluid> supplier, Properties properties) {
-//        super(supplier, properties.tab(CreativeTabManager.getTab("vanilla.misc")));
         super(supplier, properties);
         CreativeTabManager.addItem(CreativeTabManager.getTab("vanilla.tools_and_utilities"), this);
     }
@@ -31,7 +30,6 @@ public class ItemBucketBC extends BucketItem {
         return new FluidBucketWrapper(stack);
     }
 
-    // Calen 1.20.1
     public ResourceLocation getRegistryName() {
         return ForgeRegistries.ITEMS.getKey(this);
     }

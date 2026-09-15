@@ -138,7 +138,6 @@ public class VolumeBox {
 
     @SuppressWarnings("WeakerAccess")
     public Player getPlayer(Level world) {
-//        return world.getPlayerEntityByUUID(player);
         return world.getPlayerByUUID(player);
     }
 

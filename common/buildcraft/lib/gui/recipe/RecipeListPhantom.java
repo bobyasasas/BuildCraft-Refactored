@@ -12,20 +12,14 @@ public class RecipeListPhantom extends RecipeCollection {
 
     // public RecipeListPhantom(RecipeList from) throws ReflectiveOperationException
     public RecipeListPhantom(RecipeCollection from) throws ReflectiveOperationException {
-//        getRecipes().addAll(from.getRecipes());
         super(Minecraft.getInstance().level.registryAccess(), from.getRecipes());
-//        Class<?> clazzBitSet = BitSet.class;
         Class<?> clazzBitSet = Set.class;
         boolean first = true;
-//        for (Field fld : RecipeList.class.getDeclaredFields())
         for (Field fld : RecipeCollection.class.getDeclaredFields()) {
             if (fld.getType() == clazzBitSet) {
                 fld.setAccessible(true);
                 Object object = fld.get(from);
                 if (first) {
-                    // TODO Calen which field?
-////                    ((BitSet) object).set(0, getRecipes().size());
-//                    ((Set) object).set(0, getRecipes().size());
                 }
                 fld.set(this, object);
                 first = false;
@@ -46,7 +40,6 @@ public class RecipeListPhantom extends RecipeCollection {
     }
 
     @Override
-//    public boolean containsCraftableRecipes()
     public boolean hasCraftable() {
         return !getRecipes().isEmpty();
     }

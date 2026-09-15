@@ -118,7 +118,6 @@ public class ModelHolderStatic extends ModelHolder {
         }
     }
 
-    // Calen 1.20.1
     @Override
     protected void onDatagenTextureRegister(Set<ResourceLocation> toRegisterSprites, ExistingFileHelper fileHelper) {
         rawModel = null;
@@ -166,7 +165,6 @@ public class ModelHolderStatic extends ModelHolder {
 
     @Override
     protected void onModelBake() {
-//        _onModelBake();
     }
 
     protected void _onModelBake() {
@@ -197,14 +195,11 @@ public class ModelHolderStatic extends ModelHolder {
                 TextureAtlasSprite sprite;
                 if (lookup.startsWith("#") || lookup.startsWith("~")) {
                     if (allowTextureFallthrough) {
-                        // Let the caller manually replace the sprite (as we don't know what to replace it with)
-                        // But only if the model user is aware of this (so its not an error)
                         sprite = null;
                     } else {
                         sprite = missingSprite;
                     }
                 } else {
-//                    sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(lookup);
                     sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(lookup));
                 }
                 list.add(quad.toQuad(sprite));
@@ -230,7 +225,6 @@ public class ModelHolderStatic extends ModelHolder {
     }
 
     public MutableQuad[] getCutoutQuads() {
-        // Calen
         if (quads == null) {
             _onModelBake();
         }

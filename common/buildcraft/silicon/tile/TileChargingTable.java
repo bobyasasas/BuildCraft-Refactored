@@ -39,15 +39,10 @@ public class TileChargingTable extends TileLaserTableBase implements IHasWork, I
     }
 
     @Override
-    // public int getRequiredEnergy()
     public long getTarget() {
-        // ItemStack stack = this.getStackInSlot(0);
         ItemStack stack = inv.getStackInSlot(0);
-        // if (stack != null && stack.getItem() != null && stack.getItem() instanceof IEnergyContainerItem)
         if (!stack.isEmpty() && stack.getItem() instanceof IMjContainerItem) {
-            // IEnergyContainerItem containerItem = (IEnergyContainerItem) stack.getItem();
             IMjContainerItem containerItem = (IMjContainerItem) stack.getItem();
-            // return containerItem.getMaxEnergyStored(stack) - containerItem.getEnergyStored(stack);
             return containerItem.getMaxPowerStored(stack) - containerItem.getPowerStored(stack);
         }
 
@@ -62,27 +57,19 @@ public class TileChargingTable extends TileLaserTableBase implements IHasWork, I
             return;
         }
 
-        // if (getEnergy() > 0)
         if (power > 0) {
-            // if (getRequiredEnergy() > 0)
             if (getTarget() > 0) {
-                // ItemStack stack = this.getStackInSlot(0);
                 ItemStack stack = this.inv.getStackInSlot(0);
-                // IEnergyContainerItem containerItem = (IEnergyContainerItem) stack.getItem();
                 IMjContainerItem containerItem = (IMjContainerItem) stack.getItem();
-                // addEnergy(0 - containerItem.receiveEnergy(stack, getEnergy(), false));
                 power += (0 - containerItem.receivePower(stack, power, false));
-                // this.setInventorySlotContents(0, stack);
                 this.inv.setStackInSlot(0, stack);
             } else {
-                // subtractEnergy(Math.min(getEnergy(), 10));
                 power -= (Math.min(power, 10));
             }
         }
     }
 
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        // return slot == 0 && stack != null && stack.getItem() != null && stack.getItem() instanceof IEnergyContainerItem;
         return slot == 0 && stack != null && !stack.isEmpty() && stack.getItem() instanceof IMjContainerItem;
     }
 
@@ -90,7 +77,6 @@ public class TileChargingTable extends TileLaserTableBase implements IHasWork, I
 
     @Override
     public boolean hasWork() {
-        // return getRequiredEnergy() > 0;
         return getTarget() > 0;
     }
 

@@ -33,7 +33,6 @@ public class ActionPipeSignal extends BCStatement implements IActionInternal {
 
     @Override
     public Component getDescription() {
-//        return String.format(LocaleUtil.localize("gate.action.pipe.wire"), ColourUtil.getTextFullTooltip(colour));
         return Component.translatable("gate.action.pipe.wire", ColourUtil.getTextFullTooltipComponent(colour));
     }
 

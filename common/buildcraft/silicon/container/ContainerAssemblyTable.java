@@ -23,14 +23,12 @@ public class ContainerAssemblyTable extends ContainerBCTile<TileAssemblyTable> {
 
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 3; x++) {
-//                addSlotToContainer(new SlotBase(tile.inv, x + y * 3, 8 + x * 18, 36 + y * 18));
                 addSlot(new SlotBase(tile.inv, x + y * 3, 8 + x * 18, 36 + y * 18));
             }
         }
 
         for (int y = 0; y < 4; y++) {
             for (int x = 0; x < 3; x++) {
-//                addSlotToContainer(new SlotDisplay(this::getDisplay, x + y * 3, 116 + x * 18, 36 + y * 18));
                 addSlot(new SlotDisplay(this::getDisplay, x + y * 3, 116 + x * 18, 36 + y * 18));
             }
         }

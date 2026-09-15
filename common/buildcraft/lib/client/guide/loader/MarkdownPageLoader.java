@@ -43,7 +43,6 @@ public enum MarkdownPageLoader implements IPageLoaderText {
             return new OptionallyDisabled<>(line + " was not a valid complex item string!");
         }
         ItemStack stack = null;
-//        Item item = Item.getByNameOrId(args[0].trim());
         Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(args[0].trim()));
         if (item != null) {
             stack = new ItemStack(item);
@@ -67,18 +66,7 @@ public enum MarkdownPageLoader implements IPageLoaderText {
             return new OptionallyDisabled<>(stack);
         }
 
-//        try {
-//            int meta = Integer.parseInt(args[2].trim());
-//            if (meta == -1) {
 //                // Use oredict
-//                meta = OreDictionary.WILDCARD_VALUE;
-//            }
-//            stack = new ItemStack(stack.getItem(), stack.getCount(), meta);
-//            stack = new ItemStack(stack.getItem(), stack.getCount());
-//        } catch (NumberFormatException nfe) {
-//            return new OptionallyDisabled<>(args[2] + " was not a valid number: " + nfe.getLocalizedMessage());
-//        }
-        // Calen
         int meta = Integer.parseInt(args[2].trim());
         if (meta != -1) {
             throw new RuntimeException("[lib.guide.loader.xml] Found meta data [" + meta + "] in line [" + line + "] but meta data is not supported in this ms version.");
@@ -90,10 +78,8 @@ public enum MarkdownPageLoader implements IPageLoaderText {
 
         String nbtString = args[3];
         try {
-//            stack.setTag(JsonToNBT.getTagFromJson(nbtString));
             stack.setTag(TagParser.parseTag(nbtString));
         }
-//        catch (NBTException e)
         catch (CommandSyntaxException e) {
             return new OptionallyDisabled<>(nbtString + " was not a valid nbt tag: " + e.getLocalizedMessage());
         }

@@ -93,40 +93,31 @@ public abstract class ContainerBC_Neptune<MENU_PROVIDER extends MenuProvider> ex
     }
 
     @Override
-//    public ItemStack slotClick(int slotId, int dragType, ClickType clickType, EntityPlayer player)
     public void clicked(int slotId, int dragType, ClickType clickType, Player player) {
         Slot slot = slotId < 0 ? null : this.slots.get(slotId);
         if (slot == null) {
-//            return super.slotClick(slotId, dragType, clickType, player);
             super.clicked(slotId, dragType, clickType, player);
             return;
         }
 
-//        ItemStack playerStack = player.inventory.getItemStack();
         ItemStack playerStack = player.containerMenu.getCarried();
         if (slot instanceof IPhantomSlot) {
             IPhantomSlot phantom = (IPhantomSlot) slot;
             if (playerStack.isEmpty()) {
-//                slot.putStack(ItemStack.EMPTY);
                 slot.set(ItemStack.EMPTY);
             } else if (!StackUtil.canMerge(playerStack, StackUtil.asNonNull(slot.getItem()))) {
                 ItemStack copy = playerStack.copy();
                 copy.setCount(1);
-//                slot.putStack(copy);
                 slot.set(copy);
             } else if (phantom.canAdjustCount()) {
-//                ItemStack stack = slot.getStack();
                 ItemStack stack = slot.getItem();
                 if (stack.getCount() < stack.getMaxStackSize()) {
                     stack.grow(1);
-//                    slot.putStack(stack);
                     slot.set(stack);
                 }
             }
-//            return playerStack;
             return;
         }
-//        return super.slotClick(slotId, dragType, clickType, player);
         super.clicked(slotId, dragType, clickType, player);
     }
 
@@ -210,7 +201,6 @@ public abstract class ContainerBC_Neptune<MENU_PROVIDER extends MenuProvider> ex
 
     public final void sendMessage(int id, IPayloadWriter writer) {
         PacketBufferBC payload = PacketBufferBC.write(writer);
-//        MessageContainer message = new MessageContainer(windowId, id, payload);
         MessageContainer message = new MessageContainer(containerId, id, payload);
         if (player.level().isClientSide) {
             MessageManager.sendToServer(message);

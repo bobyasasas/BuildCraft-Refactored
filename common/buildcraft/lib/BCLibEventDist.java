@@ -65,19 +65,13 @@ public enum BCLibEventDist {
         }
     }
 
-    // Calen: When the event is posted, MinecraftForge.EVENT_BUS will be shut down.
     // If we unlock the event bus, some subscribers will be called wrongly.
     // Moved to BCLibEventDistModBus.
 //    @SubscribeEvent
-//    @OnlyIn(Dist.CLIENT)
-//    public void onReloadFinish(EventBuildCraftReload.FinishLoad event) {
 //        // Note: when you need to add server-side listeners the client listeners need to be moved to BCLibProxy
-//        GuideManager.INSTANCE.onRegistryReload(event);
-//    }
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-//    public static void onConnectToServer(ClientConnectedToServerEvent event)
     public void onConnectToServer(ClientPlayerNetworkEvent.LoggingIn event) {
         BuildCraftObjectCaches.onClientJoinServer();
     }
@@ -85,7 +79,6 @@ public enum BCLibEventDist {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public void renderWorldLast(RenderLevelStageEvent event) {
-        // Calen 1.20.1:
         // AFTER_SKY is the correct state for this render is use dynamic laser
         // AFTER_TRANSLUCENT_BLOCKS is the correct state for this render is use static laser. if AFTER_CUTOUT_BLOCKS, quarry debug cuboids will hide translucent blocks behind them
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
@@ -119,14 +112,11 @@ public enum BCLibEventDist {
                 HitResult mouseOver = mc.hitResult;
                 if (mouseOver != null) {
                     IDebuggable debuggable = ClientDebuggables.getDebuggableObject(mouseOver);
-//                    if (debuggable instanceof BlockEntity) {
                     if (debuggable instanceof BlockEntity && mouseOver instanceof BlockHitResult) {
                         BlockEntity tile = (BlockEntity) debuggable;
                         BlockHitResult result = (BlockHitResult) mouseOver;
-//                        MessageManager.sendToServer(new MessageDebugRequest(tile.getBlockPos(), mouseOver.sideHit));
                         MessageManager.sendToServer(new MessageDebugRequest(tile.getBlockPos(), result.getDirection()));
                     } else if (debuggable instanceof Entity entity) {
-                        // Calen 1.18.2
                         MessageManager.sendToServer(new MessageDebugRequest(entity.getUUID()));
                     }
                 }
@@ -134,16 +124,12 @@ public enum BCLibEventDist {
         }
     }
 
-    // Calen: from BCLib
     @SubscribeEvent
-//    public static void serverStarting(FMLServerStartingEvent event)
     public void serverStarting(ServerStartingEvent event) {
-//        event.registerServerCommand(new CommandBuildCraft());
         CommandDispatcher<CommandSourceStack> dispatcher = event.getServer().getCommands().getDispatcher();
         CommandBuildCraft.register(dispatcher);
     }
 
-    // Calen: update guidebook not too early
     private static List<ResourceManagerReloadListener> reloadListeners = new ArrayList<>();
 
     @SubscribeEvent
@@ -155,7 +141,6 @@ public enum BCLibEventDist {
         GuiConfigManager.loadFromConfigFile();
     }
 
-    // Calen: only client call
     public void addReloadListeners(ResourceManagerReloadListener reloadListener) {
         reloadListeners.add(reloadListener);
     }

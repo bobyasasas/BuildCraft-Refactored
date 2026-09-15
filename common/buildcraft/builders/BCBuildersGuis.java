@@ -11,7 +11,6 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkHooks;
 
-// Calen: no modGuiId in 1.18.2, so open FILLER_PLANNER gui at another place...
 @Deprecated(forRemoval = true)
 public enum BCBuildersGuis {
     ARCHITECT,
@@ -22,14 +21,11 @@ public enum BCBuildersGuis {
     FILLER_PLANNER;
 
     public void openGUI(Player player) {
-//        player.openGui(BCBuilders.INSTANCE, ordinal(), player.getEntityWorld(), 0, 0, 0);
         openGUI(player, BlockPos.ZERO);
     }
 
     public void openGUI(Player player, BlockPos pos) {
-//        player.openGui(BCBuilders.INSTANCE, ordinal(), player.getEntityWorld(), pos.getX(), pos.getY(), pos.getZ());
         if (player instanceof ServerPlayer serverPlayer) {
-//            player.openMenu(state.getMenuProvider(player.level, pos));
             if (serverPlayer.level().getBlockEntity(pos) instanceof MenuProvider menuProvider) {
                 NetworkHooks.openScreen(serverPlayer, menuProvider, pos);
             } else {

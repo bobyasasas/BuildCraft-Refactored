@@ -38,14 +38,8 @@ public class AIRobotStraightMoveTo extends AIRobotGoto {
         if (distance < prevDistance) {
             prevDistance = distance;
         } else {
-//            robot.motionX = 0;
-//            robot.motionY = 0;
-//            robot.motionZ = 0;
             robot.setDeltaMovement(Vec3.ZERO);
 
-//            robot.posX = pos.x;
-//            robot.posY = pos.y;
-//            robot.posZ = pos.z;
             robot.setPos(pos.x, pos.y, pos.z);
 
             terminate();

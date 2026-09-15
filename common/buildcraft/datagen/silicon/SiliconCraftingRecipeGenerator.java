@@ -111,7 +111,6 @@ public class SiliconCraftingRecipeGenerator extends RecipeProvider {
         makeGateRecipe2(Tags.Items.GEMS_LAPIS, EnumGateLogic.AND, EnumGateMaterial.IRON, EnumGateModifier.LAPIS, consumer);
         makeGateRecipe2(Tags.Items.GEMS_QUARTZ, EnumGateLogic.AND, EnumGateMaterial.IRON, EnumGateModifier.QUARTZ, consumer);
 
-        // And Gate <-> Or Gate (shapeless)
         for (EnumGateMaterial material : EnumGateMaterial.VALUES) {
             if (material == EnumGateMaterial.CLAY_BRICK) {
                 continue;

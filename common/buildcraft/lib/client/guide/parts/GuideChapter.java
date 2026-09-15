@@ -48,13 +48,10 @@ public abstract class GuideChapter extends GuidePart {
         RIGHT
     }
 
-    //public GuideChapter(GuiGuide gui, String chapter)
     public GuideChapter(GuiGuide gui, String chapterKey, Component chapter) {
-//        this(gui, 0, chapter);
         this(gui, 0, chapterKey, chapter);
     }
 
-    // public GuideChapter(GuiGuide gui, int level, String text)
     public GuideChapter(GuiGuide gui, int level, String textKey, Component text) {
         super(gui);
         ISimpleDrawable icon = (p, x, y) ->
@@ -74,7 +71,6 @@ public abstract class GuideChapter extends GuidePart {
         this.level = Math.max(0, level);
         icon = null;
         selected = null;
-//        this.chapter = new PageLine(icon, selected, this.level + 1, text, false);
         this.chapter = new PageLine(icon, selected, this.level + 1, textKey, text, false);
     }
 
@@ -173,7 +169,6 @@ public abstract class GuideChapter extends GuidePart {
 
         if (hasChildren && expanded) {
             childHeight = fullHeight + getChildrenFullHeight();
-            // _width = Math.max(_width, getChildrenMaxWidth());
         }
 
         if (drawCentral || lastDrawn == EnumGuiSide.RIGHT) {

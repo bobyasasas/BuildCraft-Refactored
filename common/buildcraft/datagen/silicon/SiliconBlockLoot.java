@@ -25,7 +25,6 @@ public class SiliconBlockLoot extends BlockLootSubProvider {
         dropSelf(BCSiliconBlocks.programmingTable.get());
     }
 
-    // Calen: without these: IllegalStateException: Missing loottable 'minecraft:blocks/stone' for 'minecraft:stone'
     private final Set<Block> knownBlocks = new HashSet<>();
 
     @Override

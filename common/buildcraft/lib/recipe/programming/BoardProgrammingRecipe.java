@@ -9,22 +9,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import java.util.List;
 
 public class BoardProgrammingRecipe implements IProgrammingRecipe {
-    // public static final BoardProgrammingRecipe INSTANCE = new BoardProgrammingRecipe();
 
-    // Calen 1.18.2 moved to ProgrammingRecipeManager
-//    private class BoardSorter implements Comparator<ItemStack> {
-//        private BoardProgrammingRecipe recipe;
-//
-//        public BoardSorter(BoardProgrammingRecipe recipe) {
-//            this.recipe = recipe;
-//        }
-//
 //        @Override
-//        public int compare(ItemStack o1, ItemStack o2) {
-//            int i = (recipe.getEnergyCost(o1) - recipe.getEnergyCost(o2)) * 200;
-//            return i != 0 ? i : ItemRedstoneBoard.getBoardNBT(o1).getID().compareTo(ItemRedstoneBoard.getBoardNBT(o2).getID());
-//        }
-//    }
 
     private final ResourceLocation id;
     private final IngredientStack input;
@@ -40,8 +26,6 @@ public class BoardProgrammingRecipe implements IProgrammingRecipe {
 
     @Override
     public ResourceLocation getId() {
-        // return "buildcraft:redstone_board";
-        // return new ResourceLocation(BCModules.ROBOTICS.getModId(), "redstone_board");
         return this.id;
     }
 
@@ -49,35 +33,19 @@ public class BoardProgrammingRecipe implements IProgrammingRecipe {
     private List<ItemStack> cachedOptions;
 
 //    @Override
-//    public List<ItemStack> getOptions(int width, int height) {
-//        List<ItemStack> options = new ArrayList<ItemStack>(width * height);
-//        for (RedstoneBoardNBT<?> nbt : RedstoneBoardRegistry.instance.getAllBoardNBTs()) {
-//            ItemStack stack = new ItemStack(BuildCraftRobotics.redstoneBoard);
-//            nbt.createBoard(NBTUtils.getItemData(stack));
-//            options.add(stack);
-//        }
-//        Collections.sort(options, new BoardSorter(this));
-//        return options;
-//    }
 
     @Override
-    // public long getEnergyCost(ItemStack option)
     public long getEnergyCost() {
-        // return RedstoneBoardRegistry.instance.getPowerCost(RedstoneBoardRegistry.instance.getRedstoneBoard(option.getOrCreateTag().getString("id")));
-        // return RedstoneBoardRegistry.instance.getPowerCost(ItemRedstoneBoard.getBoardNBT(option));
         return this.energyCost;
     }
 
     @Override
     public boolean canCraft(ItemStack input) {
-        // return input.getItem() instanceof ItemRedstoneBoard;
         return this.input.ingredient.test(input);
     }
 
     @Override
-    // public ItemStack craft(ItemStack input, ItemStack option)
     public ItemStack craft(ItemStack input) {
-        // return option.copy();
         return output.copy();
     }
 

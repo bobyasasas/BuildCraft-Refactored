@@ -37,7 +37,6 @@ public class RenderLaser implements BlockEntityRenderer<TileLaser> {
     }
 
     @Override
-//    public void renderTileEntityFast(@Nonnull TileLaser tile, double x, double y, double z, float partialTicks, int destroyStage, float partial, @Nonnull BufferBuilder buffer)
     public void render(TileLaser tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
         if (state.getBlock() != BCSiliconBlocks.laser.get()) {
@@ -47,7 +46,6 @@ public class RenderLaser implements BlockEntityRenderer<TileLaser> {
             Minecraft.getInstance().getProfiler().push("bc");
             Minecraft.getInstance().getProfiler().push("laser");
 
-//            buffer.setTranslation(x - tile.getBlockPos().getX(), y - tile.getBlockPos().getY(), z - tile.getBlockPos().getZ());
             poseStack.pushPose();
             poseStack.translate(-tile.getBlockPos().getX(), -tile.getBlockPos().getY(), -tile.getBlockPos().getZ());
 
@@ -67,7 +65,6 @@ public class RenderLaser implements BlockEntityRenderer<TileLaser> {
                 }
             }
 
-//            buffer.setTranslation(0, 0, 0);
             poseStack.popPose();
 
 

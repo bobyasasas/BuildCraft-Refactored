@@ -43,12 +43,10 @@ public class WorldSavedDataWireSystems extends SavedData {
     public String name;
 
     public WorldSavedDataWireSystems() {
-//        super(DATA_NAME);
         this.name = DATA_NAME;
     }
 
     public WorldSavedDataWireSystems(String name) {
-//        super(name);
         this.name = name;
     }
 
@@ -157,7 +155,6 @@ public class WorldSavedDataWireSystems extends SavedData {
                 return newPowered;
             });
         }
-//        world.getPlayers(ServerPlayer.class, Predicates.alwaysTrue())
         world.getServer().getPlayerList().getPlayers()
                 .forEach(player ->
                 {
@@ -218,7 +215,6 @@ public class WorldSavedDataWireSystems extends SavedData {
         }
         ServerLevel serverLevel = (ServerLevel) world;
         DimensionDataStorage storage = serverLevel.getDataStorage();
-//        WorldSavedDataWireSystems instance = (WorldSavedDataWireSystems) storage.getOrLoadData(WorldSavedDataWireSystems.class, DATA_NAME);
         WorldSavedDataWireSystems instance = storage.get((nbt) ->
         {
             WorldSavedDataWireSystems ret = new WorldSavedDataWireSystems();

@@ -19,7 +19,6 @@ public class TriggerFluidsTraversing extends BCStatement implements ITriggerInte
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("gate.trigger.pipe.containsFluids");
         return Component.translatable("gate.trigger.pipe.containsFluids");
     }
 

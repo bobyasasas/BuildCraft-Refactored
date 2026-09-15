@@ -33,7 +33,6 @@ public enum PipeFlowRendererRf implements IPipeFlowRenderer<PipeFlowRedstoneFlux
     INSTANCE;
 
     @Override
-    // public void render(PipeFlowRedstoneFlux flow, double x, double y, double z, float partialTicks, BufferBuilder bb)
     public void render(PipeFlowRedstoneFlux flow, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         VertexConsumer bb = bufferSource.getBuffer(Sheets.translucentCullBlockSheet());
         double centrePower = 0;
@@ -45,7 +44,6 @@ public enum PipeFlowRendererRf implements IPipeFlowRenderer<PipeFlowRedstoneFlux
             centrePower = Math.max(centrePower, power[i]);
         }
 
-        // bb.setTranslation(x, y, z);
 
         if (centrePower > 0) {
             for (Direction side : Direction.values()) {
@@ -67,7 +65,6 @@ public enum PipeFlowRendererRf implements IPipeFlowRenderer<PipeFlowRedstoneFlux
             renderCentrePower(centrePower, offsetX, offsetY, offsetZ, poseStack.last(), bb);
         }
 
-        // bb.setTranslation(0, 0, 0);
     }
 
     private static double computeOffset(double tick0, double tick1, float partialTicks) {
@@ -91,7 +88,6 @@ public enum PipeFlowRendererRf implements IPipeFlowRenderer<PipeFlowRedstoneFlux
         }
         double radius = 0.248 * power;
         if (radius >= 0.248) {
-            // overload = true;
             radius = 0.248;
         }
 
@@ -127,7 +123,6 @@ public enum PipeFlowRendererRf implements IPipeFlowRenderer<PipeFlowRedstoneFlux
         boolean overload = false;
         float radius = 0.248f * (float) power;
         if (radius > 0.248f) {
-            // overload = true;
             radius = 0.248f;
         }
         TextureAtlasSprite sprite = BCTransportSprites.POWER_FLOW_OVERLOAD.getSprite();

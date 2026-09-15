@@ -29,18 +29,14 @@ public class ContainerRequester extends ContainerBCTile<TileRequester> {
     private static final int SLOTS_Y_DIM = 5;
     private static final int SLOTS_X_DIM = 4;
 
-    // public GuiRequester gui;
 
-    // public ItemStack[] requests = new ItemStack[TileRequester.NB_ITEMS];
 
-    // private TileRequester requester;
 
     public ContainerRequester(MenuType menuType, int id, Player player, TileRequester iRequester) {
         super(menuType, id, player, iRequester);
         // Player inventory
         addFullPlayerInventory(19, 101);
 
-//        requester = iRequester;
 
         // inv
         for (int x = 0; x < SLOTS_X_DIM; ++x) {
@@ -50,20 +46,11 @@ public class ContainerRequester extends ContainerBCTile<TileRequester> {
         }
 
         // Player inventory
-//        for (int l = 0; l < 3; l++) {
-//            for (int k1 = 0; k1 < 9; k1++) {
-//                addSlot(new Slot(player.getInventory(), k1 + l * 9 + 9, 19 + k1 * 18, 101 + l * 18));
-//            }
-//        }
 
-//        for (int i1 = 0; i1 < 9; i1++) {
-//            addSlot(new Slot(player.getInventory(), i1, 19 + i1 * 18, 159));
-//        }
 
         // requests
         for (int y = 0; y < SLOTS_Y_DIM; y++) {
             for (int x = 0; x < SLOTS_X_DIM; x++) {
-                // slots.add(new RequestSlot(this, x * 5 + y, 9 + 18 * x, 7 + 18 * y));
                 addSlot(new SlotDisplay(this::getDisplay, x + y * SLOTS_X_DIM, 9 + 18 * x, 7 + 18 * y));
             }
         }
@@ -86,7 +73,6 @@ public class ContainerRequester extends ContainerBCTile<TileRequester> {
             final ItemStack[] stacks = new ItemStack[TileRequester.NB_ITEMS];
 
             for (int i = 0; i < TileRequester.NB_ITEMS; ++i) {
-                // stacks[i] = requester.getRequestTemplate(i);
                 stacks[i] = this.tile.getRequestTemplate(i);
             }
 
@@ -96,9 +82,7 @@ public class ContainerRequester extends ContainerBCTile<TileRequester> {
                 }
             });
         } else if (side == NetworkDirection.PLAY_TO_CLIENT && ID_RECEIVE_REQUEST_LIST == id) {
-            // requests = new ItemStack[TileRequester.NB_ITEMS];
             for (int i = 0; i < TileRequester.NB_ITEMS; i++) {
-                // requests[i] = NetworkUtils.readStack(stream);
                 this.tile.requests.set(i, buffer.readItem());
             }
         }

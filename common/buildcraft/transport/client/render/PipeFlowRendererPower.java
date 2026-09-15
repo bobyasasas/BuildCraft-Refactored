@@ -33,7 +33,6 @@ public enum PipeFlowRendererPower implements IPipeFlowRenderer<PipeFlowPower> {
     INSTANCE;
 
     @Override
-//    public void render(PipeFlowPower flow, double x, double y, double z, float partialTicks, BufferBuilder bb)
     public void render(PipeFlowPower flow, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         VertexConsumer bb = bufferSource.getBuffer(Sheets.translucentCullBlockSheet());
         double centrePower = 0;
@@ -45,7 +44,6 @@ public enum PipeFlowRendererPower implements IPipeFlowRenderer<PipeFlowPower> {
             centrePower = Math.max(centrePower, power[i]);
         }
 
-//        bb.setTranslation(x, y, z);
 
         if (centrePower > 0) {
             for (Direction side : Direction.VALUES) {
@@ -67,7 +65,6 @@ public enum PipeFlowRendererPower implements IPipeFlowRenderer<PipeFlowPower> {
             renderCentrePower(centrePower, offsetX, offsetY, offsetZ, poseStack.last(), bb);
         }
 
-//        bb.setTranslation(0, 0, 0);
     }
 
     private static double computeOffset(double tick0, double tick1, float partialTicks) {
@@ -92,7 +89,6 @@ public enum PipeFlowRendererPower implements IPipeFlowRenderer<PipeFlowPower> {
         boolean overload = false;
         double radius = 0.248 * power;
         if (radius >= 0.248) {
-            // overload = true;
             radius = 0.248;
         }
 
@@ -115,7 +111,6 @@ public enum PipeFlowRendererPower implements IPipeFlowRenderer<PipeFlowPower> {
             }
 
             AABB box = new AABB(centre.subtract(radiusV).scale(0.5), centre.add(radiusV).scale(0.5));
-//            box = box.move(VecUtil.offset(Vec3.ZERO, side, offset * side.getAxisDirection().getOffset() / 32));
             box = box.move(VecUtil.offset(Vec3.ZERO, side, offset * side.getAxisDirection().getStep() / 32));
             ModelUtil.mapBoxToUvs(box, face, uvs);
 
@@ -131,7 +126,6 @@ public enum PipeFlowRendererPower implements IPipeFlowRenderer<PipeFlowPower> {
         boolean overload = false;
         float radius = 0.248f * (float) power;
         if (radius > 0.248f) {
-            // overload = true;
             radius = 0.248f;
         }
         TextureAtlasSprite sprite = (overload ? BCTransportSprites.POWER_FLOW_OVERLOAD : BCTransportSprites.POWER_FLOW)

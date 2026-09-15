@@ -22,9 +22,7 @@ public class ItemBlocks {
     private static final List<Item> LIST = new ArrayList<>();
 
     static {
-//        StreamSupport.stream(Item.REGISTRY.spliterator(), false)
         StreamSupport.stream(ForgeRegistries.ITEMS.spliterator(), false)
-//                .filter(item -> item instanceof BlockItem || item instanceof BlockItemSpecial)
                 .filter(item -> item instanceof BlockItem)
                 .forEach(ItemBlocks::add);
 //        add(
@@ -38,7 +36,6 @@ public class ItemBlocks {
 ////                Items.IRON_DOOR
 ////                Items.SKULL
 ////                Items.SIGN
-//        );
         ForgeRegistries.ITEMS.tags().getTag(ItemTags.BEDS).forEach(ItemBlocks::add);
         ForgeRegistries.ITEMS.tags().getTag(ItemTags.DOORS).forEach(ItemBlocks::add);
         ForgeRegistries.ITEMS.tags().getTag(Tags.Items.HEADS).forEach(ItemBlocks::add);

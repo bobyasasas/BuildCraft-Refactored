@@ -34,7 +34,6 @@ public enum CropHandlerPlantable implements ICropHandler {
 
         if (stack.getItem() instanceof BlockItem) {
             Block block = ((BlockItem) stack.getItem()).getBlock();
-//            if (block instanceof IPlantable && block != Blocks.REED)
             if (block instanceof IPlantable && block != Blocks.SUGAR_CANE) {
                 return true;
             }
@@ -64,7 +63,6 @@ public enum CropHandlerPlantable implements ICropHandler {
     @Override
     public boolean isMature(LevelAccessor blockAccess, BlockState state, BlockPos pos) {
         Block block = state.getBlock();
-//        if (block instanceof BlockFlower || block instanceof BlockTallGrass || block instanceof BlockMelon || block instanceof BlockMushroom || block instanceof BlockDoublePlant
         if (block instanceof FlowerBlock
                 || block instanceof TallGrassBlock
                 || block instanceof MelonBlock
@@ -73,14 +71,10 @@ public enum CropHandlerPlantable implements ICropHandler {
                 || block == Blocks.PUMPKIN) {
             return true;
         }
-//        else if (block instanceof BlockCrops)
         else if (block instanceof CropBlock) {
-//            return ((BlockCrops) block).isMaxAge(state);
             return ((CropBlock) block).isMaxAge(state);
         }
-//        else if (block instanceof BlockNetherWart)
         else if (block instanceof NetherWartBlock) {
-//            return state.getValue(BlockNetherWart.AGE) == 3;
             return state.getValue(NetherWartBlock.AGE) == 3;
         } else if (block instanceof IPlantable) {
             if (blockAccess.getBlockState(pos.below()).getBlock() == block) {
@@ -92,14 +86,6 @@ public enum CropHandlerPlantable implements ICropHandler {
 
     @Override
     public CropManager.HarvestResult harvestCrop(Level world, BlockPos pos, ItemStack tool, NonNullList<ItemStack> drops) {
-//        if (!world.isRemote) {
-//            IBlockState state = world.getBlockState(pos);
-//            if (BlockUtil.breakBlock((ServerLevel) world, pos, drops, pos)) {
-//                SoundUtil.playBlockBreak(world, pos, state);
-//                return true;
-//            }
-//        }
-        // return false;
         return BlockUtil.harvestBlock((ServerLevel) world, pos, tool, FakePlayerProvider.NULL_PROFILE) ? CropManager.HarvestResult.SUCCESS : CropManager.HarvestResult.FAIL;
     }
 }

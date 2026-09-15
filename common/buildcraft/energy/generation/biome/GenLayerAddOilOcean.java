@@ -21,7 +21,6 @@ public class GenLayerAddOilOcean extends GenLayerBiomeReplacer {
     private static final double NOISE_FIELD_SCALE = 0.0005;
     private static final double NOISE_FIELD_THRESHOLD = 0.9;
 
-    // private static final List<BiomeDictionary.Type> REQUIRED_TYPES = Arrays.asList(BiomeDictionary.Type.OCEAN);
     private static final List<TagKey<Biome>> REQUIRED_TYPES = Arrays.asList(BiomeTags.IS_OCEAN);
 
     public GenLayerAddOilOcean(long worldSeed, long seed/*, GenLayer parent*/) {
@@ -29,7 +28,6 @@ public class GenLayerAddOilOcean extends GenLayerBiomeReplacer {
     }
 
     public static Holder<Biome> getOilBiomeId() {
-//        return Biome.getIdForBiome(BiomeOilOcean.INSTANCE);
         return ForgeRegistries.BIOMES.getHolder(BCBiomeRegistry.RESOURCE_KEY_BIOME_OIL_OCEAN).orElse(null);
     }
 
@@ -56,7 +54,6 @@ public class GenLayerAddOilOcean extends GenLayerBiomeReplacer {
         if (biome == null) {
             return false;
         }
-//        return BiomeDictionary.getTypes(biome).containsAll(REQUIRED_TYPES);
         return REQUIRED_TYPES.stream().anyMatch(biome::is);
     }
 }

@@ -296,9 +296,7 @@ public class InternalCompiler {
                 stack.push(token);
             } else if (index + 1 < infix.length && "(".equals(infix[index + 1])) {
                 justPushedFunc = true;
-                // Its a function (The next token is an open parenthesis)
                 stack.push(FUNCTION_START + token);
-                // Also ignore the parenthesis (the function is treated as if it was an open parenthesis)
                 index++;
             } else {
 

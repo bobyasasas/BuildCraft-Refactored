@@ -126,25 +126,21 @@ public class BCTransportSprites {
 
     public static void fmlPreInit() {
         // 1.18.2: following events are IModBusEvent
-//        MinecraftForge.EVENT_BUS.register(BCTransportSprites.class);
         IEventBus modEventBus = ((FMLModContainer) ModList.get().getModContainerById(BCTransport.MODID).get()).getEventBus();
         modEventBus.register(BCTransportSprites.class);
     }
 
     @SubscribeEvent
-//    public static void onTextureStitchPre(TextureStitchEvent.Pre event)
     public static void onTextureStitchPre(ModelEvent.ModifyBakingResult event) {
         PipeModelCacheBase.generator.onTextureStitchPre();
     }
 
-    // Calen 1.20.1
     public static void onDatagenTextureRegister(Consumer<ResourceLocation> consumer) {
         PipeModelCacheBase.generator.onDatagenTextureRegister(consumer);
     }
 
     @SubscribeEvent
     public static void onTextureStitchPost(TextureStitchEvent.Post event) {
-//        PipeModelCacheBase.generator.onTextureStitchPre();
         PipeModelCacheBase.generator.onTextureStitchPost(event);
     }
 

@@ -25,7 +25,6 @@ public class BuildersBlockLoot extends BlockLootSubProvider {
         dropSelf(BCBuildersBlocks.quarry.get());
     }
 
-    // Calen: without these: IllegalStateException: Missing loottable 'minecraft:blocks/stone' for 'minecraft:stone'
     private final Set<Block> knownBlocks = new HashSet<>();
 
     @Override

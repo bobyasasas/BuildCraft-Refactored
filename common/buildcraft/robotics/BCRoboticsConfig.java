@@ -35,7 +35,6 @@ public class BCRoboticsConfig {
                         "excludedDimensions", List.of());
     }
 
-    // public static void reloadConfig(EnumRestartRequirement restarted)
     public static void reloadConfig() {
         blacklistedRobots.addAll(propBlacklistedRobots.get());
 

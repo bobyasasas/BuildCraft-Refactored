@@ -14,11 +14,9 @@ import java.util.Iterator;
 
 class InventoryIteratorSided implements Iterable<IInvSlot> {
 
-    // private final ISidedInventory inv;
     private final WorldlyContainer inv;
     private final Direction side;
 
-    // InventoryIteratorSided(ISidedInventory inv, EnumFacing side)
     InventoryIteratorSided(WorldlyContainer inv, Direction side) {
         this.inv = inv;
         this.side = side;
@@ -33,7 +31,6 @@ class InventoryIteratorSided implements Iterable<IInvSlot> {
 
             @Override
             public boolean hasNext() {
-                // return slots != null ? index < slots.length : false;
                 return slots.length != 0 ? index < slots.length : false;
             }
 
@@ -61,38 +58,32 @@ class InventoryIteratorSided implements Iterable<IInvSlot> {
         @Nonnull
         @Override
         public ItemStack getStackInSlot() {
-            // return inv.getStackInSlot(slot);
             return inv.getItem(slot);
         }
 
         @Override
         public void setStackInSlot(@Nonnull ItemStack stack) {
-            // inv.setInventorySlotContents(slot, stack);
             inv.setItem(slot, stack);
         }
 
         @Override
         public boolean canPutStackInSlot(ItemStack stack) {
-            // return inv.canInsertItem(slot, stack, side) && inv.isItemValidForSlot(slot, stack);
             return inv.canPlaceItemThroughFace(slot, stack, side) && inv.canPlaceItem(slot, stack);
         }
 
         @Override
         public boolean canTakeStackFromSlot(ItemStack stack) {
-            // return inv.canExtractItem(slot, stack, side);
             return inv.canTakeItemThroughFace(slot, stack, side);
         }
 
         @Override
         public boolean isItemValidForSlot(ItemStack stack) {
-            // return inv.isItemValidForSlot(slot, stack);
             return inv.canPlaceItem(slot, stack);
         }
 
         @Nonnull
         @Override
         public ItemStack decreaseStackInSlot(int amount) {
-            // return inv.decrStackSize(slot, amount);
             return inv.removeItem(slot, amount);
         }
 

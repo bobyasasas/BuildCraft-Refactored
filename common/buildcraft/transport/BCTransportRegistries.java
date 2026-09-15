@@ -44,21 +44,14 @@ public class BCTransportRegistries {
         PipeApi.stripeRegistry.addHandler(StripesHandlerPlant.INSTANCE);
         PipeApi.stripeRegistry.addHandler(StripesHandlerShears.INSTANCE);
         PipeApi.stripeRegistry.addHandler(new StripesHandlerPipes());
-        // PipeApi.stripeRegistry.addHandler(new StripesHandlerPipeWires());
         PipeApi.stripeRegistry.addHandler(StripesHandlerEntityInteract.INSTANCE, EnumHandlerPriority.LOW);
         PipeApi.stripeRegistry.addHandler(StripesHandlerHoe.INSTANCE);
-        // PipeApi.stripeRegistry.addHandler(new StripesHandlerRightClick(), EnumHandlerPriority.LOW);
         PipeApi.stripeRegistry.addHandler(StripesHandlerDispenser.INSTANCE, EnumHandlerPriority.LOW);
         PipeApi.stripeRegistry.addHandler(StripesHandlerPlaceBlock.INSTANCE, EnumHandlerPriority.LOW);
         PipeApi.stripeRegistry.addHandler(StripesHandlerUse.INSTANCE, EnumHandlerPriority.LOW);
 
         // For testing
-        // StripesHandlerDispenser.ITEM_CLASSES.add(ItemBucket.class);
-        // StripesHandlerDispenser.ITEM_CLASSES.add(ItemMinecart.class);
 
-        // StripesHandlerRightClick.items.add(Items.EGG);
-        // StripesHandlerRightClick.items.add(Items.SNOWBALL);
-        // StripesHandlerRightClick.items.add(Items.EXPERIENCE_BOTTLE);
 
         // Block breaking stripes handlers
         PipeApi.stripeRegistry.addHandler(StripesHandlerMinecartDestroy.INSTANCE);

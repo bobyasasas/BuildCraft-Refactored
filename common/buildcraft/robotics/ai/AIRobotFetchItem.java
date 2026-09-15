@@ -40,7 +40,6 @@ public class AIRobotFetchItem extends AIRobot {
 
     @Override
     public void preempt(AIRobot ai) {
-//        if (target != null && target.isDead)
         if (target != null && !target.isAlive()) {
             terminate();
         }
@@ -54,10 +53,8 @@ public class AIRobotFetchItem extends AIRobot {
             pickTime++;
 
             if (pickTime > 5) {
-                // TransactorSimple inventoryInsert = new TransactorSimple(robot);
                 IItemHandler inventoryInsert = robot.getCapability(CapUtil.CAP_ITEMS).orElse(null);
 
-                // target.getEntityItem().stackSize -= inventoryInsert.inject(target.getItem(), null, true);
                 target.setItem(InventoryUtil.insert(inventoryInsert, target.getItem(), false));
 
                 if (target.getItem().getCount() <= 0) {
@@ -98,10 +95,8 @@ public class AIRobotFetchItem extends AIRobot {
 
     private void scanForItem() {
         double previousDistance = Double.MAX_VALUE;
-        // TransactorSimple inventoryInsert = new TransactorSimple(robot);
         IItemHandler inventoryInsert = robot.getCapability(CapUtil.CAP_ITEMS).orElse(null);
 
-        // for (Object o : robot.level.loadedEntityList)
         for (Object o : robot.level().getEntities().getAll()) {
             Entity e = (Entity) o;
 
@@ -121,7 +116,6 @@ public class AIRobotFetchItem extends AIRobot {
                 } else {
                     ItemEntity item = (ItemEntity) e;
 
-                    // if (inventoryInsert.inject(item.getItem(), null, false) > 0)
                     if (item.getItem().getCount() > InventoryUtil.insert(inventoryInsert, item.getItem(), true).getCount()) {
                         if (target == null) {
                             previousDistance = sqrDistance;
@@ -151,7 +145,6 @@ public class AIRobotFetchItem extends AIRobot {
 
     @Override
     public long getPowerCost() {
-//        return 15;
         return MjAPI.MJ * 15 / 10;
     }
 }

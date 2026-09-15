@@ -48,9 +48,7 @@ public class GuiEmzuliPipe_BC8 extends GuiBC8<ContainerEmzuliPipe_BC8> {
 
     public GuiEmzuliPipe_BC8(ContainerEmzuliPipe_BC8 container, Inventory inventory, Component component) {
         super(container, inventory, component);
-//        xSize = SIZE_X;
         imageWidth = SIZE_X;
-//        ySize = SIZE_Y;
         imageHeight = SIZE_Y;
     }
 
@@ -100,7 +98,6 @@ public class GuiEmzuliPipe_BC8 extends GuiBC8<ContainerEmzuliPipe_BC8> {
         {
             DyeColor colour = getter.get();
             if (colour == null) {
-//                ICON_NO_PAINT.drawAt(px + 2, py + 2);
                 ICON_NO_PAINT.drawAt(poseStack, px + 2, py + 2);
             } else {
                 ISprite sprite = BCTransportSprites.ACTION_PIPE_COLOUR[colour.ordinal()];
@@ -111,16 +108,12 @@ public class GuiEmzuliPipe_BC8 extends GuiBC8<ContainerEmzuliPipe_BC8> {
         ITooltipElement tooltips = list ->
         {
             DyeColor colour = getter.get();
-//            String line;
             Component line;
             if (colour == null) {
-//                line = LocaleUtil.localize("gui.pipes.emzuli.nopaint");
                 line = Component.translatable("gui.pipes.emzuli.nopaint");
             } else {
-//                line = LocaleUtil.localize("gui.pipes.emzuli.paint", ColourUtil.getTextFullTooltip(colour));
                 line = Component.translatable("gui.pipes.emzuli.paint", ColourUtil.getTextFullTooltip(colour));
             }
-//            list.add(new ToolTip(line));
             list.add(new ToolTip(line));
         };
         mainGui.shownElements.add(new GuiElementToolTip(mainGui, area, tooltips));
@@ -143,15 +136,11 @@ public class GuiEmzuliPipe_BC8 extends GuiBC8<ContainerEmzuliPipe_BC8> {
     @Override
     protected void drawForegroundLayer(GuiGraphics guiGraphics) {
         String title = LocaleUtil.localize("gui.pipes.emzuli.title");
-//        double titleX = mainGui.rootElement.getX() + (xSize - fontRenderer.getStringWidth(title)) / 2;
         double titleX = mainGui.rootElement.getX() + (imageWidth - font.width(title)) / 2;
-//        fontRenderer.drawString(title, (int) titleX, (int) mainGui.rootElement.getY() + 6, 0x404040);
         guiGraphics.drawString(font, title, (int) titleX, (int) mainGui.rootElement.getY() + 6, 0x404040, false);
 
         int invX = (int) mainGui.rootElement.getX() + 8;
-//        int invY = (int) mainGui.rootElement.getY() + ySize - 93;
         int invY = (int) mainGui.rootElement.getY() + imageHeight - 93;
-//        fontRenderer.drawString(LocaleUtil.localize("gui.inventory"), invX, invY, 0x404040);
         guiGraphics.drawString(font, LocaleUtil.localize("gui.inventory"), invX, invY, 0x404040, false);
     }
 }

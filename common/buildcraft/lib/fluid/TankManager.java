@@ -110,26 +110,20 @@ public class TankManager extends ForwardingList<Tank> implements IFluidHandlerAd
     @Override
     public FluidStack drain(FluidStack resource, FluidAction doDrain) {
         if (resource == null) {
-//            return null;
             return StackUtil.EMPTY_FLUID;
         }
         FluidStack draining = new FluidStack(resource, 0);
         int left = resource.getAmount();
         for (Tank tank : getDrainOrderTanks()) {
-            // Calen: in 1.18.2 isFluidEqual may ret f if amount of one is 0
-            // Calen: should use resource, draining.getFluid() will ret EMPTY
-//            if (!draining.isFluidEqual(tank.getFluid()))
             if (tank.getFluid().getRawFluid() != resource.getRawFluid()) {
                 continue;
             }
             FluidStack drained = tank.drain(left, doDrain);
-//            if (drained != null && drained.getAmount() > 0)
             if (!drained.isEmpty() && drained.getAmount() > 0) {
                 draining.setAmount(draining.getAmount() + drained.getAmount());
                 left -= drained.getAmount();
             }
         }
-//        return draining.getAmount() <= 0 ? null : draining;
         return draining.getAmount() <= 0 ? StackUtil.EMPTY_FLUID : draining;
     }
 
@@ -139,14 +133,12 @@ public class TankManager extends ForwardingList<Tank> implements IFluidHandlerAd
         for (Tank tank : getDrainOrderTanks()) {
             if (draining == null) {
                 FluidStack drained = tank.drain(maxDrain, doDrain);
-//                if (drained != null && drained.getAmount() > 0)
                 if (!drained.isEmpty() && drained.getAmount() > 0) {
                     draining = drained;
                     maxDrain -= drained.getAmount();
                 }
             } else if (draining.isFluidEqual(tank.getFluid())) {
                 FluidStack drained = tank.drain(maxDrain, doDrain);
-//                if (drained != null && drained.getAmount() > 0)
                 if (!drained.isEmpty() && drained.getAmount() > 0) {
                     draining.setAmount(draining.getAmount() + drained.getAmount());
                     maxDrain -= drained.getAmount();
@@ -159,7 +151,6 @@ public class TankManager extends ForwardingList<Tank> implements IFluidHandlerAd
     @Override
     public FluidStack drain(IFluidFilter filter, int maxDrain, FluidAction doDrain) {
         if (filter == null) {
-//            return null;
             return StackUtil.EMPTY_FLUID;
         }
         FluidStack draining = null;
@@ -169,14 +160,12 @@ public class TankManager extends ForwardingList<Tank> implements IFluidHandlerAd
             }
             if (draining == null) {
                 FluidStack drained = tank.drain(maxDrain, doDrain);
-//                if (drained != null && drained.getAmount() > 0)
                 if (!drained.isEmpty() && drained.getAmount() > 0) {
                     draining = drained;
                     maxDrain -= drained.getAmount();
                 }
             } else if (draining.isFluidEqual(tank.getFluid())) {
                 FluidStack drained = tank.drain(maxDrain, doDrain);
-//                if (drained != null && drained.getAmount() > 0)
                 if (!drained.isEmpty() && drained.getAmount() > 0) {
                     draining.setAmount(draining.getAmount() + drained.getAmount());
                     maxDrain -= drained.getAmount();
@@ -186,15 +175,7 @@ public class TankManager extends ForwardingList<Tank> implements IFluidHandlerAd
         return draining == null ? StackUtil.EMPTY_FLUID : draining;
     }
 
-    // Calen: divided into 3 methods...
 //    @Override
-//    public FluidTankProperties[] getTankProperties() {
-//        IFluidTankProperties[] info = new IFluidTankProperties[size()];
-//        for (int i = 0; i < size(); i++) {
-//            info[i] = get(i).getTankProperties()[0];
-//        }
-//        return info;
-//    }
 
     @Override
     public int getTanks() {

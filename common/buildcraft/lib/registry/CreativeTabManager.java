@@ -24,8 +24,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 public class CreativeTabManager {
-    // Calen: thread safety, avoid creating duplicate tabs
-    // private static final Map<String, CreativeTabBC> tabMap = new HashMap<>();
     public static final Map<String, CreativeTabBC> tabMap = new ConcurrentHashMap<>();
     private static final Map<String, Supplier<ItemStack>> tabIconMap = new ConcurrentHashMap<>();
     private static final Map<CreativeModeTab, NonNullList<Item>> bcTabItemsMap = new ConcurrentHashMap<>();
@@ -61,7 +59,6 @@ public class CreativeTabManager {
         }
     }
 
-    // public static CreativeTabBC createTab(String name)
     public static synchronized CreativeTabBC createTab(String name) {
         CreativeTabBC tab = tabMap.get(name);
         if (tab != null) {
@@ -72,19 +69,15 @@ public class CreativeTabManager {
         return tab;
     }
 
-    // public static void setItem(String name, Item item)
     public static void setItem(String name, Supplier<? extends Item> item) {
         if (item != null) {
-//            setItemStack(name, new ItemStack(item));
             setItemStack(name, () -> new ItemStack(item.get()));
         }
     }
 
-    // public static void setItemStack(String name, ItemStack item)
     public static void setItemStack(String name, Supplier<ItemStack> item) {
         CreativeTabBC tab = tabMap.get(name);
         if (tab != null) {
-//            tab.setItem(item);
             tab.setItemStack(item);
         }
     }
@@ -122,7 +115,6 @@ public class CreativeTabManager {
         private ItemStack stack = StackUtil.EMPTY;
         private final String name;
 
-        // private CreativeTabBC(String name)
         private CreativeTabBC(String name) {
             super(CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup." + name))
@@ -134,32 +126,23 @@ public class CreativeTabManager {
             CreativeTabManager.bcTabItemsMap.put(this, NonNullList.create());
         }
 
-        // public void setItem(Item item)
         public void setItem(Supplier<? extends Item> item) {
             if (item != null) {
-//                this.item = new ItemStack(item);
                 CreativeTabManager.tabIconMap.put(this.name, () -> new ItemStack(item.get()));
             }
         }
 
         public void setItemPipe(Supplier<? extends IItemPipe> item) {
             if (item != null) {
-//                this.item = new ItemStack(item);
                 CreativeTabManager.tabIconMap.put(this.name, () -> new ItemStack((Item) item.get()));
             }
         }
 
-        // public void setItem(ItemStack stack)
         public void setItemStack(Supplier<ItemStack> stack) {
-//            if (stack == null || stack.isEmpty()) return;
-//            item = stack;
             CreativeTabManager.tabIconMap.put(this.name, stack);
         }
 
 //        @Override
-//        public ItemStack getTabIconItem() {
-//            return item;
-//        }
 
         public ResourceLocation getId() {
             return ResourceLocation.tryBuild(BCModules.BUILDCRAFT, this.name);

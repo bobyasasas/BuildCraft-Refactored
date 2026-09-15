@@ -14,12 +14,10 @@ import net.minecraft.server.Bootstrap;
 import java.io.PrintStream;
 
 public final class PrintingByteBuf extends PacketBufferBC {
-    //    private static final PrintStream SYSOUT = Bootstrap.SYSOUT;
     private static final PrintStream SYSOUT = Bootstrap.STDOUT;
 
     public PrintingByteBuf(ByteBuf wrapped) {
         super(wrapped);
-        // this.wrapped = PacketBufferBC.asPacketBufferBc(wrapped);
     }
 
     @Override
@@ -68,7 +66,6 @@ public final class PrintingByteBuf extends PacketBufferBC {
     }
 
     @Override
-//    public PacketBuffer writeVarInt(int value)
     public FriendlyByteBuf writeVarInt(int value) {
         SYSOUT.print(" _var[" + value + "] (");
         super.writeVarInt(value);
@@ -77,7 +74,6 @@ public final class PrintingByteBuf extends PacketBufferBC {
     }
 
     @Override
-//    public PacketBuffer writeVarLong(long value)
     public FriendlyByteBuf writeVarLong(long value) {
         SYSOUT.print(" _var[" + value + "L](");
         super.writeVarLong(value);
@@ -155,10 +151,8 @@ public final class PrintingByteBuf extends PacketBufferBC {
     }
 
     @Override
-//    public PacketBufferBC writeEnumValue(Enum<?> value)
     public PacketBufferBC writeEnum(Enum<?> value) {
         SYSOUT.println("Writing " + value + " from " + value.getClass());
-//        super.writeEnumValue(value);
         super.writeEnum(value);
         return this;
     }

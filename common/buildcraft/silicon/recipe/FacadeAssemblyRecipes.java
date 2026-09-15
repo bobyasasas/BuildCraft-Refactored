@@ -42,9 +42,6 @@ import java.util.Set;
 public class FacadeAssemblyRecipes extends AssemblyRecipe implements IRecipeViewable.IRecipePowered, IFacadeAssemblyRecipes {
     public static final FacadeAssemblyRecipes INSTANCE = new FacadeAssemblyRecipes();
 
-//    static {
-//        INSTANCE.setRegistryName(new ResourceLocation("buildcrafttransport:facade_recipes"));
-//    }
 
     private static final int TIME_GAP = 500;
     private static final long MJ_COST = 64 * MjAPI.MJ;
@@ -122,11 +119,9 @@ public class FacadeAssemblyRecipes extends AssemblyRecipe implements IRecipeView
     }
 
     private static ItemStack baseRequirementStack() {
-//        if (BCItems.Transport.PIPE_STRUCTURE == null)
         if (BCItems.Transport.PIPE_STRUCTURE_COBBLESTONE_COLORLESS == null) {
             return new ItemStack(Blocks.COBBLESTONE_WALL);
         }
-//        return new ItemStack(BCTransportItems.PIPE_STRUCTURE, 3);
         return new ItemStack(BCItems.Transport.PIPE_STRUCTURE_COBBLESTONE_COLORLESS, 3);
     }
 

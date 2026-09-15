@@ -32,9 +32,7 @@ public class GuiEngineStone_BC8 extends GuiBC8<ContainerEngineStone_BC8> {
 
     public GuiEngineStone_BC8(ContainerEngineStone_BC8 container, Inventory inventory, Component component) {
         super(container, inventory, component);
-//        xSize = SIZE_X;
         imageWidth = SIZE_X;
-//        ySize = SIZE_Y;
         imageHeight = SIZE_Y;
         mainGui.shownElements.add(new LedgerEngine(mainGui, container.tile, true));
         helpFlame = new ElementHelpInfo("buildcraft.help.stone_engine.flame.title", 0xFF_FF_FF_1F, "buildcraft.help.stone_engine.flame");
@@ -49,7 +47,6 @@ public class GuiEngineStone_BC8 extends GuiBC8<ContainerEngineStone_BC8> {
     }
 
     @Override
-//    protected void drawBackgroundLayer(float partialTicks)
     protected void drawBackgroundLayer(float partialTicks, GuiGraphics guiGraphics) {
         ICON_GUI.drawAt(mainGui.rootElement, guiGraphics);
 
@@ -63,7 +60,6 @@ public class GuiEngineStone_BC8 extends GuiBC8<ContainerEngineStone_BC8> {
 //                    (int) flameRect.getX(),//
 //                    (int) (flameRect.getY() + flameRect.getHeight() - flameHeight),//
 //                    176, 14 - flameHeight, 14, flameHeight + 2
-//            );
             guiGraphics.blit(//
                     TEXTURE_BASE,
                     (int) flameRect.getX(),//
@@ -74,20 +70,15 @@ public class GuiEngineStone_BC8 extends GuiBC8<ContainerEngineStone_BC8> {
     }
 
     @Override
-//    protected void drawForegroundLayer()
     protected void drawForegroundLayer(GuiGraphics guiGraphics) {
-//        String str = LocaleUtil.localize("tile.engineStone.name");
         String str = LocaleUtil.localize(BCEnergyBlocks.engineStone.get().getDescriptionId());
-//        int strWidth = fontRenderer.getStringWidth(str);
         int strWidth = font.width(str);
         double titleX = mainGui.rootElement.getCenterX() - strWidth / 2;
         double titleY = mainGui.rootElement.getY() + 6;
-//        fontRenderer.drawString(str, (int) titleX, (int) titleY, 0x404040);
         guiGraphics.drawString(font, str, (int) titleX, (int) titleY, 0x404040, false);
 
         double invX = mainGui.rootElement.getX() + 8;
         double invY = mainGui.rootElement.getY() + SIZE_Y - 96;
-//        fontRenderer.drawString(LocaleUtil.localize("gui.inventory"), (int) invX, (int) invY, 0x404040);
         guiGraphics.drawString(font, LocaleUtil.localize("gui.inventory"), (int) invX, (int) invY, 0x404040, false);
     }
 }

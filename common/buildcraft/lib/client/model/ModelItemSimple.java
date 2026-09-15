@@ -118,19 +118,14 @@ public class ModelItemSimple implements BakedModel {
     }
 
     private final boolean isGui3d;
-    // private final List<BakedQuad> quads;
     private List<BakedQuad> quads;
-    // private final TextureAtlasSprite particle;
-    // private final TextureAtlasSprite particle;
     private TextureAtlasSprite particle;
     private final ItemTransforms transforms;
 
-    // public ModelItemSimple(List<BakedQuad> quads, ItemTransforms transforms, boolean isGui3d)
     public ModelItemSimple(List<BakedQuad> quads, ItemTransforms transforms, boolean isGui3d) {
         this.quads = quads == null ? ImmutableList.of() : quads;
         this.isGui3d = isGui3d;
         if (quads.isEmpty()) {
-//            particle = Minecraft.getInstance().getTextureMapBlocks().getMissingSprite();
             this.particle = SpriteUtil.missingSprite().get();
         } else {
             this.particle = quads.get(0).getSprite();
@@ -138,25 +133,13 @@ public class ModelItemSimple implements BakedModel {
         this.transforms = transforms;
     }
 
-    // Calen 1.20.1
-    // public ModelItemSimple(List<BakedQuad> quads, ItemTransforms transforms, boolean isGui3d)
     public ModelItemSimple(LazyLoadedValue<List<BakedQuad>> lazyLoadedQuads, ItemTransforms transforms, boolean isGui3d, Consumer<Runnable> consumerRunOnTextureStitchEvent$Post) {
-//        this.quads = quads == null ? ImmutableList.of() : quads;
-//        this.isGui3d = isGui3d;
-//        if (quads.isEmpty()) {
-////            particle = Minecraft.getInstance().getTextureMapBlocks().getMissingSprite();
-//            this.particle = SpriteUtil.missingSprite().get();
-//        } else {
-//            this.particle = quads.get(0).getSprite();
-//        }
-//        this.transforms = transforms;
         this.isGui3d = isGui3d;
         this.transforms = transforms;
         consumerRunOnTextureStitchEvent$Post.accept(() -> {
             List<BakedQuad> quads = lazyLoadedQuads.get();
             this.quads = quads == null ? ImmutableList.of() : quads;
             if (quads.isEmpty()) {
-//            particle = Minecraft.getInstance().getTextureMapBlocks().getMissingSprite();
                 this.particle = SpriteUtil.missingSprite().get();
             } else {
                 this.particle = quads.get(0).getSprite();
@@ -165,13 +148,11 @@ public class ModelItemSimple implements BakedModel {
     }
 
     @Override
-//    public List<BakedQuad> getQuads(BlockState state, Direction side, long rand)
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, RandomSource rand) {
         return face == null ? quads : ImmutableList.of();
     }
 
     @Override
-//    public boolean isAmbientOcclusion()
     public boolean useAmbientOcclusion() {
         return false;
     }
@@ -182,19 +163,16 @@ public class ModelItemSimple implements BakedModel {
     }
 
     @Override
-//    public boolean isBuiltInRenderer()
     public boolean isCustomRenderer() {
         return false;
     }
 
     @Override
-//    public TextureAtlasSprite getParticleTexture()
     public TextureAtlasSprite getParticleIcon() {
         return particle;
     }
 
     @Override
-//    public ItemTransforms getItemTransforms()
     public ItemTransforms getTransforms() {
         return transforms;
     }

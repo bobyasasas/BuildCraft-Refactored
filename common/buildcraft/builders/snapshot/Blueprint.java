@@ -57,7 +57,6 @@ public class Blueprint extends Snapshot {
         for (int z = 0; z < size.getZ(); z++) {
             for (int y = 0; y < size.getY(); y++) {
                 for (int x = 0; x < size.getX(); x++) {
-//                    list.appendTag(new IntTag(data[posToIndex(x, y, z)]));
                     list.add(IntTag.valueOf(data[posToIndex(x, y, z)]));
                 }
             }
@@ -76,7 +75,6 @@ public class Blueprint extends Snapshot {
             // TODO: Allow reading blueprints partially - invalid elements should be replaced with air
             // (Although this needs to add a "pass-through" ISchematicBlock that will store the
             // invalid CompoundTag and show up in the tooltip as an error, so that we can migrate
-            // schematics through mod additions/deletions)
             palette.add(SchematicBlockManager.readFromNBT(schematicBlockTag));
         }
         data = new int[Snapshot.getDataSize(size)];

@@ -10,7 +10,6 @@ import net.minecraftforge.fml.loading.FMLLoader;
 
 //public abstract class BCFactoryProxy implements IGuiHandler
 public abstract class BCFactoryProxy {
-    // @SidedProxy(modId = BCFactory.MODID)
     private static BCFactoryProxy proxy;
 
     public static BCFactoryProxy getProxy() {
@@ -28,27 +27,8 @@ public abstract class BCFactoryProxy {
     }
 
 //    @Override
-//    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-//        TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
-//        if (ID == BCFactoryGuis.AUTO_WORKBENCH_ITEMS.ordinal()) {
-//            if (tile instanceof TileAutoWorkbenchItems) {
-//                TileAutoWorkbenchItems workbench = (TileAutoWorkbenchItems) tile;
-//                return new ContainerAutoCraftItems(player, workbench);
-//            }
-//        }
-//        if (ID == BCFactoryGuis.CHUTE.ordinal()) {
-//            if (tile instanceof TileChute) {
-//                TileChute chute = (TileChute) tile;
-//                return new ContainerChute(player, chute);
-//            }
-//        }
-//        return null;
-//    }
 
 //    @Override
-//    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-//        return null;
-//    }
 
     public void fmlPreInit() {
     }
@@ -60,30 +40,12 @@ public abstract class BCFactoryProxy {
     }
 
     @SuppressWarnings("unused")
-//    @SideOnly(Side.SERVER)
     public static class ServerProxy extends BCFactoryProxy {
     }
 
     @SuppressWarnings("unused")
-//    @SideOnly(Side.CLIENT)
     public static class ClientProxy extends BCFactoryProxy {
 //        @Override
-//        public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-//            TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
-//            if (ID == BCFactoryGuis.AUTO_WORKBENCH_ITEMS.ordinal()) {
-//                if (tile instanceof TileAutoWorkbenchItems) {
-//                    TileAutoWorkbenchItems workbench = (TileAutoWorkbenchItems) tile;
-//                    return new GuiAutoCraftItems(new ContainerAutoCraftItems(player, workbench));
-//                }
-//            }
-//            if (ID == BCFactoryGuis.CHUTE.ordinal()) {
-//                if (tile instanceof TileChute) {
-//                    TileChute chute = (TileChute) tile;
-//                    return new GuiChute(new ContainerChute(player, chute));
-//                }
-//            }
-//            return null;
-//        }
 
         @Override
         public void fmlPreInit() {
@@ -96,8 +58,6 @@ public abstract class BCFactoryProxy {
         @Override
         public void fmlInit() {
             super.fmlInit();
-            // Calen: moved to BCFactoryModels#onTesrReg
-//            BCFactoryModels.fmlInit();
         }
     }
 }

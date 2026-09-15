@@ -79,7 +79,6 @@ public class AIRobotSearchRandomGroundBlock extends AIRobot {
     }
 
     @Override
-    // public int getEnergyCost()
     public long getPowerCost() {
         return 2 * MjAPI.MJ / 10;
     }

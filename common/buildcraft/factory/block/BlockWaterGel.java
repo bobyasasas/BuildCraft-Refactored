@@ -62,21 +62,11 @@ public class BlockWaterGel extends BlockBCBase_Neptune {
         }
 
         @Override
-//        public String getName()
         public String getSerializedName() {
             return modelName;
         }
 
-//        public static GelStage fromMeta(int meta) {
-//            if (meta < 0) {
-//                return GEL;
-//            }
-//            return VALUES[meta % VALUES.length];
-//        }
 
-//        public int getMeta() {
-//            return ordinal();
-//        }
 
         public GelStage next() {
             if (this == SPREAD_0) return SPREAD_1;
@@ -92,32 +82,23 @@ public class BlockWaterGel extends BlockBCBase_Neptune {
 
     public BlockWaterGel(String idBC, Properties props) {
         super(idBC, props);
-//        setSoundType(SoundType.SLIME_BLOCK);
     }
 
     // BlockState
 
     @Override
-//    protected BlockStateContainer createBlockState()
     protected void createBlockStateDefinition(@Nonnull StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(PROP_STAGE);
     }
 
 //    @Override
-//    public IBlockState getStateFromMeta(int meta) {
-//        return getDefaultState().withProperty(PROP_STAGE, GelStage.fromMeta(meta & 7));
-//    }
 
 //    @Override
-//    public int getMetaFromState(IBlockState state) {
-//        return state.getValue(PROP_STAGE).getMeta();
-//    }
 
     // Logic
 
     @Override
-//    public void updateTick(Level world, BlockPos pos, BlockState state, Random rand)
     public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource rand) {
         GelStage stage = state.getValue(PROP_STAGE);
         GelStage next = stage.next();
@@ -142,8 +123,6 @@ public class BlockWaterGel extends BlockBCBase_Neptune {
                 boolean water = isWater(world, test);
                 boolean spreadable = water || canSpread(world, test);
 
-                // Calen: 1.18.2 source level = 8, instead of 0 in 1.12.2
-//                if (water && world.getBlockState(test).getValue(BlockLiquid.LEVEL) == 0)
                 if (water && world.getFluidState(test).isSource()) {
                     changeable.add(test);
                 }
@@ -209,11 +188,9 @@ public class BlockWaterGel extends BlockBCBase_Neptune {
     }
 
     @Override
-//    public float getBlockHardness(BlockState state, Level world, BlockPos pos)
     public float getDestroyProgress(BlockState state, Player player, BlockGetter world, BlockPos pos) {
         GelStage stage = state.getValue(PROP_STAGE);
         float f = stage.hardness;
-        // Calen: below is from super
         if (f == -1.0F) {
             return 0.0F;
         } else {
@@ -224,12 +201,4 @@ public class BlockWaterGel extends BlockBCBase_Neptune {
 
     // 1.18.2: use datagen
 //    @Override
-//    public int quantityDropped(IBlockState state, int fortune, Random random) {
-//        GelStage stage = state.getValue(PROP_STAGE);
-//        if (stage.spreading) {
-//            return random.nextInt(2) + 1;
-//        } else {
-//            return 1;
-//        }
-//    }
 }

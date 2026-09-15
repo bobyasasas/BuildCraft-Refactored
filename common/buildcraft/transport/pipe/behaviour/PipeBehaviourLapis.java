@@ -77,9 +77,7 @@ public class PipeBehaviourLapis extends PipeBehaviour {
         }
         if (EntityUtil.getWrenchHand(player) != null) {
             EntityUtil.activateWrench(player, trace);
-//            int n = colour.getMetadata() + (player.isSneaking() ? 15 : 1);
             int n = colour.getId() + (player.isShiftKeyDown() ? 15 : 1);
-//            colour = DyeColor.byMetadata(n & 15);
             colour = DyeColor.byId(n & 15);
             pipe.getHolder().scheduleNetworkUpdate(PipeMessageReceiver.BEHAVIOUR);
             return true;

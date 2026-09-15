@@ -76,7 +76,6 @@ public class RenderQuarry implements BlockEntityRenderer<TileQuarry> {
     }
 
     @Override
-//    public void render(TileQuarry tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     public void render(TileQuarry tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
         if (state.getBlock() != BCBuildersBlocks.quarry.get()) {
@@ -87,25 +86,9 @@ public class RenderQuarry implements BlockEntityRenderer<TileQuarry> {
         profiler.push("quarry");
         profiler.push("setup");
 
-//        SpriteUtil.bindBlockTextureMap();
-////        RenderHelper.disableStandardItemLighting();
-////        GlStateManager.enableBlend();
-//        RenderUtil.enableBlend();
-////        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-//        RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-////        if (Minecraft.isAmbientOcclusionEnabled())
-//        if (Minecraft.useAmbientOcclusion()) {
-////            GlStateManager.shadeModel(GL11.GL_SMOOTH);
-//            RenderSystem.setShader(GameRenderer::getRendertypeEntitySmoothCutoutShader);
-//        } else {
-////            GlStateManager.shadeModel(GL11.GL_FLAT);
-//            RenderSystem.setShader(GameRenderer::getBlockShader);
-//        }
 
-//        GlStateManager.pushMatrix();
         poseStack.pushPose();
-//        GlStateManager.translate(x - tile.getPos().getX(), y - tile.getPos().getY(), z - tile.getPos().getZ());
         poseStack.translate(-tile.getBlockPos().getX(), -tile.getBlockPos().getY(), -tile.getBlockPos().getZ());
 
         final BlockPos min = tile.frameBox.min();
@@ -126,7 +109,6 @@ public class RenderQuarry implements BlockEntityRenderer<TileQuarry> {
                         Vec3 from = VecUtil.convertCenter(tile.getBlockPos());
                         Vec3 to = VecUtil.convertCenter(pos);
                         LaserData_BC8 laser = new LaserData_BC8(LASER, from, to, 1 / 16.0);
-//                        LaserRenderer_BC8.renderLaserStatic(laser);
                         LaserRenderer_BC8.renderLaserStatic(laser, poseStack.last());
                     }
                 } else {
@@ -134,8 +116,7 @@ public class RenderQuarry implements BlockEntityRenderer<TileQuarry> {
                             taskBreakBlock.prevClientPower +
                                     (taskBreakBlock.clientPower - taskBreakBlock.prevClientPower) * (double) partialTicks
                     );
-//                    AxisAlignedBB aabb = tile.getLevel().getBlockState(pos).getBoundingBox(tile.getLevel(), pos);
-                    VoxelShape shape = tile.getLevel().getBlockState(pos).getCollisionShape(tile.getLevel(), pos); // Calen: if shape is empty, .bounds() will cause UnsupportedOperationException (ArrayVoxelShape:28)
+                    VoxelShape shape = tile.getLevel().getBlockState(pos).getCollisionShape(tile.getLevel(), pos);
                     AABB aabb = shape.isEmpty() ? new AABB(0, 0, 0, 0, 0, 0) : shape.bounds();
                     double value = (double) power / taskBreakBlock.getTarget();
                     if (value < 0.9) {
@@ -201,7 +182,6 @@ public class RenderQuarry implements BlockEntityRenderer<TileQuarry> {
             profiler.pop();
         }
 
-//        GlStateManager.popMatrix();
         poseStack.popPose();
         profiler.push("items");
 
@@ -262,33 +242,17 @@ public class RenderQuarry implements BlockEntityRenderer<TileQuarry> {
                 double zResult = min.getZ() + (max.getZ() - min.getZ()) * zProgress;
                 ItemStack stack = new ItemStack(BCBuildersBlocks.frame.get());
 
-//                RenderHelper.disableStandardItemLighting();
-//                GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-//                RenderSystem.activeTexture(33985);
-//                GlStateManager.disableTexture2D();
-//                GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-//                RenderSystem.activeTexture(OpenGlHelper.defaultTexUnit);
-//                RenderSystem.activeTexture(33984);
-//                GlStateManager.pushMatrix();
                 poseStack.pushPose();
-//                GlStateManager.translate(x - tile.getBlockPos().getX(), y - tile.getBlockPos().getY(), z - tile.getBlockPos().getZ());
                 poseStack.translate(-tile.getBlockPos().getX(), -tile.getBlockPos().getY(), -tile.getBlockPos().getZ());
-//                GlStateManager.pushMatrix();
                 poseStack.pushPose();
-//                GlStateManager.translate(xResult + 0.5, tile.getBlockPos().getY(), zResult + 0.5);
                 poseStack.translate(xResult + 0.5, tile.getBlockPos().getY(), zResult + 0.5);
-//                GlStateManager.scale(3, 3, 3);
                 poseStack.scale(3, 3, 3);
-//                Minecraft.getMinecraft().getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.GROUND);
                 Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.GROUND, combinedLight, combinedOverlay, poseStack, bufferSource, tile.getLevel(), (int) tile.getBlockPos().asLong());
 
-//                GlStateManager.popMatrix();
                 poseStack.popPose();
-//                GlStateManager.popMatrix();
                 poseStack.popPose();
             }
         }
-//        RenderHelper.enableStandardItemLighting();
 
         profiler.pop();
         profiler.pop();
@@ -296,7 +260,6 @@ public class RenderQuarry implements BlockEntityRenderer<TileQuarry> {
     }
 
     @Override
-//    public boolean isGlobalRenderer(TileQuarry te)
     public boolean shouldRenderOffScreen(TileQuarry tile) {
         return true;
     }

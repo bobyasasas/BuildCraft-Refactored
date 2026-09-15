@@ -55,27 +55,21 @@ public class NetworkedFluidStackCache extends NetworkedObjectCache<FluidStack> {
 
     @Override
     protected void writeObject(FluidStack obj, PacketBufferBC buffer) {
-//        Fluid f = obj.getFluid();
         Fluid f = obj.getRawFluid();
-//        buffer.writeString(FluidRegistry.getFluidName(f));
-        buffer.writeRegistryId(ForgeRegistries.FLUIDS, f); // Calen: just like FluidStack#writeToPacket
-//        if (obj.tag == null)
+        buffer.writeRegistryId(ForgeRegistries.FLUIDS, f);
         if (obj.getTag() == null) {
             buffer.writeBoolean(false);
         } else {
             buffer.writeBoolean(true);
-//            buffer.writeCompoundTag(obj.tag);
             buffer.writeNbt(obj.getTag());
         }
     }
 
     @Override
     protected FluidStack readObject(PacketBufferBC buffer) throws IOException {
-//        Fluid fluid = FluidRegistry.getFluid(buffer.readString(255));
-        Fluid fluid = buffer.readRegistryId(); // Calen: just like FluidStack#readFromPacket
+        Fluid fluid = buffer.readRegistryId();
         FluidStack stack = new FluidStack(fluid, FLUID_AMOUNT);
         if (buffer.readBoolean()) {
-//            stack.tag = buffer.readCompoundTag();
             stack.setTag(buffer.readNbt());
         }
         return stack;

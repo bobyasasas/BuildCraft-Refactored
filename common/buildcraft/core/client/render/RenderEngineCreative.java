@@ -16,7 +16,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class RenderEngineCreative extends RenderEngine_BC8<TileEngineCreative> {
-//    public static final RenderEngineCreative INSTANCE = new RenderEngineCreative();
 
     public RenderEngineCreative(BlockEntityRendererProvider.Context context) {
         super(context);

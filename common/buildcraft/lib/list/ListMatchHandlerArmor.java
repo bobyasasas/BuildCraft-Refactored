@@ -16,16 +16,10 @@ import java.util.EnumSet;
 
 public class ListMatchHandlerArmor extends ListMatchHandler {
     private static EnumSet<EquipmentSlot> getArmorTypes(ItemStack stack) {
-//        EntityPlayer player = BCLibProxy.getProxy().getClientPlayer();
-//        if (player == null) {
-//            player = BuildCraftAPI.fakePlayerProvider.getBuildCraftPlayer(DimensionManager.getWorld(0));
-//        }
         EnumSet<EquipmentSlot> types = EnumSet.noneOf(EquipmentSlot.class);
 
         for (EquipmentSlot e : EquipmentSlot.values()) {
             if (e.getType() == EquipmentSlot.Type.ARMOR) {
-                // Calen: IForgeItem#canEquip
-//                if (stack.getItem().canEquip(stack, e, player))
                 if (Mob.getEquipmentSlotForItem(stack) == e) {
                     types.add(e);
                 }

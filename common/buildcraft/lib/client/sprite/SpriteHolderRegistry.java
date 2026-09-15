@@ -39,8 +39,6 @@ import java.util.function.Consumer;
 public class SpriteHolderRegistry {
     public static final boolean DEBUG = BCDebugging.shouldDebugLog("lib.sprite.holder");
 
-    // Calen: Thread Safety
-//    private static final Map<ResourceLocation, SpriteHolder> HOLDER_MAP = new HashMap<>();
     private static final Map<ResourceLocation, SpriteHolder> HOLDER_MAP = new ConcurrentHashMap<>();
 
     public static SpriteHolder getHolder(ResourceLocation location) {
@@ -59,42 +57,29 @@ public class SpriteHolderRegistry {
         return getHolder(new ResourceLocation(location));
     }
 
-    // public static void onTextureStitchPre(TextureAtlas map)
-//    public static void onTextureStitchPre(TextureStitchEvent.Pre event)
     public static void onTextureStitchPre() {
-        // Calen: for the ForgeModelBakery.White.instance() texture missing in 1.18.2
-//        event.addSprite(new ResourceLocation("minecraft", "white"));
 
         for (SpriteHolder holder : HOLDER_MAP.values()) {
-//            holder.onTextureStitchPre(map);
             holder.onTextureStitchPre();
         }
     }
 
-    // Calen 1.20.1
     public static void onDatagenTextureRegister(Consumer<ResourceLocation> consumer, ExistingFileHelper fileHelper) {
-        // Calen: for the ForgeModelBakery.White.instance() texture missing in 1.18.2
         consumer.accept(new ResourceLocation("minecraft", "white"));
 
-        // Sort by sprite location so datagen atlas output is deterministic (ConcurrentHashMap iteration)
         List<SpriteHolder> holders = new ArrayList<>(HOLDER_MAP.values());
         holders.sort((a, b) -> a.spriteLocation.toString().compareTo(b.spriteLocation.toString()));
         for (SpriteHolder holder : holders) {
-//            holder.onTextureStitchPre(map);
             holder.onDatagenTextureRegister(consumer);
         }
     }
 
-    // public static void exportTextureMap()
     public static void exportTextureMap(TextureAtlas map) {
         if (!DEBUG) {
             return;
         }
-//        TextureAtlas map = Minecraft.getInstance().getTextureMapBlocks();
-//        GlStateManager.bindTexture(map.getGlTextureId());
         GL11.glBindTexture(3553, map.getId());
 
-//        for (int l = 0; l < 4; l++)
         for (int l = 0; l <= map.mipLevel; l++) {
             int width = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, l, GL11.GL_TEXTURE_WIDTH);
             int height = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, l, GL11.GL_TEXTURE_HEIGHT);
@@ -111,7 +96,6 @@ public class SpriteHolderRegistry {
             bufferedimage.setRGB(0, 0, width, height, aint, 0, width);
 
             try {
-//                ImageIO.write(bufferedimage, "png", new File("bc_spritemap_" + l + ".png"));
                 ImageIO.write(bufferedimage, "png", new File("bc_spritemap_" + map.location().toString().replace(":", "_").replace("/", "_").replace("\\", "_") + "_" + l + ".png"));
             } catch (IOException io) {
                 BCLog.logger.warn(io);
@@ -121,18 +105,15 @@ public class SpriteHolderRegistry {
 
     public static void onTextureStitchPost(TextureStitchEvent.Post event) {
         for (SpriteHolder holder : HOLDER_MAP.values()) {
-//            holder.onTextureStitchPre(map);
             holder.onTextureStitchPost(event);
         }
 
-//        if (DEBUG && Loader.instance().isInState(LoaderState.AVAILABLE))
         if (DEBUG && ModLoadingContext.get().getActiveContainer().getCurrentState() == ModLoadingStage.COMPLETE) {
             BCLog.logger.info("[lib.sprite.holder] List of registered sprites:");
             List<ResourceLocation> locations = new ArrayList<>();
             locations.addAll(HOLDER_MAP.keySet());
             locations.sort(Comparator.comparing(ResourceLocation::toString));
 
-//            TextureAtlasSprite missing = Minecraft.getInstance().getTextureMapBlocks().getMissingSprite();
             TextureAtlasSprite missing = SpriteUtil.missingSprite().get();
 
             for (ResourceLocation r : locations) {
@@ -158,37 +139,22 @@ public class SpriteHolderRegistry {
     public static class SpriteHolder implements ISprite {
         public final ResourceLocation spriteLocation;
         private TextureAtlasSprite sprite;
-        // Calen: never used in 1.12.2
-//        private DataMetadataSection extraData = null;
         private boolean hasCalled = false;
 
         private SpriteHolder(ResourceLocation spriteLocation) {
             this.spriteLocation = spriteLocation;
         }
 
-        // Calen: TextureStitchEvent.Pre -> load the texture into TextureAtlas.LOCATION_BLOCKS
         // TextureStitchEvent.Post -> get the loaded texture u v from TextureAtlas.LOCATION_BLOCKS
 
-        // protected void onTextureStitchPre(TextureAtlas map)
-//        protected void onTextureStitchPre(TextureStitchEvent.Pre event)
         protected void onTextureStitchPre() {
-//            extraData = null;
-//            TextureAtlasSprite varSprite = AtlasSpriteVariants.createForConfig(spriteLocation);
-//            if (map.setTextureEntry(varSprite)) {
-//                sprite = varSprite;
-//            } else {
-//                sprite = map.getTextureExtry(varSprite.getIconName());
-//            }
-//            event.addSprite(spriteLocation);
         }
 
-        // Calen 1.20.1
         public void onDatagenTextureRegister(Consumer<ResourceLocation> consumer) {
             consumer.accept(spriteLocation);
         }
 
         protected void onTextureStitchPost(TextureStitchEvent.Post event) {
-            // Calen
             // ensure LOCATION_BLOCKS
             // or will get wrong texture
             TextureAtlas map = event.getAtlas();
@@ -231,17 +197,5 @@ public class SpriteHolderRegistry {
             SpriteUtil.bindBlockTextureMap();
         }
 
-        // Calen: never used in 1.12.2
-//        public DataMetadataSection getExtraData(boolean samePack) {
-//            if (extraData == null) {
-//                ResourceLocation actualLocation = SpriteUtil.transformLocation(spriteLocation);
-//                extraData = MetadataLoader.getData(actualLocation, samePack);
-//            }
-//            if (extraData == null) {
-//                extraData = new DataMetadataSection(new JsonObject());
-//            }
-//            return extraData;
-//        }
-//    }
     }
 }

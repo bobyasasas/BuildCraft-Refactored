@@ -13,18 +13,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-// TODO Calen
 public class DelegateFontRenderer extends Font {
     public final Font delegate;
 
     public DelegateFontRenderer(Font delegate) {
-        // TODO Calen creat Font Intance? where is fontset???  When soved, GuidePageContents#<init>:new ConfigurableFontRenderer(Minecraft.getInstance().font).disableShadow();
 //        super(
 //                Minecraft.getInstance().options,
-//                new ResourceLocation("textures/font/ascii.png"),
 //                Minecraft.getInstance().textureManager,
-//                delegate.getUnicodeFlag()
-//        );
         // 参考 FontManager#public Font createFont()
         // FontManager 匿名内部类 protected void apply(Map<ResourceLocation, List<GlyphProvider>> p_95036_, ResourceManager p_95037_, ProfilerFiller p_95038_)
         super((p_95014_) ->
@@ -41,7 +36,6 @@ public class DelegateFontRenderer extends Font {
                         f_fontSets.setAccessible(true);
                         Map<ResourceLocation, FontSet> mcFontManager_fontSets = (Map) f_fontSets.get(mcFontManager);
                         mcFontManager_fontSets.put(p_95014_, fontset);
-//                new FontSet(Minecraft.getInstance().textureManager,new ResourceLocation("textures/font/ascii.png"))
                         return fontset;
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -63,16 +57,6 @@ public class DelegateFontRenderer extends Font {
                 k += 85;
             }
 
-            // Calen anaglyph???
-//            if (Minecraft.getInstance().options.anaglyph)
-//            {
-//                int j1 = (k * 30 + l * 59 + i1 * 11) / 100;
-//                int k1 = (k * 30 + l * 70) / 100;
-//                int l1 = (k * 30 + i1 * 70) / 100;
-//                k = j1;
-//                l = k1;
-//                i1 = l1;
-//            }
 
             if (i >= 16) {
                 k /= 4;
@@ -95,10 +79,6 @@ public class DelegateFontRenderer extends Font {
     }
 
 //    @Override
-//    public void onResourceManagerReload(IResourceManager resourceManager)
-//    {
-//        delegate.onResourceManagerReload(resourceManager);
-//    }
 
     @Override
     public String toString() {
@@ -117,23 +97,9 @@ public class DelegateFontRenderer extends Font {
 
     //    @Override
     public int drawString(GuiGraphics guiGraphics, String text, float x, float y, int color, boolean dropShadow) {
-//        return delegate.drawString(text, x, y, color, dropShadow);
         return guiGraphics.drawString(delegate, text, x, y, color, dropShadow);
-//        int ret;
-//        if(dropShadow)
-//        {
-//            int shadowColor = (color & 16579836) >> 2 | color & -16777216;
-//            int shadow_i = delegate.drawShadow(poseStack,text, x, y, shadowColor);
-//            int foreText_i = delegate.draw(poseStack,text, x, y, color);
-//            ret = Math.max(shadow_i,foreText_i);
-//        }
 //        else
-//        {
-//            ret = delegate.draw(poseStack,text, x, y, color);
-//        }
-//        return ret;
 //        // 返回值 1.12.2 FontRenderer:334 文本和shadow取大
-//        // i = Math.max(i, this.renderString(text, x, y, color, false));
 //        // dropShadow -> 调用2次renderString 分别渲染shadow和上层文本
     }
 
@@ -196,39 +162,14 @@ public class DelegateFontRenderer extends Font {
     }
 
     //    @Override
-//    public void setUnicodeFlag(boolean unicodeFlagIn)
-//    {
-//        delegate.setUnicodeFlag(unicodeFlagIn);
-//    }
-//
 //    @Override
-//    public boolean getUnicodeFlag()
-//    {
-//        return delegate.getUnicodeFlag();
-//    }
-//
 //    @Override
-//    public void setBidiFlag(boolean bidiFlagIn)
-//    {
-//        delegate.setBidiFlag(bidiFlagIn);
-//    }
-//
 //    @Override
     public List<String> listFormattedStringToWidth(String str, int wrapWidth) {
         return Arrays.stream(delegate.plainSubstrByWidth(str, wrapWidth).split("\n")).toList();
     }
-//
 //    @Override
-//    public boolean getBidiFlag()
-//    {
-//        return delegate.getBidiFlag();
-//    }
-//
 //    @Override
-//    public int getColorCode(char character)
-//    {
-//        return delegate(character);
-//    }
     /**
      * Array of RGB triplets defining the 16 standard chat colors followed by 16 darker version of the same colors for
      * drop shadows.

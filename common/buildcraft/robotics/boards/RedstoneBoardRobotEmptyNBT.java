@@ -54,16 +54,11 @@ public class RedstoneBoardRobotEmptyNBT extends RedstoneBoardRobotNBT {
     public void addInformation(ItemStack stack, @Nullable Level world, List<Component> list, TooltipFlag flag) {}
 
     @Override
-    // public String getItemModelLocation()
     public String getBoardTexture() {
-        // return "buildcraftrobotics:board/clean";
         return "buildcraftrobotics:item/board/clean";
     }
 
 //    @Override
-//    public String getDisplayName() {
-//        return LocaleUtil.localize("buildcraft.boardRobotClean");
-//    }
 
     @Override
     public Component getDisplayNameComponent() {

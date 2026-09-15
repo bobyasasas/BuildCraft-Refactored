@@ -75,31 +75,21 @@ public enum DetachedRenderer {
     }
 
     public void renderWorldLastEvent(Player player, float partialTicks, PoseStack poseStack, Camera camera) {
-//        Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-//        Minecraft.getInstance().entityRenderer.enableLightmap();
 
         for (RenderMatrixType type : RenderMatrixType.values()) {
             List<IDetachedRenderer> rendersForType = this.renders.get(type);
             if (rendersForType.isEmpty()) continue;
-            // Calen: push
             type.glPre(player, partialTicks, poseStack, camera);
             for (IDetachedRenderer render : rendersForType) {
                 render.render(player, partialTicks, poseStack);
             }
-            // Calen: pop
             type.glPost(poseStack);
         }
 
-//        Minecraft.getInstance().entityRenderer.disableLightmap();
     }
 
     public static void fromWorldOriginPre(Player player, float partialTicks, PoseStack poseStack, Camera camera) {
-//        GL11.glPushMatrix();
         poseStack.pushPose();
-//        Vec3d diff = new Vec3d(0, 0, 0);
-//        diff = diff.subtract(player.getPositionEyes(partialTicks));
-//        diff = diff.addVector(0, player.getEyeHeight(), 0);
-//        GL11.glTranslated(diff.x, diff.y, diff.z);
         Vec3 vec3 = camera.getPosition();
         double d0 = vec3.x();
         double d1 = vec3.y();
@@ -108,7 +98,6 @@ public enum DetachedRenderer {
     }
 
     public static void fromWorldOriginPost(PoseStack poseStack) {
-//        GL11.glPopMatrix();
         poseStack.popPose();
     }
 }

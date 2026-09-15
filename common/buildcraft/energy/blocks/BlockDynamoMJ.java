@@ -28,16 +28,12 @@ public class BlockDynamoMJ extends BlockBCTile_Neptune<TileDynamoMJ> implements 
 
     @Nullable
     @Override
-//    public TileBC_Neptune createTileEntity(World worldIn, IBlockState state)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
         return new TileDynamoMJ(pos, state);
     }
 
 //    @Override
 //    @Deprecated
-//    public boolean isOpaqueCube(IBlockState state) {
-//        return false;
-//    }
 
     @Override
     public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
@@ -51,43 +47,16 @@ public class BlockDynamoMJ extends BlockBCTile_Neptune<TileDynamoMJ> implements 
 
 //    @Override
 //    @Deprecated
-//    public boolean isFullBlock(IBlockState state) {
-//        return false;
-//    }
 
 //    @Override
 //    @Deprecated
-//    public boolean isFullCube(IBlockState state) {
-//        return false;
-//    }
 
 //    @Override
 //    @Deprecated
-//    public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing side) {
-//        TileEntity tile = world.getTileEntity(pos);
-//        if (tile instanceof TileDynamoMJ) {
-//            TileDynamoMJ engine = (TileDynamoMJ) tile;
-//            if (side == engine.getCurrentDirection().getOpposite()) {
-//                return BlockFaceShape.SOLID;
-//            } else {
-//                return BlockFaceShape.UNDEFINED;
-//            }
-//        }
-//        return BlockFaceShape.UNDEFINED;
-//    }
 
 //    @Override
 //    @Deprecated
-//    public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-//        TileEntity tile = world.getTileEntity(pos);
-//        if (tile instanceof TileDynamoMJ) {
-//            TileDynamoMJ engine = (TileDynamoMJ) tile;
-//            return side == engine.getCurrentDirection().getOpposite();
-//        }
-//        return false;
-//    }
 
-    // Calen
     private static final VoxelShape BASE_U = Block.box(0, 0, 0, 16, 4, 16);
     private static final VoxelShape TRUNK_U = Block.box(4, 4, 4, 12, 16, 12);
     private static final VoxelShape UP = Shapes.or(BASE_U, TRUNK_U);
@@ -124,16 +93,12 @@ public class BlockDynamoMJ extends BlockBCTile_Neptune<TileDynamoMJ> implements 
 
     @Override
     @Deprecated
-    // public EnumBlockRenderType getRenderType(IBlockState state)
     public RenderShape getRenderShape(BlockState state) {
-        // return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
-    // public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos)
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean p_60514_) {
-        // super.neighborChanged(state, world, pos, block, fromPos);
         super.neighborChanged(state, world, pos, block, fromPos, p_60514_);
         if (world.isClientSide) return;
         BlockEntity tile = world.getBlockEntity(pos);
@@ -145,14 +110,12 @@ public class BlockDynamoMJ extends BlockBCTile_Neptune<TileDynamoMJ> implements 
 // ICustomRotationHandler
 
     @Override
-    // public EnumActionResult attemptRotation(World world, BlockPos pos, IBlockState state, EnumFacing sideWrenched)
     public InteractionResult attemptRotation(Level world, BlockPos pos, BlockState state, Direction sideWrenched) {
         BlockEntity tile = world.getBlockEntity(pos);
         if (tile instanceof TileDynamoMJ) {
             TileDynamoMJ engine = (TileDynamoMJ) tile;
             return engine.attemptRotation();
         }
-        // return EnumActionResult.FAIL;
         return InteractionResult.FAIL;
     }
 }

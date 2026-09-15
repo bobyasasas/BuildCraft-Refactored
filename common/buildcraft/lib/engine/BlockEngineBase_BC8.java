@@ -49,7 +49,6 @@ import java.util.function.Consumer;
 public abstract class BlockEngineBase_BC8<E extends Enum<E> & IEngineType> extends BlockBCTile_Neptune<TileEngineBase_BC8> implements ICustomRotationHandler, IBlockWithTickableTE<TileEngineBase_BC8> {
     public final E engineType;
 
-    // private final Map<E, Supplier<? extends TileEngineBase_BC8>> engineTileConstructors = new EnumMap<>(getEngineProperty().getValueClass());
     private final BiFunction<BlockPos, BlockState, ? extends TileEngineBase_BC8> engineTileConstructor;
 
     public BlockEngineBase_BC8(String idBC, BlockBehaviour.Properties props, E type, BiFunction<BlockPos, BlockState, ? extends TileEngineBase_BC8> engineTileConstructor) {
@@ -60,56 +59,27 @@ public abstract class BlockEngineBase_BC8<E extends Enum<E> & IEngineType> exten
 
     // Engine directly related methods
 
-//    public void registerEngine(E type, Supplier<? extends TileEngineBase_BC8> constructor) {
-//        if (RegistryConfig.isEnabled("engines", getRegistryName() + "/" + type.name().toLowerCase(Locale.ROOT), getUnlocalizedName(type))) {
-//            engineTileConstructors.put(type, constructor);
-//        }
-//    }
 
-//    public boolean isRegistered(E type) {
-//        return engineTileConstructors.containsKey(type);
-//    }
 
     @Nonnull
-//    public ItemStack getStack(E type)
     public ItemStack getStack() {
-//        return new ItemStack(this, 1, type.ordinal());
         return new ItemStack(this, 1);
     }
 
-//    public abstract Property<E> getEngineProperty();
 
-//    public abstract EnumEngineType getEngineType(int meta);
 
-//    public abstract String getUnlocalizedName();
 
     // BlockState
 
 //    @Override
-////    protected BlockStateContainer createBlockState()
-//    protected void createBlockStateDefinition(@Nonnull StateDefinition.Builder<Block, BlockState> builder) {
-////        super.createBlockStateDefinition(builder);
-////        builder.add(getEngineProperty());
-//    }
 
 //    @Override
-//    public int getMetaFromState(BlockState state) {
-//        E type = state.getValue(getEngineProperty());
-//        return type.ordinal();
-//    }
 
 //    @Override
-//    public BlockState getStateFromMeta(int meta) {
-//        E engineType = getEngineType(meta);
-//        return this.defaultBlockState().setValue(getEngineProperty(), engineType);
-//    }
 
     // Misc Block Overrides
 
 //    @Override
-//    public boolean isOpaqueCube(BlockState state) {
-//        return false;
-//    }
 
     @Override
     public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
@@ -122,47 +92,18 @@ public abstract class BlockEngineBase_BC8<E extends Enum<E> & IEngineType> exten
     }
 
 //    @Override
-//    public boolean isFullBlock(BlockState state) {
-//        return false;
-//    }
 
 //    @Override
-//    public boolean isFullCube(BlockState state) {
-//        return false;
-//    }
 
 //    @Override
-//    public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing side) {
-//        TileEntity tile = world.getTileEntity(pos);
-//        if (tile instanceof TileEngineBase_BC8) {
-//            TileEngineBase_BC8 engine = (TileEngineBase_BC8) tile;
-//            if (side == engine.currentDirection.getOpposite()) {
-//                return BlockFaceShape.SOLID;
-//            } else {
-//                return BlockFaceShape.UNDEFINED;
-//            }
-//        }
-//        return BlockFaceShape.UNDEFINED;
-//    }
 
 //    @Override
-//    public boolean isSideSolid(BlockState base_state, LevelAccessor world, BlockPos pos, Direction side) {
-//        BlockEntity tile = world.getBlockEntity(pos);
-//        if (tile instanceof TileEngineBase_BC8) {
-//            TileEngineBase_BC8 engine = (TileEngineBase_BC8) tile;
-//            return side == engine.currentDirection.getOpposite();
-//        }
-//        return false;
-//    }
 
     @Override
-//    public EnumBlockRenderType getRenderType(BlockState state)
     public RenderShape getRenderShape(BlockState state) {
-//        return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
-    // Calen
     private static final VoxelShape BASE_U = Block.box(0, 0, 0, 16, 4, 16);
     private static final VoxelShape TRUNK_U = Block.box(4, 4, 4, 12, 16, 12);
     private static final VoxelShape UP = Shapes.or(BASE_U, TRUNK_U);
@@ -198,33 +139,18 @@ public abstract class BlockEngineBase_BC8<E extends Enum<E> & IEngineType> exten
     }
 
     @Override
-//    public TileBC_Neptune createTileEntity(Level world, BlockState state)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
-//        E engineType = state.getValue(getEngineProperty());
-//        BiFunction<BlockPos, BlockState, ? extends TileEngineBase_BC8> constructor = engineTileConstructors.get(engineType);
         BiFunction<BlockPos, BlockState, ? extends TileEngineBase_BC8> constructor = this.engineTileConstructor;
         if (constructor == null) {
             return null;
         }
         TileEngineBase_BC8 tile = constructor.apply(pos, state);
-//        tile.setWorld(world);
         return tile;
     }
 
 //    @Override
-//    public void getSubBlocks(CreativeModeTab tab, NonNullList<ItemStack> list) {
-//        for (E engine : getEngineProperty().getAllowedValues()) {
-//            if (engineTileConstructors.containsKey(engine)) {
-//                list.add(new ItemStack(this, 1, engine.ordinal()));
-//            }
-//        }
-//    }
 
-    // Calen: use datagen LootTable
 //    @Override
-//    public int damageDropped(BlockState state) {
-//        return state.getValue(getEngineProperty()).ordinal();
-//    }
 
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean p_60514_) {
@@ -276,7 +202,6 @@ public abstract class BlockEngineBase_BC8<E extends Enum<E> & IEngineType> exten
         ).get();
     }
 
-    // Calen for particles instead of missingno
     @Override
     @OnlyIn(Dist.CLIENT)
     public void initializeClient(Consumer<IClientBlockExtensions> consumer) {

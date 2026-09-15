@@ -182,7 +182,6 @@ public class TileElectronicLibrary extends TileBC_Neptune implements ITickable, 
                 }
             }
             if (id == NET_DOWN) {
-//                Snapshot.Header header = BCBuildersItems.snapshot.getHeader(invDownIn.getStackInSlot(0));
                 Snapshot.Header header = BCBuildersItems.snapshotBLUEPRINT.get().getHeader(invDownIn.getStackInSlot(0));
                 if (header != null) {
                     Snapshot snapshot = GlobalSavedDataSnapshots.get(level).getSnapshot(header.key);
@@ -239,7 +238,6 @@ public class TileElectronicLibrary extends TileBC_Neptune implements ITickable, 
                             private void write(boolean last) throws IOException {
                                 MessageManager.sendToServer(createMessage(NET_UP, localBuffer ->
                                 {
-//                                    localBuffer.writeUniqueId(ctx.getClientHandler().getGameProfile().getId());
                                     localBuffer.writeUUID(((ClientPacketListener) ctx.getNetworkManager().getPacketListener()).getLocalGameProfile().getId());
                                     selected.writeToByteBuf(localBuffer);
                                     localBuffer.writeBoolean(last);
@@ -280,7 +278,6 @@ public class TileElectronicLibrary extends TileBC_Neptune implements ITickable, 
         }
         if (side == NetworkDirection.PLAY_TO_SERVER) {
             if (id == NET_UP) {
-//                UUID playerId = buffer.readUniqueId();
                 UUID playerId = buffer.readUUID();
                 Snapshot.Key key = new Snapshot.Key(buffer);
                 Pair<UUID, Snapshot.Key> pair = Pair.of(playerId, key);
@@ -301,7 +298,6 @@ public class TileElectronicLibrary extends TileBC_Neptune implements ITickable, 
                         snapshot.key = new Snapshot.Key(snapshot.key, (Snapshot.Header) null);
                         snapshot.computeKey();
                         GlobalSavedDataSnapshots.get(level).addSnapshot(snapshot);
-//                        invUpOut.setStackInSlot(0, BCBuildersItems.snapshot.getUsed(snapshot.getType(), header));
                         invUpOut.setStackInSlot(0, BCBuildersItems.snapshotBLUEPRINT.get().getUsed(snapshot.getType(), header));
                         invUpIn.setStackInSlot(0, StackUtil.EMPTY);
                     } finally {

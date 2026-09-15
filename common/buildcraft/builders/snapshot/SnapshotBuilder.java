@@ -33,7 +33,6 @@ import java.util.stream.IntStream;
 public abstract class SnapshotBuilder<T extends ITileForSnapshotBuilder> implements INBTSerializable<CompoundTag> {
     private static final int MAX_QUEUE_SIZE = 16;
     @SuppressWarnings("WeakerAccess")
-    // protected static final byte CHECK_RESULT_UNKNOWN = 0;
     public static final byte CHECK_RESULT_UNKNOWN = 0;
     @SuppressWarnings("WeakerAccess")
     protected static final byte CHECK_RESULT_CORRECT = 1;
@@ -48,21 +47,11 @@ public abstract class SnapshotBuilder<T extends ITileForSnapshotBuilder> impleme
     private static final long MAX_POWER_PER_TICK = 256 * MjAPI.MJ;
 
     protected final T tile;
-    // private final IWorldEventListener worldEventListener = new WorldEventListenerAdapter() {
 //        @Override
 //        public void notifyBlockUpdate(@Nonnull Level world,
 //                                      @Nonnull BlockPos pos,
 //                                      @Nonnull BlockState oldState,
 //                                      @Nonnull BlockState newState,
-//                                      int flags) {
-//            if (tile.getBuilder() == SnapshotBuilder.this && getBuildingInfo() != null && getBuildingInfo().box.contains(pos)) {
-//                if (check(pos)) {
-//                    afterChecks();
-//                }
-//            }
-//        }
-//    };
-    // Calen: use LocalBlockUpdateNotifier.instance(level).remove/registerSubscriberFromUpdateNotifications()
     // just like TileLaser
     private final ILocalBlockUpdateSubscriber subscriber = new ILocalBlockUpdateSubscriber() {
         @Override
@@ -93,7 +82,6 @@ public abstract class SnapshotBuilder<T extends ITileForSnapshotBuilder> impleme
     @SuppressWarnings("WeakerAccess")
     public final Queue<PlaceTask> prevClientPlaceTasks = new ArrayDeque<>();
     @SuppressWarnings("WeakerAccess")
-    // protected byte[] checkResults;
     @Nonnull
     protected byte[] checkResults = new byte[0];
     private byte[] requiredCache;
@@ -115,14 +103,12 @@ public abstract class SnapshotBuilder<T extends ITileForSnapshotBuilder> impleme
 
     public void validate() {
         if (!tile.getWorldBC().isClientSide) {
-//            tile.getWorldBC().addEventListener(worldEventListener);
             LocalBlockUpdateNotifier.instance(tile.getWorldBC()).registerSubscriberForUpdateNotifications(this.subscriber);
         }
     }
 
     public void invalidate() {
         if (!tile.getWorldBC().isClientSide) {
-//            tile.getWorldBC().removeEventListener(worldEventListener);
             LocalBlockUpdateNotifier.instance(tile.getWorldBC()).removeSubscriberFromUpdateNotifications(this.subscriber);
         }
     }
@@ -161,10 +147,8 @@ public abstract class SnapshotBuilder<T extends ITileForSnapshotBuilder> impleme
 
     /** @return Pos where flying item should be rendered */
     public Vec3 getPlaceTaskItemPos(PlaceTask placeTask) {
-//        Vec3 height = new Vec3(placeTask.pos.subtract(tile.getBuilderPos()));
         Vec3 height = Vec3.atLowerCornerOf(placeTask.pos.subtract(tile.getBuilderPos()));
         double progress = placeTask.power * 1D / placeTask.getTarget();
-//        return new Vec3(tile.getBuilderPos())
         return Vec3.atLowerCornerOf(tile.getBuilderPos())
                 .add(height.scale(progress))
                 .add(new Vec3(0, Math.sin(progress * Math.PI) * (Math.abs(height.y) + 1), 0))
@@ -225,7 +209,6 @@ public abstract class SnapshotBuilder<T extends ITileForSnapshotBuilder> impleme
         placeTasks.clear();
         clientPlaceTasks.clear();
         prevClientPlaceTasks.clear();
-        // checkResults = null;
         checkResults = new byte[0];
         requiredCache = null;
         breakOrder = null;
@@ -253,7 +236,6 @@ public abstract class SnapshotBuilder<T extends ITileForSnapshotBuilder> impleme
             if (!breakTasks.isEmpty()) {
                 Vec3 newRobotPos = breakTasks.stream()
                         .map(breakTask -> breakTask.pos)
-//                        .map(Vec3::new)
                         .map(Vec3::atLowerCornerOf)
                         .map(VecUtil.VEC_HALF::add)
                         .reduce(Vec3.ZERO, Vec3::add)
@@ -313,7 +295,6 @@ public abstract class SnapshotBuilder<T extends ITileForSnapshotBuilder> impleme
 
         boolean isDone = true;
 
-        // Calen Fix:
         // without this, if there is too many blocks to check, a block should be broken or placed may not be checked, when other blocks are correct, this method will return true by mistake.
         // Example: We'd like to build a 5x5 redstone wall, if the right up corner is air and other blocks are already redstone, then the corner wil be ignored.
         for (byte v : checkResults) {
@@ -449,7 +430,6 @@ public abstract class SnapshotBuilder<T extends ITileForSnapshotBuilder> impleme
                     tile.getWorldBC().getProfiler().pop();
                 }
             }
-            // Calen Fix:
             isDone = false;
         }
         tile.getWorldBC().getProfiler().pop();
@@ -477,7 +457,6 @@ public abstract class SnapshotBuilder<T extends ITileForSnapshotBuilder> impleme
                     iterator.remove();
                 }
             }
-            // Calen Fix:
             isDone = false;
         }
         tile.getWorldBC().getProfiler().pop();
@@ -563,7 +542,6 @@ public abstract class SnapshotBuilder<T extends ITileForSnapshotBuilder> impleme
         currentCheckIndex = nbt.getInt("currentCheckIndex");
     }
 
-    // Calen 1.18.2 for robot builder
 
     public Queue<BreakTask> getBreakTasks() {
         return breakTasks;
@@ -639,11 +617,6 @@ public abstract class SnapshotBuilder<T extends ITileForSnapshotBuilder> impleme
             pos = MessageUtil.readBlockPos(buffer);
             items = IntStream.range(0, buffer.readInt()).mapToObj(j ->
             {
-//                try {
-//                    return buffer.readItemStack();
-//                } catch (IOException e) {
-//                    throw new RuntimeException(e);
-//                }
                 return buffer.readItem();
             }).collect(Collectors.toList());
             power = buffer.readLong();
@@ -654,7 +627,6 @@ public abstract class SnapshotBuilder<T extends ITileForSnapshotBuilder> impleme
             pos = NbtUtils.readBlockPos(nbt.getCompound("pos"));
             items = ImmutableList.copyOf(
                     NBTUtilBC.readCompoundList(nbt.get("items"))
-//                            .map(ItemStack::new)
                             .map(ItemStack::of)
                             .collect(Collectors.toList())
             );
@@ -662,14 +634,12 @@ public abstract class SnapshotBuilder<T extends ITileForSnapshotBuilder> impleme
         }
 
         public long getTarget() {
-//            return (long) (Math.sqrt(pos.distanceSq(tile.getBuilderPos())) * 10 * MjAPI.MJ);
             return (long) (Math.sqrt(VecUtil.distanceSq(pos, tile.getBuilderPos())) * 10 * MjAPI.MJ);
         }
 
         public void writePayload(PacketBufferBC buffer) {
             MessageUtil.writeBlockPos(buffer, pos);
             buffer.writeInt(items.size());
-//            items.forEach(buffer::writeItemStack);
             items.forEach((itemStack) -> buffer.writeItemStack(itemStack, false));
             buffer.writeLong(power);
         }

@@ -32,7 +32,6 @@ public class TriggerEnginePowerStage extends BCStatement implements ITriggerExte
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("gate.trigger.engine." + stage.name());
         return Component.translatable("gate.trigger.engine." + stage.getSerializedName());
     }
 

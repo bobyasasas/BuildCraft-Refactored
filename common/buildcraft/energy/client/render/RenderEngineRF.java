@@ -13,7 +13,6 @@ import buildcraft.lib.client.render.tile.RenderEngine_BC8;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
 public class RenderEngineRF extends RenderEngine_BC8<TileEngineRF> {
-    // public static final RenderEngineRF INSTANCE = new RenderEngineRF();
 
     public RenderEngineRF(BlockEntityRendererProvider.Context context) {
         super(context);

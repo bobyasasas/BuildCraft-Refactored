@@ -49,8 +49,6 @@ import java.util.*;
 
 public class SchematicBlockPipe implements ISchematicBlock {
     private CompoundTag tileNbt;
-    // Calen 1.12.2 tileRotation -> 1.18.2 SkullBlock BlockState ROTATION_16
-    // private Rotation tileRotation = Rotation.NONE;
 
     public static boolean predicate(SchematicBlockContext context) {
         return context.world.getBlockState(context.pos).getBlock() == BCTransportBlocks.pipeHolder.get();
@@ -78,17 +76,12 @@ public class SchematicBlockPipe implements ISchematicBlock {
                     tileNbt.getCompound("pipe").get("col"),
                     DyeColor.class
             );
-            // Calen: reg different item objects for different colours
-//            Item item = (Item) PipeApi.pipeRegistry.getItemForPipe(definition);
             Item item = (Item) PipeApi.pipeRegistry.getItemForPipe(definition, color);
             if (item != null) {
 //                builder.add(
-//                        new ItemStack(
 //                                item,
 //                                1,
 //                                color == null ? 0 : color.getMetadata() + 1
-//                        )
-//                );
                 builder.add(new ItemStack(item, 1));
             }
 
@@ -137,7 +130,6 @@ public class SchematicBlockPipe implements ISchematicBlock {
         }
     }
 
-    // Calen
     @NotNull
     @Override
     public List<FluidStack> computeRequiredFluids() {
@@ -158,18 +150,14 @@ public class SchematicBlockPipe implements ISchematicBlock {
     @Override
     public SchematicBlockPipe getRotated(Rotation rotation) {
         SchematicBlockPipe schematicBlock = new SchematicBlockPipe();
-//        schematicBlock.tileNbt = tileNbt;
         schematicBlock.tileNbt = tileNbt.copy();
         rotatePlugs(schematicBlock.tileNbt, rotation);
         rotatePipe(schematicBlock.tileNbt, rotation);
-        // Calen 1.12.2 tileRotation -> 1.18.2 SkullBlock BlockState ROTATION_16
-        // schematicBlock.tileRotation = tileRotation.add(rotation);
         return schematicBlock;
     }
 
     @Override
     public boolean canBuild(Level world, BlockPos blockPos) {
-//        return world.isAirBlock(blockPos);
         return world.isEmptyBlock(blockPos);
     }
 
@@ -179,17 +167,9 @@ public class SchematicBlockPipe implements ISchematicBlock {
         BlockState state = BCTransportBlocks.pipeHolder.get().defaultBlockState();
         boolean setBlockResult = world.setBlock(blockPos, state, Block.UPDATE_ALL_IMMEDIATE);
         if (setBlockResult) {
-//            TileEntity tileEntity = TileEntity.create(world, tileNbt);
             BlockEntity tileEntity = BlockEntity.loadStatic(blockPos, state, tileNbt);
             if (tileEntity != null) {
-                // Calen: tileEntity#setLevel and tileEntity#clearRemoved will be called in world#setBlockEntity
-//                tileEntity.setWorld(world);
-//                world.setTileEntity(blockPos, tileEntity);
                 world.setBlockEntity(tileEntity);
-//                if (tileRotation != Rotation.NONE) {
-//                    tileEntity.rotate(tileRotation);
-//                }
-                // Calen
                 checkDirectionalPipeDir(tileEntity, tileNbt);
                 return true;
             }
@@ -199,22 +179,12 @@ public class SchematicBlockPipe implements ISchematicBlock {
 
     @SuppressWarnings("Duplicates")
     @Override
-//    public boolean buildWithoutChecks(World world, BlockPos blockPos)
     public boolean buildWithoutChecks(IFakeWorld world, BlockPos blockPos) {
         BlockState state = BCTransportBlocks.pipeHolder.get().defaultBlockState();
         if (world.setBlock(blockPos, state, 0)) {
-//            TileEntity tileEntity = TileEntity.create(world, tileNbt);
             BlockEntity tileEntity = BlockEntity.loadStatic(blockPos, state, tileNbt);
             if (tileEntity != null) {
-                // Calen: tileEntity#setLevel and tileEntity#clearRemoved will be called in world.setBlockEntity
-//                tileEntity.setWorld(world);
-//                world.setTileEntity(blockPos, tileEntity);
                 world.setBlockEntity(tileEntity);
-                // Calen 1.12.2 tileRotation -> 1.18.2 SkullBlock BlockState ROTATION_16
-//                if (tileRotation != Rotation.NONE) {
-//                    tileEntity.rotate(tileRotation);
-//                }
-                // Calen
                 checkDirectionalPipeDir(tileEntity, tileNbt);
                 return true;
             }
@@ -231,19 +201,14 @@ public class SchematicBlockPipe implements ISchematicBlock {
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         nbt.put("tileNbt", tileNbt);
-        // Calen 1.12.2 tileRotation -> 1.18.2 SkullBlock BlockState ROTATION_16
-        // nbt.put("tileRotation", NBTUtilBC.writeEnum(tileRotation));
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) throws InvalidInputDataException {
         tileNbt = nbt.getCompound("tileNbt");
-        // Calen 1.12.2 tileRotation -> 1.18.2 SkullBlock BlockState ROTATION_16
-        // tileRotation = NBTUtilBC.readEnum(nbt.get("tileRotation"), Rotation.class);
     }
 
-    // Calen FIX: builder rotates plugs on pipes
     private static void rotatePlugs(CompoundTag nbt, Rotation rotation) {
         try {
             CompoundTag nbtPlugs = nbt.getCompound("plugs");

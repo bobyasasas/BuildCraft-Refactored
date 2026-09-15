@@ -20,7 +20,6 @@ public class ItemRedstoneBoard extends ItemBC_Neptune {
     private final RedstoneBoardNBT<?> boardNBT;
 
     public ItemRedstoneBoard(String idBC, Properties properties, RedstoneBoardNBT<?> boardNBT) {
-        // super(BCCreativeTab.get("boards"));
         super(idBC, properties);
         this.boardNBT = boardNBT;
     }
@@ -34,7 +33,6 @@ public class ItemRedstoneBoard extends ItemBC_Neptune {
     public Component getName(ItemStack stack) {
         MutableComponent start = (MutableComponent) super.getName(stack);
         RedstoneBoardNBT<?> board = getBoardNBT(stack);
-//        return start + " (" + board.getDisplayName() + ")";
         return start.append(" (" + board.getDisplayName() + ")");
     }
 
@@ -44,28 +42,10 @@ public class ItemRedstoneBoard extends ItemBC_Neptune {
         board.addInformation(stack, world, list, flag);
     }
 
-    // Calen 1.18.2: created independent items
-//    @SuppressWarnings({ "unchecked", "rawtypes" })
 //    @Override
-////    @OnlyIn(Dist.CLIENT)
-//    // public void getSubItems(Item item, CreativeTabs par2CreativeTabs, List itemList)
-//    public void addSubItems(CreativeModeTab tab, NonNullList<ItemStack> itemList) {
-//        itemList.add(createStack(RedstoneBoardRegistry.instance.getEmptyRobotBoard()));
-//        for (RedstoneBoardNBT<?> boardNBT : RedstoneBoardRegistry.instance.getAllBoardNBTs()) {
-//            itemList.add(createStack(boardNBT));
-//        }
-//    }
 
-//    public static ItemStack createStack(RedstoneBoardNBT<?> boardNBT) {
-////        ItemStack stack = new ItemStack(BCRoboticsItems.redstoneBoard.get());
-////        CompoundTag nbtData = NBTUtilBC.getItemData(stack);
-////        boardNBT.createBoard(nbtData);
-//        ItemStack stack = new ItemStack(RedstoneBoardRegistry.instance.getBoardNBTItemMap().get(boardNBT).get());
-//        return stack;
-//    }
 
     public static RedstoneBoardNBT<?> getBoardNBT(ItemStack stack) {
-        // return getBoardNBT(getNBT(stack));
         if (stack.getItem() instanceof ItemRedstoneBoard) {
             return ((ItemRedstoneBoard) stack.getItem()).boardNBT;
         } else {
@@ -73,34 +53,13 @@ public class ItemRedstoneBoard extends ItemBC_Neptune {
         }
     }
 
-//    private static CompoundTag getNBT(ItemStack stack) {
-//        CompoundTag cpt = NBTUtilBC.getItemData(stack);
-//        if (!cpt.contains("id")) {
-//            RedstoneBoardRegistry.instance.getEmptyRobotBoard().createBoard(cpt);
-//        }
-//        return cpt;
-//    }
 
-//    private static RedstoneBoardNBT<?> getBoardNBT(CompoundTag cpt) {
-//        return RedstoneBoardRegistry.instance.getRedstoneBoard(cpt);
-//    }
 
-    // Calen 1.18.2
     public RedstoneBoardNBT<?> getBoardNBT() {
         return boardNBT;
     }
 
-    //    @OnlyIn(Dist.CLIENT)
 //    @Override
-//    public void registerModels() {
-//        List<RedstoneBoardNBT<?>> boardNBTs = Lists.newArrayList(RedstoneBoardRegistry.instance.getAllBoardNBTs());
-//        boardNBTs.add(RedstoneBoardRegistry.instance.getEmptyRobotBoard());
-//        for (RedstoneBoardNBT<?> boardNBT : boardNBTs) {
-//            String type = boardNBT.getItemModelLocation();
 //            /* Neat little trick: we have to register the models, but NEVER for meta 0 (because of the way minecraft
 //             * gets its item models). So, provided this number is never 0 it will work */
-//            Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(this, 1, new ModelResourceLocation(type, "inventory"));
-//            ModelBakery.addVariantName(this, type);
-//        }
-//    }
 }

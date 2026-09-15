@@ -52,18 +52,14 @@ public abstract class VariablePartCuboidBase extends JsonVariableModelPart {
                 VariableFaceData data = getFaceData(face, spriteLookup);
                 if (data != null) {
                     Vector3f radius = new Vector3f(t[0] - f[0], t[1] - f[1], t[2] - f[2]);
-//                    radius.scale(0.5f);
                     radius.mul(0.5f);
                     Vector3f center = new Vector3f(f);
                     center.add(radius);
                     MutableQuad quad = ModelUtil.createFace(face, center, radius, data.uvs);
                     quad.rotateTextureUp(data.rotations);
-//                    quad.lighti(l, 0);
                     quad.lightb(l, (byte) 0);
                     quad.colouri(rgba);
-//                    quad.texFromSprite(data.sprite);
                     quad.texFromSprite(data.sprite.get());
-//                    quad.setSprite(data.sprite);
                     quad.setSprite(data.sprite.get());
                     quad.setShade(s);
                     if (data.bothSides) {
@@ -81,7 +77,6 @@ public abstract class VariablePartCuboidBase extends JsonVariableModelPart {
 
     public static class VariableFaceData {
         public ModelUtil.UvFaceData uvs = new ModelUtil.UvFaceData();
-        // public TextureAtlasSprite sprite;
         public LazyLoadedValue<TextureAtlasSprite> sprite;
         public int rotations = 0;
         public boolean invertNormal = false;

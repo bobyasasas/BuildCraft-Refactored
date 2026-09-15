@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-// Calen 1.18.2: supported entity
 public class MessageDebugRequest implements IMessage {
     private boolean isEntity = false;
     private BlockPos pos;
@@ -84,8 +83,6 @@ public class MessageDebugRequest implements IMessage {
             obj = player.level().getBlockEntity(message.pos);
         }
         if (obj instanceof IDebuggable) {
-//            List<String> left = new ArrayList<>();
-//            List<String> right = new ArrayList<>();
             List<Component> left = new ArrayList<>();
             List<Component> right = new ArrayList<>();
             ((IDebuggable) obj).getDebugInfo(left, right, message.side);

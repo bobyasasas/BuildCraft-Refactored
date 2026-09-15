@@ -10,15 +10,12 @@ import net.minecraftforge.common.MinecraftForge;
 import java.util.HashMap;
 
 public class RobotRegistryProvider implements IRobotRegistryProvider {
-    // private static HashMap<Integer, IRobotRegistry> registries = new HashMap<Integer, IRobotRegistry>();
     private static HashMap<ResourceKey<Level>, RobotRegistry> registries = new HashMap<ResourceKey<Level>, RobotRegistry>();
 
     @Override
     public synchronized RobotRegistry getRegistry(Level world) {
-        // if (!registries.containsKey(world.provider.getDimensionId()) || registries.get(world.provider.getDimensionId()).world != world)
         if (!registries.containsKey(world.dimension()) || registries.get(world.dimension()).world != world) {
 
-            // RobotRegistry newRegistry = (RobotRegistry) world.getPerWorldStorage().loadData(RobotRegistry.class, "robotRegistry");
             RobotRegistry newRegistry = (RobotRegistry) ((ServerLevel) world).getDataStorage().get((nbt) -> {
                 RobotRegistry ret = new RobotRegistry();
                 ret.readFromNBT(nbt);
@@ -26,9 +23,7 @@ public class RobotRegistryProvider implements IRobotRegistryProvider {
             }, "robotRegistry");
 
             if (newRegistry == null) {
-                // newRegistry = new RobotRegistry("robotRegistry");
                 newRegistry = new RobotRegistry();
-                // world.getPerWorldStorage().setData("robotRegistry", newRegistry);
                 ((ServerLevel) world).getDataStorage().set("robotRegistry", newRegistry);
             }
 

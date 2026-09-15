@@ -31,9 +31,7 @@ public class TilePowerConsumerTester extends TileBC_Neptune implements IMjReceiv
     }
 
     @Override
-//    public void readFromNBT(CompoundTag nbt)
     public void load(CompoundTag nbt) {
-//        super.readFromNBT(nbt);
         super.load(nbt);
         lastReceived = nbt.getLong("last");
         nextTickReceived = nbt.getLong("nt");
@@ -42,15 +40,12 @@ public class TilePowerConsumerTester extends TileBC_Neptune implements IMjReceiv
     }
 
     @Override
-//    public CompoundTag writeToNBT(CompoundTag nbt)
     public void saveAdditional(CompoundTag nbt) {
-//        nbt = super.writeToNBT(nbt);
         super.saveAdditional(nbt);
         nbt.putLong("last", lastReceived);
         nbt.putLong("nt", nextTickReceived);
         nbt.putLong("lt", lastTickReceived);
         nbt.putLong("total", totalReceived);
-//        return nbt;
     }
 
     // ITickable
@@ -86,15 +81,10 @@ public class TilePowerConsumerTester extends TileBC_Neptune implements IMjReceiv
     // IDebuggable
 
     @Override
-    // public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-        // left.add("");
         left.add(Component.literal(""));
-        // left.add("Last received = " + LocaleUtil.localizeMj(lastReceived));
         left.add(Component.literal("Last received = ").append(LocaleUtil.localizeMjComponent(lastReceived)));
-        // left.add("Tick received = " + LocaleUtil.localizeMj(lastTickReceived));
         left.add(Component.literal("Tick received = ").append(LocaleUtil.localizeMjComponent(lastTickReceived)));
-        // left.add("Total received = " + LocaleUtil.localizeMj(totalReceived));
         left.add(Component.literal("Total received = ").append(LocaleUtil.localizeMjComponent(totalReceived)));
     }
 }

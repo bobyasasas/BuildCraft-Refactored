@@ -43,7 +43,6 @@ public class TileRequester extends TileBC_Neptune implements IRequestProvider, I
     public static final int NB_ITEMS = 20;
 
     public final ItemHandlerSimple inv;
-    // private SimpleInventory requests = new SimpleInventory(NB_ITEMS, "requests", 64);
     public final NonNullList<ItemStack> requests = NonNullList.withSize(NB_ITEMS, StackUtil.EMPTY);
 
     public TileRequester(BlockPos pos, BlockState blockState) {
@@ -73,66 +72,33 @@ public class TileRequester extends TileBC_Neptune implements IRequestProvider, I
     }
 
     public ItemStack getRequestTemplate(int index) {
-        // return requests.getStackInSlot(index);
         return requests.get(index);
     }
 
-    // Calen: 1.8.9 impl IInventory -> 1.18.2 capability ItemHandlerSimple
 //    @Override
-//    public int getSizeInventory() {
-//        return inv.getSizeInventory();
-//    }
 
 //    @Override
-//    public ItemStack getStackInSlot(int slotId) {
-//        return inv.getStackInSlot(slotId);
-//    }
 
 //    @Override
-//    public ItemStack decrStackSize(int slotId, int count) {
-//        return inv.decrStackSize(slotId, count);
-//    }
 
 //    @Override
-//    public ItemStack removeStackFromSlot(int slotId) {
-//        return inv.removeStackFromSlot(slotId);
-//    }
 
 //    @Override
-//    public void setInventorySlotContents(int slotId, ItemStack itemStack) {
-//        inv.setInventorySlotContents(slotId, itemStack);
-//    }
 
 //    @Override
-//    public boolean hasCustomName() {
-//        return inv.hasCustomName();
-//    }
 
 //    @Override
-//    public int getInventoryStackLimit() {
-//        return inv.getInventoryStackLimit();
-//    }
 
 //    @Override
-//    public boolean isUseableByPlayer(EntityPlayer entityPlayer) {
-//        return inv.isUseableByPlayer(entityPlayer);
-//    }
 
 //    @Override
-//    public void openInventory(Player player) {
-//        inv.openInventory(player);
-//    }
 
 //    @Override
-//    public void closeInventory(Player player) {
-//        inv.closeInventory(player);
-//    }
 
     // MenuProvider
 
     @Override
     public Component getDisplayName() {
-        // return inv.getDisplayName();
         return this.getBlockState().getBlock().getName();
     }
 
@@ -143,15 +109,12 @@ public class TileRequester extends TileBC_Neptune implements IRequestProvider, I
     }
 
     // @Override
-    // public boolean isItemValidForSlot(int i, ItemStack itemStack)
     public boolean isItemValid(int i, ItemStack itemStack) {
-        // if (requests.getStackInSlot(i) == null)
         if (requests.get(i).isEmpty()) {
             return false;
         } else if (!StackUtil.isMatchingItemOrList(requests.get(i), itemStack)) {
             return false;
         } else {
-            // return inv.isItemValidForSlot(i, itemStack);
             return true;
         }
     }
@@ -163,7 +126,6 @@ public class TileRequester extends TileBC_Neptune implements IRequestProvider, I
         CompoundTag invNBT = inv.serializeNBT();
         nbt.put("inv", invNBT);
 
-        // requests.serializeNBT();
         ListTag reqNBT = new ListTag();
         for (ItemStack request : requests) {
             reqNBT.add(request.serializeNBT());
@@ -176,7 +138,6 @@ public class TileRequester extends TileBC_Neptune implements IRequestProvider, I
         super.load(nbt);
 
         inv.deserializeNBT(nbt.getCompound("inv"));
-        // requests.deserializeNBT(nbt.getCompound("req"));
         ListTag reqNBT = nbt.getList("req", Tag.TAG_COMPOUND);
         for (int i = 0; i < reqNBT.size(); i++) {
             requests.set(i, ItemStack.of(reqNBT.getCompound(i)));
@@ -184,11 +145,9 @@ public class TileRequester extends TileBC_Neptune implements IRequestProvider, I
     }
 
     public boolean isFulfilled(int i) {
-        // if (requests.getStackInSlot(i) == null)
         if (requests.get(i).isEmpty()) {
             return true;
         }
-        // else if (inv.getStackInSlot(i) == null)
         else if (inv.getStackInSlot(i).isEmpty()) {
             return false;
         } else {
@@ -204,7 +163,6 @@ public class TileRequester extends TileBC_Neptune implements IRequestProvider, I
     @Nonnull
     @Override
     public ItemStack getRequest(int i) {
-        // if (requests.getStackInSlot(i) == null)
         if (requests.get(i).isEmpty()) {
             return StackUtil.EMPTY;
         } else if (isFulfilled(i)) {
@@ -213,7 +171,6 @@ public class TileRequester extends TileBC_Neptune implements IRequestProvider, I
             ItemStack request = requests.get(i).copy();
 
             ItemStack existingStack = inv.getStackInSlot(i);
-            // if (existingStack == null)
             if (existingStack.isEmpty()) {
                 return request;
             }
@@ -236,11 +193,9 @@ public class TileRequester extends TileBC_Neptune implements IRequestProvider, I
     public ItemStack offerItem(int i, ItemStack stack) {
         ItemStack existingStack = inv.getStackInSlot(i);
 
-        // if (requests.getStackInSlot(i) == null)
         if (requests.get(i).isEmpty()) {
             return stack;
         }
-        // else if (existingStack == null)
         else if (existingStack.isEmpty()) {
             if (!StackUtil.isMatchingItemOrList(stack, requests.get(i))) {
                 return stack;
@@ -249,7 +204,6 @@ public class TileRequester extends TileBC_Neptune implements IRequestProvider, I
             int maxQty = requests.get(i).getCount();
 
             if (stack.getCount() <= maxQty) {
-                // inv.setInventorySlotContents(i, stack);
                 inv.setStackInSlot(i, stack);
 
                 return StackUtil.EMPTY;
@@ -258,7 +212,6 @@ public class TileRequester extends TileBC_Neptune implements IRequestProvider, I
                 newStack.setCount(maxQty);
                 stack.shrink(maxQty);
 
-                // inv.setInventorySlotContents(i, newStack);
                 inv.setStackInSlot(i, newStack);
 
                 return stack;

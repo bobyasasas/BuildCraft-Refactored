@@ -36,11 +36,9 @@ public class AIRobotSearchEntity extends AIRobot {
     public void start() {
         double previousDistance = Double.MAX_VALUE;
 
-        // for (Object o : robot.level.loadedEntityList)
         for (Object o : robot.level().getEntities().getAll()) {
             Entity e = (Entity) o;
 
-            // if (!e.isDead && filter.matches(e) && (zone == null || zone.contains(VecUtil.getVec(e))) && (!robot.isKnownUnreachable(e)))
             if (e.isAlive() && filter.matches(e) && (zone == null || zone.contains(VecUtil.getVec(e))) && (!robot.isKnownUnreachable(e))) {
                 double dx = e.getX() - robot.getX();
                 double dy = e.getY() - robot.getY();
@@ -74,7 +72,6 @@ public class AIRobotSearchEntity extends AIRobot {
     }
 
     @Override
-    // public int getEnergyCost()
     public long getPowerCost() {
         return 2 * MjAPI.MJ / 10;
     }

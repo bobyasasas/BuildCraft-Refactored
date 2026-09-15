@@ -31,46 +31,33 @@ public class ContainerEngineIron_BC8 extends ContainerBCTile<TileEngineIron_BC8>
 
 
     @Override
-//    public ItemStack transferStackInSlot(Player player, int index)
     public ItemStack quickMoveStack(Player player, int index) {
         // The only slots are player slots -- try to interact with all of the tanks
 
         if (!player.level().isClientSide) {
-//            Slot slot = inventorySlots.get(index);
             Slot slot = slots.get(index);
-//            ItemStack stack = slot.getStack();
             ItemStack stack = slot.getItem();
             ItemStack original = stack.copy();
             stack = tile.tankFuel.transferStackToTank(this, stack);
-//            if (!ItemStack.areItemStacksEqual(stack, original))
             if (!ItemStack.matches(stack, original)) {
-//                slot.putStack(stack);
                 slot.set(stack);
-//                detectAndSendChanges();
                 broadcastChanges();
                 return ItemStack.EMPTY;
             }
             stack = tile.tankCoolant.transferStackToTank(this, stack);
-//            if (!ItemStack.areItemStacksEqual(stack, original))
             if (!ItemStack.matches(stack, original)) {
-//                slot.putStack(stack);
                 slot.set(stack);
-//                detectAndSendChanges();
                 broadcastChanges();
                 return ItemStack.EMPTY;
             }
             stack = tile.tankResidue.transferStackToTank(this, stack);
-//            if (!ItemStack.areItemStacksEqual(stack, original))
             if (!ItemStack.matches(stack, original)) {
-//                slot.putStack(stack);
                 slot.set(stack);
-//                detectAndSendChanges();
                 broadcastChanges();
                 return ItemStack.EMPTY;
             }
         }
 
-//        return super.transferStackInSlot(player, index);
         return super.quickMoveStack(player, index);
     }
 }

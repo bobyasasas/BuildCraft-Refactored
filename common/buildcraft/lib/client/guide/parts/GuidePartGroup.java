@@ -28,7 +28,6 @@ public class GuidePartGroup extends GuidePart {
             values[i] = groupValues.get(i).value;
         }
         texts = new GuideText[1 + values.length];
-//        texts[0] = new GuideText(gui, group.getTitle(direction));
         texts[0] = new GuideText(gui, group.getTitle(direction), Component.nullToEmpty(group.getTitle(direction)));
         int i = 1;
         for (PageValue<?> single : groupValues) {

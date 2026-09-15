@@ -60,15 +60,12 @@ public class SpriteNineSliced {
         PoseStack poseStack = guiGraphics.pose();
         sprite.bindTexture();
 
-        // Calen: should enableBlend to enable alpha, or the fluid tank overlay will not be seen
         RenderUtil.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         Tesselator tess = Tesselator.getInstance();
         BufferBuilder vb = tess.getBuilder();
-//        vb.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
         vb.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-//        vb.setTranslation(x, y, 0);
         poseStack.pushPose();
         poseStack.translate(x, y, 0);
 
@@ -92,9 +89,7 @@ public class SpriteNineSliced {
         quad(vb, poseStack, xa, ya, ua, va, 2, 1);
         quad(vb, poseStack, xa, ya, ua, va, 2, 2);
 
-//        tess.draw();
         tess.end();
-//        vb.setTranslation(0, 0, 0);
         poseStack.popPose();
     }
 
@@ -112,9 +107,7 @@ public class SpriteNineSliced {
     }
 
     private void vertex(BufferBuilder vb, PoseStack.Pose pose, double x, double y, double texU, double texV) {
-//        vb.pos(x, y, 0);
         vb.vertex(pose.pose(), (float) x, (float) y, 0);
-//        vb.tex(sprite.getInterpU(texU), sprite.getInterpV(texV));
         vb.uv((float) sprite.getInterpU(texU), (float) sprite.getInterpV(texV));
         vb.endVertex();
     }

@@ -24,7 +24,6 @@ public class TankProperties {
     // @Override
     public FluidStack getContents() {
         FluidStack current = tank.getFluid();
-//        return current == null ? null : current.copy();
         return (current == null || current.getRawFluid() instanceof EmptyFluid) ? StackUtil.EMPTY_FLUID : current.copy();
     }
 
@@ -45,7 +44,6 @@ public class TankProperties {
 
     // @Override
     public boolean canFillFluidType(FluidStack fluidStack) {
-//        return canFill() && tank.canFillFluidType(fluidStack);
         return canFill() && tank.isFluidValid(fluidStack);
     }
 

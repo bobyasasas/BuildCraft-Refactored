@@ -72,10 +72,8 @@ public class GuiElementStatementDrag implements IMenuElement {
                     }
                 }
             }
-//            GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
             RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT, false);
             if (!canPlace) {
-//                GlStateManager.color(1.0f, 0.7f, 0.7f);
                 RenderUtil.color(1.0f, 0.7f, 0.7f);
             }
             double x = gui.mouse.getX() - 9;
@@ -98,7 +96,6 @@ public class GuiElementStatementDrag implements IMenuElement {
                     }
                 }
             }
-//            GlStateManager.color(1, 1, 1);
             RenderUtil.color(1, 1, 1);
         }
     }

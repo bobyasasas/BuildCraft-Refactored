@@ -33,8 +33,6 @@ public class RenderPartCube {
     }
 
     public void setWhiteTex() {
-        // Calen: at TextureStitchEvent.Post ForgeModelBakery.White.instance() cannot be called
-        // RuntimeException: getAtlasTexture called too early! (ModelManager.java:99)
         TextureAtlasSprite sprite = White.instance();
         // Reset the vertex so that edits don't spill out to other tiles.
         center.texf(sprite.getU(8), sprite.getV(8));
@@ -42,19 +40,14 @@ public class RenderPartCube {
 
     /** Renders an element, without changing the vertex. However this does ignore the "normal" and "texture" components
      * of the vertex. */
-//    public void render(BufferBuilder bb)
     public void render(PoseStack poseStack, VertexConsumer bb) {
         Vector3f pos = center.positionvf();
         double x = pos.x;
         double y = pos.y;
         double z = pos.z;
 
-        // Calen: add 0.001 to avoid black border caused by VertexConsumer#vertex: double->float->double
-//        double rX = sizeX / 2;
         double rX = sizeX / 2 + 0.001;
-//        double rY = sizeY / 2;
         double rY = sizeY / 2 + 0.001;
-//        double rZ = sizeZ / 2;
         double rZ = sizeZ / 2 + 0.001;
 
         vertex(poseStack, bb, center, x - rX, y + rY, z + rZ);
@@ -88,20 +81,18 @@ public class RenderPartCube {
         vertex(poseStack, bb, center, x - rX, y - rY, z + rZ);
     }
 
-    // private static void vertex(BufferBuilder vb, MutableVertex center, double x, double y, double z)
     private static void vertex(PoseStack poseStack, VertexConsumer vb, MutableVertex center, double x, double y, double z) {
         // Using DefaultVertexFormats.BLOCK
         // -- POSITION_3F // pos
         // -- COLOR_4UB // colour
         // -- TEX_2F // texture
         // -- TEX_2S // lightmap
-//        vb.pos(x, y, z);
         vb.vertex(poseStack.last().pose(), (float) x, (float) y, (float) z);
         center.renderColour(vb);
         center.renderTex(vb);
-        center.renderOverlay(vb); // Calen add
+        center.renderOverlay(vb);
         center.renderLightMap(vb);
-        center.renderNormal(poseStack.last().normal(), vb); // Calen add
+        center.renderNormal(poseStack.last().normal(), vb);
         vb.endVertex();
     }
 }

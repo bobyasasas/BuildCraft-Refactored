@@ -71,13 +71,6 @@ public abstract class NetworkedObjectCache<T> {
      *         make sure that this really is the server thread. */
     public ServerView server() {
         if (DEBUG_LOG) {
-            // TODO Calen how to get server???
-//            MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-//            MinecraftServer server = Minecraft.getInstance().getSingleplayerServer();
-//            if (!server.isSameThread())
-//            {
-//                throw new IllegalStateException("");
-//            }
         }
         return serverView;
     }
@@ -181,7 +174,6 @@ public abstract class NetworkedObjectCache<T> {
     private int serverStore(T object) {
         Integer current = serverObjectToId.get(object);
         if (current == null) {
-            // new entry
             int id = serverCurrentId++;
             T copy = copyOf(object);
             serverObjectToId.put(copy, id);

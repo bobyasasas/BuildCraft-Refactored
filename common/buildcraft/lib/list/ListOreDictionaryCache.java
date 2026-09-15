@@ -15,36 +15,13 @@ import java.util.Set;
 public final class ListOreDictionaryCache {
     public static final ListOreDictionaryCache INSTANCE = new ListOreDictionaryCache();
     private static final String[] TYPE_KEYWORDS = { "Tiny", "Dense", "Small" };
-    // Calen not still used in 1.18
-//    private final Map<String, Set<Integer>> namingCache = new HashMap<>();
-//    private final Set<String> registeredNames = new HashSet<>();
     private final Set<TagKey> registeredNames = new HashSet<>();
 
     private ListOreDictionaryCache() {
 
     }
 
-    // Calen not still used in 1.18
-//    public Set<Integer> getListOfPartialMatches(String part) {
-//        return namingCache.get(part);
-//    }
 
-    // Calen not still used in 1.18
-//    private void addToNamingCache(String s, int id) {
-//        if (s == null) {
-//            return;
-//        }
-//
-//        Set<Integer> ll = namingCache.get(s);
-//
-//        if (ll == null) {
-//            ll = new HashSet<>();
-//            ll.add(id);
-//            namingCache.put(s, ll);
-//        } else {
-//            ll.add(id);
-//        }
-//    }
 
     public static String getType(String name) {
         // Rules for finding type:
@@ -89,17 +66,11 @@ public final class ListOreDictionaryCache {
         return splitLocation < name.length() ? t : null;
     }
 
-    // public void registerName(String name)
     public void registerName(TagKey name) {
         if (registeredNames.contains(name)) {
             return;
         }
 
-        // Calen not still used in 1.18
-//        int oreID = OreDictionary.getOreID(name);
-//
-//        addToNamingCache(getType(name), oreID);
-//        addToNamingCache(getMaterial(name), oreID);
 
         registeredNames.add(name);
     }

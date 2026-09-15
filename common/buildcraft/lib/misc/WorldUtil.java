@@ -22,24 +22,16 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 
 public class WorldUtil {
-//    public static boolean isWorldCreative(World world) {
-//        return world.getWorldInfo().getGameType().isCreative();
-//    }
 
     public static boolean mayPlace(Level world, Block blockIn, BlockPos pos, boolean skipCollisionCheck, Direction sidePlacedOn, @Nullable Player placer) {
         BlockState iblockstate1 = world.getBlockState(pos);
         VoxelShape axisalignedbb = skipCollisionCheck ? null : blockIn.defaultBlockState().getCollisionShape(world, pos);
 
-//        if (axisalignedbb != Block.NULL_AABB && !this.checkNoEntityCollision(axisalignedbb.offset(pos), placer))
         if (axisalignedbb != Shapes.empty() && !world.getEntities(placer, axisalignedbb.bounds().move(pos)).isEmpty()) {
             return false;
-//        } else if (iblockstate1.getMaterial() == Material.CIRCUITS && blockIn == Blocks.ANVIL) {
-//            // Calen:
 //            // 1.12.2 anvil replaces a circuits block
 //            // 1.20.1 no Material
-//            return true;
         } else {
-//            return iblockstate1.getBlock().isReplaceable(this, pos) && blockIn.canPlaceBlockOnSide(this, pos, sidePlacedOn);
             return iblockstate1.canBeReplaced(
                     new BlockPlaceContext(
                             world,

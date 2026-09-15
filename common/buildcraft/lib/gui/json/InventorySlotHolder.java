@@ -13,12 +13,9 @@ public class InventorySlotHolder {
 
     public final Slot[] slots;
 
-    // public InventorySlotHolder(Container container, IInventory inventory)
     public InventorySlotHolder(AbstractContainerMenu container, Container inventory) {
         List<Slot> list = new ArrayList<>();
-//        for (Slot s : container.inventorySlots)
         for (Slot s : container.slots) {
-//            if (s.inventory == inventory)
             if (s.container == inventory) {
                 list.add(s);
             }
@@ -28,7 +25,6 @@ public class InventorySlotHolder {
 
     public InventorySlotHolder(AbstractContainerMenu container, IItemHandler inventory) {
         List<Slot> list = new ArrayList<>();
-//        for (Slot s : container.inventorySlots)
         for (Slot s : container.slots) {
             if (s instanceof SlotItemHandler && ((SlotItemHandler) s).getItemHandler() == inventory) {
                 list.add(s);

@@ -57,7 +57,6 @@ public class FluidRenderer {
     private static final boolean[] DEFAULT_FACES = { true, true, true, true, true, true };
 
     // Cached fields that prevent lots of arguments on most methods
-//    private static BufferBuilder bb;
     private static VertexConsumer bb;
     private static PoseStack.Pose pose;
     private static TextureAtlasSprite sprite;
@@ -65,7 +64,6 @@ public class FluidRenderer {
     private static boolean invertU, invertV;
     private static double xTexDiff, yTexDiff, zTexDiff;
 
-    // Calen 1.20.1
     public static final ResourceLocation TEXTURE_ATLAS_FROZEN_LOCATION = new ResourceLocation(BCLib.MODID, "textures/atlas/frozen.png");
     public static final TextureAtlas FROZEN_ATLAS = new TextureAtlas(TEXTURE_ATLAS_FROZEN_LOCATION);
     public static final RenderType FROZEN_FLUID_RENDER_TYPE_TRANSLUCENT = RenderType.create(
@@ -109,34 +107,8 @@ public class FluidRenderer {
         Minecraft.getInstance().textureManager.register(FROZEN_ATLAS.location(), FROZEN_ATLAS);
     }
 
-//    public static void onTextureStitchPre(TextureMap map) {
-//        for (FluidSpriteType type : FluidSpriteType.values()) {
-//            fluidSprites.get(type).clear();
-//        }
-//        Map<ResourceLocation, SpriteFluidFrozen> spritesStitched = new HashMap<>();
-//        for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
-//            ResourceLocation still = fluid.getStill();
-//            ResourceLocation flowing = fluid.getFlowing();
-//            if (still == null || flowing == null) {
-//                throw new IllegalStateException("Encountered a fluid with a null still sprite! (" + fluid.getName()
-//                        + " - " + FluidRegistry.getDefaultFluidName(fluid) + ")");
-//            }
-//            if (spritesStitched.containsKey(still)) {
-//                fluidSprites.get(FluidSpriteType.FROZEN).put(fluid.getName(), spritesStitched.get(still));
-//            } else {
-//                SpriteFluidFrozen spriteFrozen = new SpriteFluidFrozen(still);
-//                spritesStitched.put(still, spriteFrozen);
-//                if (!map.setTextureEntry(spriteFrozen)) {
-//                    throw new IllegalStateException("Failed to set the frozen variant of " + still + "!");
-//                }
-//                fluidSprites.get(FluidSpriteType.FROZEN).put(fluid.getName(), spriteFrozen);
-//            }
 //            // Note: this must be called with EventPriority.LOW so that we don't overwrite other custom sprites.
-//            fluidSprites.get(FluidSpriteType.STILL).put(fluid.getName(), map.registerSprite(still));
-//            fluidSprites.get(FluidSpriteType.FLOWING).put(fluid.getName(), map.registerSprite(flowing));
-//        }
 
-    // Calen: part of onTextureStitchPre in 1.12.2
     public static void onTextureStitchPost(TextureStitchEvent.Post event) {
         // ensure LOCATION_BLOCKS
         // or we will get wrong texture
@@ -144,9 +116,7 @@ public class FluidRenderer {
         if (map.location().equals(TextureAtlas.LOCATION_BLOCKS)) {
             SpriteLoader spriteLoader = SpriteLoader.create(FROZEN_ATLAS);
             List<SpriteContents> spriteContentsList = Lists.newArrayList();
-            // Calen: BC 1.12.2
             for (Fluid fluid : ForgeRegistries.FLUIDS.getValues()) {
-                // Calen
                 if (fluid.getClass() == EmptyFluid.class) {
                     continue;
                 }
@@ -154,7 +124,6 @@ public class FluidRenderer {
                 ResourceLocation flowing = FluidUtilBC.getFlowingTexture(fluid);
                 ResourceLocation registryName = FluidUtilBC.getRegistryName(fluid);
                 if (still == null || flowing == null) {
-                    // Calen: for uncompleted fluid, continue
                     BCLog.logger.warn("[lib.fluid.renderder] Found fluid [" + registryName + "] has no still or flow textuer ResourceLocation, unable to get sprite.");
                     continue;
                 }
@@ -252,7 +221,6 @@ public class FluidRenderer {
             sideRender = DEFAULT_FACES;
         }
 
-//        double height = MathHelper.clamp(amount / cap, 0, 1);
         double height = Mth.clamp(amount / cap, 0, 1);
         final Vec3 realMin, realMax;
         if (fluid.getRawFluid().getFluidType().isLighterThanAir()) {
@@ -264,7 +232,6 @@ public class FluidRenderer {
         }
 
         FluidRenderer.bb = bbIn;
-//        FluidRenderer.poseStack = poseStack;
         FluidRenderer.pose = poseIn;
 
         if (type == null) {
@@ -393,20 +360,14 @@ public class FluidRenderer {
 
         sprite = FluidRenderer.fluidSprites.get(FluidSpriteType.STILL).get(FluidUtilBC.getRegistryName(fluid.getRawFluid()).toString());
         if (sprite == null) {
-//            sprite = Minecraft.getInstance().getTextureMapBlocks().getMissingSprite();
             sprite = SpriteUtil.missingSprite().get();
         }
-//        Minecraft.getInstance().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         SpriteUtil.bindTexture(TextureAtlas.LOCATION_BLOCKS);
-//        RenderUtil.setGLColorFromInt(fluid.getFluid().getColor(fluid));
         RenderUtil.setGLColorFromInt(FluidUtilBC.getColor(fluid.getRawFluid()));
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-//        Tessellator tess = Tessellator.getInstance();
         Tesselator tess = Tesselator.getInstance();
-//        bb = tess.getBuffer();
         bb = tess.getBuilder();
-//        bb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         ((BufferBuilder) bb).begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
         // draw all the full sprites
@@ -474,22 +435,16 @@ public class FluidRenderer {
             guiVertex(poseMatrix, x, endY, 0, ty);
         }
 
-//        tess.draw();
         tess.end();
-//        GlStateManager.color(1, 1, 1);
         RenderUtil.color(1, 1, 1);
         sprite = null;
         bb = null;
     }
 
     private static void guiVertex(Matrix4f poseMatrix, double x, double y, double u, double v) {
-//        float ru = sprite.getInterpolatedU(u);
         float ru = sprite.getU(u);
-//        float rv = sprite.getInterpolatedV(v);
         float rv = sprite.getV(v);
-//        poseStack.translate(x, y, 0);
         bb.vertex(poseMatrix, (float) x, (float) y, 0);
-//        bb.tex(ru, rv);
         bb.uv(ru, rv);
         bb.endVertex();
     }
@@ -523,7 +478,6 @@ public class FluidRenderer {
             if (invertV) {
                 realv = 1 - realv;
             }
-//            vertex.texf(sprite.getInterpolatedU(realu * 16), sprite.getInterpolatedV(realv * 16));
             vertex.texf(sprite.getU(realu * 16), sprite.getV(realv * 16));
         }
     }

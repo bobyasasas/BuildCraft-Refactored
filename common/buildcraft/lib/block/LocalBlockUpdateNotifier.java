@@ -16,7 +16,7 @@ import java.util.*;
  * Listens for BlockUpdates in a given world and notifies all registered IBlockUpdateSubscribers of the update provided
  * it was within the update range of the ILocalBlockUpdateSubscriber
  */
-@Mod.EventBusSubscriber(modid = BCLib.MODID) // Calen
+@Mod.EventBusSubscriber(modid = BCLib.MODID)
 public class LocalBlockUpdateNotifier {
 
     private static final Map<LevelAccessor, LocalBlockUpdateNotifier> instanceMap = new WeakHashMap<>();
@@ -24,20 +24,12 @@ public class LocalBlockUpdateNotifier {
 
 
     private LocalBlockUpdateNotifier(LevelAccessor world) {
-//        IWorldEventListener worldEventListener = new WorldEventListenerAdapter() {
 //            @Override
 //            public void notifyBlockUpdate(@Nonnull World world, @Nonnull BlockPos eventPos, @Nonnull IBlockState oldState,
-//                                          @Nonnull IBlockState newState, int flags) {
-//                notifySubscribersInRange(world, eventPos, oldState, newState, flags);
-//            }
-//        };
-//        // Calen: moved to #handleForgeEvent
-//        world.addEventListener(worldEventListener);
     }
 
     private static final List<GameEvent> listenedEvents = List.of(GameEvent.BLOCK_CHANGE, GameEvent.EXPLODE, GameEvent.BLOCK_PLACE, GameEvent.BLOCK_DESTROY);
 
-    // Calen
     @SubscribeEvent
     public static void handleForgeEvent(VanillaGameEvent event) {
         GameEvent gameEvent = event.getVanillaEvent();
@@ -92,7 +84,6 @@ public class LocalBlockUpdateNotifier {
      * @param world    from the Block Update
      * @param eventPos from the Block Update
      */
-//    private void notifySubscribersInRange(Level world, BlockPos eventPos, BlockState oldState, BlockState newState, int flags)
     private void notifySubscribersInRange(Level world, BlockPos eventPos) {
         for (ILocalBlockUpdateSubscriber subscriber : subscriberSet) {
             BlockPos keyPos = subscriber.getSubscriberPos();
@@ -100,7 +91,6 @@ public class LocalBlockUpdateNotifier {
             if (Math.abs(keyPos.getX() - eventPos.getX()) <= updateRange &&
                     Math.abs(keyPos.getY() - eventPos.getY()) <= updateRange &&
                     Math.abs(keyPos.getZ() - eventPos.getZ()) <= updateRange) {
-//                subscriber.setWorldUpdated(world, eventPos, oldState, newState, flags);
                 subscriber.setWorldUpdated(world, eventPos);
             }
         }

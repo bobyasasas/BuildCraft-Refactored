@@ -17,40 +17,13 @@ public class AtlasSpriteFluid extends AtlasSpriteSwappable {
     final int colourLight, colourDark;
 
     public AtlasSpriteFluid(String baseName, ResourceLocation fromName, BCFluid fluid) {
-//        super(baseName);
         super(null, null, 0, 0, 0, 0);
         throw new RuntimeException("");
-//        this.fromName = fromName;
-//        this.fluid = fluid;
-//        colourLight = fluid.getLightColour();
-//        colourDark = fluid.getDarkColour();
     }
 
 //    @Override
-//    public boolean load(IResourceManager manager, ResourceLocation location, Function<ResourceLocation, TextureAtlasSprite> textureGetter) {
-//        ResourceLocation from = SpriteUtil.transformLocation(fromName);
-//        TextureAtlasSprite sprite = loadSprite(manager, from.toString(), from, true);
-//        if (sprite == null) {
-//            BCLog.logger.warn("Unable to recolour " + from + " as it couldn't be loaded!");
-//            return true;
-//        }
-//        for (int f = 0; f < sprite.getFrameCount(); f++) {
-//            recolourFrame(sprite, f);
-//        }
-//        swapWith(sprite);
-//        return false;
-//    }
 
-//    private void recolourFrame(TextureAtlasSprite sprite, int f) {
-//        int[][] frameData = sprite.getFrameTextureData(f);
-//        if (frameData != null) {
 //            // frameData[0] is mipmap 0
-//            int[] pixels = frameData[0];
-//            for (int i = 0; i < pixels.length; i++) {
-//                recolourPixel(pixels, i);
-//            }
-//        }
-//    }
 
     private void recolourPixel(int[] pixels, int i) {
         int rgba = pixels[i];

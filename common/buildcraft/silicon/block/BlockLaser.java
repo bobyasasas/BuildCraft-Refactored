@@ -28,7 +28,6 @@ public class BlockLaser extends BlockBCTile_Neptune<TileLaser> implements IBlock
     }
 
     @Override
-//    public TileBC_Neptune createTileEntity(Level world, BlockState state)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
         return BCSiliconBlocks.laserTile.get().create(pos, state);
     }
@@ -39,14 +38,8 @@ public class BlockLaser extends BlockBCTile_Neptune<TileLaser> implements IBlock
     }
 
 //    @Override
-//    public boolean isFullCube(IBlockState state) {
-//        return false;
-//    }
 
 //    @Override
-//    public boolean isOpaqueCube(IBlockState state) {
-//        return false;
-//    }
 
     @Override
     public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {

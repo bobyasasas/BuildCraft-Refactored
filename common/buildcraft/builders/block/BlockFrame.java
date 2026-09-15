@@ -60,7 +60,6 @@ public class BlockFrame extends BlockBCBase_Neptune {
         return getActualState(thisState, world, thisPos);
     }
 
-    // public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
     public BlockState getActualState(BlockState state, LevelAccessor world, BlockPos pos) {
         for (Direction side : CONNECTED_MAP.keySet()) {
             Block block = world.getBlockState(pos.relative(side)).getBlock();
@@ -69,16 +68,9 @@ public class BlockFrame extends BlockBCBase_Neptune {
         return state;
     }
 
-    // Calen: moved to BuildCraftBuilders#onRenderRegister
 //    @Override
-//    public BlockRenderLayer getBlockLayer() {
-//        return BlockRenderLayer.CUTOUT;
-//    }
 
 //    @Override
-//    public boolean isFullCube(IBlockState state) {
-//        return false;
-//    }
 
     @Override
     public boolean isCollisionShapeFullBlock(BlockState state, BlockGetter world, BlockPos pos) {
@@ -86,9 +78,6 @@ public class BlockFrame extends BlockBCBase_Neptune {
     }
 
 //    @Override
-//    public boolean isOpaqueCube(IBlockState state) {
-//        return false;
-//    }
 
     @Override
     public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
@@ -102,65 +91,35 @@ public class BlockFrame extends BlockBCBase_Neptune {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    // Calen ret opposite value to 1.12.2!
-//    public boolean shouldSideBeRendered(IBlockState state, IBlockAccess world, BlockPos pos, Direction side)
     public boolean skipRendering(BlockState thisState, BlockState otherState, Direction side) {
-//        BlockState actualState = thisState.getActualState(world, pos);
         BlockState actualState = thisState;
         Direction[] facings = CONNECTED_MAP.keySet().stream()
                 .filter(facing -> actualState.getValue(CONNECTED_MAP.get(facing)))
                 .toArray(Direction[]::new);
         if (facings.length == 1) {
-//            return side != facings[0];
             return side == facings[0];
         } else if (facings.length == 2 && facings[0] == facings[1].getOpposite()) {
-//            return side != facings[0] && side != facings[1];
             return side == facings[0] || side == facings[1];
         }
-//        return true;
         return false;
     }
 
 //    @Override
-//    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos)
-//    {
-//        IBlockState actualState = state.getActualState(world, pos);
-//        AtomicReference<AxisAlignedBB> box = new AtomicReference<>(BASE_AABB);
 //        CONNECTED_MAP.forEach((side, property) ->
-//        {
-//            if (actualState.getValue(property))
-//            {
-//                box.set(box.get().union(RotationUtil.rotateAABB(CONNECTION_AABB, side)));
-//            }
-//        });
-//        return box.get();
-//    }
 
     @Override
     public VoxelShape getShape(BlockState actualState, BlockGetter world, BlockPos pos, CollisionContext context) {
-//        AtomicReference<AABB> box = new AtomicReference<>(BASE_AABB.bounds());
         List<VoxelShape> shapes = new ArrayList<>();
         CONNECTED_MAP.forEach((side, property) ->
         {
             if (actualState.getValue(property)) {
-//                box.set(box.get().minmax(RotationUtil.rotateAABB(CONNECTION_AABB.bounds(), side)));
                 shapes.add(Shapes.create(RotationUtil.rotateAABB(CONNECTION_AABB.bounds(), side)));
             }
         });
-//        return Shapes.create(box.get());
         return Shapes.or(BASE_AABB, shapes.toArray(new VoxelShape[0]));
     }
 
 //    @Override
-//    public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entity, boolean isPistonMoving)
-//    {
-//        IBlockState actualState = state.getActualState(world, pos);
-//        addCollisionBoxToList(pos, entityBox, collidingBoxes, BASE_AABB);
-//        CONNECTED_MAP.keySet().stream()
-//                .filter(side -> actualState.getValue(CONNECTED_MAP.get(side)))
-//                .map(side -> RotationUtil.rotateAABB(CONNECTION_AABB, side))
-//                .forEach(box -> addCollisionBoxToList(pos, entityBox, collidingBoxes, box));
-//    }
 
     @Override
     public VoxelShape getCollisionShape(BlockState actualState, BlockGetter world, BlockPos pos, CollisionContext context) {
@@ -170,12 +129,10 @@ public class BlockFrame extends BlockBCBase_Neptune {
                 .filter(side -> actualState.getValue(CONNECTED_MAP.get(side)))
                 .map(side -> Shapes.create(RotationUtil.rotateAABB(CONNECTION_AABB.bounds(), side)))
                 .forEach(box -> shapes.add(Shapes.create(box.bounds().move(pos))));
-//                .forEach(box -> shape = Shapes.or(shape,));
         return Shapes.or(shape, shapes.toArray(new VoxelShape[0]));
     }
 
     @Override
-//    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
     public List<ItemStack> getDrops(BlockState state, Builder builder) {
         return Collections.emptyList();
     }

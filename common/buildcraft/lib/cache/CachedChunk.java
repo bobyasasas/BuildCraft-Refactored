@@ -36,7 +36,6 @@ public class CachedChunk implements IChunkCache {
         }
         if (cachedChunk != null) {
             LevelChunk c = cachedChunk.get();
-//            if (c != null && c.isLoaded())
             if (c != null && c.isInLevel()) {
                 return c;
             }

@@ -97,7 +97,6 @@ public class ScriptableRegistry<E> extends SimpleReloadableRegistry<E> implement
         List<Path> jarRoots = new ArrayList<>();
 
         for (ModFileInfo container : LoadingModList.get().getModFiles()) {
-            // Calen 1.18.2
             if ("forge".equals(container.moduleName())) {
                 continue;
             }
@@ -148,7 +147,6 @@ public class ScriptableRegistry<E> extends SimpleReloadableRegistry<E> implement
     }
 
     private void visitFile(List<FileSystem> openFileSystems, Map<File, Path> loadedFiles, List<Path> roots, File source) {
-//        if (loadedFiles.containsKey(source))
         if (loadedFiles.containsKey(source) || !source.exists()) {
             return;
         }
@@ -325,7 +323,6 @@ public class ScriptableRegistry<E> extends SimpleReloadableRegistry<E> implement
     private void loadReloadable(ResourceLocation name, Gson gson, JsonObject json) throws JsonSyntaxException {
         String type = "";
         if (json.has("type")) {
-//            type = JsonUtils.getString(json, "type");
             type = GsonHelper.getAsString(json, "type");
         }
         IEntryDeserializer<? extends E> deserializer = getCustomDeserializers().get(type);

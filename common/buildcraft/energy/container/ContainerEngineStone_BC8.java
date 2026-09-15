@@ -17,7 +17,6 @@ public class ContainerEngineStone_BC8 extends ContainerBCTile<TileEngineStone_BC
         super(menuType, id, player, engine);
 
         addFullPlayerInventory(84);
-//        addSlotToContainer(new SlotBase(engine.invFuel, 0, 80, 41));
         addSlot(new SlotBase(engine.invFuel, 0, 80, 41));
     }
 }

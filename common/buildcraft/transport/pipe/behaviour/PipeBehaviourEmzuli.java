@@ -206,9 +206,7 @@ public class PipeBehaviourEmzuli extends PipeBehaviourWood {
         if (EntityUtil.getWrenchHand(player) != null) {
             return super.onPipeActivate(player, trace, hitX, hitY, hitZ, part);
         }
-//        if (player.isServerWorld())
         if (player instanceof ServerPlayer) {
-//            BCTransportGuis.PIPE_EMZULI.openGui(player, pipe.getHolder().getPipePos());
             MessageUtil.serverOpenTileGui(player, pipe.getHolder(), pipe.getHolder().getPipePos());
         }
         return true;

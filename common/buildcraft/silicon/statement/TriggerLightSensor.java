@@ -33,7 +33,6 @@ public class TriggerLightSensor extends BCStatement implements ITriggerInternalS
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("gate.trigger.light." + (bright ? "bright" : "dark"));
         return Component.translatable("gate.trigger.light." + (bright ? "bright" : "dark"));
     }
 
@@ -46,7 +45,6 @@ public class TriggerLightSensor extends BCStatement implements ITriggerInternalS
     public boolean isTriggerActive(Direction side, IStatementContainer source, IStatementParameter[] parameters) {
         BlockEntity tile = source.getTile();
         BlockPos pos = tile.getBlockPos().relative(side);
-//        int light = tile.getLevel().getLightFromNeighbors(pos);
         Level world = tile.getLevel();
         int light = world.getBrightness(LightLayer.SKY, pos) + world.getBrightness(LightLayer.BLOCK, pos) - world.getSkyDarken(); // DaylightDetectorBlock#updateSignalStrength()
         return (light < 8) ^ bright;

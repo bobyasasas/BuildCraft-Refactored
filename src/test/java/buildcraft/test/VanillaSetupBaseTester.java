@@ -14,7 +14,6 @@ public class VanillaSetupBaseTester {
         PrintStream sysOut = System.out;
         InputStream sysIn = System.in;
 
-//        Bootstrap.register();
         SharedConstants.tryDetectVersion();
         Bootstrap.bootStrap();
 

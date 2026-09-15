@@ -240,8 +240,6 @@ public class WireManager implements IWireManager {
                 DyeColor colour = buffer.readEnum(DyeColor.class);
                 parts.put(part, colour);
             }
-//            updateBetweens(false);
-            // Calen: when world loading, TilePipeHolder#getNeighbourTile -> [lib.tile] Ghost-loading tile at ...
             getHolder().runWhenWorldNotNull(() -> updateBetweens(false), true);
         }
     }

@@ -101,9 +101,6 @@ public abstract class JsonVariableModelPart {
         }
     }
 
-    // private static JsonVariableQuad[] readFace(JsonObject obj, FunctionContext fnCtx) {
-    // throw new AbstractMethodError("Implement this!");
-    // }
 
     public static INodeDouble[] readVariablePosition(JsonObject obj, String member, FunctionContext fnCtx) {
         String[] got = JsonUtil.getSubAsStringArray(obj, member);

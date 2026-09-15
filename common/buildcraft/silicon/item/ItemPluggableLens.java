@@ -33,8 +33,6 @@ import javax.annotation.Nonnull;
 public class ItemPluggableLens extends ItemBC_Neptune implements IItemPluggable {
     public ItemPluggableLens(String idBC, Item.Properties properties) {
         super(idBC, properties);
-//        setMaxDamage(0);
-//        setHasSubtypes(true);
     }
 
     public static LensData getData(ItemStack stack) {
@@ -67,28 +65,19 @@ public class ItemPluggableLens extends ItemBC_Neptune implements IItemPluggable 
     }
 
     @Override
-//    public String getItemStackDisplayName(ItemStack stack)
     public Component getName(ItemStack stack) {
-        // Calen: if using TranslatableComponent to localize colours, the colour will not be seen, unknown why...
         LensData data = getData(stack);
         String colour = data.colour == null ? LocaleUtil.localize("color.clear")
                 : ColourUtil.getTextFullTooltipSpecial(data.colour);
         String first = LocaleUtil.localize(data.isFilter ? "item.Filter.name" : "item.Lens.name");
-//        return colour + " " + first;
         return Component.literal(colour + " " + first);
     }
 
-    // TODO Calen getFontRenderer???
 //    @Override
-//    @SideOnly(Side.CLIENT)
-//    public FontRenderer getFontRenderer(ItemStack stack) {
-//        return SpecialColourFontRenderer.INSTANCE;
-//    }
 
     @Override
     protected void addSubItems(NonNullList<ItemStack> subItems) {
         for (int i = 0; i < 34; i++) {
-//            ItemStack stack = new ItemStack(this, 1, i);
             ItemStack stack = new ItemStack(this, 1);
             stack.setDamageValue(i);
             subItems.add(stack);
@@ -96,12 +85,6 @@ public class ItemPluggableLens extends ItemBC_Neptune implements IItemPluggable 
     }
 
 //    @Override
-//    @SideOnly(Side.CLIENT)
-//    public void addModelVariants(TIntObjectHashMap<ModelResourceLocation> variants) {
-//        for (int i = 0; i < 34; i++) {
-//            variants.put(i, new ModelResourceLocation("buildcraftsilicon:lens_item#inventory"));
-//        }
-//    }
 
     public static class LensData {
         public final DyeColor colour;
@@ -121,7 +104,6 @@ public class ItemPluggableLens extends ItemBC_Neptune implements IItemPluggable 
                 colour = null;
                 isFilter = damage == 33;
             } else {
-//                colour = EnumDyeColor.byDyeDamage(damage & 15);
                 colour = DyeColor.byId(15 - damage & 15);
                 isFilter = damage >= 16;
             }
@@ -131,7 +113,6 @@ public class ItemPluggableLens extends ItemBC_Neptune implements IItemPluggable 
             if (colour == null) {
                 return isFilter ? 33 : 32;
             } else {
-//                return colour.getDyeDamage() + (isFilter ? 16 : 0);
                 return (15 - colour.getId()) + (isFilter ? 16 : 0);
             }
         }

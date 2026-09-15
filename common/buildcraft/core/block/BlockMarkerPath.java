@@ -24,13 +24,11 @@ public class BlockMarkerPath extends BlockMarkerBase {
     }
 
     @Override
-//    public TileBC_Neptune createTileEntity(Level worldIn, IBlockState state)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
         return new TileMarkerPath(pos, state);
     }
 
     @Override
-//    public boolean onBlockActivated(Level world, BlockPos pos, IBlockState state, Player player, InteractionHand hand, Direction side, float hitX, float hitY, float hitZ)
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!world.isClientSide) {
             BlockEntity tile = world.getBlockEntity(pos);
@@ -41,7 +39,6 @@ public class BlockMarkerPath extends BlockMarkerBase {
                 }
             }
         }
-//        return true;
         return InteractionResult.SUCCESS;
     }
 }

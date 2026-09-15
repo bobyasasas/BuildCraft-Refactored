@@ -104,7 +104,6 @@ public class ExpressionCompat {
         RENDERING.put_s_l("convertColourToArgb", ExpressionCompat::convertColourToArgb);
     }
 
-    // public static void setup()
     public static synchronized void setup() {
         // Just to call the above static initializer
     }

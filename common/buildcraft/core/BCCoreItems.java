@@ -22,7 +22,6 @@ public final class BCCoreItems {
     public static RegistryObject<ItemBC_Neptune> gearIron;
     public static RegistryObject<ItemBC_Neptune> gearGold;
     public static RegistryObject<ItemBC_Neptune> gearDiamond;
-    // public static RegistryObject<ItemPaintbrush_BC8> paintbrush;
     public static Map<DyeColor, RegistryObject<ItemPaintbrush_BC8>> colourBrushMap = new HashMap<>();
     public static RegistryObject<ItemPaintbrush_BC8> paintbrushClean;
     public static RegistryObject<ItemPaintbrush_BC8> paintbrushWhite;
@@ -55,7 +54,6 @@ public final class BCCoreItems {
         gearIron = HELPER.addItem("item.gear.iron", ItemPropertiesCreator.common64(), ItemBC_Neptune::new);
         gearGold = HELPER.addItem("item.gear.gold", ItemPropertiesCreator.common64(), ItemBC_Neptune::new);
         gearDiamond = HELPER.addItem("item.gear.diamond", ItemPropertiesCreator.common64(), ItemBC_Neptune::new);
-//        paintbrush = HELPER.addItem("item.paintbrush", ItemPropertiesCreator.stack1(), ItemPaintbrush_BC8::new);
         paintbrushClean = regPaintBrush(null);
         paintbrushWhite = regPaintBrush(DyeColor.WHITE);
         paintbrushOrange = regPaintBrush(DyeColor.ORANGE);

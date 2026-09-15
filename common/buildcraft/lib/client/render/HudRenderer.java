@@ -14,10 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public abstract class HudRenderer {
-    // protected abstract void renderImpl(Minecraft mc, EntityPlayerSP player);
     protected abstract void renderImpl(Minecraft mc, LocalPlayer player);
 
-    // protected abstract boolean shouldRender(Minecraft mc, EntityPlayerSP player);
     protected abstract boolean shouldRender(Minecraft mc, LocalPlayer player);
 
     protected void setupTransforms() {
@@ -27,14 +25,11 @@ public abstract class HudRenderer {
 
     }
 
-    // public final void render(Minecraft mc, EntityPlayerSP player)
     public final void render(Minecraft mc, PoseStack poseStack, LocalPlayer player) {
         if (shouldRender(mc, player)) {
-//            GL11.glPushMatrix();
             poseStack.pushPose();
             setupTransforms();
             renderImpl(mc, player);
-//            GL11.glPopMatrix();
             poseStack.popPose();
         }
     }

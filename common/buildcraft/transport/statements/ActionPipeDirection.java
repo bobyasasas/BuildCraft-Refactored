@@ -36,7 +36,6 @@ public class ActionPipeDirection extends BCStatement implements IActionInternal 
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("gate.action.pipe.direction", ColourUtil.getTextFullTooltip(direction));
         return Component.translatable("gate.action.pipe.direction", ColourUtil.getTextFullTooltipComponent(direction));
     }
 

@@ -28,8 +28,6 @@ public class VanillaRotationHandlers {
     /* Player friendly rotations- these only rotate through sides that are touching (only 90 degree changes, in any
      * axis), rather than jumping around. */
     public static final OrderedEnumMap<Direction> ROTATE_HORIZONTAL, ROTATE_FACING, ROTATE_TORCH, ROTATE_HOPPER;
-    // Calen: not still used. we handle skull and level in #rotateSkull #rotateLever
-//    public static final OrderedEnumMap<VoxelShape> ROTATE_LEVER;
 
     static {
         Direction e = Direction.EAST, w = Direction.WEST;
@@ -40,20 +38,6 @@ public class VanillaRotationHandlers {
         ROTATE_TORCH = new OrderedEnumMap<>(Direction.class, e, s, w, n, u);
         ROTATE_HOPPER = new OrderedEnumMap<>(Direction.class, e, s, w, n, d);
 
-//        EnumOrientation[] leverFaces = new EnumOrientation[8];
-//        int index = 0;
-//        for (EnumFacing face : ROTATE_FACING.getOrder()) {
-//            if (face == EnumFacing.DOWN) {
-//                leverFaces[index++] = EnumOrientation.DOWN_Z;
-//                leverFaces[index++] = EnumOrientation.DOWN_X;
-//            } else if (face == EnumFacing.UP) {
-//                leverFaces[index++] = EnumOrientation.UP_Z;
-//                leverFaces[index++] = EnumOrientation.UP_X;
-//            } else {
-//                leverFaces[index++] = EnumOrientation.forFacings(face, null);
-//            }
-//        }
-//        ROTATE_LEVER = new OrderedEnumMap<>(EnumOrientation.class, leverFaces);
     }
 
     public static void fmlInit() {
@@ -157,7 +141,6 @@ public class VanillaRotationHandlers {
 
     private static InteractionResult rotateLever(Level world, BlockPos pos, BlockState state, Direction sideWrenched) {
         if (state.getBlock() instanceof LeverBlock) {
-//            return rotateAnyTypeAuto(world, pos, state, BlockLever.FACING, ROTATE_LEVER, EnumOrientation::getFacing);
             Direction direction = state.getValue(HorizontalDirectionalBlock.FACING);
             BlockState newState = state.setValue(HorizontalDirectionalBlock.FACING, direction.getClockWise());
             if (newState.canSurvive(world, pos)) {
@@ -237,12 +220,6 @@ public class VanillaRotationHandlers {
                 BlockPos offsetPos = pos.relative(toTry.getOpposite());
                 BlockState offsetState = world.getBlockState(offsetPos);
 
-//                if (toTry == EnumFacing.UP && offsetState.getBlock().canPlaceTorchOnTop(state, world, offsetPos)) {
-//                    return true;
-//                } else if (toTry != EnumFacing.UP && toTry != EnumFacing.DOWN) {
-//                    return offsetState.getBlockFaceShape(world, offsetPos, toTry) == BlockFaceShape.SOLID && !BlockBCBase_Neptune.isExceptBlockForAttachWithPiston(offsetState.getBlock());
-//                }
-//                return false;
                 return state.setValue(HorizontalDirectionalBlock.FACING, toTry).canSurvive(world, pos)
                         && !BlockBCBase_Neptune.isExceptBlockForAttachWithPiston(offsetState.getBlock());
             };
@@ -318,21 +295,11 @@ public class VanillaRotationHandlers {
     private static InteractionResult rotateSkull(Level world, BlockPos pos, BlockState state, Direction sideWrenched) {
         if (state.getBlock() instanceof SkullBlock) {
 
-//            if (state.getValue(SkullBlock.ROTATION).getAxis().isVertical())
             if (true) {
                 BlockEntity tile = world.getBlockEntity(pos);
                 if (tile instanceof SkullBlockEntity) {
                     // 1.12.2 Old
-//                    SkullBlockEntity tileSkull = (SkullBlockEntity) tile;
-//
-//                    int rot = ObfuscationReflectionHelper.getPrivateValue(SkullBlockEntity.class, tileSkull, "skullRotation", "field_" + "145910_i");
-//                    rot = (rot + 1) % 16;
-//
-//                    tileSkull.setSkullRotation(rot);
-//                    tileSkull.markDirty();
-//                    world.sendBlockUpdated(pos, state, state, 3);
 
-                    // Calen
                     BlockState s = world.getBlockState(pos);
                     int rot = s.getValue(SkullBlock.ROTATION);
                     rot = (rot + 1) % 16;
@@ -343,9 +310,6 @@ public class VanillaRotationHandlers {
                 }
                 return InteractionResult.PASS;
             }
-//            else {
-//                return rotateOnce(world, pos, state, SkullBlock.ROTATION, ROTATE_HORIZONTAL);
-//            }
         }
         return InteractionResult.PASS;
     }
@@ -413,7 +377,6 @@ public class VanillaRotationHandlers {
     )
     //@formatter:on
     {
-//        Predicate<E> tester = toTry -> state.getBlock().canPlaceBlockOnSide(world, pos, mapper.apply(toTry));
         Predicate<E> tester = toTry -> state.setValue(prop, toTry).canSurvive(world, pos);
         return rotateAnyTypeManual(world, pos, state, prop, possible, tester);
     }

@@ -69,8 +69,6 @@ public class BCDatapackBuiltinEntriesProvider extends DatapackBuiltinEntriesProv
     public static void initDatagenStructures(BootstapContext<Structure> context) {
         HolderGetter<Biome> biomes = context.lookup(Registries.BIOME);
         HolderSet.Named<Biome> biomeHolderSet = biomes.getOrThrow(OreDictionaryTags.OIL_GEN);
-//        MappedRegistry<Structure> mappedRegistry = ForgeRegistries.BIOMES.getSlaveMap();
-//        mappedRegistry.getOrCreateTag(OreDictionaryTags.OIL_GEN);
         CONFIGURED_INSTANCE_OIL_STRUCTURE = context.register(
                 ResourceKey.create(
                         Registries.STRUCTURE,
@@ -87,11 +85,7 @@ public class BCDatapackBuiltinEntriesProvider extends DatapackBuiltinEntriesProv
     }
 
     public static void initDatagenStructureSets(BootstapContext<StructureSet> context) {
-//        HolderGetter<Structure> structures = context.lookup(Registries.STRUCTURE);
-//        Holder.Reference<Structure> oil = structures.getOrThrow(STRUCTURE_KEY);
 
-//        ForgeRegistry<Structure> registry = RegistryManager.ACTIVE.getRegistry(Registries.STRUCTURE);
-//        Holder<Structure> oil = registry.getHolder(STRUCTURE_KEY).get();
 
         // 1.18.2: the salt should not be negative...
         context.register(

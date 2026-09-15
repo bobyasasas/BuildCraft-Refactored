@@ -21,7 +21,6 @@ public enum BCCoreEventDist {
 
     @SubscribeEvent
     public void onWorldTick(TickEvent.LevelTickEvent event) {
-//        if (event.world != null && !event.world.isRemote && event.world.getMinecraftServer() != null)
         if (event.level != null && !event.level.isClientSide && event.level.getServer() != null) {
             WorldSavedDataVolumeBoxes.get(event.level).tick();
         }

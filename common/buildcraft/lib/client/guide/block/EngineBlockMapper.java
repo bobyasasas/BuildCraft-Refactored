@@ -19,7 +19,6 @@ import java.util.List;
 public class EngineBlockMapper implements IBlockGuidePageMapper {
     @Override
     public String getFor(Level world, BlockPos pos, BlockState state) {
-//        EnumEngineType type = state.getValue(BuildCraftProperties.ENGINE_TYPE);
         EnumEngineType type = (EnumEngineType) ((BlockEngineBase_BC8) state.getBlock()).engineType;
         return "engine_" + type.getSerializedName();
     }

@@ -13,7 +13,6 @@ public class BlockPowerConsumerTester extends BlockBCTile_Neptune<TilePowerConsu
     }
 
     @Override
-//    public TileBC_Neptune createTileEntity(World worldIn, IBlockState state)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
         return new TilePowerConsumerTester(pos, state);
     }

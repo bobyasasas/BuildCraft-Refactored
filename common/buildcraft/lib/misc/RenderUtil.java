@@ -33,14 +33,10 @@ import java.util.function.Supplier;
 public class RenderUtil {
 
     private static final ThreadLocal<TessellatorQueue> threadLocalTessellators;
-    // private static final MethodHandle HANDLE_FORGE_TESSELLATOR;
     // 1.16.5+: BufferBuilder provides getter
-    // private static final MethodHandle HANDLE_IS_BUFFER_DRAWING;
 
     static {
         threadLocalTessellators = ThreadLocal.withInitial(TessellatorQueue::new);
-//        HANDLE_FORGE_TESSELLATOR = createGetter(TileEntityRendererDispatcher.class, Tessellator.class, "batchBuffer");
-//        HANDLE_IS_BUFFER_DRAWING = createGetter(BufferBuilder.class, boolean.class, "isDrawing", "field_179010_r");
     }
 
     private static MethodHandle createGetter(Class<?> owner, Class<?> type, String... names) {
@@ -85,7 +81,6 @@ public class RenderUtil {
         float green = (color >> 8 & 255) / 255.0F;
         float blue = (color & 255) / 255.0F;
 
-//        GlStateManager.color(red, green, blue);
         RenderSystem.setShaderColor(red, green, blue, 1.0F);
     }
 
@@ -98,7 +93,6 @@ public class RenderUtil {
         float green = (color >> 8 & 255) / 255.0F;
         float blue = (color & 255) / 255.0F;
 
-//        GlStateManager.color(red, green, blue, alpha);
         RenderSystem.setShaderColor(red, green, blue, alpha);
     }
 
@@ -110,7 +104,6 @@ public class RenderUtil {
         return (a << 24) | (b << 16) | (g << 8) | r;
     }
 
-    // Calen
     public static int swapRGBforABGR(int _rgb) {
         return swapARGBforABGR(_rgb | 0xFF_00_00_00);
     }
@@ -119,7 +112,6 @@ public class RenderUtil {
         return (combinedLight & 0xFFFF0000) | Math.max(fluidLight << 4, combinedLight & 0xFFFF);
     }
 
-    // Calen
     public static int getCombinedLight(Level level, BlockPos pos) {
         byte sky = (byte) level.getLightEngine().getRawBrightness(pos, 0);
         byte block = (byte) level.getLightEmission(pos);
@@ -134,10 +126,6 @@ public class RenderUtil {
         return (byte) ((combinedLight & 0x0000FFFF) >>> 4);
     }
 
-//    public static boolean isRenderingTranslucent() {
-////        return MinecraftForgeClient.getRenderLayer() == BlockRenderLayer.TRANSLUCENT || MinecraftForgeClient.getRenderPass() == 1;
-//        return MinecraftForgeClient.getRenderType() == RenderType.translucent();
-//    }
 
     /**
      * @return true if this thread is the main minecraft thread, used for all client side game logic and (by default)
@@ -156,27 +144,12 @@ public class RenderUtil {
     }
 
 //    /** @return The forge {@link Tesselator} used for rendering {@link BlockEntityRenderer}'s. */
-//    public static Tessellator getMainTessellator() {
-//        if (!isMainRenderThread()) {
-//            throw new IllegalStateException("Not the main thread!");
-//        }
-//        try {
-//            return (Tessellator) HANDLE_FORGE_TESSELLATOR.invokeExact(TileEntityRendererDispatcher.instance);
-//        } catch (Throwable t) {
-//            throw new Error(t);
-//        }
-//    }
 
     /**
      * @return True if the given {@link BufferBuilder} is currently in the middle of drawing. Essentially returns true
      * if {@link BufferBuilder#begin(VertexFormat.Mode, VertexFormat)} would throw an exception.
      */
     public static boolean isDrawing(BufferBuilder bb) {
-//        try {
-//            return (boolean) HANDLE_IS_BUFFER_DRAWING.invokeExact(bb);
-//        } catch (Throwable t) {
-//            throw new Error(t);
-//        }
         return bb.building();
     }
 
@@ -185,7 +158,6 @@ public class RenderUtil {
         return new Tesselator(0x200_000);
     }
 
-    // Calen add
     // 1.12.2 GlStateManager#color
     public static void color(float colorRed, float colorGreen, float colorBlue) {
         color(colorRed, colorGreen, colorBlue, 1.0F);
@@ -195,56 +167,36 @@ public class RenderUtil {
         RenderSystem.setShaderColor(colorRed, colorGreen, colorBlue, alpha);
     }
 
-    // Calen
     public static void disableBlend() {
         RenderSystem.disableBlend();
     }
 
-    // Calen
     public static void enableBlend() {
         RenderSystem.enableBlend();
     }
 
-    // Calen
     public static void disableDepth() {
         RenderSystem.disableDepthTest();
     }
 
-    // Calen
     public static void enableDepth() {
         RenderSystem.enableDepthTest();
     }
 
-    // Calen
 
     /**
      * Sets OpenGL lighting for rendering blocks as items inside GUI screens (such as containers).
      */
     public static void enableGUIStandardItemLighting() {
-        // Calen: maybe not right
         Lighting.setupFor3DItems();
         // from 1.12.2 RenderHelper.class
-//        GlStateManager.pushMatrix();
-//        poseStack.pushPose();
-//        // Calen: FATAL ERROR in native method: Thread[Render thread,10,main]: No context is current or a function that is not available in the current context was called
-//        GlStateManager.rotate(-30.0F, 0.0F, 1.0F, 0.0F);
-//        GlStateManager.rotate(165.0F, 1.0F, 0.0F, 0.0F);
-//        enableStandardItemLighting();
-//        GlStateManager.popMatrix();
-//        poseStack.popPose();
     }
 
-    // Calen
 
     /**
      * Disables the OpenGL lighting properties enabled by enableStandardItemLighting
      */
     public static void disableStandardItemLighting() {
-        // TODO Calen disableStandardItemLighting???
-//        GlStateManager.disableLighting();
-//        GlStateManager.disableLight(0);
-//        GlStateManager.disableLight(1);
-//        GlStateManager.disableColorMaterial();
     }
 
     public static void enableAlpha() {

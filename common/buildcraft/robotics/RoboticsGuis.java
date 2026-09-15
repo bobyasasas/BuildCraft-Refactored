@@ -8,15 +8,5 @@ package buildcraft.robotics;
 public enum RoboticsGuis {
     ZONE_PLANTER;
 
-//    public void openGUI(EntityPlayer player) {
-//        player.openGui(BCRobotics.INSTANCE, ordinal(), player.getEntityWorld(), 0, 0, 0);
-//    }
 
-//    public void openGUI(Player player, BlockPos pos)
-//    public void openGUI(Player player, BlockPos pos, TileZonePlanner zonePlanner) {
-////        player.openGui(BCRobotics.INSTANCE, ordinal(), player.getEntityWorld(), pos.getX(), pos.getY(), pos.getZ());
-//        if (player instanceof ServerPlayer serverPlayer) {
-//            NetworkHooks.openGui(serverPlayer, zonePlanner, pos);
-//        }
-//    }
 }

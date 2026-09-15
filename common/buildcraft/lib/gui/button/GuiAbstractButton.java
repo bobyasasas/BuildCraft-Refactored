@@ -40,11 +40,8 @@ public abstract class GuiAbstractButton extends GuiElementSimple
     }
 
     public GuiElementText createTextElement(Supplier<String> text) {
-//        FontRenderer fr = gui.mc.fontRenderer;
         Font fr = gui.mc.font;
-//        DoubleSupplier x = () -> -fr.getStringWidth(text.get()) / 2;
         DoubleSupplier x = () -> -fr.width(text.get()) / 2;
-//        DoubleSupplier y = () -> -fr.FONT_HEIGHT / 2;
         DoubleSupplier y = () -> -fr.lineHeight / 2;
         IGuiPosition pos = getCenter().offset(x, y);
         return new GuiElementText(gui, pos, text, this::getColourForText);

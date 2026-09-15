@@ -27,7 +27,6 @@ public class ActionType extends StatementType<ActionWrapper> {
         if (value instanceof IActionInternal) {
             return new ActionWrapperInternal((IActionInternal) value);
         }
-        // We cannot convert sided actions (as they require a side)
         return null;
     }
 

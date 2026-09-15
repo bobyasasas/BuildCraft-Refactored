@@ -45,7 +45,6 @@ public class ItemMapLocation extends ItemBC_Neptune implements IMapLocation {
 
     public ItemMapLocation(String idBC, Item.Properties properties) {
         super(idBC, properties);
-//        setHasSubtypes(true);
     }
 
     @Override
@@ -54,12 +53,6 @@ public class ItemMapLocation extends ItemBC_Neptune implements IMapLocation {
     }
 
 //    @Override
-//    @SideOnly(Side.CLIENT)
-//    public void addModelVariants(TIntObjectHashMap<ModelResourceLocation> variants) {
-//        for (MapLocationType type : MapLocationType.values()) {
-//            addVariant(variants, type.meta, type.name().toLowerCase(Locale.ROOT));
-//        }
-//    }
 
     @OnlyIn(Dist.CLIENT)
     @Override
@@ -122,7 +115,6 @@ public class ItemMapLocation extends ItemBC_Neptune implements IMapLocation {
             }
         }
         if (type != MapLocationType.CLEAN) {
-//            strings.add(Component.literal(LocaleUtil.localize("buildcraft.item.nonclean.usage")));
             strings.add(Component.translatable("buildcraft.item.nonclean.usage"));
         }
     }
@@ -155,7 +147,6 @@ public class ItemMapLocation extends ItemBC_Neptune implements IMapLocation {
     }
 
     @Override
-//    public InteractionResult onItemUseFirst(Player player, Level world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ, InteractionHand hand)
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         Level world = context.getLevel();
         BlockPos pos = context.getClickedPos();
@@ -165,7 +156,6 @@ public class ItemMapLocation extends ItemBC_Neptune implements IMapLocation {
             return InteractionResult.PASS;
         }
 
-//        ItemStack stack = StackUtil.asNonNull(player.getHeldItem(hand));
         stack = StackUtil.asNonNull(stack);
         if (MapLocationType.getFromStack(stack) != MapLocationType.CLEAN) {
             return InteractionResult.FAIL;
@@ -176,7 +166,6 @@ public class ItemMapLocation extends ItemBC_Neptune implements IMapLocation {
         boolean anotherStack = false;
         if (stack.getCount() > 1) {
             modified = stack.copy();
-//            stack.setCount(stack.getCount() - 1);
             stack.shrink(1);
             modified.setCount(1);
             anotherStack = true;
@@ -222,7 +211,6 @@ public class ItemMapLocation extends ItemBC_Neptune implements IMapLocation {
             cpt.putInt("z", pos.getZ());
         }
 
-        // Calen FIXED: in 1.12.2 if map_location stack size > 1, the used one will not be given to player
         if (anotherStack) {
             player.getInventory().add(modified);
         }
@@ -370,7 +358,6 @@ public class ItemMapLocation extends ItemBC_Neptune implements IMapLocation {
     }
 
     @Override
-//    public String getName(@Nonnull ItemStack item)
     public String getName_INamedItem(@Nonnull ItemStack item) {
         return NBTUtilBC.getItemData(item).getString("name");
     }

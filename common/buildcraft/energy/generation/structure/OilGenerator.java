@@ -59,22 +59,8 @@ public class OilGenerator {
 
         int x = chunkX * 16 + 8;
         int z = chunkZ * 16 + 8;
-        // Calen: moved to OilGenStructureFeature#checkLocation
-////        for (int cdx = -MAX_CHUNK_RADIUS; cdx <= MAX_CHUNK_RADIUS; cdx++)
-//        int cx = chunkX;
-//        int cz = chunkZ;
-//
-//        WorldgenRandom rand = new WorldgenRandom(new LegacyRandomSource(MAGIC_GEN_NUMBER));
-//        rand.setLargeFeatureSeed(context.seed(), cx, cz);
 //        // shift to world coordinates
-//        int xForGen = cx * 16 + 8 + rand.nextInt(16);
-//        int zForGen = cz * 16 + 8 + rand.nextInt(16);
-//        Biome biome = context.chunkGenerator().getNoiseBiome(
 //                QuartPos.fromBlock(xForGen),
-//                QuartPos.fromBlock(63), // Calen: 63?
-//                QuartPos.fromBlock(zForGen)
-//        ).value();
-//        GenType type = getPieceTypeByRand(rand, biome, cx, cz, xForGen, zForGen, true);
         if (info == null) {
             BCLog.logger.error("[energy.oilgen] Tried to gen structure pieces in chunk [" + chunkPos + "], but found none prepared data for this chunk. Something works wrong.");
             return;
@@ -224,7 +210,6 @@ public class OilGenerator {
             // Generate a spring at the very bottom
             if (type == GenType.LARGE) {
                 structures.add(createTube(new BlockPos(x, worldBottomHeight + 2, z), wellY - worldBottomHeight + 1, radius, Direction.Axis.Y));
-//                if (BCCoreBlocks.spring != null)
                 if (BCCoreBlocks.springOil != null) {
                     structures.add(createSpring(new BlockPos(x, worldBottomHeight + 1, z)));
                 }
@@ -251,16 +236,12 @@ public class OilGenerator {
         BlockPos max = VecUtil.replaceValue(center.offset(radius, radius, radius), axis, valForAxis + length);
         double radiusSq = radius * radius;
         int toReplace = valForAxis;
-//        Predicate<BlockPos> tester = p -> VecUtil.replaceValue(p, axis, toReplace).distSqr(center) <= radiusSq;
-//        return new GenByPredicate(new Box(min, max), ReplaceType.ALWAYS, tester);
         return new GenByPredicate(new Box(min, max), ReplaceType.ALWAYS, new Object[] { axis, toReplace, center, radiusSq });
     }
 
     public static OilGenStructurePart createSphere(BlockPos center, int radius) {
         Box box = new Box(center.offset(-radius, -radius, -radius), center.offset(radius, radius, radius));
         double radiusSq = radius * radius + 0.01;
-//        Predicate<BlockPos> tester = p -> p.distSqr(center) <= radiusSq;
-//        return new OilStructurePiece.GenByPredicate(box, OilStructurePiece.ReplaceType.ALWAYS, tester);
         return new OilGenStructurePart.GenByPredicate(box, OilGenStructurePart.ReplaceType.ALWAYS, new Object[] { center, radiusSq });
     }
 

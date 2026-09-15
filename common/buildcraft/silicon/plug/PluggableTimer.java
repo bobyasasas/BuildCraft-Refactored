@@ -65,17 +65,14 @@ public class PluggableTimer extends PipePluggable {
 
     @Override
     public PluggableModelKey getModelRenderKey(RenderType layer) {
-        // if (layer == BlockRenderLayer.CUTOUT) return new KeyPlugTimer(side);
         if (layer == RenderType.cutout()) return new KeyPlugTimer(side);
         return null;
     }
 
     @PipeEventHandler
     public void addInternalTriggers(PipeEventStatement.AddTriggerInternal event) {
-//        if (event == this.side) {
         event.triggers.add(BCSiliconStatements.TRIGGER_TIMER_SHORT);
         event.triggers.add(BCSiliconStatements.TRIGGER_TIMER_MEDIUM);
         event.triggers.add(BCSiliconStatements.TRIGGER_TIMER_LONG);
-//        }
     }
 }

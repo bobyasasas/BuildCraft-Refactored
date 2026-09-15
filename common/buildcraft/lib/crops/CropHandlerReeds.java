@@ -31,7 +31,6 @@ public enum CropHandlerReeds implements ICropHandler {
 
     @Override
     public boolean isSeed(ItemStack stack) {
-//        return stack.getItem() == Items.REEDS;
         return stack.getItem() == Items.SUGAR_CANE;
     }
 
@@ -39,7 +38,6 @@ public enum CropHandlerReeds implements ICropHandler {
     public boolean canSustainPlant(Level world, ItemStack seed, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
-//        return block.canSustainPlant(state, world, pos, Direction.UP, Blocks.REEDS) && block != Blocks.REEDS && world.isAirBlock(pos.up());
         return block.canSustainPlant(state, world, pos, Direction.UP, (SugarCaneBlock) Blocks.SUGAR_CANE) && block != Blocks.SUGAR_CANE && world.isEmptyBlock(pos.above());
     }
 
@@ -50,13 +48,11 @@ public enum CropHandlerReeds implements ICropHandler {
 
     @Override
     public boolean isMature(LevelAccessor access, BlockState state, BlockPos pos) {
-        // return false;
         return state.is(Blocks.SUGAR_CANE) && access.getBlockState(pos.relative(Direction.DOWN)).is(Blocks.SUGAR_CANE);
     }
 
     @Override
     public CropManager.HarvestResult harvestCrop(Level world, BlockPos pos, ItemStack tool, NonNullList<ItemStack> drops) {
-        // return false;
         return BlockUtil.harvestBlock((ServerLevel) world, pos, tool, FakePlayerProvider.NULL_PROFILE) ? CropManager.HarvestResult.SUCCESS : CropManager.HarvestResult.FAIL;
     }
 }

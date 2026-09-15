@@ -42,7 +42,6 @@ public class SchematicEntityDefault implements ISchematicEntity {
     private Rotation entityRotation = Rotation.NONE;
 
     public static boolean predicate(SchematicEntityContext context) {
-//        ResourceLocation registryName = EntityList.getKey(context.entity);
         ResourceLocation registryName = EntityUtil.getRegistryName(context.entity.getType());
         return registryName != null &&
 //                RulesLoader.READ_DOMAINS.contains(registryName.getResourceDomain()) &&
@@ -59,14 +58,10 @@ public class SchematicEntityDefault implements ISchematicEntity {
     @Override
     public void init(SchematicEntityContext context) {
         entityNbt = context.entity.serializeNBT();
-//        pos = context.entity.getPositionVector().subtract(new Vec3(context.basePos));
         pos = context.entity.position().subtract(Vec3.atLowerCornerOf(context.basePos));
         if (context.entity instanceof HangingEntity) {
-//            EntityHanging entityHanging = (EntityHanging) context.entity;
             HangingEntity entityHanging = (HangingEntity) context.entity;
-//            hangingPos = entityHanging.getHangingPosition().subtract(context.basePos);
             hangingPos = entityHanging.getPos().subtract(context.basePos);
-//            hangingFacing = entityHanging.getHorizontalFacing();
             hangingFacing = entityHanging.getDirection();
         } else {
             hangingPos = BlockPos.containing(pos);
@@ -121,7 +116,6 @@ public class SchematicEntityDefault implements ISchematicEntity {
         schematicEntity.pos = RotationUtil.rotateVec3d(pos, rotation);
         schematicEntity.hangingPos = hangingPos.rotate(rotation);
         schematicEntity.hangingFacing = rotation.rotate(hangingFacing);
-//        schematicEntity.entityRotation = entityRotation.add(rotation);
         schematicEntity.entityRotation = entityRotation.getRotated(rotation);
         return schematicEntity;
     }
@@ -156,7 +150,6 @@ public class SchematicEntityDefault implements ISchematicEntity {
         } else {
             rotate = true;
         }
-//        Entity entity = EntityList.createEntityFromNBT(
         Entity entity = EntityType.create(
                 replaceNbt != null
                         ? (CompoundTag) NBTUtilBC.merge(newEntityNbt, replaceNbt)
@@ -182,7 +175,6 @@ public class SchematicEntityDefault implements ISchematicEntity {
                         entity.yRotO
                 );
             }
-//            world.spawnEntity(entity);
             world.addFreshEntity(entity);
         }
         return entity;

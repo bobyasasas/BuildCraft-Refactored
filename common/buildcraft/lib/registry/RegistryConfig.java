@@ -39,16 +39,7 @@ public class RegistryConfig {
         return config;
     }
 
-    // Calen: this method always causes java.lang.IllegalStateException: Didn't find a config for buildcraftcore
-    // at buildcraftcore.lib.registry.RegistryConfig.useOtherModConfigFor(RegistryConfig.java:46) ~[%2387!/:?] {re:classloading}
-//    public static Configuration useOtherModConfigFor(String from, String to)
     public static void useOtherModConfigFor(String from, String to) {
-//        Configuration config = modObjectConfigs.get(getMod(to));
-//        if (config == null) {
-//            throw new IllegalStateException("Didn't find a config for " + to);
-//        }
-//        modObjectConfigs.put(getMod(from), config);
-//        return config;
         moduleConfigMapping.put(getMod(from), getMod(to));
     }
 
@@ -58,31 +49,23 @@ public class RegistryConfig {
     //
     // #######################
 
-    // public static boolean isEnabled(Item item)
     public static boolean isEnabledItem(String idBC) {
-//        return isEnabled(getCategory(item), item.getRegistryName().getPath(),
-//                item.getRegistryName() + ".name");
         String regName = TagManager.getTag(idBC, TagManager.EnumTagType.REGISTRY_NAME);
         return isEnabled("items", regName.split(":")[0], regName.split(":")[1], "item." + TagManager.getTag(idBC).getSingleTag(TagManager.EnumTagType.UNLOCALIZED_NAME) + ".name");
     }
 
-    // Calen: in 1.12.2 pipe items are forced
     // this #isEnabled is never used on pipes
     public static boolean isEnabledPipeItemItem(String idBC) {
         String regName = TagManager.getTag(idBC, TagManager.EnumTagType.REGISTRY_NAME);
         return isEnabled("pipes", regName.split(":")[0], regName.split(":")[1], "item." + TagManager.getTag(idBC).getSingleTag(TagManager.EnumTagType.UNLOCALIZED_NAME) + ".name");
     }
 
-    // public static boolean isEnabled(Block block)
     public static boolean isEnabledBlock(String idBC) {
-//        return isEnabled(getCategory(block), block.getRegistryName().getPath(),
-//                block.getRegistryName() + ".name");
         String regName = TagManager.getTag(idBC, TagManager.EnumTagType.REGISTRY_NAME);
         return isEnabled("blocks", regName.split(":")[0], regName.split(":")[1], "tile." + TagManager.getTag(idBC).getSingleTag(TagManager.EnumTagType.UNLOCALIZED_NAME) + ".name");
     }
 
     public static boolean isEnabled(String category, String modId, String resourcePath, String langKey) {
-        // return isEnabled(getActiveMod(), category, resourcePath, langKey);
         return isEnabled(getMod(modId), category, resourcePath, langKey);
     }
 
@@ -110,20 +93,9 @@ public class RegistryConfig {
     //
     // #######################
 
-//    private static String getCategory(Object obj) {
-//        if (obj instanceof IItemPipe) {
-//            return "pipes";
-//        } else if (obj instanceof Block) {
-//            return "blocks";
-//        } else {
-//            return "items";
-//        }
-//    }
 
-    // Calen: Thread Safety
     private static ConcurrentHashMap<ModContainer, ModContainer> moduleConfigMapping = new ConcurrentHashMap<>();
 
-    // Calen
     private static Map<ModContainer, Configuration> getModObjectConfigs() {
         // just ensure Core Config loaded
         BCCoreConfig.clinit();
@@ -132,10 +104,8 @@ public class RegistryConfig {
     }
 
     private synchronized static boolean isEnabled(ModContainer activeMod, String category, String resourcePath, String langKey) {
-//        Configuration config = modObjectConfigs.get(activeMod);
         Configuration config = getModObjectConfigs().get(activeMod);
         if (config == null) {
-//            config = modObjectConfigs.get(moduleConfigMapping.get(activeMod));
             config = getModObjectConfigs().get(moduleConfigMapping.get(activeMod));
             if (config == null) {
                 throw new RuntimeException("No config exists for the mod " + activeMod.getModId());
@@ -161,7 +131,6 @@ public class RegistryConfig {
 
     private static ModContainer getMod(String modid) {
         ModContainer container = ModList.get().getModContainerById(modid).get();
-//        if (container == null)
         if (container == null || !(container instanceof FMLModContainer)) {
             throw new RuntimeException("No mod with an id of \"" + modid + "\" is loaded!");
         } else {

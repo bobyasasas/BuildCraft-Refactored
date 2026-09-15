@@ -26,17 +26,12 @@ public class JsonGuiIterator {
     public JsonGuiIterator(JsonElement element) {
         if (element.isJsonObject()) {
             JsonObject obj = element.getAsJsonObject();
-//            name = JsonUtils.getString(obj, "name", "index");
             name = GsonHelper.getAsString(obj, "name", "index");
-//            start = JsonUtils.getString(obj, "start", "0");
             start = GsonHelper.getAsString(obj, "start", "0");
-//            step = JsonUtils.getString(obj, "step");
             step = GsonHelper.getAsString(obj, "step");
             if (obj.has("while")) {
-//                shouldContinue = JsonUtils.getString(obj, "while");
                 shouldContinue = GsonHelper.getAsString(obj, "while");
             } else {
-//                String end = JsonUtils.getString(obj, "end");
                 String end = GsonHelper.getAsString(obj, "end");
                 shouldContinue = "step > 0 ? ($name <= $end) : ($name >= $end)"//
                         .replace("$end", end).replace("$name", name);

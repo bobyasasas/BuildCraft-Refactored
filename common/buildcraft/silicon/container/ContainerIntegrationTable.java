@@ -23,15 +23,12 @@ public class ContainerIntegrationTable extends ContainerBCTile<TileIntegrationTa
 
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-//                addSlotToContainer(new SlotBase((x == 1 && y == 1) ? tile.invTarget : tile.invToIntegrate, indexes[x + y * 3], 19 + x * 25, 24 + y * 25));
                 addSlot(new SlotBase((x == 1 && y == 1) ? tile.invTarget : tile.invToIntegrate, indexes[x + y * 3], 19 + x * 25, 24 + y * 25));
             }
         }
 
-//        addSlotToContainer(new SlotDisplay(i -> tile.getOutput(), 0, 101, 36));
         addSlot(new SlotDisplay(i -> tile.getOutput(), 0, 101, 36));
 
-//        addSlotToContainer(new SlotOutput(tile.invResult, 0, 138, 49));
         addSlot(new SlotOutput(tile.invResult, 0, 138, 49));
     }
 }

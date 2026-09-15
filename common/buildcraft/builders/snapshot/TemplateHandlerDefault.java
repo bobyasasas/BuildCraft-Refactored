@@ -22,7 +22,6 @@ public enum TemplateHandlerDefault implements ITemplateHandler {
 
     @Override
     public boolean handle(Level world, BlockPos pos, Player player, ItemStack stack) {
-//        return stack.onItemUse(
 //            player,
 //            world,
 //            pos,
@@ -31,7 +30,6 @@ public enum TemplateHandlerDefault implements ITemplateHandler {
 //            0.5F,
 //            0.0F,
 //            0.5F
-//        ) == EnumActionResult.SUCCESS;
         return stack.useOn(
                 new UseOnContext(
                         world,

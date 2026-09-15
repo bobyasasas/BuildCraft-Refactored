@@ -49,7 +49,6 @@ public class BCFluidBlock extends LiquidBlock {
 
         this.sticky = sticky;
         this.registryContainer = registryContainer;
-//        renderLayer = BlockRenderLayer.SOLID; // Calen: moved to BCEnergy#clientInit
     }
 
     @Override
@@ -65,26 +64,17 @@ public class BCFluidBlock extends LiquidBlock {
     }
 
 //    @Override
-//    public Boolean isEntityInsideMaterial(IBlockAccess world, BlockPos pos, IBlockState state, Entity entity, double yToTest, Material material, boolean testingHead) {
-//        if (material == Material.WATER) {
-//            return true;
-//        }
-//        return null;
-//    }
 
-    // public int getFlammability(IBlockAccess world, BlockPos pos, EnumFacing face)
     @Override
     public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         return state.ignitedByLava() ? 200 : 0;
     }
 
-    // public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, EnumFacing face)
     @Override
     public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         return state.ignitedByLava() ? 200 : 0;
     }
 
-    // public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
     @Override
     public void entityInside(BlockState p_58180_, Level p_58181_, BlockPos p_58182_, Entity entityIn) {
         if (BCEnergyConfig.oilIsSticky && sticky) {
@@ -92,11 +82,7 @@ public class BCFluidBlock extends LiquidBlock {
         }
     }
 
-//    public void setSticky(boolean sticky) {
-//        this.sticky = sticky;
-//    }
 
-    // Calen 1.20.1
     public ResourceLocation getRegistryName() {
         return ForgeRegistries.BLOCKS.getKey(this);
     }

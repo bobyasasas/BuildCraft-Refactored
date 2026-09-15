@@ -126,8 +126,6 @@ public class TriggerParameterSignal implements IStatementParameter {
         if (colour == null) {
             return null;
         }
-//        return String.format(LocaleUtil.localize("gate.trigger.pipe.wire." + (active ? "active" : "inactive")),
-//            ColourUtil.getTextFullTooltip(colour));
         return Component.translatable("gate.trigger.pipe.wire." + (active ? "active" : "inactive"),
                 ColourUtil.getTextFullTooltipComponent(colour));
     }
@@ -137,8 +135,6 @@ public class TriggerParameterSignal implements IStatementParameter {
         if (colour == null) {
             return null;
         }
-//        return String.format(LocaleUtil.localize("gate.trigger.pipe.wire." + (active ? "active" : "inactive")),
-//            ColourUtil.getTextFullTooltip(colour));
         return "gate.trigger.pipe.wire." + (active ? "active." : "inactive.") + colour.getName();
     }
 

@@ -56,7 +56,6 @@ public class RenderPump implements BlockEntityRenderer<TilePump> {
         LED_STATUS = new RenderPartCube[4];
 
         for (int i = 0; i < 4; i++) {
-//            Direction facing = Direction.getHorizontal(i);
             Direction facing = Direction.from2DDataValue(i);
 
             final int dX, dZ;
@@ -64,7 +63,6 @@ public class RenderPump implements BlockEntityRenderer<TilePump> {
 
             if (facing.getAxis() == Axis.X) {
                 dX = 0;
-//                dZ = facing.getAxisDirection().getOffset();
                 dZ = facing.getAxisDirection().getStep();
                 ledZ = 0.5;
                 if (facing == Direction.EAST) {
@@ -73,7 +71,6 @@ public class RenderPump implements BlockEntityRenderer<TilePump> {
                     ledX = 0.4 / 16.0;
                 }
             } else {
-//                dX = -facing.getAxisDirection().getOffset();
                 dX = -facing.getAxisDirection().getStep();
                 dZ = 0;
                 ledX = 0.5;
@@ -86,13 +83,13 @@ public class RenderPump implements BlockEntityRenderer<TilePump> {
 
             LED_POWER[i] = new RenderPartCube();
             LED_POWER[i].center.positiond(ledX + dX * POWER, Y, ledZ + dZ * POWER);
-            LED_POWER[i].center.overlay(OverlayTexture.NO_OVERLAY); // Calen add
-            LED_POWER[i].center.normalf(1, 1, 1); // Calen add
+            LED_POWER[i].center.overlay(OverlayTexture.NO_OVERLAY);
+            LED_POWER[i].center.normalf(1, 1, 1);
 
             LED_STATUS[i] = new RenderPartCube();
             LED_STATUS[i].center.positiond(ledX + dX * STATUS, Y, ledZ + dZ * STATUS);
-            LED_STATUS[i].center.overlay(OverlayTexture.NO_OVERLAY); // Calen add
-            LED_STATUS[i].center.normalf(1, 1, 1); // Calen add
+            LED_STATUS[i].center.overlay(OverlayTexture.NO_OVERLAY);
+            LED_STATUS[i].center.normalf(1, 1, 1);
         }
 
         SpriteHolder spriteTubeMiddle = SpriteHolderRegistry.getHolder("buildcraftfactory:block/pump/tube");
@@ -106,7 +103,6 @@ public class RenderPump implements BlockEntityRenderer<TilePump> {
 
     private static boolean whiteTextureFlag = false;
 
-    // public static void textureStitchPost()
     public static void initWhiteTex() {
         whiteTextureFlag = true;
         for (int i = 0; i < 4; i++) {
@@ -121,21 +117,16 @@ public class RenderPump implements BlockEntityRenderer<TilePump> {
     }
 
     @Override
-//    public void renderTileEntityFast(@Nonnull TilePump tile, double x, double y, double z, float partialTicks, int destroyStage, float partial, @Nonnull BufferBuilder buffer)
     public void render(TilePump tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
-        // Calen: get the white texture
         if (!whiteTextureFlag) {
             initWhiteTex();
         }
 
         VertexConsumer buffer = bufferSource.getBuffer(Sheets.solidBlockSheet());
 
-//        Minecraft.getMinecraft().mcProfiler.startSection("bc");
         Minecraft.getInstance().getProfiler().push("bc");
-//        Minecraft.getMinecraft().mcProfiler.startSection("pump");
         Minecraft.getInstance().getProfiler().push("pump");
 
-//        buffer.setTranslation(x, y, z);
 
         float percentFilled = tile.getPercentFilledForRender();
         int powerColour = COLOUR_POWER[(int) (percentFilled * (COLOUR_POWER.length - 1))];
@@ -145,13 +136,9 @@ public class RenderPump implements BlockEntityRenderer<TilePump> {
         int statusLight = complete ? BLOCK_LIGHT_STATUS_OFF : BLOCK_LIGHT_STATUS_ON;
         for (int i = 0; i < 4; i++) {
             // Get the light level of a direction
-//            Direction dir = Direction.getHorizontal(i);
             Direction dir = Direction.from2DDataValue(i);
-//            BlockPos pos = tile.getPos().offset(dir);
             BlockPos pos = tile.getBlockPos().relative(dir);
-//            int block = tile.getWorld().getLightFor(EnumSkyBlock.BLOCK, pos);
             byte block = (byte) tile.getLevel().getLightEmission(pos);
-//            int sky = tile.getWorld().getLightFor(EnumSkyBlock.SKY, pos);
             byte sky = (byte) tile.getLevel().getLightEngine().getRawBrightness(pos, 0);
 
             LED_POWER[i].center.colouri(powerColour);
@@ -168,14 +155,11 @@ public class RenderPump implements BlockEntityRenderer<TilePump> {
 
         tubeRenderer.render(tile, partialTicks, poseStack, bufferSource, combinedLight, combinedOverlay);
 
-//        Minecraft.getMinecraft().mcProfiler.endSection();
         Minecraft.getInstance().getProfiler().pop();
-//        Minecraft.getMinecraft().mcProfiler.endSection();
         Minecraft.getInstance().getProfiler().pop();
     }
 
     @Override
-//    public boolean isGlobalRenderer(TilePump tile)
     public boolean shouldRenderOffScreen(TilePump tile) {
         return true;
     }

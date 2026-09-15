@@ -23,7 +23,6 @@ public class BlockMiningWell extends BlockBCTile_Neptune<TileMiningWell> impleme
 
     @Nullable
     @Override
-//    public TileBC_Neptune createTileEntity(World worldIn, IBlockState state)
     public TileMiningWell newBlockEntity(BlockPos worldIn, BlockState state) {
         return new TileMiningWell(worldIn, state);
     }

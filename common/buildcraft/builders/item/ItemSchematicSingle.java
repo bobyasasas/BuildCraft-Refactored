@@ -44,41 +44,27 @@ public class ItemSchematicSingle extends ItemBC_Neptune {
 
     public ItemSchematicSingle(String idBC, Item.Properties properties) {
         super(idBC, properties);
-//        setHasSubtypes(true);
-//        setMaxStackSize(1); // Calen: moved to properties
     }
 
     @Override
-//    public int getItemStackLimit(ItemStack stack)
     public int getMaxStackSize(ItemStack stack) {
-//        return stack.getItemDamage() == DAMAGE_CLEAN ? 16 : super.getItemStackLimit(stack);
         return stack.getDamageValue() == DAMAGE_CLEAN ? 16 : super.getMaxStackSize(stack);
     }
 
-    // Calen: not still useful in 1.18.2
 //    @Override
-//    @OnlyIn(Dist.CLIENT)
-//    public void addModelVariants(TIntObjectHashMap<ModelResourceLocation> variants)
-//    {
-//        addVariant(variants, DAMAGE_CLEAN, "clean");
-//        addVariant(variants, DAMAGE_USED, "used");
-//    }
 
     @Override
-//    public ActionResult<ItemStack> onItemRightClick(Level world, Player player, InteractionHand hand)
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = StackUtil.asNonNull(player.getItemInHand(hand));
         if (world.isClientSide) {
             return new InteractionResultHolder<>(InteractionResult.PASS, stack);
         }
-//        if (player.isSneaking())
         if (player.isShiftKeyDown()) {
             CompoundTag itemData = NBTUtilBC.getItemData(stack);
             itemData.remove(NBT_KEY);
             if (itemData.isEmpty()) {
                 stack.setTag(null);
             }
-//            stack.setItemDamage(DAMAGE_CLEAN);
             stack.setDamageValue(DAMAGE_CLEAN);
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
         }
@@ -86,7 +72,6 @@ public class ItemSchematicSingle extends ItemBC_Neptune {
     }
 
     @Override
-//    public InteractionResult onItemUseFirst(Player player, Level world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ, InteractionHand hand)
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext ctx) {
         Player player = ctx.getPlayer();
         Level world = ctx.getLevel();
@@ -97,8 +82,6 @@ public class ItemSchematicSingle extends ItemBC_Neptune {
         if (world.isClientSide) {
             return InteractionResult.PASS;
         }
-//        ItemStack stack = player.getHeldItem(hand);
-//        if (player.isSneaking())
         if (player.isShiftKeyDown()) {
             CompoundTag itemData = NBTUtilBC.getItemData(StackUtil.asNonNull(stack));
             itemData.remove(NBT_KEY);
@@ -126,18 +109,14 @@ public class ItemSchematicSingle extends ItemBC_Neptune {
             return InteractionResult.SUCCESS;
         } else {
             BlockPos placePos = pos;
-//            boolean replaceable = world.getBlockState(pos).getBlock().isReplaceable(world, pos);
             boolean replaceable = world.getBlockState(pos).canBeReplaced();
-//            boolean replaceable = world.getBlockState(pos).canBeReplaced(new BlockPlaceContext(world,player,hand,stack, BlockHitResult.miss()));
             if (!replaceable) {
                 placePos = placePos.relative(side);
             }
-//            if (!world.mayPlace(world.getBlockState(pos).getBlock(), placePos, false, side, null))
             if (!WorldUtil.mayPlace(world, world.getBlockState(pos).getBlock(), placePos, false, side, null)) {
                 return InteractionResult.FAIL;
             }
             if (replaceable && !world.isEmptyBlock(placePos)) {
-//                world.setBlockToAir(placePos);
                 world.setBlock(placePos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
             }
             try {
@@ -147,7 +126,6 @@ public class ItemSchematicSingle extends ItemBC_Neptune {
                         List<FluidStack> requiredFluids = schematicBlock.computeRequiredFluids();
                         List<ItemStack> requiredItems = schematicBlock.computeRequiredItems();
                         if (requiredFluids.isEmpty()) {
-//                            InventoryWrapper itemTransactor = new InventoryWrapper(player.inventory);
                             InventoryWrapper itemTransactor = new InventoryWrapper(player.getInventory());
                             if (StackUtil.mergeSameItems(requiredItems).stream().noneMatch(s ->
                                     itemTransactor.extract(
@@ -168,7 +146,6 @@ public class ItemSchematicSingle extends ItemBC_Neptune {
                                             )
                                     );
                                     SoundUtil.playBlockPlace(world, placePos);
-//                                    player.swingArm(hand);
                                     player.swing(hand);
                                     return InteractionResult.SUCCESS;
                                 }
@@ -176,12 +153,8 @@ public class ItemSchematicSingle extends ItemBC_Neptune {
 //                                player.sendStatusMessage(
 //                                        Component.literalString(
 //                                                "Not enough items. Total needed: " +
-//                                                        StackUtil.mergeSameItems(requiredItems).stream()
-//                                                                .map(s -> s.getTextComponent().getFormattedText() + " x " + s.getCount())
-//                                                                .collect(Collectors.joining(", "))
 //                                        ),
 //                                        true
-//                                );
                                 MutableComponent message = Component.translatable("chat.buildcraft.schematic_single.not_enough_item").append("\n");
                                 List<MutableComponent> requiredItemNames = StackUtil.mergeSameItems(requiredItems).stream()
                                         .map(s -> Component.literal("    ").append(s.getDisplayName()).append(" x " + s.getCount())).toList();
@@ -197,7 +170,6 @@ public class ItemSchematicSingle extends ItemBC_Neptune {
 //                            player.sendStatusMessage(
 //                                    Component.literalString("Schematic requires fluids"),
 //                                    true
-//                            );
                             player.sendSystemMessage(
                                     Component.translatable("chat.buildcraft.schematic_single.require_fluid")
                             );
@@ -208,7 +180,6 @@ public class ItemSchematicSingle extends ItemBC_Neptune {
 //                player.sendStatusMessage(
 //                        Component.literalString("Invalid schematic: " + e.getMessage()),
 //                        true
-//                );
                 player.sendSystemMessage(
                         Component.translatable("chat.buildcraft.schematic_single.invalid").append(e.getMessage())
                 );
@@ -227,7 +198,6 @@ public class ItemSchematicSingle extends ItemBC_Neptune {
     }
 
     public static ISchematicBlock getSchematicSafe(@Nonnull ItemStack stack) {
-        // Calen FIX: when mouse hovers on unused schematic, #getSchematic will cause InvalidInputDataException
         if ((!stack.hasTag()) || !(stack.getTag().contains("name"))) {
             return null;
         }
@@ -235,7 +205,6 @@ public class ItemSchematicSingle extends ItemBC_Neptune {
         try {
             return getSchematic(stack);
         } catch (InvalidInputDataException e) {
-//            BCLog.logger.warn("Invalid schematic " + e.getMessage());
             BCLog.logger.warn("[builders.schematic_single] Invalid schematic " + e.getMessage());
             return null;
         }

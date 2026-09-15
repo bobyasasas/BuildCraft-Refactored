@@ -92,7 +92,6 @@ public class PipeTabButton {
                     }
                     // window size changed
                     else if (screen.renderables.contains(button) && (button.getX() != (screen.getGuiLeft() + LEFT_POS_ADD) || button.getY() != (screen.getGuiTop() + TOP_POS_ADD))) {
-                        // Calen: accesstransformer doesn't work for removeWidget & addRenderableWidget
                         // When gradle refreshed, runClient will be not able to launch mc
                         removeButton(screen, button);
                         button = newButton(screen);
@@ -199,7 +198,6 @@ public class PipeTabButton {
             guiGraphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
             RenderSystem.enableBlend();
             RenderSystem.enableDepthTest();
-//            int i = this.getYImage(this.isHoveredOrFocused()); // 1.18.2
             int i = this.getTextureY(); // 1.20.1
             // LU
             guiGraphics.blit(

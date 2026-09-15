@@ -27,20 +27,15 @@ public class BlockZonePlanner extends BlockBCTile_Neptune<TileZonePlanner> imple
     }
 
     @Override
-//    public TileBC_Neptune createTileEntity(World world, IBlockState state)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
         return new TileZonePlanner(pos, state);
     }
 
     @Override
-//    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, Player player, InteractionHand hand, Direction side, float hitX, float hitY, float hitZ)
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-//        if (!world.isClientSide)
         if (!world.isClientSide && world.getBlockEntity(pos) instanceof TileZonePlanner zonePlanner) {
-//            RoboticsGuis.ZONE_PLANTER.openGUI(player, pos);
             MessageUtil.serverOpenTileGui(player, zonePlanner);
         }
-//        return true;
         return InteractionResult.SUCCESS;
     }
 }

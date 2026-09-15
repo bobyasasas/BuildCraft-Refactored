@@ -48,16 +48,12 @@ public class ItemRobot extends ItemBC_Neptune implements IMjContainerItem {
     private final RedstoneBoardRobotNBT robotNBT;
 
     public ItemRobot(String idBC, Properties properties, RedstoneBoardRobotNBT robotNBT) {
-        // super(BCCreativeTab.get("boards"));
         super(idBC, properties);
-        // setMaxStackSize(1);
         this.robotNBT = robotNBT;
     }
 
     @Override
     public int getMaxStackSize(ItemStack stack) {
-        // CompoundTag cpt = getNBT(stack);
-        // RedstoneBoardRobotNBT boardNBT = getRobotNBT(cpt);
         RedstoneBoardRobotNBT boardNBT = this.robotNBT;
 
         if (boardNBT != RedstoneBoardRegistry.instance.getEmptyRobotBoard()) {
@@ -71,12 +67,10 @@ public class ItemRobot extends ItemBC_Neptune implements IMjContainerItem {
         try {
             CompoundTag nbt = getNBT(stack);
 
-            // RedstoneBoardRobotNBT robotNBT = getRobotNBT(nbt);
             RedstoneBoardRobotNBT robotNBT = this.robotNBT;
             if (robotNBT == RedstoneBoardRegistry.instance.getEmptyRobotBoard()) {
                 return null;
             }
-            // EntityRobot robot = new EntityRobot(world, robotNBT);
             EntityRobot robot = BCRoboticsEntities.robotMap.get(robotNBT).get().create(world);
             robot.getBattery().deserializeNBT(nbt);
 
@@ -88,7 +82,6 @@ public class ItemRobot extends ItemBC_Neptune implements IMjContainerItem {
     }
 
     public static RedstoneBoardRobotNBT getRobotNBT(ItemStack stack) {
-        // return getRobotNBT(getNBT(stack));
         return stack.getItem() instanceof ItemRobot ? ((ItemRobot) stack.getItem()).robotNBT : RedstoneBoardRegistry.instance.getEmptyRobotBoard();
     }
 
@@ -106,10 +99,8 @@ public class ItemRobot extends ItemBC_Neptune implements IMjContainerItem {
     }
 
     @Override
-//    public void addInformation(ItemStack stack, Player player, List list, boolean advanced)
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> list, TooltipFlag flag) {
         CompoundTag cpt = getNBT(stack);
-        // RedstoneBoardRobotNBT boardNBT = getRobotNBT(cpt);
         RedstoneBoardRobotNBT boardNBT = this.robotNBT;
 
         if (boardNBT != RedstoneBoardRegistry.instance.getEmptyRobotBoard()) {
@@ -130,30 +121,15 @@ public class ItemRobot extends ItemBC_Neptune implements IMjContainerItem {
     }
 
     public static ItemStack createRobotStack(RedstoneBoardRobotNBT board, long energy) {
-        // ItemStack robot = new ItemStack(BCRoboticsItems.robot.get());
         ItemStack robot = new ItemStack(BCRoboticsItems.robot.get(board).get());
-        // CompoundTag boardCpt = new CompoundTag();
-        // board.createBoard(boardCpt);
-        // NBTUtilBC.getItemData(robot).put("board", boardCpt);
         NBTUtilBC.getItemData(robot).putLong(MjBattery.NBT_STORED, energy);
-        // return robot;
         return robot;
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    // @OnlyIn(Dist.CLIENT)
-    // public void getSubItems(Item item, CreativeModeTab par2CreativeTabs, List itemList)
     protected void addSubItems(NonNullList<ItemStack> itemList) {
-//        itemList.add(createRobotStack(RedstoneBoardRegistry.instance.getEmptyRobotBoard(), 0));
 
-//        for (RedstoneBoardNBT boardNBT : RedstoneBoardRegistry.instance.getAllBoardNBTs()) {
-//            if (boardNBT instanceof RedstoneBoardRobotNBT) {
-//                RedstoneBoardRobotNBT robotNBT = (RedstoneBoardRobotNBT) boardNBT;
-//                itemList.add(createRobotStack(robotNBT, 0));
-//                itemList.add(createRobotStack(robotNBT, EntityRobotBase.MAX_POWER));
-//            }
-//        }
 
         itemList.add(createRobotStack(robotNBT, 0));
         if (this.robotNBT != RedstoneBoardRegistry.instance.getEmptyRobotBoard()) {
@@ -162,10 +138,8 @@ public class ItemRobot extends ItemBC_Neptune implements IMjContainerItem {
     }
 
     @Override
-    // public long receiveEnergy(ItemStack container, long maxReceive, boolean simulate)
     public long receivePower(ItemStack container, long maxReceive, boolean simulate) {
         CompoundTag cpt = getNBT(container);
-        // if (getRobotNBT(cpt) == RedstoneBoardRegistry.instance.getEmptyRobotBoard())
         if (this.robotNBT == RedstoneBoardRegistry.instance.getEmptyRobotBoard()) {
             return 0;
         }
@@ -178,10 +152,8 @@ public class ItemRobot extends ItemBC_Neptune implements IMjContainerItem {
     }
 
     @Override
-    // public long extractEnergy(ItemStack container, long maxExtract, boolean simulate)
     public long extractPower(ItemStack container, long maxExtract, boolean simulate) {
         CompoundTag cpt = getNBT(container);
-        // if (getRobotNBT(cpt) == RedstoneBoardRegistry.instance.getEmptyRobotBoard())
         if (this.robotNBT == RedstoneBoardRegistry.instance.getEmptyRobotBoard()) {
             return 0;
         }
@@ -194,13 +166,11 @@ public class ItemRobot extends ItemBC_Neptune implements IMjContainerItem {
     }
 
     @Override
-    // public long getEnergyStored(ItemStack container)
     public long getPowerStored(ItemStack container) {
         return getEnergy(container);
     }
 
     @Override
-    // public long getMaxEnergyStored(ItemStack container)
     public long getMaxPowerStored(ItemStack container) {
         if (getRobotNBT(container) == RedstoneBoardRegistry.instance.getEmptyRobotBoard()) {
             return 0;
@@ -209,7 +179,6 @@ public class ItemRobot extends ItemBC_Neptune implements IMjContainerItem {
     }
 
     @Override
-    // public boolean onItemUse(ItemStack currentItem, Player player, Level world, BlockPos pos, Direction side, float hitX, float hitY, float hitZ)
     public InteractionResult useOn(UseOnContext context) {
         ItemStack currentItem = context.getItemInHand();
         Player player = context.getPlayer();
@@ -218,23 +187,16 @@ public class ItemRobot extends ItemBC_Neptune implements IMjContainerItem {
         Direction side = context.getClickedFace();
         if (!world.isClientSide) {
             Block b = world.getBlockState(pos).getBlock();
-            // if (!(b instanceof BlockGenericPipe))
             if (!(b instanceof BlockPipeHolder)) {
-                // return false;
                 return InteractionResult.PASS;
             }
 
-            // Pipe<?> pipe = BlockGenericPipe.getPipe(world, pos);
             TilePipeHolder pipe = BlockPipeHolder.getPipe(world, pos, true);
             if (pipe == null) {
-                // return false;
                 return InteractionResult.PASS;
             }
 
-            // BlockGenericPipe pipeBlock = (BlockGenericPipe) b;
-            // BlockGenericPipe.RaytraceResult rayTraceResult = pipeBlock.doRayTrace(world, pos, player);
 
-            // PipePluggable pluggable = pipe.container.getPipePluggable(side);
             PipePluggable pluggable = pipe.getPluggable(side);
 
             if (pluggable instanceof PluggableRobotStation) {
@@ -244,7 +206,6 @@ public class ItemRobot extends ItemBC_Neptune implements IMjContainerItem {
                 if (!station.isTaken()) {
                     RedstoneBoardRobotNBT robotNBT = ItemRobot.getRobotNBT(currentItem);
                     if (robotNBT == RedstoneBoardRegistry.instance.getEmptyRobotBoard()) {
-                        // return true;
                         return InteractionResult.SUCCESS;
                     }
 
@@ -253,7 +214,6 @@ public class ItemRobot extends ItemBC_Neptune implements IMjContainerItem {
                     RobotEvent.Place robotEvent = new RobotEvent.Place(robot, player);
                     MinecraftForge.EVENT_BUS.post(robotEvent);
                     if (robotEvent.isCanceled()) {
-                        // return true;
                         return InteractionResult.SUCCESS;
                     }
 
@@ -270,33 +230,22 @@ public class ItemRobot extends ItemBC_Neptune implements IMjContainerItem {
                         world.addFreshEntity(robot);
 
                         if (!player.isCreative()) {
-                            // player.getCurrentEquippedItem().stackSize--;
                             currentItem.shrink(1);
                         }
                     }
                 }
 
-                // return true;
                 return InteractionResult.SUCCESS;
             }
         }
-        // return false;
         return InteractionResult.PASS;
     }
 
     private static CompoundTag getNBT(ItemStack stack) {
         CompoundTag cpt = NBTUtilBC.getItemData(stack);
-//        if (!cpt.contains("board")) {
-//            RedstoneBoardRegistry.instance.getEmptyRobotBoard().createBoard(cpt);
-//        }
         return cpt;
     }
 
-    // Calen 1.18.2: created independent items
-//    private static RedstoneBoardRobotNBT getRobotNBT(CompoundTag cpt) {
-//        CompoundTag boardCpt = cpt.getCompound("board");
-//        return (RedstoneBoardRobotNBT) RedstoneBoardRegistry.instance.getRedstoneBoard(boardCpt);
-//    }
 
     private static long getEnergy(CompoundTag cpt) {
         return cpt.getLong(MjBattery.NBT_STORED);
@@ -306,7 +255,6 @@ public class ItemRobot extends ItemBC_Neptune implements IMjContainerItem {
         cpt.putLong(MjBattery.NBT_STORED, energy);
     }
 
-    // Calen 1.18.2
     @Override
     public boolean isDamaged(ItemStack stack) {
         CompoundTag cpt = getNBT(stack);

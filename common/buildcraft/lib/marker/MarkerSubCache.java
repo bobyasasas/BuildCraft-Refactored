@@ -30,7 +30,6 @@ public abstract class MarkerSubCache<C extends MarkerConnection<C>> {
     public static final boolean DEBUG_FULL = BCDebugging.shouldDebugComplex("lib.marker.full");
 
     public final int cacheId;
-    // public final String dimensionId;
     public final ResourceKey<Level> dimensionId;
     public final boolean isServer;
     private final Map<BlockPos, C> posToConnection = new ConcurrentHashMap<>();
@@ -39,7 +38,6 @@ public abstract class MarkerSubCache<C extends MarkerConnection<C>> {
 
     public MarkerSubCache(Level world, int cacheId) {
         this.isServer = !world.isClientSide;
-//        this.dimensionId = world.dimension().location().getPath();
         this.dimensionId = world.dimension();
         this.cacheId = cacheId;
     }

@@ -163,7 +163,6 @@ public abstract class TileMiner extends TileBC_Neptune implements ITickable, IDe
     }
 
     @Override
-//    public CompoundTag writeToNBT(CompoundTag nbt) {
     public void saveAdditional(CompoundTag nbt) {
         super.saveAdditional(nbt);
         if (currentPos != null) {
@@ -220,15 +219,7 @@ public abstract class TileMiner extends TileBC_Neptune implements ITickable, IDe
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-//        left.add("battery = " + battery.getDebugString());
-//        left.add("current = " + currentPos);
-//        left.add("wantedLength = " + wantedLength);
-//        left.add("currentLength = " + currentLength);
-//        left.add("lastLength = " + lastLength);
-//        left.add("isComplete = " + isComplete());
-//        left.add("progress = " + LocaleUtil.localizeMj(progress));
         left.add(Component.literal("battery = " + battery.getDebugString()));
         left.add(Component.literal("current = " + currentPos));
         left.add(Component.literal("wantedLength = " + wantedLength));
@@ -247,18 +238,8 @@ public abstract class TileMiner extends TileBC_Neptune implements ITickable, IDe
 
     // 1.18.2: moved to TESR
 //    @Override
-//    @OnlyIn(Dist.CLIENT)
-//    public double getMaxRenderDistanceSquared() {
-//        return Double.MAX_VALUE;
-//    }
-//
 //    // Rendering
-//
 //    @Override
-//    @OnlyIn(Dist.CLIENT)
-//    public boolean hasFastRenderer() {
-//        return true;
-//    }
 
     @OnlyIn(Dist.CLIENT)
     public float getPercentFilledForRender() {

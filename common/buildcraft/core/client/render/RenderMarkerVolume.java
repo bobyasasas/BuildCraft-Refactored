@@ -31,7 +31,6 @@ import java.util.Set;
 public class RenderMarkerVolume implements BlockEntityRenderer<TileMarkerVolume> {
     private static final double SCALE = 1 / 16.2; // smaller than normal lasers
 
-//    public static final RenderMarkerVolume INSTANCE = new RenderMarkerVolume();
 
     private static final LaserType LASER_TYPE = BuildCraftLaserManager.MARKER_VOLUME_SIGNAL;
     private static final Vec3 VEC_HALF = new Vec3(0.5, 0.5, 0.5);
@@ -40,21 +39,17 @@ public class RenderMarkerVolume implements BlockEntityRenderer<TileMarkerVolume>
     }
 
     @Override
-//    public boolean isGlobalRenderer(TileMarkerVolume te)
     public boolean shouldRenderOffScreen(TileMarkerVolume te) {
         return true;
     }
 
     @Override
     public int getViewDistance() {
-        // Calen: as beacon and endGateway
         return BCCoreConfig.markerMaxDistance * 2;
     }
 
     @Override
-//    public void render(TileMarkerVolume marker, double tileX, double tileY, double tileZ, float partialTicks, int destroyStage, float alpha)
     public void render(TileMarkerVolume marker, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
-        // Calen: red laser rendered in VolumeConnection#renderInWorld, blue laser rendered here
         if (marker == null || !marker.isShowingSignals()) return;
 
         Minecraft.getInstance().getProfiler().push("bc");
@@ -63,10 +58,6 @@ public class RenderMarkerVolume implements BlockEntityRenderer<TileMarkerVolume>
 
         poseStack.pushPose();
 
-        // Calen: 1.18.2 should not call these
-//        DetachedRenderer.fromWorldOriginPre(Minecraft.getMinecraft().player, partialTicks);
-//        RenderHelper.disableStandardItemLighting();
-//        Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
         VolumeConnection volume = marker.getCurrentConnection();
         Set<Axis> taken = volume == null ? ImmutableSet.of() : volume.getConnectedAxis();
@@ -87,8 +78,6 @@ public class RenderMarkerVolume implements BlockEntityRenderer<TileMarkerVolume>
 
         poseStack.popPose();
 
-//        RenderHelper.enableStandardItemLighting();
-//        DetachedRenderer.fromWorldOriginPost();
 
         Minecraft.getInstance().getProfiler().pop();
         Minecraft.getInstance().getProfiler().pop();
@@ -101,7 +90,6 @@ public class RenderMarkerVolume implements BlockEntityRenderer<TileMarkerVolume>
         Vec3 one = offset(minWorldPos, faceForMin);
         Vec3 two = offset(maxWorldPos, faceForMax);
         LaserData_BC8 data = new LaserData_BC8(LASER_TYPE, one, two, SCALE);
-//        LaserRenderer_BC8.renderLaserStatic(data);
         LaserRenderer_BC8.renderLaserStatic(data, poseStack.last());
     }
 

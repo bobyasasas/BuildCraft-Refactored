@@ -154,7 +154,6 @@ public class BoxIterator implements Iterator<BlockPos> {
     }
 
     private static BlockPos increment(BlockPos pos, Direction facing) {
-//        int diff = facing.getAxisDirection().getOffset();
         int diff = facing.getAxisDirection().getStep();
         int value = VecUtil.getValue(pos, facing.getAxis()) + diff;
         return VecUtil.replaceValue(pos, facing.getAxis(), value);
@@ -219,7 +218,6 @@ public class BoxIterator implements Iterator<BlockPos> {
     private int compare(BlockPos pos, Direction direction) {
         int argVal = VecUtil.getValue(pos, direction.getAxis());
         int currentVal = VecUtil.getValue(current, direction.getAxis());
-//        return (currentVal - argVal) * direction.getAxisDirection().getOffset();
         return (currentVal - argVal) * direction.getAxisDirection().getStep();
     }
 

@@ -102,7 +102,6 @@ public class PluggablePulsar extends PipePluggable {
         VariableInfoObject<Direction> infoSide = MODEL_VAR_INFO.createInfoObject(MODEL_SIDE);
         infoSide.cacheType = CacheType.ALWAYS;
         infoSide.setIsComplete = true;
-//        infoSide.possibleValues.addAll(Arrays.asList(Direction.VALUES));
         infoSide.possibleValues.addAll(Arrays.asList(Direction.VALUES.clone()));
 
         VariableInfoDouble infoStage = MODEL_VAR_INFO.createInfoDouble(MODEL_STAGE);
@@ -207,10 +206,7 @@ public class PluggablePulsar extends PipePluggable {
                     pulseStage = 0;
                 }
             } else {
-                // pulseStage--;
-                // if (pulseStage < 0) {
                 pulseStage = 0;
-                // }
             }
             setModelVariables(1);
             clientModelData.tick();
@@ -221,10 +217,7 @@ public class PluggablePulsar extends PipePluggable {
         if (isOn) {
             pulseStage++;
         } else {
-            // pulseStage--;
-            // if (pulseStage < 0) {
             pulseStage = 0;
-            // }
         }
         if (gateEnabledTicks > 0) {
             gateEnabledTicks--;

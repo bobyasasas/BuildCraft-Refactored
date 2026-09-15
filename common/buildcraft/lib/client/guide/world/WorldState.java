@@ -14,19 +14,10 @@ import java.util.List;
 public class WorldState {
     private final Vector3f cameraPos;
     private final double cameraYaw, cameraPitch;
-    // private final Vec3i size;
-    // private final FakeWorld world;
     private final List<WorldLabel> labels;
 
     public WorldState(WorldInfo info) {
         byte[] schematic = info.getSchematic();
-        // BlueprintBase blueprint = BlueprintBase.loadBluePrint(NBTUtils.load(schematic));
-        // this.size = blueprint.size;
-        // if (blueprint instanceof Blueprint) {
-        // this.world = new FakeWorld((Blueprint) blueprint);
-        // } else {
-        // this.world = new FakeWorld((Template) blueprint, Blocks.BRICK_BLOCK.getDefaultState());
-        // }
         this.labels = ImmutableList.copyOf(info.labels);
         this.cameraPos = null;// TODO Utils.convertFloat(info.cameraPos);
 

@@ -54,7 +54,6 @@ public class TileAdvancedCraftingTable extends TileLaserTableBase implements IAu
     @Override
     protected void onSlotChange(IItemHandlerModifiable handler, int slot, @Nonnull ItemStack before, @Nonnull ItemStack after) {
         super.onSlotChange(handler, slot, before, after);
-        // if (!ItemStack.matches(before, after))
         if (!StackUtil.isSameItemSameDamageSameTagSameCount(before, after) && !ItemStack.matches(before, after)) {
             crafting.onInventoryChange(handler);
         }
@@ -123,7 +122,6 @@ public class TileAdvancedCraftingTable extends TileLaserTableBase implements IAu
         return invBlueprint;
     }
 
-    // Calen added from MenuProvider
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {

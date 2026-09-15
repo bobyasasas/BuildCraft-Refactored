@@ -76,7 +76,6 @@ public class PositionUtilTester {
 
         // Construct it manually via PositionUtil.isOnEdge
 
-//        for (BlockPos p : BlockPos.getAllInBox(min.subtract(VecUtil.POS_ONE), max.add(VecUtil.POS_ONE)))
         for (BlockPos p : BlockPos.betweenClosed(min.subtract(VecUtil.POS_ONE), max.offset(VecUtil.POS_ONE))) {
             if (PositionUtil.isOnEdge(min, max, p)) {
                 Assert.assertTrue("All In Box", allOnEdge.contains(p));

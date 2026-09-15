@@ -38,7 +38,6 @@ public class AIRobotUnloadFluids extends AIRobot {
         }
     }
 
-    // public static int unload(EntityRobotBase robot, DockingStation station, boolean doUnload)
     public static int unload(EntityRobotBase robot, DockingStation station, IFluidHandler.FluidAction doUnload) {
         if (station == null) {
             return 0;
@@ -54,20 +53,16 @@ public class AIRobotUnloadFluids extends AIRobot {
             return 0;
         }
 
-//        FluidStack drainable = robot.drain(null, FluidAttributes.BUCKET_VOLUME, false);
         FluidStack drainable = robot.getCapability(CapUtil.CAP_FLUIDS).orElse(null).drain(FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
-//        if (drainable == null)
         if (drainable == null || drainable.isEmpty()) {
             return 0;
         }
 
         drainable = drainable.copy();
-//        int filled = fluidHandler.fill(station.getFluidOutputSide().face, drainable, doUnload);
         int filled = fluidHandler.fill(drainable, doUnload);
 
         if (filled > 0 && doUnload.execute()) {
             drainable.setAmount(filled);
-//            robot.drain(null, drainable, true);
             robot.getCapability(CapUtil.CAP_FLUIDS).orElse(null).drain(drainable, IFluidHandler.FluidAction.EXECUTE);
         }
         return filled;

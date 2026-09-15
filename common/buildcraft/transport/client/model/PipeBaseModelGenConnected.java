@@ -28,15 +28,12 @@ public enum PipeBaseModelGenConnected implements IPipeBaseModelGen {
     private static final Map<PipeDefinition, TextureAtlasSprite[]> sprites = new IdentityHashMap<>();
 
     @Override
-//    public void onTextureStitchPre(TextureStitchEvent.Pre event)
     public void onTextureStitchPre() {
-//        PipeBaseModelGenStandard.INSTANCE.onTextureStitchPre(event);
         PipeBaseModelGenStandard.INSTANCE.onTextureStitchPre();
 
         // TODO: Custom sprite creation + stitching
     }
 
-    // Calen 1.20.1
     @Override
     public void onDatagenTextureRegister(Consumer<ResourceLocation> consumer) {
         PipeBaseModelGenStandard.INSTANCE.onDatagenTextureRegister(consumer);

@@ -20,7 +20,6 @@ public class AdvancementUtil {
     public static void unlockAdvancement(Player player, ResourceLocation advancementName) {
         if (player instanceof ServerPlayer) {
             ServerPlayer playerMP = (ServerPlayer) player;
-//            AdvancementManager advancementManager = playerMP.getLevel().getAdvancementManager();
             ServerAdvancementManager advancementManager = playerMP.getServer().getAdvancements();
             if (advancementManager == null) {
                 // Because this *can* happen
@@ -31,7 +30,6 @@ public class AdvancementUtil {
                 // never assume the advancement exists, we create them but they are removable by datapacks
                 PlayerAdvancements tracker = playerMP.getAdvancements();
                 // When the fake player gets constructed it will set itself to the main player advancement tracker
-                // (So this just harmlessly removes it)
                 tracker.setPlayer(playerMP);
                 tracker.award(advancement, "code_trigger");
             } else if (UNKNOWN_ADVANCEMENTS.add(advancementName)) {

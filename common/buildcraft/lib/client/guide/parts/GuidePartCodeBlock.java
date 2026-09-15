@@ -49,7 +49,6 @@ public class GuidePartCodeBlock extends GuidePart {
             int _y = y + current.pixel;
             GuiGuide.BOX_CODE_SLICED.draw(guiGraphics, x + lineNumberWidth + 5, _y, outerWidth, outerHeight);
             _y += 4;
-            // try (AutoGlScissor scissor = GuiUtil.scissor(x, _y, width, height)) {
             boolean darken = true;
             for (int i = 0; i < wrappedLines.size(); i++) {
                 String line = wrappedLines.get(i);
@@ -71,7 +70,6 @@ public class GuidePartCodeBlock extends GuidePart {
                 _y += font.getMaxFontHeight() + 2;
             }
 
-            // }
         }
         current = current.nextLine(outerHeight, height);
         return current;

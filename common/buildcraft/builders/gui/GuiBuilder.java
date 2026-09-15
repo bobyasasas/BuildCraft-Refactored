@@ -34,9 +34,7 @@ public class GuiBuilder extends GuiBC8<ContainerBuilder> {
 
     public GuiBuilder(ContainerBuilder container, Inventory inventory, Component component) {
         super(container, inventory, component);
-//        xSize = SIZE_BLUEPRINT_X;
         imageWidth = SIZE_BLUEPRINT_X;
-//        ySize = SIZE_Y;
         imageHeight = SIZE_Y;
     }
 
@@ -53,21 +51,13 @@ public class GuiBuilder extends GuiBC8<ContainerBuilder> {
 
         // here is comment in 1.12.2
 //        buttonList.add(
-//                new GuiButtonSmall(
 //                        this,
 //                        0,
 //                        rootElement.getX() + (ICON_GUI.width - 100) / 2,
 //                        rootElement.getY() + 50,
 //                        100,
 //                        "Can Excavate"
-//                )
-//                        .setToolTip(ToolTip.createLocalized("gui.builder.canExcavate"))
-//                        .setBehaviour(IButtonBehaviour.TOGGLE)
-//                        .setActive(container.tile.canExcavate())
 //                        .registerListener((button, buttonId, buttonKey) ->
-//                                container.tile.sendCanExcavate(button.isButtonActive())
-//                        )
-//        );
     }
 
     @Override

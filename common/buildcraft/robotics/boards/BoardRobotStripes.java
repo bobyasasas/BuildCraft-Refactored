@@ -36,12 +36,10 @@ public class BoardRobotStripes extends RedstoneBoardRobot {
 
     @Override
     public void update() {
-        // if (robot.getHeldItem() == null)
         if (robot.getMainHandItem().isEmpty()) {
             startDelegateAI(new AIRobotFetchAndEquipItemStack(robot, new IStackFilter() {
                 @Override
                 public boolean matches(ItemStack stack) {
-                    // return stack != null;
                     return !stack.isEmpty();
                 }
             }));
@@ -49,7 +47,6 @@ public class BoardRobotStripes extends RedstoneBoardRobot {
             startDelegateAI(new AIRobotSearchAndGotoBlock(robot, true, new IBlockFilter() {
                 @Override
                 public boolean matches(Level world, BlockPos pos) {
-                    // return world.getBlockState(pos).getBlock().isAir(world, pos) && !robot.getRegistry().isTaken(new ResourceIdBlock(pos));
                     return world.getBlockState(pos).isAir() && !robot.getRegistry().isTaken(new ResourceIdBlock(pos));
                 }
             }));

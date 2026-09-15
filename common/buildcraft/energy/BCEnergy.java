@@ -36,18 +36,13 @@ import java.util.function.Consumer;
 //        name = "BuildCraft Energy",
 //        version = BCLib.VERSION,
 //        dependencies = "required-after:buildcraftcore@[" + BCLib.VERSION + "]"
-//)
 //@formatter:on
 @Mod(BCEnergy.MODID)
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BCEnergy {
     public static final String MODID = "buildcraftenergy";
 
-//    static {
-//        FluidRegistry.enableUniversalBucket();
-//    }
 
-    // @Mod.Instance(MODID)
     public static BCEnergy INSTANCE;
 
     public BCEnergy() {
@@ -63,18 +58,15 @@ public class BCEnergy {
         BCEnergyConfig.preInit();
         BCEnergyEntities.preInit();
         BCEnergyWorldGen.preInit();
-        // Calen: BCEnergyProxy.getProxy().fmlPreInit() Should before BCEnergyFluids.preInit() and BCEnergyBlocks.preInit() to set christmas special fluid data
         BCEnergyProxy.getProxy().fmlPreInit();
 
         BCEnergyFluids.preInit();
         BCEnergyBlocks.preInit();
         BCEnergyItems.preInit();
 
-//        NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, BCEnergyProxy.getProxy());
     }
 
     @SubscribeEvent
-//    public static void init(FMLInitializationEvent evt)
     public static void init(FMLCommonSetupEvent event) {
         BCEnergyFluids.registerBucketDispenserBehavior();
 //        BCEnergyRecipes.init(); // 1.18.2: use datagen
@@ -85,7 +77,6 @@ public class BCEnergy {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void clientInit(FMLClientSetupEvent event) {
-        // Calen: from BCFluidBlock#<init>
         for (RegistryObject<BCFluid.Source> fluid : BCEnergyFluids.allStill) {
             ItemBlockRenderTypes.setRenderLayer(fluid.get().getSource(), RenderType.solid());
             ItemBlockRenderTypes.setRenderLayer(fluid.get().getFlowing(), RenderType.solid());
@@ -96,7 +87,6 @@ public class BCEnergy {
     public static void postInit(FMLLoadCompleteEvent event) {
         BCEnergyProxy.getProxy().fmlPostInit();
         BCEnergyConfig.validateBiomeNames();
-//        registerMigrations();
         EnumSpring.OIL.liquidBlock = BCEnergyFluids.crudeOil[0].get().defaultFluidState().createLegacyBlock();
         BCEnergyConfig.saveConfigs();
     }
@@ -118,56 +108,39 @@ public class BCEnergy {
         }
     }
 
-    // TODO Calen biome???
 //    @SubscribeEvent
-//    public static void registerSerializers(RegistryEvent.Register<RecipeSerializer<?>> evt) {
-////        Registry.register(Registry.BIOME_SOURCE, ">>>", BCBiomeProvider.TF_CODEC);
-////        Registry.register(Registry.CHUNK_GENERATOR, ">>>", BCChunkGenerator.CODEC);
-//    }
 
     private static final TagManager tagManager = new TagManager();
 
     static {
-        // Calen: in namespace Energy
         startBatch();
         // Items
-//        registerTag("item.glob.oil").reg("glob_of_oil").oldReg("glob_oil").locale("globOil").model("glob_oil");
-//        registerTag("item.glob_oil").reg("glob_oil").locale("globOil").model("glob_oil");
         registerTag("item.glob_oil").reg("glob_oil").locale("globOil");
-//        registerTag("item.oil_placer").reg("oil_placer").locale("oilPlacer").model("glob_oil");
         registerTag("item.oil_placer").reg("oil_placer").locale("oilPlacer");
 
         // Item Blocks
-//        registerTag("item.block.mj_dynamo").reg("mj_dynamo").locale("mjDynamo").model("mj_dynamo");
         registerTag("item.block.mj_dynamo").reg("mj_dynamo").locale("mjDynamo");
 
         // Tiles
         registerTag("tile.mj_dynamo").reg("mj_dynamo");
 
-//        endBatch(TagManager.prependTags("buildcraftenergy:", TagManager.EnumTagType.REGISTRY_NAME, TagManager.EnumTagType.MODEL_LOCATION)
         endBatch(TagManager.prependTags("buildcraftenergy:", TagManager.EnumTagType.REGISTRY_NAME)
                 .andThen(TagManager.setTab("buildcraft.main"))
         );
 
         // Blocks
 
-//        registerTag("block.mj_dynamo").reg("mj_dynamo").locale("mjDynamo").model("mj_dynamo");
         registerTag("block.mj_dynamo").reg("mj_dynamo").locale("mjDynamo");
 
-        // Calen: in namespace Core
         startBatch();
         // Item Blocks
-//        registerTag("item.block.engine.bc.stone").reg("engine_stone").locale("engineStone").model("");
         registerTag("item.block.engine.bc.stone").reg("engine_stone").locale("engineStone");
-//        registerTag("item.block.engine.bc.iron").reg("engine_iron").locale("engineIron").model("");
         registerTag("item.block.engine.bc.iron").reg("engine_iron").locale("engineIron");
         registerTag("item.block.engine.bc.rf").reg("engine_rf").locale("engineRf");
 
         // Blocks
         registerTag("block.engine.bc.stone").reg("engine_stone").locale("engineStone");
-//        registerTag("block.engine.bc.stone").locale("engine_stone");
         registerTag("block.engine.bc.iron").reg("engine_iron").locale("engineIron");
-//        registerTag("block.engine.bc.iron").locale("engine_iron");
         registerTag("block.engine.bc.rf").reg("engine_rf").locale("engineRf");
 
         // Tiles
@@ -177,24 +150,20 @@ public class BCEnergy {
 
         registerTag("tile.spring.oil").reg("spring_oil");
 
-//        endBatch(TagManager.prependTags("buildcraftcore:", TagManager.EnumTagType.REGISTRY_NAME, TagManager.EnumTagType.MODEL_LOCATION)
         endBatch(TagManager.prependTags("buildcraftcore:", TagManager.EnumTagType.REGISTRY_NAME)
                 .andThen(TagManager.setTab("buildcraft.main"))
         );
     }
 
     private static TagManager.TagEntry registerTag(String id) {
-//        return TagManager.registerTag(id);
         return tagManager.registerTag(id);
     }
 
     private static void startBatch() {
-//        TagManager.startBatch();
         tagManager.startBatch();
     }
 
     private static void endBatch(Consumer<TagManager.TagEntry> consumer) {
-//        TagManager.endBatch(consumer);
         tagManager.endBatch(consumer);
     }
 }

@@ -57,9 +57,7 @@ public class AIRobotUnload extends AIRobot {
             return false;
         }
 
-        // for (IInvSlot robotSlot : InventoryIterator.getIterable(robot))
         for (IInvSlot robotSlot : InventoryIterator.getIterable(robot.getCapability(CapUtil.CAP_ITEMS).orElse(null))) {
-            // if (robotSlot.getStackInSlot() == null)
             if (robotSlot.getStackInSlot().isEmpty()) {
                 continue;
             }
@@ -70,39 +68,29 @@ public class AIRobotUnload extends AIRobot {
             }
 
             ItemStack stack = robotSlot.getStackInSlot();
-            // int used = output.injectItem(stack, doUnload, injectSide, null);
             ItemStack leftover = output.injectItem(stack, doUnload, injectSide, null, 0);
 
-            // if (used > 0)
             if (stack.getCount() > leftover.getCount()) {
                 if (doUnload) {
-                    // robotSlot.decreaseStackInSlot(used);
                     robotSlot.setStackInSlot(leftover);
                 }
                 return true;
             }
         }
 
-        // if (robot.getHeldItem() != null)
         if (!robot.getMainHandItem().isEmpty()) {
-            // if (!ActionRobotFilter.canInteractWithItem(station, new ArrayStackOrListFilter(robot.getHeldItem()), ActionStationAcceptItems.class))
             if (!ActionRobotFilter.canInteractWithItem(station, new ArrayStackOrListFilter(robot.getMainHandItem()), ActionStationAcceptItems.class)) {
                 return false;
             }
 
-            // ItemStack stack = robot.getHeldItem();
             ItemStack stack = robot.getMainHandItem();
-            // int used = output.injectItem(stack, doUnload, injectSide, null);
             ItemStack leftover = output.injectItem(stack, doUnload, injectSide, null, 0);
 
-            // if (used > 0)
             if (stack.getCount() > leftover.getCount()) {
                 if (doUnload) {
-                    // if (stack.getCount() <= used)
                     if (leftover.getCount() <= 0) {
                         robot.setItemInUse(StackUtil.EMPTY);
                     } else {
-                        // stack.shrink(used);
                         robot.setItemInHand(InteractionHand.MAIN_HAND, leftover);
                     }
                 }
@@ -114,7 +102,6 @@ public class AIRobotUnload extends AIRobot {
     }
 
     @Override
-    // public int getEnergyCost()
     public long getPowerCost() {
         return 10 * MjAPI.MJ / 10;
     }

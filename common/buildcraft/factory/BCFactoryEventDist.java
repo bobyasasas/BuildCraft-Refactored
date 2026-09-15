@@ -16,22 +16,8 @@ public enum BCFactoryEventDist {
     INSTANCE;
 
 //    @SubscribeEvent
-//    @OnlyIn(Dist.CLIENT)
-//    public static void textureStitchPre(TextureStitchEvent.Pre event) {
-//        RenderPump.textureStitchPre();
-////        RenderMiningWell.textureStitchPre();
-//    }
 
 //    @SubscribeEvent
-//    @OnlyIn(Dist.CLIENT)
-//    public static void textureStitchPost(TextureStitchEvent.Post event) {
-//        if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
-//            // Calen: don't call here! The event will be called several times, then the setWhiteTex(event) will be called duplicated to make the texture lean
-//            // moved to RenderPump&RenderMiningWell#initWhiteTex()
-//            RenderPump.textureStitchPost();
-//            RenderMiningWell.textureStitchPost();
-//        }
-//    }
 
     @SubscribeEvent
     public void onPlayerDestroyBlock(BlockEvent.BreakEvent event) {

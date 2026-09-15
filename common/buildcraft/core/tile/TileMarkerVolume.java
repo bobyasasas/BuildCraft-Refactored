@@ -82,7 +82,6 @@ public class TileMarkerVolume extends TileMarker<VolumeConnection> implements IT
     public void switchSignals() {
         if (!level.isClientSide) {
             showSignals = !showSignals;
-//            markDirty();
             this.setChanged();
             sendNetworkUpdate(showSignals ? NET_SIGNALS_ON : NET_SIGNALS_OFF);
         }
@@ -127,12 +126,7 @@ public class TileMarkerVolume extends TileMarker<VolumeConnection> implements IT
         return INFINITE_EXTENT_AABB;
     }
 
-    // Calen: RenderMarkerVolume#getViewDistance
 //    @Override
-//    @OnlyIn(Dist.CLIENT)
-//    public double getMaxRenderDistanceSquared() {
-//        return BCCoreConfig.markerMaxDistance * 4 * BCCoreConfig.markerMaxDistance;
-//    }
 
     public void onManualConnectionAttempt(Player player) {
         MarkerSubCache<VolumeConnection> cache = this.getLocalCache();
@@ -166,12 +160,8 @@ public class TileMarkerVolume extends TileMarker<VolumeConnection> implements IT
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
         super.getDebugInfo(left, right, side);
-//        left.add("Min = " + min());
-//        left.add("Max = " + max());
-//        left.add("Signals = " + showSignals);
         left.add(Component.literal("Min = " + min()));
         left.add(Component.literal("Max = " + max()));
         left.add(Component.literal("Signals = " + showSignals));

@@ -61,7 +61,6 @@ public class GuiUtil {
      * scale".)
      */
     public static int getScreenHeight() {
-//        return Minecraft.getInstance().currentScreen.height;
         return Minecraft.getInstance().screen.height;
     }
 
@@ -112,21 +111,15 @@ public class GuiUtil {
     }
 
     public static void drawItemStackAt(ItemStack stack, GuiGraphics guiGraphics, int x, int y) {
-//        RenderHelper.enableGUIStandardItemLighting();
         RenderUtil.enableGUIStandardItemLighting();
         Minecraft mc = Minecraft.getInstance();
-//        ItemRenderer itemRender = mc.getItemRenderer();
-//        itemRender.renderItemAndEffectIntoGUI(mc.player, stack, x, y);
         guiGraphics.renderFakeItem(stack, x, y);
-//        itemRender.renderItemOverlayIntoGUI(mc.fontRenderer, stack, x, y, null);
         guiGraphics.renderItemDecorations(mc.font, stack, x, y, null);
-//        RenderHelper.disableStandardItemLighting();
         RenderUtil.disableStandardItemLighting();
     }
 
     @FunctionalInterface
     public interface IVerticalAppendingDrawer<D> {
-        // double draw(D drawable, double x, double y);
         double draw(D drawable, GuiGraphics guiGraphics, double x, double y);
     }
 
@@ -150,11 +143,6 @@ public class GuiUtil {
     public static int drawHoveringText(GuiGraphics guiGraphics, List<Component> textLines, final int mouseX, final int mouseY, final int screenWidth, final int screenHeight, final int maxTextWidth, Font font) {
         PoseStack poseStack = guiGraphics.pose();
         if (!textLines.isEmpty()) {
-//            GlStateManager.disableRescaleNormal();
-//            RenderHelper.disableStandardItemLighting();
-//            GlStateManager.disableLighting();
-            // Calen: not need to disableDepth, ScreenUtils.drawGradientRect will enableDepthTest
-//            GlStateManager.disableDepth();
             int tooltipTextWidth = 0;
 
             for (Component textLine : textLines) {
@@ -192,7 +180,6 @@ public class GuiUtil {
                 List<Component> wrappedTextLines = new ArrayList<>();
                 for (int i = 0; i < textLines.size(); i++) {
                     Component textLine = textLines.get(i);
-//                    List<String> wrappedLine = font.listFormattedStringToWidth(textLine, tooltipTextWidth);
                     List<String> wrappedLine = FontUtil.listFormattedStringToWidth(textLine.getString(), tooltipTextWidth);
                     if (i == 0) {
                         titleLinesCount = wrappedLine.size();
@@ -230,15 +217,10 @@ public class GuiUtil {
                 tooltipY = screenHeight - tooltipHeight - 6;
             }
 
-            // Calen: to render above number text of itemStacks and other gui elements
             // the GuiElementStatementVariant background height is 1000 in GuiElementStatementVariant#drawBackground
             // the mc default tooltip height is 400
-//            final int zLevel = 300;
-//            final int zLevel = 400;
             final int zLevel = 1400;
             final int backgroundColor = 0xF0100010;
-            // 1.18.2 GuiUtils.drawGradientRect(Matrix4f mat, int zLevel, int left, int top, int right, int bottom, int startColor, int endColor)
-            // 1.20.1 GuiGraphics.fillGradient(int x1, int y1, int x2, int y2, int z, int colorFrom, int colorTo)
             guiGraphics.fillGradient(tooltipX - 3, tooltipY - 4,
                     tooltipX + tooltipTextWidth + 3, tooltipY - 3,
                     zLevel,
@@ -279,12 +261,10 @@ public class GuiUtil {
                     borderColorEnd, borderColorEnd);
 
             RenderSystem.disableBlend();
-//            RenderSystem.enableTexture();
             for (int lineNumber = 0; lineNumber < textLines.size(); ++lineNumber) {
                 Component line = textLines.get(lineNumber);
-//                font.drawStringWithShadow(line, tooltipX, tooltipY, -1);
                 poseStack.pushPose();
-                poseStack.translate(0, 0, zLevel); // Calen: Screen.class:288
+                poseStack.translate(0, 0, zLevel);
                 guiGraphics.drawString(font, line, tooltipX, tooltipY, -1);
                 poseStack.popPose();
 
@@ -295,11 +275,6 @@ public class GuiUtil {
                 tooltipY += 10;
             }
 
-//            GlStateManager.enableLighting();
-            // Calen: disableDepth not called before
-//            GlStateManager.enableDepth();
-//            RenderHelper.enableStandardItemLighting();
-//            GlStateManager.enableRescaleNormal();
             return tooltipHeight + 5;
         }
         return 0;
@@ -332,20 +307,13 @@ public class GuiUtil {
     }
 
     public static void drawTexturedModalRect(GuiGraphics guiGraphics, ResourceLocation texture, double posX, double posY, double textureX, double textureY, double width, double height) {
-//        int x = MathHelper.floor(posX);
         int x = Mth.floor(posX);
-//        int y = MathHelper.floor(posY);
         int y = Mth.floor(posY);
-//        int u = MathHelper.floor(textureX);
         int u = Mth.floor(textureX);
-//        int v = MathHelper.floor(textureY);
         int v = Mth.floor(textureY);
-//        int w = MathHelper.floor(width);
         int w = Mth.floor(width);
-//        int h = MathHelper.floor(height);
         int h = Mth.floor(height);
         Gui gui = Minecraft.getInstance().gui;
-//        gui.drawTexturedModalRect(x, y, u, v, w, h);
         guiGraphics.blit(texture, x, y, u, v, w, h);
     }
 
@@ -368,7 +336,6 @@ public class GuiUtil {
         double endX = startX + position.getWidth();
         double endY;
 
-//        if (fluid.getFluid().isGaseous(fluid))
         if (fluid.getRawFluid().getFluidType().isLighterThanAir()) {
             startY = position.getY() + height;
             endY = position.getY();
@@ -386,10 +353,6 @@ public class GuiUtil {
 
     public static AutoGlScissor scissor(IGuiArea area) {
         GuiRectangle rect = area.asImmutable();
-        // Calen: RenderSystem.enableScissor() contains _enableScissorTest()
-//        if (scissorRegions.isEmpty()) {
-//            GL11.glEnable(GL11.GL_SCISSOR_TEST);
-//        }
         scissorRegions.push(rect);
         scissor0();
         return new AutoGlScissor() {
@@ -401,8 +364,6 @@ public class GuiUtil {
                 }
                 GuiRectangle next = scissorRegions.peek();
                 if (next == null) {
-//                    GL11.glDisable(GL11.GL_SCISSOR_TEST);
-//                    GlStateManager._disableScissorTest();
                     RenderSystem.disableScissor();
                 } else {
                     scissor0();
@@ -435,17 +396,10 @@ public class GuiUtil {
     }
 
     private static void scissor0(double x, double y, double width, double height) {
-//        Minecraft mc = Minecraft.getMinecraft();
-//        ScaledResolution res = new ScaledResolution(mc);
-//        double scaleW = mc.displayWidth / res.getScaledWidth_double();
-//        double scaleH = mc.displayHeight / res.getScaledHeight_double();
         Window window = Minecraft.getInstance().getWindow();
         double scaleFactor = window.getGuiScale();
-//        int rx = (int) (x * scaleW);
         int rx = (int) (x * scaleFactor);
-//        int ry = (int) (mc.displayHeight - (y + height) * scaleH);
         int ry = (int) (window.getHeight() - (y + height) * scaleFactor);
-//        GL11.glScissor(rx, ry, (int) (width * scaleW), (int) (height * scaleH));
         RenderSystem.enableScissor(rx, ry, (int) (width * scaleFactor), (int) (height * scaleFactor));
     }
 
@@ -489,12 +443,10 @@ public class GuiUtil {
         List<Component> list = getUnFormattedTooltip(stack);
 
         if (!list.isEmpty()) {
-//            list.set(0, Component.literal(stack.getRarity().color.toString() + list.get(0).getString()));
             list.set(0, Component.literal(stack.getRarity().color.toString()).append(list.get(0)));
         }
 
         for (int i = 1; i < list.size(); ++i) {
-//            list.set(i, Component.literal(ChatFormatting.GRAY.toString() + list.get(i).getString()));
             list.set(i, Component.literal(ChatFormatting.GRAY.toString()).append(list.get(i)));
         }
 

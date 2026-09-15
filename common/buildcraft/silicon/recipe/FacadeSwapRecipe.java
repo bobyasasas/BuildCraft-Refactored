@@ -66,15 +66,12 @@ public enum FacadeSwapRecipe implements CraftingRecipe, IRecipeViewable.IViewabl
     }
 
     @Override
-//    public boolean matches(InventoryCrafting inv, World world)
     public boolean matches(CraftingContainer inv, Level world) {
-//        return !getCraftingResult(inv).isEmpty();
         return !assemble(inv, world.registryAccess()).isEmpty();
     }
 
     @NotNull
     @Override
-//    public ItemStack getCraftingResult(InventoryCrafting inv)
     public ItemStack assemble(CraftingContainer inv, RegistryAccess registryAccess) {
         ItemStack stackIn = StackUtil.EMPTY;
         for (int s = 0; s < inv.getContainerSize(); s++) {
@@ -97,16 +94,11 @@ public enum FacadeSwapRecipe implements CraftingRecipe, IRecipeViewable.IViewabl
 
     @NotNull
     @Override
-//    public ItemStack getRecipeOutput()
     public ItemStack getResultItem(RegistryAccess registryAccess) {
         return StackUtil.EMPTY;
     }
 
-    // Calen use default getRemainingItems in Recipe.class
 //    @Override
-//    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
-//        return ForgeHooks.defaultRecipeGetRemainingItems(inv);
-//    }
 
     @Override
     public ChangingItemStack[] getRecipeInputs() {
@@ -140,13 +132,9 @@ public enum FacadeSwapRecipe implements CraftingRecipe, IRecipeViewable.IViewabl
     }
 
 //    @Override
-//    public IRecipe setRegistryName(ResourceLocation name) {
-//        return this;
-//    }
 
     @NotNull
     @Override
-//    public ResourceLocation getRegistryName()
     public ResourceLocation getId() {
         return new ResourceLocation(BCTransport.MODID, "facade_swap");
     }
@@ -159,9 +147,7 @@ public enum FacadeSwapRecipe implements CraftingRecipe, IRecipeViewable.IViewabl
 
     @NotNull
     @Override
-//    public Class<Recipe> getRegistryType()
     public RecipeType<CraftingRecipe> getType() {
-//        return Recipe.class;
         return RecipeType.CRAFTING;
     }
 
@@ -171,7 +157,6 @@ public enum FacadeSwapRecipe implements CraftingRecipe, IRecipeViewable.IViewabl
     }
 
     @Override
-//    public boolean canFit(int width, int height)
     public boolean canCraftInDimensions(int width, int height) {
         return width >= 1 && height >= 1;
     }

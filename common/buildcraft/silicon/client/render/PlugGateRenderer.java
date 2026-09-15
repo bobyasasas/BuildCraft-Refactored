@@ -27,9 +27,7 @@ public enum PlugGateRenderer implements IPlugDynamicRenderer<PluggableGate> {
     }
 
     @Override
-//    public void render(PluggableGate gate, double x, double y, double z, float partialTicks, BufferBuilder vb)
     public void render(PluggableGate gate, float partialTicks, PoseStack poseStack, VertexConsumer vb, int combinedLight, int combinedOverlay) {
-//        vb.setTranslation(x, y, z);
         gate.setClientModelVariables();
         if (gate.clientModelData.hasNoNodes()) {
             gate.clientModelData.setNodes(BCSiliconModels.GATE_DYNAMIC.createTickableNodes());
@@ -45,6 +43,5 @@ public enum PlugGateRenderer implements IPlugDynamicRenderer<PluggableGate> {
 
             copy.render(poseStack.last(), vb);
         }
-//        vb.setTranslation(0, 0, 0);
     }
 }

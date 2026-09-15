@@ -44,7 +44,6 @@ public class TriggerInventory extends BCStatement implements ITriggerExternal {
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("gate.trigger.inventory." + state.name().toLowerCase(Locale.ROOT));
         return Component.translatable("gate.trigger.inventory." + state.name().toLowerCase(Locale.ROOT));
     }
 

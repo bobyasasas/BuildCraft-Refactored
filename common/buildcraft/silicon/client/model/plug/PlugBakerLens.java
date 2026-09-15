@@ -35,17 +35,6 @@ public enum PlugBakerLens implements IPluggableStaticBaker<KeyPlugLens> {
     }
 
     private static IQuadGetter getGetter(KeyPlugLens key) {
-//        switch (key.layer) {
-//            case CUTOUT: {
-//                return key.isFilter ? filterCutout : lensCutout;
-//            }
-//            case TRANSLUCENT: {
-//                return key.isFilter ? filterTranslucent : lensTranslucent;
-//            }
-//            default: {
-//                throw new IllegalArgumentException("Unknown layer " + key.layer);
-//            }
-//        }
         if (key.layer == RenderType.cutout()) {
             return key.isFilter ? filterCutout : lensCutout;
         } else if (key.layer == RenderType.translucent()) {

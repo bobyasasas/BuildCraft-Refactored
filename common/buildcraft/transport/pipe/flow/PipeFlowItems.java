@@ -65,8 +65,6 @@ public final class PipeFlowItems extends PipeFlow implements IFlowItems {
     public PipeFlowItems(IPipe pipe, CompoundTag nbt) {
         super(pipe, nbt);
         ListTag list = nbt.getList("items", Tag.TAG_COMPOUND);
-        // Calen: when world loading, the level of TE is null
-//        long tickNow = pipe.getHolder().getPipeWorld().getTotalWorldTime();
         long tickNow = nbt.getLong("tickNow");
 
         for (int i = 0; i < list.size(); i++) {
@@ -83,7 +81,6 @@ public final class PipeFlowItems extends PipeFlow implements IFlowItems {
         List<List<TravellingItem>> allItems = items.getAllElements();
         ListTag list = new ListTag();
 
-//        long tickNow = pipe.getHolder().getPipeWorld().getTotalWorldTime();
         long tickNow = pipe.getHolder().getPipeWorld().getGameTime();
         for (List<TravellingItem> l : allItems) {
             for (TravellingItem item : l) {
@@ -91,7 +88,6 @@ public final class PipeFlowItems extends PipeFlow implements IFlowItems {
             }
         }
         nbt.put("items", list);
-        // Calen
         nbt.putLong("tickNow", pipe.getHolder().getPipeWorld().getGameTime());
         return nbt;
     }
@@ -112,7 +108,6 @@ public final class PipeFlowItems extends PipeFlow implements IFlowItems {
                 item.side = buffer.readEnum(Direction.class);
                 item.colour = MessageUtil.readEnumOrNull(buffer, DyeColor.class);
                 item.timeToDest = buffer.readUnsignedShort();
-//                item.tickStarted = pipe.getHolder().getPipeWorld().getTotalWorldTime() + 1;
                 item.tickStarted = pipe.getHolder().getPipeWorld().getGameTime() + 1;
                 item.tickFinished = item.tickStarted + item.timeToDest;
                 items.add(item.timeToDest + 1, item);
@@ -135,7 +130,6 @@ public final class PipeFlowItems extends PipeFlow implements IFlowItems {
         item.side = data.side;
         item.colour = data.colour;
         item.timeToDest = data.timeToDest;
-//        item.tickStarted = pipe.getHolder().getPipeWorld().getTotalWorldTime() + 1;
         item.tickStarted = pipe.getHolder().getPipeWorld().getGameTime() + 1;
         item.tickFinished = item.tickStarted + item.timeToDest;
         items.add(item.timeToDest + 1, item);
@@ -143,15 +137,6 @@ public final class PipeFlowItems extends PipeFlow implements IFlowItems {
 
     void sendItemDataToClient(TravellingItem item) {
         final int stackId = BuildCraftObjectCaches.storeItemStack(item.stack);
-        // sendCustomPayload(NET_CREATE_ITEM, (buffer) -> {
-        // PacketBufferBC buf = PacketBufferBC.asPacketBufferBc(buffer);
-        // buf.writeInt(stackId);
-        // buf.writeShort(item.stack.getCount());
-        // buf.writeBoolean(item.toCenter);
-        // buf.writeEnumValue(item.side);
-        // MessageUtil.writeEnumOrNull(buf, item.colour);
-        // buf.writeShort(item.timeToDest > Short.MAX_VALUE ? Short.MAX_VALUE : item.timeToDest);
-        // });
         PipeItemMessageQueue.appendTravellingItem(
                 pipe.getHolder().getPipeWorld(), pipe.getHolder().getPipePos(), stackId, (byte) item.stack.getCount(),
                 item.toCenter, item.side, item.colour, item.timeToDest > Byte.MAX_VALUE ? Byte.MAX_VALUE
@@ -230,7 +215,6 @@ public final class PipeFlowItems extends PipeFlow implements IFlowItems {
         face1 = from == null ? to : null;
         face2 = to;
 
-//        long now = pipe.getHolder().getPipeWorld().getTotalWorldTime();
         long now = pipe.getHolder().getPipeWorld().getGameTime();
 
         TravellingItem firstItem = new TravellingItem(stack);
@@ -261,10 +245,8 @@ public final class PipeFlowItems extends PipeFlow implements IFlowItems {
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {
         if (capability == PipeApi.CAP_INJECTABLE) {
-//            return PipeApi.CAP_INJECTABLE.cast(this);
             return LazyOptional.of(() -> this).cast();
         } else if (capability == CapUtil.CAP_ITEM_TRANSACTOR) {
-//            return CapabilityHelper.CAP_ITEM_TRANSACTOR.cast(ItemTransactorHelper.wrapInjectable(this, facing));
             return LazyOptional.of(() -> ItemTransactorHelper.wrapInjectable(this, facing)).cast();
         } else {
             return super.getCapability(capability, facing);
@@ -286,7 +268,6 @@ public final class PipeFlowItems extends PipeFlow implements IFlowItems {
         Level world = pipe.getHolder().getPipeWorld();
 
         List<TravellingItem> toTick = items.advance();
-//        long currentTime = world.getTotalWorldTime();
         long currentTime = world.getGameTime();
 
         for (TravellingItem item : toTick) {
@@ -466,7 +447,6 @@ public final class PipeFlowItems extends PipeFlow implements IFlowItems {
         item.tried.add(item.side);
         item.toCenter = true;
         item.stack = excess;
-//        item.genTimings(holder.getPipeWorld().getTotalWorldTime(), getPipeLength(item.side));
         item.genTimings(holder.getPipeWorld().getGameTime(), getPipeLength(item.side));
         items.add(item.timeToDest, item);
         sendItemDataToClient(item);
@@ -496,35 +476,25 @@ public final class PipeFlowItems extends PipeFlow implements IFlowItems {
         Level world = holder.getPipeWorld();
         BlockPos pos = holder.getPipePos();
 
-//        double x = pos.getX() + 0.5 + motion.getFrontOffsetX() * 0.5;
-//        double y = pos.getY() + 0.5 + motion.getFrontOffsetY() * 0.5;
-//        double z = pos.getZ() + 0.5 + motion.getFrontOffsetZ() * 0.5;
         double x = pos.getX() + 0.5 + motion.getStepX() * 0.5;
         double y = pos.getY() + 0.5 + motion.getStepY() * 0.5;
         double z = pos.getZ() + 0.5 + motion.getStepZ() * 0.5;
         speed += 0.01;
         speed *= 2;
         ItemEntity ent = new ItemEntity(world, x, y, z, stack);
-//        ent.motionX = motion.getFrontOffsetX() * speed;
-//        ent.motionY = motion.getFrontOffsetY() * speed;
-//        ent.motionZ = motion.getFrontOffsetZ() * speed;
         ent.setDeltaMovement(motion.getStepX() * speed, motion.getStepY() * speed, motion.getStepZ() * speed);
 
         PipeEventItem.Drop drop = new PipeEventItem.Drop(holder, this, ent);
         holder.fireEvent(drop);
-//        if (ent.getItem().isEmpty() || ent.isDead)
         if (ent.getItem().isEmpty() || !ent.isAlive()) {
             return;
         }
 
-//        world.spawnEntity(ent);
         world.addFreshEntity(ent);
     }
 
     @Override
     public boolean canInjectItems(Direction from) {
-        // return pipe.isConnected(from);
-        // Calen 1.18.2: supported robot station
         return pipe.isConnected(from) || (pipe.getHolder().getPluggable(from) instanceof IDockingStationProvider);
     }
 
@@ -550,7 +520,6 @@ public final class PipeFlowItems extends PipeFlow implements IFlowItems {
             return stack;
         }
         ItemStack toSplit = stack.copy();
-//        ItemStack toInsert = toSplit.splitStack(tryInsert.accepted);
         ItemStack toInsert = toSplit.split(tryInsert.accepted);
 
         if (doAdd) {
@@ -576,11 +545,9 @@ public final class PipeFlowItems extends PipeFlow implements IFlowItems {
         if (speed < 0.01) {
             speed = 0.01;
         }
-//        long now = world.getTotalWorldTime();
         long now = world.getGameTime();
         TravellingItem item = new TravellingItem(stack);
         if (from == null) {
-            // Find a reasonable alternative (as it's not allowed to be null)
             for (Direction f : Direction.VALUES) {
                 if (!pipe.isConnected(f)) {
                     item.side = f;
@@ -618,7 +585,6 @@ public final class PipeFlowItems extends PipeFlow implements IFlowItems {
         }
 
         Level world = pipe.getHolder().getPipeWorld();
-//        long now = world.getTotalWorldTime();
         long now = world.getGameTime();
 
         TravellingItem item = new TravellingItem(toInsert);
@@ -651,9 +617,7 @@ public final class PipeFlowItems extends PipeFlow implements IFlowItems {
 
     public boolean doesContainItems() {
         // Note that this counts all items
-        // (including phantom items, which is fine)
         // This only works because this list is only expanded to add elements
-        // and elements are only removed in advance()
         return items.getMaxDelay() > 0 || !postDropCache.isEmpty();
     }
 

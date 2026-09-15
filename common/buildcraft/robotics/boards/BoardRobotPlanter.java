@@ -47,16 +47,13 @@ public class BoardRobotPlanter extends RedstoneBoardRobot {
 
     @Override
     public void update() {
-        // if (robot.getHeldItem() == null)
         if (robot.getMainHandItem().isEmpty()) {
             startDelegateAI(new AIRobotFetchAndEquipItemStack(robot, new AggregateFilter(filter, ActionRobotFilter.getGateFilter(robot.getLinkedStation()))));
         } else {
-            // final ItemStack itemStack = robot.getHeldItem();
             final ItemStack itemStack = robot.getMainHandItem();
             IBlockFilter blockFilter = new IBlockFilter() {
                 @Override
                 public boolean matches(Level world, BlockPos pos) {
-                    // return !BuildCraftAPI.getWorldProperty("replaceable").get(world, pos) && isPlantable(itemStack, world, pos) && !robot.getRegistry().isTaken(new ResourceIdBlock(pos));
                     return !BlockUtil.isReplaceable(world.getBlockState(pos)) && isPlantable(itemStack, world, pos) && !robot.getRegistry().isTaken(new ResourceIdBlock(pos));
                 }
             };

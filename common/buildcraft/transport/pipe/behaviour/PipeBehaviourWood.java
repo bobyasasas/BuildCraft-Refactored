@@ -80,7 +80,6 @@ public class PipeBehaviourWood extends PipeBehaviourDirectional implements IMjRe
                 IFlowFluid flow = (IFlowFluid) pipe.getFlow();
                 int maxMillibuckets = (int) (power / BCTransportConfig.mjPerMillibucket);
                 if (maxMillibuckets > 0) {
-//                    FluidStack extracted = extractFluid(flow, getCurrentDir(), maxMillibuckets, simulate);
                     FluidStack extracted = extractFluid(flow, getCurrentDir(), maxMillibuckets, simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
                     if (extracted != null && extracted.getAmount() > 0) {
                         return power - extracted.getAmount() * BCTransportConfig.mjPerMillibucket;
@@ -96,9 +95,7 @@ public class PipeBehaviourWood extends PipeBehaviourDirectional implements IMjRe
     }
 
     @Nullable
-//    protected FluidStack extractFluid(IFlowFluid flow, Direction dir, int millibuckets, boolean simulate)
     protected FluidStack extractFluid(IFlowFluid flow, Direction dir, int millibuckets, IFluidHandler.FluidAction action) {
-//        return flow.tryExtractFluid(millibuckets, dir, null, simulate);
         return flow.tryExtractFluid(millibuckets, dir, null, action);
     }
 
@@ -127,9 +124,7 @@ public class PipeBehaviourWood extends PipeBehaviourDirectional implements IMjRe
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-//        left.add("Facing = " + currentDir);
         left.add(Component.literal("Facing = " + currentDir));
     }
 }

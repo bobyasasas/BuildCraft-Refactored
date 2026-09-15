@@ -33,7 +33,6 @@ public class SpriteRaw implements ISprite {
 
     @Override
     public void bindTexture() {
-//        Minecraft.getMinecraft().renderEngine.bindTexture(location);
         SpriteUtil.bindTexture(location);
     }
 

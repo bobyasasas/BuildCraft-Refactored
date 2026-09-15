@@ -28,7 +28,6 @@ import java.util.stream.StreamSupport;
 
 public class AddonRendererFillerPlanner implements IFastAddonRenderer<AddonFillerPlanner> {
     @Override
-//    public void renderAddonFast(AddonFillerPlanner addon, Player player, float partialTicks, BufferBuilder vb)
     public void renderAddonFast(AddonFillerPlanner addon, Player player, PoseStack.Pose pose, float partialTicks, VertexConsumer vb) {
         if (addon.buildingInfo == null) {
             return;
@@ -48,15 +47,11 @@ public class AddonRendererFillerPlanner implements IFastAddonRenderer<AddonFille
                                 )
                         )
                 )
-//                .filter(player.level::isAirBlock)
                 .filter(player.level()::isEmptyBlock)
-//                .map(BlockPos.MutableBlockPos::toImmutable)
-//                .map(BlockPos.MutableBlockPos::immutable) // Calen: betweenClosed ret mutable BlockPos
                 .collect(Collectors.toCollection(ArrayList::new));
         Minecraft.getInstance().getProfiler().pop();
 
         Minecraft.getInstance().getProfiler().push("sort");
-//        list.sort(Comparator.<BlockPos>comparingDouble(p -> player.getPositionVector().squareDistanceTo(new Vec3(p))).reversed());
         list.sort(Comparator.<BlockPos>comparingDouble(p -> player.position().distanceToSqr(Vec3.atLowerCornerOf(p))).reversed());
         Minecraft.getInstance().getProfiler().pop();
 
@@ -65,7 +60,6 @@ public class AddonRendererFillerPlanner implements IFastAddonRenderer<AddonFille
         Matrix3f normal = pose.normal();
         for (BlockPos p : list) {
             AABB bb = new AABB(p, p.offset(1, 1, 1)).inflate(-0.1);
-//            TextureAtlasSprite s = ModelLoader.White.INSTANCE;
             TextureAtlasSprite s = White.instance();
 
             vb.vertex(posePose, (float) bb.minX, (float) bb.maxY, (float) bb.minZ).color(204, 204, 204, 127).uv(s.getU0(), s.getV0()).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(240, 0).normal(normal, 1, 1, 1).endVertex();

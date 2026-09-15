@@ -62,13 +62,11 @@ public class AIRobotLoad extends AIRobot {
     @Nonnull
     public static ItemStack takeSingle(DockingStation station, IStackFilter filter, boolean doTake) {
         if (station == null) {
-            // return null;
             return StackUtil.EMPTY;
         }
 
         Container tileInventory = station.getItemInput();
         if (tileInventory == null) {
-            // return null;
             return StackUtil.EMPTY;
         }
 
@@ -90,12 +88,10 @@ public class AIRobotLoad extends AIRobot {
                 stack = slot.decreaseStackInSlot(1);
             } else {
                 stack = stack.copy();
-                // stack = stack.splitStack(1);
                 stack = stack.split(1);
             }
             return stack;
         }
-        // return null;
         return StackUtil.EMPTY;
     }
 
@@ -111,7 +107,6 @@ public class AIRobotLoad extends AIRobot {
             return false;
         }
 
-        // for (IInvSlot slot : InventoryIterator.getIterable(tileInventory, station.getItemInputSide().face))
         for (IInvSlot slot : InventoryIterator.getIterable(tileInventory, station.getItemInputSide().face)) {
             ItemStack stack = slot.getStackInSlot();
 
@@ -126,18 +121,14 @@ public class AIRobotLoad extends AIRobot {
                 continue;
             }
 
-            // ITransactor robotTransactor = Transactor.getTransactorFor(robot);
             IItemHandler robotTransactor = robot.getCapability(CapUtil.CAP_ITEMS).orElse(null);
 
             if (quantity == ANY_QUANTITY) {
                 ItemStack oldStack = slot.getStackInSlot();
-                // ItemStack added = robotTransactor.add(slot.getStackInSlot(), null, doLoad);
                 ItemStack overflow = InventoryUtil.insert(robotTransactor, oldStack, !doLoad);
                 if (doLoad) {
-                    // slot.decreaseStackInSlot(added.getCount());
                     slot.setStackInSlot(overflow);
                 }
-                // return added.getCount() > 0;
                 return oldStack.getCount() > overflow.getCount();
             } else {
                 ItemStack toAdd = slot.getStackInSlot().copy();
@@ -146,14 +137,12 @@ public class AIRobotLoad extends AIRobot {
                     toAdd.setCount(quantity - loaded);
                 }
 
-                // ItemStack added = robotTransactor.add(toAdd, null, doLoad);
                 ItemStack overflow = InventoryUtil.insert(robotTransactor, toAdd, !doLoad);
                 ItemStack added = toAdd.copy();
                 added.shrink(overflow.getCount());
                 if (doLoad) {
                     slot.decreaseStackInSlot(added.getCount());
                 }
-                // loaded += added.stackSize;
                 loaded += added.getCount();
 
                 if (quantity - loaded <= 0) {
@@ -165,7 +154,6 @@ public class AIRobotLoad extends AIRobot {
     }
 
     @Override
-    // public int getEnergyCost()
     public long getPowerCost() {
         return 8 * MjAPI.MJ / 10;
     }

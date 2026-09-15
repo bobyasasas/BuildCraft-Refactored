@@ -26,37 +26,25 @@ public class GuiDiamondPipe extends GuiBC8<ContainerDiamondPipe> {
     private static final GuiIcon ICON_GUI = new GuiIcon(TEXTURE, 0, 0, SIZE_X, SIZE_Y);
     private static final GuiIcon ICON_GUI_CB = new GuiIcon(TEXTURE_CB, 0, 0, SIZE_X, SIZE_Y);
 
-    // IInventory playerInventory;
     Container playerInventory;
     IItemHandler filterInventory;
 
-    // public GuiDiamondPipe(Player player, PipeBehaviourDiamond pipe, Inventory inventory, Component component)
     public GuiDiamondPipe(ContainerDiamondPipe container, Inventory inventory, Component component) {
-//        super(new ContainerDiamondPipe(null, -1, player, pipe), inventory, component);
         super(container, inventory, component);
-//        this.playerInventory = player.inventory;
-//        this.playerInventory = player.getInventory();
         this.playerInventory = inventory;
-//        this.filterInventory = pipe.filters;
         this.filterInventory = ((PipeBehaviourDiamond) container.pipeHolder.getPipe().getBehaviour()).filters;
-//        xSize = SIZE_X;
         imageWidth = SIZE_X;
-//        ySize = SIZE_Y;
         imageHeight = SIZE_Y;
     }
 
     @Override
-//    protected void drawForegroundLayer()
     protected void drawForegroundLayer(GuiGraphics guiGraphics) {
         String string = LocaleUtil.localize("gui.pipes.emerald.title");
         double titleX = mainGui.rootElement.getX() + 8;
         double titleY = mainGui.rootElement.getY() + 6;
-//        fontRenderer.drawString(string, (int) titleX, (int) titleY, 0x404040);
         guiGraphics.drawString(font, string, (int) titleX, (int) titleY, 0x404040, false);
 
-//        double invY = mainGui.rootElement.getY() + ySize - 97;
         double invY = mainGui.rootElement.getY() + imageHeight - 97;
-//        fontRenderer.drawString(LocaleUtil.localize("gui.inventory"), (int) titleX, (int) invY, 0x404040);
         guiGraphics.drawString(font, LocaleUtil.localize("gui.inventory"), (int) titleX, (int) invY, 0x404040, false);
     }
 

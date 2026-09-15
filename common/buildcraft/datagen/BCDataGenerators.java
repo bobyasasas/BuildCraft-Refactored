@@ -45,7 +45,6 @@ public class BCDataGenerators {
         packGenerator.addProvider(packOutput -> new EnergyOilTextureGenerator(packOutput, existingFileHelper));
 
 //        // frozen fluid texture
-//        generator.addProvider(new FrozenFluidTextureProvider(generator, existingFileHelper));
 
         // Tags
         BCBlockTagsGenerator blockTagsProvider = packGenerator.addProvider(packOutput -> new BCBlockTagsGenerator(packOutput, lookupProvider, existingFileHelper));
@@ -108,18 +107,15 @@ public class BCDataGenerators {
         packGenerator.addProvider(packOutput -> new RoboticsItemModelGenerator(packOutput, existingFileHelper));
 
         // Sprite
-        // Calen 1.20.1: 1 mod jar should contain at most 1 SpriteSourceProvider for BLOCKS_ATLAS, more will overwrite the earlier /assets/minecraft/atlases/blocks.json files
         packGenerator.addProvider(packOutput -> new BCSpriteSourceProvider(packOutput, existingFileHelper));
 
         // M0.3: registry baseline snapshot -> migration/snapshots/registry-baseline.json
         // Keep this last, it harvests recipe/tag ids from the other providers' output files.
         packGenerator.addProvider(packOutput -> new BCRegistrySnapshotGenerator(packOutput));
 
-        // Calen 1.20.1
         enableShouldExecute(generator);
     }
 
-    // Calen 1.20.1 for datagen
     private static void enableShouldExecute(DataGenerator generator) {
         try {
             Field f_dataGeneratorConfig = DatagenModLoader.class.getDeclaredField("dataGeneratorConfig");

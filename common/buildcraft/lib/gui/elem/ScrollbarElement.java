@@ -56,7 +56,6 @@ public class ScrollbarElement extends GuiElementSimple implements IInteractionEl
 
     /** This is called EVEN IF the mouse is not inside your width and height! */
     @Override
-//    public void onMouseDragged(int button, long ticksSinceClick)
     public void onMouseDragged(int button) {
         if (isClicking && button == 0) {
             updatePositionFromMouse();

@@ -39,14 +39,12 @@ public class SimpleScript {
 
         // Add: adds a single recipe
 
-        // Remove: removes a recipe (likely from a different datapack)
 
         // Overwrite: alias for:
         // - remove <old>
         // - add <recipe>
 
         // Replace: alias for:
-        // - if recipe_exists(<old>)
         // - - remove <old>
         // - - add <new>
         // - endif

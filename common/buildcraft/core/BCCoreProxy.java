@@ -23,7 +23,6 @@ import java.util.List;
 
 //public abstract class BCCoreProxy implements IGuiHandler
 public abstract class BCCoreProxy {
-    // @SidedProxy(modId = BCCore.MODID)
     private static BCCoreProxy proxy = null;
 
     public static BCCoreProxy getProxy() {
@@ -41,17 +40,8 @@ public abstract class BCCoreProxy {
     }
 
 //    @Override
-//    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-//        if (ID == BCCoreGuis.LIST.ordinal()) {
-//            return new ContainerList(player);
-//        }
-//        return null;
-//    }
 
 //    @Override
-//    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-//        return null;
-//    }
 
     public void fmlPreInit() {
         MessageManager.registerMessageClass(BCModules.CORE, MessageVolumeBoxes.class, Dist.CLIENT);
@@ -67,20 +57,12 @@ public abstract class BCCoreProxy {
         return WorldSavedDataVolumeBoxes.get(world).volumeBoxes;
     }
 
-    // @SideOnly(Side.SERVER)
     public static class ServerProxy extends BCCoreProxy {
 
     }
 
-    // @SideOnly(Side.CLIENT)
     public static class ClientProxy extends BCCoreProxy {
 //        @Override
-//        public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-//            if (ID == BCCoreGuis.LIST.ordinal()) {
-//                return new GuiList(player);
-//            }
-//            return null;
-//        }
 
         @Override
         public void fmlPreInit() {

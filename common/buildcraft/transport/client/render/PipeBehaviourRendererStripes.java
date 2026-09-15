@@ -22,13 +22,10 @@ public enum PipeBehaviourRendererStripes implements IPipeBehaviourRenderer<PipeB
     INSTANCE;
 
     @Override
-//    public void render(PipeBehaviourStripes stripes, double x, double y, double z, float partialTicks, BufferBuilder bb)
     public void render(PipeBehaviourStripes stripes, float partialTicks, PoseStack poseStack, VertexConsumer bb, int combinedLight, int combinedOverlay) {
         Direction dir = stripes.direction;
         if (dir == null) return;
         MutableQuad[] quads = BCTransportModels.getStripesDynQuads(dir);
-//        bb.setTranslation(x, y, z);
-//        int light = stripes.pipe.getHolder().getPipeWorld().getCombinedLight(stripes.pipe.getHolder().getPipePos(), 0);
         int light = RenderUtil.getCombinedLight(stripes.pipe.getHolder().getPipeWorld(), stripes.pipe.getHolder().getPipePos());
         for (MutableQuad q : quads) {
             q.multShade();
@@ -36,6 +33,5 @@ public enum PipeBehaviourRendererStripes implements IPipeBehaviourRenderer<PipeB
             q.overlay(combinedOverlay);
             q.render(poseStack.last(), bb);
         }
-//        bb.setTranslation(0, 0, 0);
     }
 }

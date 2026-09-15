@@ -52,7 +52,6 @@ import java.util.function.Consumer;
 //        updateJSON = "https://mod-buildcraft.com/version/versions.json",
 //        acceptedMinecraftVersions = "(gradle_replace_mcversion,)",
 //        dependencies = "required-after:forge@(gradle_replace_forgeversion,)"
-//)
 @Mod(BCLib.MODID)
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 //@formatter:on
@@ -67,13 +66,11 @@ public class BCLib {
 
     public static final boolean DEV = VERSION.startsWith("$") || Boolean.getBoolean("buildcraft.dev");
 
-    // @Instance(MODID)
     public static BCLib INSTANCE;
 
     public static ModContainer MOD_CONTAINER;
 
     static {
-        // Calen: should be called before BCSiliconPlugs.preInit() and BCTransportPlugs.preInit()
         BCLibRegistries.fmlPreInit();
     }
 
@@ -143,24 +140,16 @@ public class BCLib {
         BCLog.logger.info("");
 
         ExpressionDebugManager.logger = BCLog.logger::info;
-//        ExpressionCompat.setup(); // Calen: moved to <init> to be loaded early enough, or the Silicon/Transport/Factory model classed will cause Exception when running <clinit>
 
 
-//        BCLibRegistries.fmlPreInit(); // Calen: moved to static
         BCLibProxy.getProxy().fmlPreInit();
         BCLibItems.fmlPreInit();
 //
         BuildCraftObjectCaches.fmlPreInit();
-//        NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, BCLibProxy.getProxy());
-//
         MinecraftForge.EVENT_BUS.register(BCLibEventDist.INSTANCE);
         MinecraftForge.EVENT_BUS.register(MigrationManager.INSTANCE);
-//        MinecraftForge.EVENT_BUS.register(FluidManager.class); // Calen: not used in 1.18.2
 
 //        // Set max chunk limit for quarries: 1 chunk for quarry itself and 5 * 5 chunks square for working area
-//        ForgeChunkManager.getConfig().get(MODID, "maximumChunksPerTicket", 26);
-//        ForgeChunkManager.syncConfigDefaults();
-//        ForgeChunkManager.setForcedChunkLoadingCallback(BCLib.INSTANCE, ChunkLoaderManager::rebindTickets);
         ForgeChunkManager.setForcedChunkLoadingCallback(BCLib.MODID, ChunkLoaderManager::rebindTickets);
     }
 
@@ -192,47 +181,33 @@ public class BCLib {
         MessageManager.fmlPostInit();
     }
 
-    // Calen: moved to BCLibEventDistForgeBus#serverStarting because it is Forge Bus Event in 1.18.2
 //    @Mod.EventHandler
-//    public static void serverStarting(FMLServerStartingEvent event) {
-//        event.registerServerCommand(new CommandBuildCraft());
-//    }
 
     private static final TagManager tagManager = new TagManager();
 
     static {
         startBatch();
         registerTag("item.guide").reg("guide").locale("buildcraft.guide")
-//                .model("guide")
-//                .tab("vanilla.misc")
                 .tab("buildcraft.main")
         ;
         registerTag("item.guide.note").reg("guide_note").locale("buildcraft.guide_note")
-//                .model("guide_note")
-//                .tab("vanilla.misc")
                 .tab("buildcraft.main")
         ;
         registerTag("item.debugger").reg("debugger").locale("debugger")
-//                .model("debugger")
-//                .tab("vanilla.misc")
                 .tab("buildcraft.main")
         ;
-//        endBatch(TagManager.prependTags("buildcraftlib:", TagManager.EnumTagType.REGISTRY_NAME, TagManager.EnumTagType.MODEL_LOCATION));
         endBatch(TagManager.prependTags("buildcraftlib:", TagManager.EnumTagType.REGISTRY_NAME));
     }
 
     private static TagEntry registerTag(String id) {
-//        return TagManager.registerTag(id);
         return tagManager.registerTag(id);
     }
 
     private static void startBatch() {
-//        TagManager.startBatch();
         tagManager.startBatch();
     }
 
     private static void endBatch(Consumer<TagEntry> consumer) {
-//        TagManager.endBatch(consumer);
         tagManager.endBatch(consumer);
     }
 }

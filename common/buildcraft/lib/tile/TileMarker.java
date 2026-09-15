@@ -44,17 +44,14 @@ public abstract class TileMarker<C extends MarkerConnection<C>> extends TileBC_N
     }
 
     @Override
-//    public void onChunkUnload()
     public void onChunkUnloaded() {
         super.onChunkUnloaded();
         getLocalCache().unloadMarker(getBlockPos());
     }
 
     @Override
-//    public void invalidate()
     public void setRemoved() {
         super.setRemoved();
-        // getLocalCache().removeMarker(getPos());
     }
 
     @Override
@@ -71,17 +68,13 @@ public abstract class TileMarker<C extends MarkerConnection<C>> extends TileBC_N
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
         C current = getCurrentConnection();
         MarkerSubCache<C> cache = getLocalCache();
-//        left.add("Exists = " + (cache.getMarker(getBlockPos()) == this));
         left.add(Component.literal("Exists = " + (cache.getMarker(getBlockPos()) == this)));
         if (current == null) {
-//            left.add("Connection = null");
             left.add(Component.literal("Connection = null"));
         } else {
-//            left.add("Connection:");
             left.add(Component.literal("Connection:"));
             current.getDebugInfo(getBlockPos(), left);
         }

@@ -50,7 +50,6 @@ public enum PatternParameterAxis implements IStatementParameter {
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("buildcraft.param.axis." + name().toLowerCase(Locale.ROOT));
         return Component.translatable("buildcraft.param.axis." + name().toLowerCase(Locale.ROOT));
     }
 

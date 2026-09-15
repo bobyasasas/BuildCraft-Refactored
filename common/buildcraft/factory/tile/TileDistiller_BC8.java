@@ -125,13 +125,11 @@ public class TileDistiller_BC8 extends TileBC_Neptune implements IDebuggable, IT
 
     private boolean isDistillableFluid(FluidStack fluid) {
         IRefineryRecipeManager manager = BuildcraftRecipeRegistry.refineryRecipes;
-//        IRefineryRecipeManager.IDistillationRecipe recipe = manager.getDistillationRegistry().getRecipeForInput(fluid);
         IDistillationRecipe recipe = manager.getDistillationRegistry().getRecipeForInput(this.level, fluid);
         return recipe != null;
     }
 
     @Override
-//    public CompoundTag writeToNBT(CompoundTag nbt)
     public void saveAdditional(CompoundTag nbt) {
         super.saveAdditional(nbt);
         nbt.put("tanks", tankManager.serializeNBT());
@@ -234,7 +232,6 @@ public class TileDistiller_BC8 extends TileBC_Neptune implements IDebuggable, IT
         changedSinceNetUpdate |= powerAvgClient != powerAvg.getAverageLong();
 
         currentRecipe =
-//                BuildcraftRecipeRegistry.refineryRecipes.getDistillationRegistry().getRecipeForInput(tankIn.getFluid());
                 BuildcraftRecipeRegistry.refineryRecipes.getDistillationRegistry().getRecipeForInput(this.level, tankIn.getFluid());
         if (currentRecipe == null) {
             mjBattery.addPowerChecking(distillPower, false);
@@ -286,15 +283,7 @@ public class TileDistiller_BC8 extends TileBC_Neptune implements IDebuggable, IT
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-//        left.add("In = " + tankIn.getDebugString());
-//        left.add("GasOut = " + tankGasOut.getDebugString());
-//        left.add("LiquidOut = " + tankLiquidOut.getDebugString());
-//        left.add("Battery = " + mjBattery.getDebugString());
-//        left.add("Progress = " + MjAPI.formatMj(distillPower));
-//        left.add("Rate = " + LocaleUtil.localizeMjFlow(powerAvgClient));
-//        left.add("CurrRecipe = " + currentRecipe);
         left.add(Component.literal("In = " + tankIn.getDebugString()));
         left.add(Component.literal("GasOut = " + tankGasOut.getDebugString()));
         left.add(Component.literal("LiquidOut = " + tankLiquidOut.getDebugString()));
@@ -318,7 +307,6 @@ public class TileDistiller_BC8 extends TileBC_Neptune implements IDebuggable, IT
         clientModelData.addDebugInfo(left);
     }
 
-    // Calen: for other mods to show tanks contents
 
     @Override
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing) {

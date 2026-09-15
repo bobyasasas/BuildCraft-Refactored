@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 
 public class StatementParameterRobot extends StatementParameterItemStack {
-    // Calen 1.18.2
     public static final StatementParameterRobot EMPTY;
 
     static {
@@ -35,22 +34,15 @@ public class StatementParameterRobot extends StatementParameterItemStack {
     }
 
     @Override
-    // public void onClick(IStatementContainer source, IStatement stmt, ItemStack stack, StatementMouseClick mouse)
     public StatementParameterRobot onClick(IStatementContainer source, IStatement stmt, @Nonnull ItemStack stack, StatementMouseClick mouse) {
-        // if (stack == null && (this.stack == null || this.stack.getItem() instanceof ItemRobot))
         if (stack.isEmpty() && (this.stack.isEmpty() || this.stack.getItem() instanceof ItemRobot)) {
             RedstoneBoardRobotNBT nextBoard = RobotUtils.getNextBoard(this.stack, mouse.getButton() > 0);
             if (nextBoard != null) {
-                // this.stack = ItemRobot.createRobotStack(nextBoard, 0);
                 return new StatementParameterRobot(ItemRobot.createRobotStack(nextBoard, 0));
             } else {
-                // this.stack = null;
                 return StatementParameterRobot.EMPTY;
             }
         }
-//        else {
-//            super.onClick(source, stmt, stack, mouse);
-//        }
         else if (stack.isEmpty() || !(stack.getItem() instanceof ItemRobot)) {
             return EMPTY;
         } else {
@@ -58,7 +50,6 @@ public class StatementParameterRobot extends StatementParameterItemStack {
             newStack.setCount(1);
             return new StatementParameterRobot(newStack);
         }
-        // return null;
     }
 
     @Override
@@ -78,7 +69,6 @@ public class StatementParameterRobot extends StatementParameterItemStack {
 
     public static boolean matches(IStatementParameter param, EntityRobotBase robot) {
         ItemStack stack = param.getItemStack();
-        // if (stack != null)
         if (!stack.isEmpty()) {
             if (stack.getItem() instanceof IList) {
                 IList list = (IList) stack.getItem();

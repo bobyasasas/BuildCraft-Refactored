@@ -20,30 +20,22 @@ public class ProfilerUtil {
 
     /** Calls {@link #writeProfilerResults(ActiveProfiler, String)} with {@link System#out} as the
      * {@link ILogAcceptor}. */
-//    public static void printProfilerResults(Profiler profiler, String rootName)
     public static void printProfilerResults(ActiveProfiler profiler, String rootName) {
-//        printProfilerResults(profiler, rootName, -1);
         printProfilerResults(profiler, rootName);
     }
 
 //    /** Calls {@link #writeProfilerResults(Profiler, String, ILogAcceptor)} with {@link System#out} as the
 //     * {@link ILogAcceptor}. */
-//    public static void printProfilerResults(Profiler profiler, String rootName, long totalNanoseconds) {
-//        writeProfilerResults(profiler, rootName, totalNanoseconds, System.out::println);
-//    }
 
     /** Calls {@link #writeProfilerResults(ActiveProfiler, String)} with {@link BCLog#logger
      * BCLog.logger}::{@link org.apache.logging.log4j.Logger#info(CharSequence) info} as the {@link ILogAcceptor}. */
-//    public static void logProfilerResults(Profiler profiler, String rootName)
     public static void logProfilerResults(ActiveProfiler profiler, String rootName) {
         logProfilerResults(profiler, rootName, -1);
     }
 
     /** Calls {@link #writeProfilerResults(ActiveProfiler, String)} with {@link BCLog#logger
      * BCLog.logger}::{@link org.apache.logging.log4j.Logger#info(CharSequence) info} as the {@link ILogAcceptor}. */
-//    public static void logProfilerResults(Profiler profiler, String rootName, long totalNanoseconds)
     public static void logProfilerResults(ActiveProfiler profiler, String rootName, long totalNanoseconds) {
-//        writeProfilerResults(profiler, rootName, totalNanoseconds, BCLog.logger::info);
         writeProfilerResults(profiler, rootName);
     }
 
@@ -52,35 +44,22 @@ public class ProfilerUtil {
 //     * @throws IOException if the file exists but is a directory rather than a regular file, does not exist but cannot
 //     *             be created, or cannot be opened for any other reason, or if an I/O exception occurred while writing
 //     *             the profiler results. */
-//    public static void saveProfilerResults(Profiler profiler, String rootName, Path dest) throws IOException {
-//        saveProfilerResults(profiler, rootName, -1, dest);
-//    }
 
 //    /** Calls {@link #writeProfilerResults(Profiler, String, ILogAcceptor)} but saves the output to a file.
 //     *
 //     * @throws IOException if the file exists but is a directory rather than a regular file, does not exist but cannot
 //     *             be created, or cannot be opened for any other reason, or if an I/O exception occurred while wrting
 //     *             the profiler results. */
-//    public static void saveProfilerResults(Profiler profiler, String rootName, File dest) throws IOException {
-//        dest = dest.getAbsoluteFile();
-//        dest.getParentFile().mkdirs();
-//        saveProfilerResults(profiler, rootName, -1, dest.toPath());
-//    }
 
     /** Calls {@link #writeProfilerResults(ActiveProfiler, String)} but saves the output to a file.
      *
      * @throws IOException if the file exists but is a directory rather than a regular file, does not exist but cannot
      *             be created, or cannot be opened for any other reason, or if an I/O exception occurred while writing
      *             the profiler results. */
-//    public static void saveProfilerResults(Profiler profiler, String rootName, long totalNanoseconds, Path dest)
     public static void saveProfilerResults(ActiveProfiler profiler, String rootName, Path dest) throws IOException {
         try (BufferedWriter br = Files.newBufferedWriter(dest, StandardOpenOption.WRITE,
                 StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE))
         {
-//            writeProfilerResults(profiler, rootName, str -> {
-//                br.write(str);
-//                br.newLine();
-//            });
             writeProfilerResults(profiler, rootName);
             br.flush();
         }
@@ -89,9 +68,6 @@ public class ProfilerUtil {
 //    /** @param rootName The base name to use. Most of the time you just want to use "root".
 //     * @param dest The method to call with the finished lines.
 //     * @throws E if {@link ILogAcceptor#write(String)} throws an exception. */
-//    public static <E extends Throwable> void writeProfilerResults(Profiler profiler, String rootName, ILogAcceptor<E> dest) throws E {
-//        writeProfilerResults(profiler, rootName, -1, dest);
-//    }
 
     /** @param rootName The base name to use. Most of the time you just want to use "root".
      * @throws E if {@link ILogAcceptor#write(String)} throws an exception. */
@@ -142,18 +118,14 @@ public class ProfilerUtil {
         }
     }
 
-    // public static ProfilerEntry createEntry(Profiler p1, Profiler p2)
     public static ProfilerEntry createEntry(ProfilerFiller p1, ProfilerFiller p2) {
-//        if (p1.profilingEnabled)
         if (p1 instanceof ActiveProfiler) {
-//            if (p2.profilingEnabled)
             if (p2 instanceof ActiveProfiler) {
                 return new ProfilerEntry2(p1, p2);
             } else {
                 return new ProfilerEntry1(p1);
             }
         } else {
-//            if (p2.profilingEnabled)
             if (p2 instanceof ActiveProfiler) {
                 return new ProfilerEntry1(p2);
             } else {
@@ -185,22 +157,18 @@ public class ProfilerUtil {
 
         @Override
         public void startSection(String name) {
-//            p.startSection(name);
             p.push(name);
         }
 
         @Override
         public void endSection() {
-//            p.endSection();
             p.pop();
         }
     }
 
     static final class ProfilerEntry2 implements ProfilerEntry {
-        // final Profiler p1, p2;
         final ProfilerFiller p1, p2;
 
-        // ProfilerEntry2(Profiler p1, Profiler p2)
         ProfilerEntry2(ProfilerFiller p1, ProfilerFiller p2) {
             this.p1 = p1;
             this.p2 = p2;
@@ -208,22 +176,17 @@ public class ProfilerUtil {
 
         @Override
         public void startSection(String name) {
-//            p1.startSection(name);
-//            p2.startSection(name);
             p1.push(name);
             p2.push(name);
         }
 
         @Override
         public void endSection() {
-//            p1.endSection();
-//            p2.endSection();
             p1.pop();
             p2.pop();
         }
     }
 
-    // Calen
     public static ActiveProfiler newProfiler() {
         ActiveProfiler ret = new ActiveProfiler(Util.timeSource, () ->
         {

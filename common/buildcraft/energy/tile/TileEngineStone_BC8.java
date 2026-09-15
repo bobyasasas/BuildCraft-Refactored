@@ -44,7 +44,6 @@ import java.util.List;
 public class TileEngineStone_BC8 extends TileEngineBase_BC8 implements IBCTileMenuProvider {
     private static final long MAX_OUTPUT = MjAPI.MJ;
     private static final long MIN_OUTPUT = MAX_OUTPUT / 3;
-    // private static final long TARGET_OUTPUT = 0.375f;
     private static final float kp = 1f;
     private static final float ki = 0.05f;
     private static final long eLimit = (MAX_OUTPUT - MIN_OUTPUT) * 20;
@@ -71,7 +70,6 @@ public class TileEngineStone_BC8 extends TileEngineBase_BC8 implements IBCTileMe
     // TileEntity overrides
 
     @Override
-//    public void readFromNBT(NBTTagCompound nbt)
     public void load(CompoundTag nbt) {
         super.load(nbt);
         burnTime = nbt.getInt("burnTime");
@@ -80,7 +78,6 @@ public class TileEngineStone_BC8 extends TileEngineBase_BC8 implements IBCTileMe
     }
 
     @Override
-//    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
     public void saveAdditional(CompoundTag nbt) {
         super.saveAdditional(nbt);
         nbt.putInt("burnTime", burnTime);
@@ -90,7 +87,6 @@ public class TileEngineStone_BC8 extends TileEngineBase_BC8 implements IBCTileMe
 
     @Override
     protected void onSlotChange(IItemHandlerModifiable handler, int slot, @Nonnull ItemStack before, @Nonnull ItemStack after) {
-        // if (handler == invFuel)
         if (handler == invFuel && !StackUtil.isSameItemSameDamageSameTagSameCount(before, after)) {
             if (isForceInserting && after.isEmpty()) {
                 isForceInserting = false;
@@ -103,7 +99,6 @@ public class TileEngineStone_BC8 extends TileEngineBase_BC8 implements IBCTileMe
     @Override
     public InteractionResult onActivated(Player player, InteractionHand hand, Direction side, float hitX, float hitY, float hitZ) {
         if (!level.isClientSide) {
-//            BCEnergyGuis.ENGINE_STONE.openGUI(player, getPos());
             MessageUtil.serverOpenTileGui(player, this);
         }
         return InteractionResult.SUCCESS;
@@ -167,7 +162,6 @@ public class TileEngineStone_BC8 extends TileEngineBase_BC8 implements IBCTileMe
      * {@link ForgeHooks#getBurnTime(ItemStack, RecipeType)} is recommended by forge
      */
     private static int getItemBurnTime(ItemStack itemstack) {
-//        return TileEntityFurnace.getItemBurnTime(itemstack);
         return ForgeHooks.getBurnTime(itemstack, RecipeType.SMELTING);
     }
 
@@ -193,9 +187,6 @@ public class TileEngineStone_BC8 extends TileEngineBase_BC8 implements IBCTileMe
 
     @Override
     public long getCurrentOutput() {
-        // double e = 0.375 * getMaxEnergy() - energy;
-        // esum = MathUtils.clamp(esum + e, -eLimit, eLimit);
-        // return MathUtils.clamp(e * 1 + esum * 0.05, MIN_OUTPUT, MAX_OUTPUT);
 
         long e = 3 * getMaxPower() / 8 - power;
         esum = clamp(esum + e, -eLimit, eLimit);
@@ -207,14 +198,7 @@ public class TileEngineStone_BC8 extends TileEngineBase_BC8 implements IBCTileMe
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-//        super.getDebugInfo(left, right, side);
-//        left.add("esum = " + MjAPI.formatMj(esum) + " M");
-//        long e = 3 * getMaxPower() / 8 - power;
-//        left.add("output = " + MjAPI.formatMj(clamp(e + esum / 20, MIN_OUTPUT, MAX_OUTPUT)) + " MJ");
-//        left.add("burnTime = " + burnTime);
-//        left.add("delta = " + deltaFuelLeft.getDynamic(0));
         super.getDebugInfo(left, right, side);
         left.add(Component.literal("esum = " + MjAPI.formatMj(esum) + " M"));
         long e = 3 * getMaxPower() / 8 - power;

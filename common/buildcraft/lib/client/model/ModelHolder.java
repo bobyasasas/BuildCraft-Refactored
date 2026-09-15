@@ -30,7 +30,6 @@ public abstract class ModelHolder {
 
     protected abstract void onTextureStitchPre(Set<ResourceLocation> toRegisterSprites);
 
-    // Calen 1.20.1
     protected abstract void onDatagenTextureRegister(Set<ResourceLocation> toRegisterSprites, ExistingFileHelper fileHelper);
 
     public abstract boolean hasBakedQuads();

@@ -33,9 +33,6 @@ public class GuiConfigManager {
         // TODO (AlexIIL, post 1.12 move): Flesh this system out more! Add settings that can be loaded from json GUI's
         // TODO (AlexIIL, post 1.12 move): Move config file loading from core -> lib
         customGuiProperties.put(NodeTypes.getName(boolean.class), GuiPropertyBoolean::new);
-        // customGuiProperties.put(NodeTypes.getName(long.class), GuiPropertyLong::new);
-        // customGuiProperties.put(NodeTypes.getName(double.class), GuiPropertyDouble::new);
-        // customGuiProperties.put(NodeTypes.getName(String.class), GuiPropertyString::new);
     }
 
     public static IVariableNode getOrAddProperty(ResourceLocation gui, String name, IExpressionNode value) {
@@ -48,7 +45,6 @@ public class GuiConfigManager {
     }
 
     public static void markDirty() {
-//        if (!isDirty && BCLibConfig.guiConfigFile != null)
         if (!isDirty && BCLibConfig.getGuiConfigFileAndEnsureCreated() != null) {
             // Minimise successive file writes -- add a little bit of a delay
             MessageUtil.doDelayedClient(10, () ->
@@ -56,7 +52,6 @@ public class GuiConfigManager {
                 if (!isDirty) {
                     return;
                 }
-//                try (FileWriter fw = new FileWriter(BCLibConfig.guiConfigFile))
                 try (FileWriter fw = new FileWriter(BCLibConfig.getGuiConfigFileAndEnsureCreated())) {
                     Gson gson = new GsonBuilder().setPrettyPrinting().create();
                     try (BufferedWriter bw = new BufferedWriter(fw)) {
@@ -76,12 +71,10 @@ public class GuiConfigManager {
     }
 
     public static void loadFromConfigFile() {
-//        if (BCLibConfig.guiConfigFile != null)
         if (BCLibConfig.getGuiConfigFileAndEnsureCreated() != null) {
             Gson gson = new Gson();
             List<String> lines;
             try {
-//                lines = Files.readAllLines(BCLibConfig.guiConfigFile.toPath());
                 lines = Files.readAllLines(BCLibConfig.getGuiConfigFileAndEnsureCreated().toPath());
             } catch (IOException io) {
                 BCLog.logger.warn("[lib.gui.cfg] Failed to read the config file! " + io.getMessage());

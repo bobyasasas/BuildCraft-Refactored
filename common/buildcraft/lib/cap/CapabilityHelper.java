@@ -59,11 +59,7 @@ public class CapabilityHelper implements ICapabilityProvider {
         return provider;
     }
 
-    // 1.18.2: use getCapability().isPresent()
 //    @Override
-//    public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
-//        return getCapability(capability, facing) != null;
-//    }
 
     @SuppressWarnings("unchecked")
     @NotNull
@@ -76,7 +72,6 @@ public class CapabilityHelper implements ICapabilityProvider {
             return ret == null ? LazyOptional.empty() : LazyOptional.of(() -> (T) ret);
         }
         for (ICapabilityProvider provider : additional) {
-//            if (provider.hasCapability(capability, facing))
             LazyOptional<T> result = provider.getCapability(capability, facing);
             if (result.isPresent()) {
                 return result;

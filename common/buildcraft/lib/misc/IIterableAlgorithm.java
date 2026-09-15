@@ -4,7 +4,6 @@
  * of the license located in http://www.mod-buildcraft.com/MMPL-1.0.txt */
 package buildcraft.lib.misc;
 
-// Calen 1.18.2 from 1.8.9
 public interface IIterableAlgorithm {
 
     void iterate();

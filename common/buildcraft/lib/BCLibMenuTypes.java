@@ -28,31 +28,7 @@ public class BCLibMenuTypes {
 //        MenuScreens.register(
 //                GUIDE,
 //                (container, inv, title) ->
-//                {
-//                    Player player = inv.player;
-//                    ItemStack stack;
-//                    if (player.getMainHandItem().getItem() == BCLibItems.guide.get())
-//                    {
-//                        stack = player.getMainHandItem();
-//                    }
-//                    else if (player.getOffhandItem().getItem() == BCLibItems.guide.get())
-//                    {
-//                        stack = player.getOffhandItem();
-//                    }
 //                    else
-//                    {
-//                        stack = StackUtil.EMPTY;
-//                    }
-//                    String name = ItemGuide.getBookName(stack);
-//                    if (name == null || name.isEmpty())
-//                    {
-//                        return new GuiGuide(container, title);
-//                    }
 //                    else
-//                    {
-//                        return new GuiGuide(container, name, title);
-//                    }
-//                }
-//        );
     }
 }

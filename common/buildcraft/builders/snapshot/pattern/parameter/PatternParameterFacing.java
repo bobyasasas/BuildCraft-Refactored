@@ -80,7 +80,6 @@ public enum PatternParameterFacing implements IStatementParameter {
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("buildcraft.param.facing." + face.getName());
         return Component.translatable("buildcraft.param.facing." + face.getName());
     }
 

@@ -23,9 +23,7 @@ public class GuiIntegrationTable extends GuiBC8<ContainerIntegrationTable> {
 
     public GuiIntegrationTable(ContainerIntegrationTable container, Inventory inventory, Component component) {
         super(container, inventory, component);
-//        xSize = SIZE_X;
         imageWidth = SIZE_X;
-//        ySize = SIZE_Y;
         imageHeight = SIZE_Y;
 
         mainGui.shownElements.add(new LedgerTablePower(mainGui, container.tile, true));
@@ -49,17 +47,11 @@ public class GuiIntegrationTable extends GuiBC8<ContainerIntegrationTable> {
             );
         }
 
-//        if (container.tile.recipe != null && container.tile.recipe.getMaxExpansionCount() > 0) {
-//            for (int i = 8; i > container.tile.recipe.getMaxExpansionCount(); i--) {
-//                drawTexturedModalRect(leftPos + ContainerIntegrationTable.SLOT_X[i] - 1, topPos + ContainerIntegrationTable.SLOT_Y[i] - 1, 180, 17, 18, 18);
-//            }
-//        }
     }
 
     @Override
     protected void drawForegroundLayer(GuiGraphics guiGraphics) {
         String title = I18n.get("tile.integrationTableBlock.name");
-//        font.draw(title, guiLeft + (xSize - fontRenderer.getStringWidth(title)) / 2, guiTop + 10, 0x404040);
         guiGraphics.drawString(font, title, leftPos + (float) (imageWidth - font.width(title)) / 2, topPos + 10, 0x404040, false);
     }
 }

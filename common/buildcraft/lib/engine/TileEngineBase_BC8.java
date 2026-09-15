@@ -153,11 +153,8 @@ public abstract class TileEngineBase_BC8 extends TileBC_Neptune implements ITick
             if (isFacingReceiver(current)) {
                 if (currentDirection != current) {
                     currentDirection = current;
-                    // makeTileCache();
                     sendNetworkUpdate(NET_RENDER_DATA);
                     redrawBlock();
-                    // TODO Calen notifyNeighborsRespectDebug???
-//                    world.notifyNeighborsRespectDebug(getPos(), getBlockType(), true);
                     return InteractionResult.SUCCESS;
                 }
                 return InteractionResult.PASS;
@@ -273,7 +270,6 @@ public abstract class TileEngineBase_BC8 extends TileBC_Neptune implements ITick
     @Override
     public void onNeighbourBlockChanged(Block block, BlockPos nehighbour) {
         super.onNeighbourBlockChanged(block, nehighbour);
-//        isRedstonePowered = world.isBlockIndirectlyGettingPowered(getPos()) > 0;
         isRedstonePowered = level.hasNeighborSignal(getBlockPos());
     }
 
@@ -366,10 +362,8 @@ public abstract class TileEngineBase_BC8 extends TileBC_Neptune implements ITick
         // Pulsed power
         return extractPower(0, receiver.getPowerRequested(), doExtract);
         // TODO: Use this:
-        // return extractPower(receiver.getMinPowerReceived(), receiver.getMaxPowerReceived(), false);
 
         // Constant power
-        // return extractEnergy(0, getActualOutput(), false); // Uncomment for constant power
     }
 
     private void sendPower(IMjReceiver receiver) {
@@ -384,10 +378,6 @@ public abstract class TileEngineBase_BC8 extends TileBC_Neptune implements ITick
     }
 
     // Uncomment out for constant power
-    // public float getActualOutput() {
-    // float heatLevel = getIdealHeatLevel();
-    // return getCurrentOutput() * heatLevel;
-    // }
     protected void burn() {
     }
 
@@ -429,15 +419,11 @@ public abstract class TileEngineBase_BC8 extends TileBC_Neptune implements ITick
     @Override
     public void setRemoved() {
         super.setRemoved();
-        // tileCache = null;
-        // checkOrientation = true;
     }
 
     @Override
     public void clearRemoved() {
         super.clearRemoved();
-        // tileCache = null;
-        // checkOrientation = true;
     }
 
     /* STATE INFORMATION */
@@ -445,18 +431,7 @@ public abstract class TileEngineBase_BC8 extends TileBC_Neptune implements ITick
 
     // IPowerReceptor stuffs -- move!
     // @Override
-    // public PowerReceiver getPowerReceiver(ForgeDirection side) {
-    // return powerHandler.getPowerReceiver();
-    // }
-    //
     // @Override
-    // public void doWork(PowerHandler workProvider) {
-    // if (worldObj.isRemote) {
-    // return;
-    // }
-    //
-    // addEnergy(powerHandler.useEnergy(1, maxEnergyReceived(), true) * 0.95F);
-    // }
 
     public void addPower(long microJoules) {
         power += microJoules;
@@ -464,8 +439,6 @@ public abstract class TileEngineBase_BC8 extends TileBC_Neptune implements ITick
 
         if (getPowerStage() == EnumPowerStage.OVERHEAT) {
             // TODO: turn engine off
-            // worldObj.createExplosion(null, xCoord, yCoord, zCoord, explosionRange(), true);
-            // worldObj.setBlockToAir(xCoord, yCoord, zCoord);
         }
 
         if (power > getMaxPower()) {
@@ -628,14 +601,7 @@ public abstract class TileEngineBase_BC8 extends TileBC_Neptune implements ITick
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-//        left.add("facing = " + currentDirection);
-//        left.add("heat = " + LocaleUtil.localizeHeat(heat) + " -- " + String.format("%.2f %%", getHeatLevel()));
-//        left.add("power = " + LocaleUtil.localizeMj(power));
-//        left.add("stage = " + powerStage);
-//        left.add("progress = " + progress);
-//        left.add("last = " + LocaleUtil.localizeMjFlow(lastPower));
         left.add(Component.literal("facing = " + currentDirection));
         left.add(Component.literal("heat = ").append(Component.literal(LocaleUtil.localizeHeat(heat) + " -- " + String.format("%.2f %%", getHeatLevel()))));
         left.add(Component.literal("power = ").append(LocaleUtil.localizeMjComponent(power)));
@@ -652,8 +618,4 @@ public abstract class TileEngineBase_BC8 extends TileBC_Neptune implements ITick
     }
 
 //    @Override
-//    @OnlyIn(Dist.CLIENT)
-//    public boolean hasFastRenderer() {
-//        return true;
-//    }
 }

@@ -26,18 +26,10 @@ public enum BCEnergyGuis {
         return VALUES[id];
     }
 
-//    public void openGUI(EntityPlayer player) {
-//        player.openGui(BCEnergy.INSTANCE, ordinal(), player.getEntityWorld(), 0, 0, 0);
-//    }
 
-    // public void openGUI(Player player, BlockPos pos, BlockState blockState)
     public void openGUI(Player player, TileBC_Neptune tile) {
-//        player.openGui(BCEnergy.INSTANCE, ordinal(), player.getEntityWorld(), pos.getX(), pos.getY(), pos.getZ());
-//        player.openMenu(blockState.getMenuProvider(player.level, pos));
         if (player instanceof ServerPlayer serverPlayer) {
-//            player.openMenu(state.getMenuProvider(player.level, pos));
             if (tile instanceof MenuProvider menuProvider) {
-//                NetworkHooks.openGui(serverPlayer, menuProvider, pos);
 
                 IMessage msg = tile.onServerPlayerOpenNoSend(player);
                 NetworkHooks.openScreen(

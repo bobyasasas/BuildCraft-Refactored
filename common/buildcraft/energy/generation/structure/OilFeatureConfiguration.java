@@ -8,7 +8,6 @@ public class OilFeatureConfiguration implements FeatureConfiguration {
     public static final Codec<OilFeatureConfiguration> CODEC = Codec.unit(() -> OilFeatureConfiguration.INSTANCE);
     public static final OilFeatureConfiguration INSTANCE = new OilFeatureConfiguration();
 
-//    public static final Map<ChunkPos, Info> cache = new ConcurrentHashMap<>();
 
     public static class Info {
         public WorldgenRandom oilRand;
@@ -23,11 +22,4 @@ public class OilFeatureConfiguration implements FeatureConfiguration {
         }
     }
 
-//    public static void add(ChunkPos chunkPos, Info info) {
-//        cache.put(chunkPos, info);
-//    }
-//
-//    public static Info get(ChunkPos chunkPos) {
-//        return cache.remove(chunkPos);
-//    }
 }

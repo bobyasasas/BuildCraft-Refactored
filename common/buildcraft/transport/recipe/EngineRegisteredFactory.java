@@ -5,7 +5,4 @@ package buildcraft.transport.recipe;
 public class EngineRegisteredFactory {
 
 //    @Override
-//    public BooleanSupplier parse(JsonContext context, JsonObject json) {
-//        return () -> BCCoreBlocks.engine.isRegistered(EnumEngineType.valueOf(json.get("engineType").getAsString()));
-//    }
 }

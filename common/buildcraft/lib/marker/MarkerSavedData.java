@@ -26,7 +26,6 @@ public abstract class MarkerSavedData<S extends MarkerSubCache<C>, C extends Mar
     private String mapName;
 
     public MarkerSavedData(String name) {
-//        super(name);
         this.mapName = name;
     }
 

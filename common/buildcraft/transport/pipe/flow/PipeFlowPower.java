@@ -190,10 +190,8 @@ public class PipeFlowPower extends PipeFlow implements IFlowPower, IDebuggable {
         if (facing == null) {
             return LazyOptional.empty();
         } else if (capability == MjAPI.CAP_RECEIVER) {
-//            return isReceiver ? MjAPI.CAP_RECEIVER.cast(sections.get(facing)) : null;
             return isReceiver ? LazyOptional.of(() -> sections.get(facing)).cast() : LazyOptional.empty();
         } else if (capability == MjAPI.CAP_CONNECTOR) {
-//            return MjAPI.CAP_CONNECTOR.cast(sections.get(facing));
             return LazyOptional.of(() -> sections.get(facing)).cast();
         } else {
             return LazyOptional.empty();
@@ -201,14 +199,7 @@ public class PipeFlowPower extends PipeFlow implements IFlowPower, IDebuggable {
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-//        left.add("maxPower = " + LocaleUtil.localizeMj(maxPower));
-//        left.add("isReceiver = " + isReceiver);
-//        left.add("internalPower = " + arrayToString(s -> s.internalPower) + " <- " + arrayToString(s -> s.internalNextPower));
-//        left.add("- powerQuery: " + arrayToString(s -> s.powerQuery) + " <- " + arrayToString(s -> s.nextPowerQuery));
-//        left.add("- power: IN " + arrayToString(s -> s.debugPowerInput) + ", OUT " + arrayToString(s -> s.debugPowerOutput));
-//        left.add("- power: OFFERED " + arrayToString(s -> s.debugPowerOffered));
         left.add(Component.literal("maxPower = ").append(LocaleUtil.localizeMjComponent(maxPower)));
         left.add(Component.literal("isReceiver = " + isReceiver));
         left.add(Component.literal("internalPower = " + arrayToString(s -> s.internalPower) + " <- " + arrayToString(s -> s.internalNextPower)));
@@ -235,7 +226,6 @@ public class PipeFlowPower extends PipeFlow implements IFlowPower, IDebuggable {
             for (Direction face : Direction.VALUES) {
                 Section s = sections.get(face);
                 s.clientDisplayFlowLast = s.clientDisplayFlow;
-//                double diff = s.displayFlow.value * 2.4 * face.getAxisDirection().getOffset();
                 double diff = s.displayFlow.value * 2.4 * face.getAxisDirection().getStep();
                 s.clientDisplayFlow += 16 + diff;
                 s.clientDisplayFlow %= 16;
@@ -330,7 +320,6 @@ public class PipeFlowPower extends PipeFlow implements IFlowPower, IDebuggable {
 
         // Compute the tiles requesting power that are not power pipes
         for (Direction face : Direction.VALUES) {
-            // if (pipe.getConnectedType(face) != ConnectedType.TILE)
             if (pipe.getConnectedType(face) != ConnectedType.TILE && pipe.getHolder().getPluggable(face) == null) {
                 continue;
             }
@@ -384,7 +373,6 @@ public class PipeFlowPower extends PipeFlow implements IFlowPower, IDebuggable {
             }
         }
 
-        // if (tracker.markTimeIfDelay(pipe.getHolder().getPipeWorld())) {
         if (didChange) {
             sendPayload(NET_POWER_AMOUNTS);
         }
@@ -399,7 +387,6 @@ public class PipeFlowPower extends PipeFlow implements IFlowPower, IDebuggable {
     }
 
     private void step() {
-//        long now = pipe.getHolder().getPipeWorld().getTotalWorldTime();
         long now = pipe.getHolder().getPipeWorld().getGameTime();
         if (currentWorldTime != now) {
             currentWorldTime = now;
@@ -438,7 +425,6 @@ public class PipeFlowPower extends PipeFlow implements IFlowPower, IDebuggable {
         double max = 0;
         for (Section s : sections.values()) {
             double value = s.displayPower / (double) MjAPI.MJ;
-            // value = MathUtil.interp(partialTicks, value, value);
             max = Math.max(max, value);
         }
         return max;

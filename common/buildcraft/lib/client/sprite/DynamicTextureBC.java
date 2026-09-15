@@ -27,24 +27,17 @@ import net.minecraftforge.client.ForgeRenderTypes;
 @OnlyIn(Dist.CLIENT)
 public class DynamicTextureBC {
     public final int width, height;
-    // private final int[] colorMap;
     private final int widthPow2, heightPow2;
     private final DynamicTexture dynamicTexture;
     private final RenderType renderType;
 
-    // public DynamicTextureBC(int iWidth, int iHeight)
     public DynamicTextureBC(int iWidth, int iHeight, String id) {
         width = iWidth;
         height = iHeight;
-//        widthPow2 = MathHelper.smallestEncompassingPowerOfTwo(iWidth);
         widthPow2 = Mth.smallestEncompassingPowerOfTwo(iWidth);
-//        heightPow2 = MathHelper.smallestEncompassingPowerOfTwo(iHeight);
         heightPow2 = Mth.smallestEncompassingPowerOfTwo(iHeight);
-//        dynamicTexture = new DynamicTexture(widthPow2, heightPow2);
         dynamicTexture = new DynamicTexture(widthPow2, heightPow2, false);
-//        colorMap = dynamicTexture.getTextureData();
 
-        // Calen 1.20.1
         ResourceLocation resourcelocation = Minecraft.getInstance().textureManager.register("zone_planner/" + id, this.dynamicTexture);
         this.renderType = createRenderType(resourcelocation);
     }
@@ -68,19 +61,13 @@ public class DynamicTextureBC {
     }
 
     public void setColor(int x, int y, int color) {
-//        colorMap[x + y * widthPow2] = color;
         this.dynamicTexture.getPixels().setPixelRGBA(x, y, color); // ABGR?????????
     }
 
     public void updateTexture() {
-//        TextureUtil.prepareImage(dynamicTexture.getId(), dynamicTexture.getPixels().getWidth(), dynamicTexture.getPixels().getHeight());
         dynamicTexture.upload();
     }
 
-    // Calen 1.18.2: called in DynamicTexture#upload
-//    public void bindGlTexture() {
-//        GlStateManager.bindTexture(dynamicTexture.getGlTextureId());
-//    }
 
     public void deleteGlTexture() {
         dynamicTexture.releaseId();
@@ -103,28 +90,22 @@ public class DynamicTextureBC {
 
         float f = 1F / widthPow2;
         float f1 = 1F / heightPow2;
-//        Tessellator tessellator = Tessellator.getInstance();
         Tesselator tessellator = Tesselator.getInstance();
-//        BufferBuilder bb = tessellator.getBuffer();
         BufferBuilder bb = tessellator.getBuilder();
         bb.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         vertexUV(bb, screenX + 0, screenY + clipHeight, zLevel, (clipX + 0) * f, (clipY + clipHeight) * f1);
         vertexUV(bb, screenX + clipWidth, screenY + clipHeight, zLevel, (clipX + clipWidth) * f, (clipY + clipHeight) * f1);
         vertexUV(bb, screenX + clipWidth, screenY + 0, zLevel, (clipX + clipWidth) * f, (clipY + 0) * f1);
         vertexUV(bb, screenX + 0, screenY + 0, zLevel, (clipX + 0) * f, (clipY + 0) * f1);
-//        tessellator.draw();
         tessellator.end();
     }
 
     private static void vertexUV(BufferBuilder bb, double x, double y, double z, double u, double v) {
-//        bb.pos(x, y, z);
         bb.vertex(x, y, z);
-//        bb.tex(u, v);
         bb.uv((float) u, (float) v);
         bb.endVertex();
     }
 
-    // Calen 1.20.1
     public RenderType getRenderType() {
         return renderType;
     }

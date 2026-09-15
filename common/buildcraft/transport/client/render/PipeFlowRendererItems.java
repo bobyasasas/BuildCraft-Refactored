@@ -56,13 +56,10 @@ public enum PipeFlowRendererItems implements IPipeFlowRenderer<PipeFlowItems> {
     }
 
     @Override
-//    public void render(PipeFlowItems flow, double x, double y, double z, float partialTicks, BufferBuilder bb)
     public void render(PipeFlowItems flow, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int lightc, int combinedOverlay) {
         VertexConsumer bb = bufferSource.getBuffer(Sheets.translucentCullBlockSheet());
         Level world = flow.pipe.getHolder().getPipeWorld();
-//        long now = world.getTotalWorldTime();
         long now = world.getGameTime();
-//        int lightc = world.getCombinedLight(flow.pipe.getHolder().getPipePos(), 0);
 
         List<TravellingItem> toRender = flow.getAllItemsForRender();
 
@@ -74,12 +71,10 @@ public enum PipeFlowRendererItems implements IPipeFlowRenderer<PipeFlowItems> {
 
             ItemStack stack = item.clientItemLink.get();
             if (stack != null && !stack.isEmpty()) {
-//                ItemRenderUtil.renderItemStack(x + pos.x, y + pos.y, z + pos.z, stack, item.stackSize, lightc, item.getRenderDirection(now, partialTicks), bb);
                 ItemRenderUtil.renderItemStack(stack, item.stackSize, lightc, item.getRenderDirection(now, partialTicks), poseStack, bb);
                 ItemRenderUtil.endItemBatch(poseStack);
             }
             if (item.colour != null) {
-//                bb.setTranslation(x + pos.x, y + pos.y, z + pos.z);
                 int col = ColourUtil.getLightHex(item.colour);
                 int r = (col >> 16) & 0xFF;
                 int g = (col >> 8) & 0xFF;
@@ -90,7 +85,6 @@ public enum PipeFlowRendererItems implements IPipeFlowRenderer<PipeFlowItems> {
                     q2.multColouri(r, g, b, 255);
                     q2.render(poseStack.last(), bb);
                 }
-//                bb.setTranslation(0, 0, 0);
             }
             poseStack.popPose();
         }

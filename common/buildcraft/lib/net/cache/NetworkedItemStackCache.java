@@ -58,9 +58,7 @@ public class NetworkedItemStackCache extends NetworkedObjectCache<ItemStack> {
         } else {
             buffer.writeBoolean(true);
             buffer.writeShort(Item.getId(obj.getItem()));
-//            buffer.writeShort(obj.getMetadata());
             CompoundTag tag = null;
-//            if (obj.getItem().isDamageable(obj) || obj.getItem().getShareTag(obj))
             if (obj.getItem().isDamageable(obj)) {
                 tag = obj.getItem().getShareTag(obj);
             }
@@ -72,8 +70,6 @@ public class NetworkedItemStackCache extends NetworkedObjectCache<ItemStack> {
     protected ItemStack readObject(PacketBufferBC buffer) throws IOException {
         if (buffer.readBoolean()) {
             Item item = Item.byId(buffer.readUnsignedShort());
-//            int meta = buffer.readShort();
-//            ItemStack stack = new ItemStack(item, 1, meta);
             ItemStack stack = new ItemStack(item, 1);
             stack.setTag(buffer.readNbt());
             return stack;

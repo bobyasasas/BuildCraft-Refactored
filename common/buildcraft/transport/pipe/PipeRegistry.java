@@ -30,7 +30,6 @@ public enum PipeRegistry implements IPipeRegistry {
     public static final RegistrationHelper helper = new RegistrationHelper(BCTransport.MODID);
 
     private final Map<ResourceLocation, PipeDefinition> definitions = new HashMap<>();
-    // private final Map<PipeDefinition, IItemPipe> pipeItems = new IdentityHashMap<>();
     private final Map<PipeDefinition, Map<DyeColor, RegistryObject<? extends IItemPipe>>> pipeItems = new IdentityHashMap<>();
 
     @Override
@@ -39,7 +38,6 @@ public enum PipeRegistry implements IPipeRegistry {
     }
 
     @Override
-//    public void setItemForPipe(PipeDefinition definition, @Nullable IItemPipe item)
     public void setItemForPipe(PipeDefinition definition, Map<DyeColor, RegistryObject<? extends IItemPipe>> item) {
         if (definition == null) {
             throw new NullPointerException("definition");
@@ -52,14 +50,11 @@ public enum PipeRegistry implements IPipeRegistry {
     }
 
     @Override
-//    public ItemPipeHolder createItemForPipe(PipeDefinition definition)
     public Map<DyeColor, RegistryObject<? extends IItemPipe>> createItemForPipe(PipeDefinition definition) {
         Map<DyeColor, RegistryObject<? extends IItemPipe>> map = new HashMap<>();
-//        ItemPipeHolder item = ItemPipeHolder.createAndTag(definition);
         // colorless
         RegistryObject<ItemPipeHolder> item = ItemPipeHolder.createAndTag(definition, null);
         if (definitions.values().contains(definition)) {
-//            setItemForPipe(definition, item);
             setItemForPipe(definition, map);
         }
         map.put(null, item);
@@ -69,25 +64,13 @@ public enum PipeRegistry implements IPipeRegistry {
             item = ItemPipeHolder.createAndTag(definition, colour);
             map.put(colour, item);
         }
-//        return item;
         return map;
     }
 
 //    @Override
-//    public IItemPipe createUnnamedItemForPipe(PipeDefinition definition, Consumer<Item> postCreate) {
-//        ItemPipeHolder item = ItemPipeHolder.create(definition);
-//        postCreate.accept(item);
-//        helper.addForcedItem(item);
-//        if (definitions.values().contains(definition)) {
-//            setItemForPipe(definition, item);
-//        }
-//        return item;
-//    }
 
     @Override
-//    public IItemPipe getItemForPipe(PipeDefinition definition)
     public IItemPipe getItemForPipe(PipeDefinition definition, DyeColor colour) {
-//        return pipeItems.get(definition).get();
         return pipeItems.get(definition).get(colour).get();
     }
 

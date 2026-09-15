@@ -126,7 +126,6 @@ public class TileHeatExchange extends TileBC_Neptune implements ITickable, IDebu
             } else {
                 if (exchangers.isEmpty()) {
                     // Something went wrong when searching
-                    // (as normally this deque will contain this)
                     checkNeighbours = true;
                 } else if (exchangers.size() < 3) {
                     for (TileHeatExchange tile : exchangers) {
@@ -270,7 +269,6 @@ public class TileHeatExchange extends TileBC_Neptune implements ITickable, IDebu
                     buffer.writeBoolean(section instanceof ExchangeSectionStart);
                     section.writePayload(id, buffer, side);
                 }
-                // Calen: update blockstate for model
                 Level exchangeWorld = this.level;
                 BlockPos exchangePos = this.worldPosition;
                 BlockState state = exchangeWorld.getBlockState(exchangePos);
@@ -298,7 +296,6 @@ public class TileHeatExchange extends TileBC_Neptune implements ITickable, IDebu
 
     @NotNull
     @Override
-//    public <T> T getCapability(@Nonnull Capability<T> capability, Direction facing)
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {
         LazyOptional<T> ret = LazyOptional.empty();
         if (section != null) {
@@ -310,7 +307,6 @@ public class TileHeatExchange extends TileBC_Neptune implements ITickable, IDebu
         return ret;
     }
 
-    // Calen: for other mods to show tanks contents
     private IFluidHandler fakeFluidHandlerOfAllTanks = new IFluidHandler() {
         @Override
         public int getTanks() {
@@ -362,9 +358,7 @@ public class TileHeatExchange extends TileBC_Neptune implements ITickable, IDebu
     }
 
     @Override
-//    public void invalidate()
     public void setRemoved() {
-//        super.invalidate();
         super.setRemoved();
         if (section instanceof ExchangeSectionStart) {
             ((ExchangeSectionStart) section).endSection = null;
@@ -372,9 +366,7 @@ public class TileHeatExchange extends TileBC_Neptune implements ITickable, IDebu
     }
 
     @Override
-//    public void validate()
     public void clearRemoved() {
-//        super.validate();
         super.clearRemoved();
         checkNeighbours = true;
     }
@@ -480,13 +472,10 @@ public class TileHeatExchange extends TileBC_Neptune implements ITickable, IDebu
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
         if (section == null) {
-//            left.add("section = null");
             left.add(Component.literal("section = null"));
         } else {
-//            left.add("section = " + (section instanceof ExchangeSectionStart ? "start" : "end"));
             left.add(Component.literal("section = " + (section instanceof ExchangeSectionStart ? "start" : "end")));
             section.getDebugInfo(left, right, side);
         }
@@ -565,16 +554,11 @@ public class TileHeatExchange extends TileBC_Neptune implements ITickable, IDebu
             }
         }
 
-        // void getDebugInfo(List<String> left, List<String> right, Direction side)
         public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-//            left.add("tank_input = " + tankInput.getDebugString());
             left.add(Component.literal("tank_input = " + tankInput.getDebugString()));
-//            left.add("tank_output = " + tankOutput.getDebugString());
             left.add(Component.literal("tank_output = " + tankOutput.getDebugString()));
-//            left.add("smoothed_input: ");
             left.add(Component.literal("smoothed_input: "));
             smoothedTankInput.getDebugInfo(left, right, side);
-//            left.add("smoothed_output: ");
             left.add(Component.literal("smoothed_output: "));
             smoothedTankOutput.getDebugInfo(left, right, side);
         }
@@ -619,8 +603,6 @@ public class TileHeatExchange extends TileBC_Neptune implements ITickable, IDebu
 
         @Override
         CompoundTag writeToNbt() {
-            // Calen FIX: fluid in start section will not be saved in 1.12.2
-//            NBTTagCompound nbt = new NBTTagCompound();
             CompoundTag nbt = super.writeToNbt();
             nbt.putBoolean("start", true);
             nbt.putInt("coolantCharge", inputCoolantAmountCharge);
@@ -666,7 +648,6 @@ public class TileHeatExchange extends TileBC_Neptune implements ITickable, IDebu
         }
 
         private boolean isHeatant(FluidStack fluid) {
-//            return BuildcraftRecipeRegistry.refineryRecipes.getHeatableRegistry().getRecipeForInput(fluid) != null;
             return BuildcraftRecipeRegistry.refineryRecipes.getHeatableRegistry().getRecipeForInput(this.getTile().getLevel(), fluid) != null;
         }
 
@@ -732,9 +713,7 @@ public class TileHeatExchange extends TileBC_Neptune implements ITickable, IDebu
             Tank h_in = tankInput;
             Tank h_out = endSection.tankOutput;
             IRefineryRecipeManager reg = BuildcraftRecipeRegistry.refineryRecipes;
-//            ICoolableRecipe c_recipe = reg.getCoolableRegistry().getRecipeForInput(c_in.getFluid());
             ICoolableRecipe c_recipe = reg.getCoolableRegistry().getRecipeForInput(this.getTile().getLevel(), c_in.getFluid());
-//            IHeatableRecipe h_recipe = reg.getHeatableRegistry().getRecipeForInput(h_in.getFluid());
             IHeatableRecipe h_recipe = reg.getHeatableRegistry().getRecipeForInput(this.getTile().getLevel(), h_in.getFluid());
             if (h_recipe == null || c_recipe == null) {
                 progressState = EnumProgressState.STOPPING;
@@ -751,16 +730,12 @@ public class TileHeatExchange extends TileBC_Neptune implements ITickable, IDebu
             }
 
             // Find the minimum common amount that we can process from each tank up to `max_amount`
-            // min_common_multiplier == 0 indicates that we can no longer process (tanks full/empty)
             int max_amount = FLUID_MULT[middleCount - 1];
             FluidStack c_in_f = setAmount(c_recipe.in(), max_amount);
             FluidStack c_out_f = setAmount(c_recipe.out(), max_amount);
             FluidStack h_in_f = setAmount(h_recipe.in(), max_amount);
             FluidStack h_out_f = setAmount(h_recipe.out(), max_amount);
 
-            // fluid == null => the fluid is consumed in the process (e.g. water, lava)
-//            int c_out_amount = c_out_f == null ? max_amount : c_out.fillInternal(c_out_f, false);
-//            int h_out_amount = h_out_f == null ? max_amount : h_out.fillInternal(h_out_f, false);
             int c_out_amount = c_out_f.isEmpty() ? max_amount : c_out.fillInternal(c_out_f, IFluidHandler.FluidAction.SIMULATE);
             int h_out_amount = h_out_f.isEmpty() ? max_amount : h_out.fillInternal(h_out_f, IFluidHandler.FluidAction.SIMULATE);
 
@@ -815,7 +790,6 @@ public class TileHeatExchange extends TileBC_Neptune implements ITickable, IDebu
         }
 
         private void spewForth(Vec3 from, Direction dir, SimpleParticleType particle) {
-//            Vec3 vecDir = new Vec3(dir.getDirectionVec());
             Vec3 vecDir = Vec3.atLowerCornerOf(dir.getNormal());
             from = from.add(vecDir);
 
@@ -854,16 +828,13 @@ public class TileHeatExchange extends TileBC_Neptune implements ITickable, IDebu
         }
 
         private static FluidStack setAmount(FluidStack fluid, int mult) {
-//            if (fluid == null)
             if (fluid == null || fluid.isEmpty()) {
-//                return null;
                 return StackUtil.EMPTY_FLUID;
             }
             return new FluidStack(fluid, mult);
         }
 
         private static int drainableAmount(Tank t, FluidStack fluid) {
-//            FluidStack f2 = t.drainInternal(fluid, false);
             FluidStack f2 = t.drainInternal(fluid, IFluidHandler.FluidAction.SIMULATE);
             return f2.isEmpty() ? 0 : f2.getAmount();
         }
@@ -880,7 +851,6 @@ public class TileHeatExchange extends TileBC_Neptune implements ITickable, IDebu
         }
 
         private static void drain(Tank t, FluidStack fluid) {
-//            FluidStack f2 = t.drainInternal(fluid, true);
             FluidStack f2 = t.drainInternal(fluid, IFluidHandler.FluidAction.EXECUTE);
             if (f2.isEmpty() || f2.getAmount() != fluid.getAmount()) {
                 String err = "Buggy transition! Failed to drain " + fluid.getRawFluid();
@@ -902,19 +872,11 @@ public class TileHeatExchange extends TileBC_Neptune implements ITickable, IDebu
         }
 
         @Override
-//        void getDebugInfo(List<String> left, List<String> right, Direction side)
         public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
             super.getDebugInfo(left, right, side);
-//            left.add("progress = " + progress);
-//            left.add("state = " + progressState);
-//            left.add("has_end = " + (endSection != null));
-//            // left.add("heatProvided = " + heatProvided);
-//            // left.add("coolingProvided = " + coolingProvided);
             left.add(Component.literal("progress = " + progress));
             left.add(Component.literal("state = " + progressState));
             left.add(Component.literal("has_end = " + (endSection != null)));
-            // left.add(Component.literal("heatProvided = " + heatProvided));
-            // left.add(Component.literal("coolingProvided = " + coolingProvided));
         }
     }
 
@@ -935,7 +897,6 @@ public class TileHeatExchange extends TileBC_Neptune implements ITickable, IDebu
         }
 
         private boolean isCoolant(FluidStack fluid) {
-//            return BuildcraftRecipeRegistry.refineryRecipes.getCoolableRegistry().getRecipeForInput(fluid) != null;
             return BuildcraftRecipeRegistry.refineryRecipes.getCoolableRegistry().getRecipeForInput(this.getTile().getLevel(), fluid) != null;
         }
 

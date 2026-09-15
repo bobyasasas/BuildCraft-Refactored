@@ -140,8 +140,6 @@ public class TilePump extends TileMiner {
             return;
         }
 
-//        Profiler debugProf = new Profiler();
-//        debugProf.profilingEnabled = DEBUG_PUMP;
         ProfilerFiller debugProf = ProfilerUtil.newProfiler(DEBUG_PUMP);
         ProfilerUtil.ProfilerEntry prof = ProfilerUtil.createEntry(debugProf, level.getProfiler());
         Stopwatch watch = Stopwatch.createStarted();
@@ -160,7 +158,6 @@ public class TilePump extends TileMiner {
         prof.startSection("build");
         Direction[] directions = queueFluid.getFluidType().isLighterThanAir() ? SEARCH_GASEOUS : SEARCH_NORMAL;
         boolean isWater
-//                = !BCCoreConfig.pumpsConsumeWater && FluidUtilBC.areFluidsEqual(queueFluid, Fluids.WATER);
                 = !BCCoreConfig.pumpsConsumeWater && FluidUtilBC.areFluidsEqualIgnoringStillOrFlow(queueFluid, Fluids.WATER);
         final int maxLengthSquared = BCCoreConfig.pumpMaxDistance * BCCoreConfig.pumpMaxDistance;
         outer:
@@ -183,7 +180,6 @@ public class TilePump extends TileMiner {
                         prof.startSection("eq_get");
                         Fluid fluidAt = BlockUtil.getFluidWithFlowing(level, offsetPos);
                         prof.endStartSection("eq_cmp");
-//                        boolean eq = FluidUtilBC.areFluidsEqual(fluidAt, queueFluid);
                         boolean eq = FluidUtilBC.areFluidsEqualIgnoringStillOrFlow(fluidAt, queueFluid);
                         prof.endSection();
                         if (eq) {
@@ -214,11 +210,9 @@ public class TilePump extends TileMiner {
                     if (count >= 2) {
                         BlockState below = level.getBlockState(posToCheck.below());
                         // Same check as in BlockDynamicLiquid.updateTick:
-                        // if that method changes how it checks for adjacent
                         // water sources then this also needs updating
                         Fluid fluidBelow = BlockUtil.getFluidWithoutFlowing(below);
                         if (
-//                                FluidUtilBC.areFluidsEqual(fluidBelow, Fluids.WATER) || below.getMaterial().isSolid()
                                 FluidUtilBC.areFluidsEqualIgnoringStillOrFlow(fluidBelow, Fluids.WATER) || below.isSolid()
                         ) {
                             isInfiniteWaterSource = true;
@@ -238,7 +232,6 @@ public class TilePump extends TileMiner {
                 if (level.getBlockState(spring).getBlock() instanceof BlockSpring) {
                     BlockEntity tile = level.getBlockEntity(spring);
                     if (tile instanceof ITileOilSpring) {
-//                        springPositions.add(spring);
                         springPositions.add(spring.immutable());
                     }
                 }
@@ -260,7 +253,6 @@ public class TilePump extends TileMiner {
 
     private static boolean isOil(Fluid queueFluid) {
         if (BCModules.ENERGY.isLoaded()) {
-//            return FluidUtilBC.areFluidsEqual(queueFluid, BCEnergyFluids.crudeOil[0]);
             return FluidUtilBC.areFluidsEqualIgnoringStillOrFlow(queueFluid, BCEnergyFluids.crudeOil[0].get().getSource());
         }
         return false;
@@ -268,20 +260,11 @@ public class TilePump extends TileMiner {
 
     private boolean canDrain(BlockPos blockPos) {
         Fluid fluid = BlockUtil.getFluid(level, blockPos);
-//        return tank.isEmpty() ? fluid != null : FluidUtilBC.areFluidsEqual(fluid, tank.getFluidType());
         return tank.isEmpty() ? fluid != null : FluidUtilBC.areFluidsEqualIgnoringStillOrFlow(fluid, tank.getFluidType());
     }
 
     private void nextPos() {
-        // Calen: don't remove the last from the queue too early,
         // or updateLength() will see an empty queue and make the pump not able to create the tube when fluid is put after the pump been put
-//        while (!queue.isEmpty()) {
-//            currentPos = queue.removeLast();
-//            if (canDrain(currentPos)) {
-//                updateLength();
-//                return;
-//            }
-//        }
         while (!queue.isEmpty()) {
             currentPos = queue.getLast();
             if (canDrain(currentPos)) {
@@ -320,7 +303,6 @@ public class TilePump extends TileMiner {
 
     @Override
     public void mine() {
-        // Calen: stop pump when 9B of 16B
         if (tank.getFluidAmount() > tank.getCapacity() / 2) {
             return;
         }
@@ -368,7 +350,6 @@ public class TilePump extends TileMiner {
                 progress = 0;
                 isInfiniteWaterSource &= !BCCoreConfig.pumpsConsumeWater;
                 if (isInfiniteWaterSource) {
-//                    isInfiniteWaterSource = FluidUtilBC.areFluidsEqual(drain.getRawFluid(), Fluids.WATER);
                     isInfiniteWaterSource = FluidUtilBC.areFluidsEqualIgnoringStillOrFlow(drain.getRawFluid(), Fluids.WATER);
                 }
                 AdvancementUtil.unlockAdvancement(getOwner().getId(), ADVANCEMENT_DRAIN_ANY);
@@ -434,7 +415,6 @@ public class TilePump extends TileMiner {
     }
 
     @Override
-//    public CompoundTag writeToNBT(CompoundTag nbt) {
     public void saveAdditional(CompoundTag nbt) {
         super.saveAdditional(nbt);
         if (oilSpringPos != null) {
@@ -469,12 +449,8 @@ public class TilePump extends TileMiner {
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
         super.getDebugInfo(left, right, side);
-//        left.add("fluid = " + tank.getDebugString());
-//        left.add("queue size = " + queue.size());
-//        left.add("infinite = " + isInfiniteWaterSource);
         left.add(Component.literal("fluid = " + tank.getDebugString()));
         left.add(Component.literal("queue size = " + queue.size()));
         left.add(Component.literal("infinite = " + isInfiniteWaterSource));

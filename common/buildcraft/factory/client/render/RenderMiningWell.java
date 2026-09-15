@@ -65,7 +65,6 @@ public class RenderMiningWell implements BlockEntityRenderer<TileMiningWell> {
 
     private static boolean whiteTextureFlag = false;
 
-    // public static void textureStitchPost()
     public static void initWhiteTex() {
         whiteTextureFlag = true;
         LED_POWER.setWhiteTex();
@@ -78,9 +77,7 @@ public class RenderMiningWell implements BlockEntityRenderer<TileMiningWell> {
     }
 
     @Override
-//    public void renderTileEntityFast(@Nonnull TileMiningWell tile, double x, double y, double z, float partialTicks, int destroyStage, float partial, @Nonnull BufferBuilder buffer)
     public void render(TileMiningWell tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
-        // Calen: get the white texture
         if (!whiteTextureFlag) {
             initWhiteTex();
         }
@@ -90,7 +87,6 @@ public class RenderMiningWell implements BlockEntityRenderer<TileMiningWell> {
         Minecraft.getInstance().getProfiler().push("bc");
         Minecraft.getInstance().getProfiler().push("miner");
 
-//        buffer.setTranslation(x, y, z);
         Direction facing = Direction.NORTH;
         BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
         if (state.getBlock() == BCFactoryBlocks.miningWell.get()) {
@@ -102,7 +98,6 @@ public class RenderMiningWell implements BlockEntityRenderer<TileMiningWell> {
 
         if (facing.getAxis() == Axis.X) {
             dX = 0;
-//            dZ = facing.getAxisDirection().getOffset();
             dZ = facing.getAxisDirection().getStep();
             ledZ = 0.5;
             if (facing == Direction.EAST) {
@@ -111,7 +106,6 @@ public class RenderMiningWell implements BlockEntityRenderer<TileMiningWell> {
                 ledX = 0.2 / 16.0;
             }
         } else {
-//            dX = -facing.getAxisDirection().getOffset();
             dX = -facing.getAxisDirection().getStep();
             dZ = 0;
             ledX = 0.5;
@@ -122,7 +116,6 @@ public class RenderMiningWell implements BlockEntityRenderer<TileMiningWell> {
             }
         }
 
-        // int combinedLight = tile.getWorld().getCombinedLight(tile.getPos().offset(facing), 0);
         combinedLight = RenderUtil.getCombinedLight(tile.getLevel(), tile.getBlockPos().relative(facing));
         LED_POWER.center.lighti(combinedLight);
         LED_STATUS.center.lighti(combinedLight);
@@ -142,7 +135,6 @@ public class RenderMiningWell implements BlockEntityRenderer<TileMiningWell> {
 
         LED_STATUS.render(poseStack, buffer);
 
-//        tubeRenderer.renderTileEntityFast(tile, x, y, z, partialTicks, destroyStage, partial, buffer);
         tubeRenderer.render(tile, partialTicks, poseStack, bufferSource, combinedLight, combinedOverlay);
 
         Minecraft.getInstance().getProfiler().pop();
@@ -150,7 +142,6 @@ public class RenderMiningWell implements BlockEntityRenderer<TileMiningWell> {
     }
 
     @Override
-//    public boolean isGlobalRenderer(TileMiningWell tile)
     public boolean shouldRenderOffScreen(TileMiningWell p_112306_) {
         return true;
     }

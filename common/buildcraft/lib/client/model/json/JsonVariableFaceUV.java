@@ -87,8 +87,6 @@ public class JsonVariableFaceUV {
     public VariablePartCuboidBase.VariableFaceData evaluate(JsonVariableModel.ITextureGetter spriteLookup) {
         VariablePartCuboidBase.VariableFaceData data = new VariablePartCuboidBase.VariableFaceData();
         ModelUtil.TexturedFace face = spriteLookup.get(texture.evaluate());
-//        data.sprite = face.sprite;
-//        data.sprite = new LazyLoadedValue<>(() -> face.sprite);
         data.sprite = face.sprite;
         data.rotations = (int) textureRotation.evaluate();
         data.uvs.minU = (float) (uv[0].evaluate() / 16.0);

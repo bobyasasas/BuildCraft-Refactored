@@ -97,7 +97,6 @@ public final class ListHandler {
                     }
                 }
                 if (!anyHandled) {
-//                    if (type == Type.TYPE && target.getHasSubtypes())
                     if (type == Type.TYPE) {
                         return StackUtil.isMatchingItem(compare, target, false, false);
                     }
@@ -196,9 +195,6 @@ public final class ListHandler {
                 }
             }
             if (handlersCustom.size() > 0) {
-//                for (Item i : ForgeRegistries.ITEMS) {
-//                    NonNullList<ItemStack> examples = NonNullList.create();
-//                    i.getSubItems(CreativeModeTab.TAB_SEARCH, examples);
                 Collection<ItemStack> examples = BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.SEARCH).getDisplayItems();
                 for (ItemStack s : examples) {
                     for (ListMatchHandler mh : handlersCustom) {
@@ -208,7 +204,6 @@ public final class ListHandler {
                         }
                     }
                 }
-//                }
             }
             Collections.shuffle(stackList);
             return stackList;

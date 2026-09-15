@@ -15,7 +15,6 @@ public abstract class ContainerPipe extends ContainerBC_Neptune<IPipeHolder> {
     }
 
     @Override
-//    public final boolean canInteractWith(Player player)
     public final boolean stillValid(Player player) {
         return pipeHolder.canPlayerInteract(player);
     }

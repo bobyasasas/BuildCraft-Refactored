@@ -120,7 +120,6 @@ public class PacketBufferBC extends FriendlyByteBuf {
         // - bits = 0123456789
 
         // current
-        // (# = already written, _ is not yet written)
         // - in buffer [######## _#######]
         // - writePartialCache = "_#######"
         // - writePartialOffset = 7
@@ -130,10 +129,8 @@ public class PacketBufferBC extends FriendlyByteBuf {
         // - writePartialCache = "_______9"
         // - writePartialOffset = 1
 
-        // first stage: take the toppermost bits and append them to the cache (if the cache contains bits)
         if (writePartialOffset > 0) {
 
-            // top length = 8 - (num bits in cache) or length, whichever is SMALLER
             int availableBits = 8 - writePartialOffset;
 
             if (availableBits >= length) {
@@ -151,7 +148,6 @@ public class PacketBufferBC extends FriendlyByteBuf {
                 // value = __01 2345 6789
                 // want == ____ ____ ___0
                 // mask == ____ ____ ___1
-                // shift back = 9
 
                 int mask = (1 << availableBits) - 1;
 
@@ -265,7 +261,6 @@ public class PacketBufferBC extends FriendlyByteBuf {
         if (possible.length == 0)
             throw new IllegalArgumentException("Tried to write an enum value without any values! How did you do this?");
         if (possible.length == 1) return this;
-//        writeFixedBits(value.ordinal(), MathHelper.log2DeBruijn(possible.length));
         writeFixedBits(value.ordinal(), Mth.ceillog2(possible.length));
         return this;
     }
@@ -278,7 +273,6 @@ public class PacketBufferBC extends FriendlyByteBuf {
         if (enums.length == 0)
             throw new IllegalArgumentException("Tried to read an enum value without any values! How did you do this?");
         if (enums.length == 1) return enums[0];
-//        int length = MathHelper.log2DeBruijn(enums.length);
         int length = Mth.ceillog2(enums.length);
         int index = readFixedBits(length);
         return enums[index];
@@ -294,7 +288,6 @@ public class PacketBufferBC extends FriendlyByteBuf {
         return new String(array, Charsets.UTF_8);
     }
 
-    // Calen 1.18.2 from 1.8.9
 
     public void writeVec3(Vec3 vector) {
         this.writeDouble(vector.x());

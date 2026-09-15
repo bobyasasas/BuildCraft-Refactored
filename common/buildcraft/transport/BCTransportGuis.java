@@ -25,22 +25,12 @@ public enum BCTransportGuis {
         return VALUES[id];
     }
 
-//    public void openGui(EntityPlayer player) {
-//        openGui(player, 0, -1, 0);
-//    }
 
-//    public void openGui(EntityPlayer player, BlockPos pos) {
-//        openGui(player, pos.getX(), pos.getY(), pos.getZ());
-//    }
 
     public void openPipeGui(Player player, BlockPos pos, IBCTileMenuProvider holder) {
-//        openGui(player, pos.getX(), pos.getY(), pos.getZ());
         if (player instanceof ServerPlayer serverPlayer) {
-//        player.openGui(BCTransport.INSTANCE, ordinal(), player.getEntityWorld(), x, y, z);
-            // Calen 1.18.2: moved from ContainerGate#<init>
             // recreate plug object before gui packed received
             // Client call in BCSiliconMenuTypes#GATE
-//            PacketBufferBC buffer = new PacketBufferBC(Unpooled.buffer());
 
             IMessage msg = holder.onServerPlayerOpenNoSend(player);
             NetworkHooks.openScreen(
@@ -54,7 +44,4 @@ public enum BCTransportGuis {
         }
     }
 
-//    public void openGui(EntityPlayer player, int x, int y, int z) {
-//        player.openGui(BCTransport.INSTANCE, ordinal(), player.getEntityWorld(), x, y, z);
-//    }
 }

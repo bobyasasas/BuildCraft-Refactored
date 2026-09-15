@@ -37,7 +37,6 @@ public class AdvDebuggerQuarry implements DetachedRenderer.IDetachedRenderer {
     }
 
     @Override
-    // public void render(Player player, float partialTicks)
     public void render(Player player, float partialTicks, PoseStack poseStack) {
         TileQuarry tile = tileReference.get();
         if (tile == null || !tile.frameBox.isInitialized()) {
@@ -59,10 +58,6 @@ public class AdvDebuggerQuarry implements DetachedRenderer.IDetachedRenderer {
                                 )
                 )
         );
-//        GlStateManager.enableBlend();
-//        BufferBuilder bb = Tessellator.getInstance().getBuffer();
-//        bb.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-//        bb.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
         VertexConsumer bb = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(RenderType.translucent());
         for (ChunkPos chunkPos : chunkPoses) {
             DebugRenderHelper.renderAABB(
@@ -83,7 +78,5 @@ public class AdvDebuggerQuarry implements DetachedRenderer.IDetachedRenderer {
                     COLOUR_CHUNK
             );
         }
-//        Tessellator.getInstance().draw();
-//        GlStateManager.disableBlend();
     }
 }

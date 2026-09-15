@@ -22,9 +22,6 @@ import java.util.Map;
 public class VanillaPaintHandlers {
 
     public static void fmlInit() {
-//        registerDoubleTypedHandler(Blocks.GLASS, Blocks.STAINED_GLASS, StainedGlassBlock.COLOR);
-//        registerDoubleTypedHandler(Blocks.GLASS_PANE, Blocks.STAINED_GLASS_PANE, BlockStainedGlassPane.COLOR);
-//        registerDoubleTypedHandler(Blocks.TERRACOTTA, Blocks.STAINED_HARDENED_CLAY, BlockColored.COLOR);
         registerDoubleTypedHandler(Blocks.GLASS, createColourBlockMap("minecraft", "_terracotta"));
         registerDoubleTypedHandler(Blocks.GLASS_PANE, createColourBlockMap("minecraft", "_stained_glass"));
         registerDoubleTypedHandler(Blocks.TERRACOTTA, createColourBlockMap("minecraft", "_stained_glass_pane"));
@@ -34,16 +31,12 @@ public class VanillaPaintHandlers {
         registerDoubleTypedHandler(Blocks.WHITE_CONCRETE_POWDER, createColourBlockMap("minecraft", "_concrete_powder"));
     }
 
-    // private static void registerDoubleTypedHandler(Block clear, Block dyed, Property<DyeColor> colourProp)
     private static void registerDoubleTypedHandler(Block clear, Map<DyeColor, ? extends Block> dyed) {
-//        ICustomPaintHandler handler = createDoubleTypedPainter(clear, dyed, colourProp);
         ICustomPaintHandler handler = createDoubleTypedPainter(clear, dyed);
         CustomPaintHelper.INSTANCE.registerHandler(clear, handler);
-//        CustomPaintHelper.INSTANCE.registerHandler(dyed, handler);
         dyed.values().forEach(b -> CustomPaintHelper.INSTANCE.registerHandler(b, handler));
     }
 
-    // public static ICustomPaintHandler createDoubleTypedPainter(Block clear, Block dyed, Property<DyeColor> colourProp)
     public static ICustomPaintHandler createDoubleTypedPainter(Block clear, Map<DyeColor, ? extends Block> dyed) {
         return (world, pos, state, hitPos, hitSide, to) ->
         {
@@ -53,10 +46,7 @@ public class VanillaPaintHandlers {
                 if (to == null) {
                     return InteractionResult.FAIL;
                 }
-//                BlockState painted = dyed.defaultBlockState().setValue(colourProp, to);
                 Block painted = dyed.get(to);
-//                world.setBlock(pos, painted, Block.UPDATE_ALL);
-//                return InteractionResult.SUCCESS;
                 if (painted != null) {
                     world.setBlock(pos, painted.defaultBlockState(), Block.UPDATE_ALL);
                     return InteractionResult.SUCCESS;
@@ -65,10 +55,8 @@ public class VanillaPaintHandlers {
                 }
             }
             // dyed -> ?
-//            else if (state.getBlock() == dyed)
             else if (dyed.containsValue(state.getBlock())) {
                 // the same colour
-//                if (to == state.getValue(colourProp))
                 if (dyed.get(to) == state.getBlock()) {
                     return InteractionResult.FAIL;
                 }
@@ -77,7 +65,6 @@ public class VanillaPaintHandlers {
                     state = clear.defaultBlockState();
                 } else {
                     // to another colour
-//                    state = state.setValue(colourProp, to);
                     Block b = dyed.get(to);
                     if (b != null) {
                         state = b.defaultBlockState();
@@ -92,7 +79,6 @@ public class VanillaPaintHandlers {
         };
     }
 
-    // Calen
     public static Map<DyeColor, ? extends Block> createColourBlockMap(String namespace, String pathSuffix) {
         Map<DyeColor, Block> ret = new HashMap<>();
         Arrays.stream(DyeColor.values()).toList().forEach(

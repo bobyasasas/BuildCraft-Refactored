@@ -58,7 +58,6 @@ public enum PatternParameterYDir implements IStatementParameter {
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("direction." + (up ? "up" : "down"));
         return Component.translatable("direction." + (up ? "up" : "down"));
     }
 

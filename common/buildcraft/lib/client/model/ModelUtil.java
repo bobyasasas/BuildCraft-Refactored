@@ -77,7 +77,6 @@ public class ModelUtil {
     }
 
     public static class TexturedFace {
-        // public TextureAtlasSprite sprite;
         public LazyLoadedValue<TextureAtlasSprite> sprite;
         public UvFaceData faceData = new UvFaceData();
     }

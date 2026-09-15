@@ -106,7 +106,6 @@ public class FluidSmoother implements IDebuggable {
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
         if (data != null) {
             data.getDebugInfo(left, right, side);
@@ -168,11 +167,7 @@ public class FluidSmoother implements IDebuggable {
         }
 
         @Override
-//        public void getDebugInfo(List<String> left, List<String> right, Direction side)
         public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-//            String contents = (tank.getFluid() != null) ? "Something" : "Nothing";
-//            left.add("current = " + tank.getFluidAmount() + " of " + contents);
-//            left.add("lastSent = " + sentAmount + " of " + (sentHasFluid ? "Something" : "Nothing"));
             String contents = (tank.getFluid() != null) ? "Something" : "Nothing";
             left.add(Component.literal("current = " + tank.getFluidAmount() + " of " + contents));
             left.add(Component.literal("lastSent = " + sentAmount + " of " + (sentHasFluid ? "Something" : "Nothing")));
@@ -215,10 +210,7 @@ public class FluidSmoother implements IDebuggable {
         }
 
         @Override
-//        public void getDebugInfo(List<String> left, List<String> right, Direction side)
         public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-//            left.add("shown = " + amount + ", target = " + target);
-//            left.add("lastMsg = " + lastMessage + ", lastMsg-1 = " + lastMessageMinus1 + ", diff = " + (lastMessage - lastMessageMinus1));
             left.add(Component.literal("shown = " + amount + ", target = " + target));
             left.add(Component.literal("lastMsg = " + lastMessage + ", lastMsg-1 = " + lastMessageMinus1 + ", diff = " + (lastMessage - lastMessageMinus1)));
         }

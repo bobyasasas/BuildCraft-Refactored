@@ -136,7 +136,6 @@ public class GateLogic implements IGate, IWireEmitter, IRedstoneStatementContain
             statements[i].action.readFromNbt(nbt.getCompound(aName));
         }
 
-        // Calen 1.18.2: to store the state. without these, robot will get default(false) action states when world loading, then the working area will be lost
         short t = nbt.getShort("triggerOn");
         for (int i = 0; i < triggerOn.length; i++) {
             triggerOn[i] = ((t >>> i) & 1) == 1;
@@ -206,7 +205,6 @@ public class GateLogic implements IGate, IWireEmitter, IRedstoneStatementContain
         }
         nbt.put("wireBroadcasts", NBTUtilBC.writeEnumSet(wireBroadcasts, DyeColor.class));
 
-        // Calen 1.18.2: to store the state. without these, robot will get default(false) action states when world loading, then the working area will be lost
         short t = 0;
         for (int i = 0; i < triggerOn.length; i++) {
             if (triggerOn[i]) {
@@ -457,20 +455,14 @@ public class GateLogic implements IGate, IWireEmitter, IRedstoneStatementContain
 
                     // TODO: add merging / overriding functionality for actions
                     // such that
-                    // - (face direction: east)
-                    // - (face direction: west)
                     // can be merged (in a single tick) to just
-                    // - (face direction: west)
                     // As there's no point in facing both east AND west at the same time
                     // Currently this just faces the pipe east, then west
                     // however it would be *really* useful to optimise that east face set out
                     // in addition we want feedback in the GUI for:
                     // - triggers are on/off
-                    // - current action state (for stateful actions)
-                    // - and if an action is being overriden (like in the example above)
                     // We might need to expand GUI elements and statements a *lot* for this to work though.
                     // (specifically adding full json-based statement icons and
-                    // and full GUI hovers for action + trigger states.)
 
                     ActionWrapper action = fullAction.action.get();
                     actionOn[actionIndex] = allActionsActive;

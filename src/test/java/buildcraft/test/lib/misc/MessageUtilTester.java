@@ -11,7 +11,6 @@ public class MessageUtilTester {
     public void testBooleanArraySmall() {
         boolean[] expected = { false, true, false };
 
-//        PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
         FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
         MessageUtil.writeBooleanArray(buffer, expected);
         boolean[] got = MessageUtil.readBooleanArray(buffer, expected.length);
@@ -22,7 +21,6 @@ public class MessageUtilTester {
     public void testBooleanArrayLarge() {
         boolean[] expected = { false, true, false, false, false, true, true, true, true, true, true, true, false };
 
-//        PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
         FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
         MessageUtil.writeBooleanArray(buffer, expected);
         boolean[] got = MessageUtil.readBooleanArray(buffer, expected.length);
@@ -33,7 +31,6 @@ public class MessageUtilTester {
     public void testBooleanArrayLargeManual() {
         boolean[] expected = { false, true, false, false, false, true, true, true, true, true, true, true, false };
 
-//        PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
         FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
         MessageUtil.writeBooleanArray(buffer, expected);
 

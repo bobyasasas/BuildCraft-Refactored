@@ -33,8 +33,6 @@ public class ContainerEmzuliPipe_BC8 extends ContainerPipe {
         super(menuType, id, player, behaviour.pipe.getHolder());
         this.behaviour = behaviour;
         this.filterInv = behaviour.invFilters;
-        // Calen: moved to BCTransportGuis#openPipeGui and BCTransportMenuTypes
-//        behaviour.pipe.getHolder().onPlayerOpen(player);
 
         addFullPlayerInventory(84);
 
@@ -55,9 +53,7 @@ public class ContainerEmzuliPipe_BC8 extends ContainerPipe {
     }
 
     @Override
-//    public void onContainerClosed(Player player)
     public void removed(Player player) {
-//        super.onContainerClosed(player);
         super.removed(player);
         behaviour.pipe.getHolder().onPlayerClose(player);
     }

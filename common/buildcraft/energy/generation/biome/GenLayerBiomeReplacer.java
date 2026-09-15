@@ -20,14 +20,10 @@ public abstract class GenLayerBiomeReplacer {
     protected final double zOffset;
     protected final double noiseScale;
     protected final double noiseThreshold;
-//    protected final Holder<Biome> newBiomeId;
 
     public GenLayerBiomeReplacer(long worldSeed, long seed, /*GenLayer parent, */double noiseScale, double noiseThreshold, Holder<Biome> newBiomeId) {
-//        super(seed);
-//        this.parent = parent;
         this.noiseScale = noiseScale;
         this.noiseThreshold = noiseThreshold;
-//        this.newBiomeId = newBiomeId;
         Random rand = new Random(worldSeed);
         xOffset = rand.nextInt(OFFSET_RANGE) - (OFFSET_RANGE / 2);
         zOffset = rand.nextInt(OFFSET_RANGE) - (OFFSET_RANGE / 2);

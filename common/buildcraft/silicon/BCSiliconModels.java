@@ -70,7 +70,6 @@ public class BCSiliconModels {
     public static final IPluggableStaticBaker<KeyPlugLightSensor> BAKER_PLUG_LIGHT_SENSOR;
 
     static {
-        // Calen: ensure ExpressionCompat ENUM_FACING = new NodeType<>("Facing", Direction.UP); run, or will cause IllegalArgumentException: Unknown NodeType class net.minecraft.core.Direction
         ExpressionCompat.setup();
 
         LIGHT_SENSOR = getStaticModel("plugs/light_sensor");
@@ -104,17 +103,12 @@ public class BCSiliconModels {
 
     public static void fmlPreInit() {
         // 1.18.2: following events are IModBusEvent
-//        MinecraftForge.EVENT_BUS.register(BCSiliconModels.class);
         IEventBus modEventBus = ((FMLModContainer) ModList.get().getModContainerById(BCSilicon.MODID).get()).getEventBus();
         modEventBus.register(BCSiliconModels.class);
     }
 
     public static void fmlInit() {
-//        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(BCSiliconItems.plugGate, GateMeshDefinition.INSTANCE);
 
-        // Calen: moved to #onTesrReg
-//        ClientRegistry.bindTileEntitySpecialRenderer(TileLaser.class, new RenderLaser());
-//        ClientRegistry.bindTileEntitySpecialRenderer(TileProgrammingTable_Neptune.class, new RenderProgrammingTable());
 
         IClientRegistry pipeRegistryClient = PipeApiClient.registry;
         if (pipeRegistryClient != null) {
@@ -142,10 +136,8 @@ public class BCSiliconModels {
         RegistryUtil.regTesrIfTilePresent(BCSiliconBlocks.programmingTableTile, RenderProgrammingTable::new);
     }
 
-    // Calen 1.20.1
     private static final List<Runnable> spriteTasks = Lists.newLinkedList();
 
-    // Calen 1.20.1
     @SubscribeEvent
     public static void onTextureStitchEvent$Post(TextureStitchEvent.Post event) {
         if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
@@ -155,7 +147,6 @@ public class BCSiliconModels {
 
     @SubscribeEvent
     public static void onModelBake(ModelEvent.ModifyBakingResult event) {
-//        putModel(event, "gate_item#inventory", ModelGateItem.INSTANCE);
         event.getModels().replaceAll((rl, model) ->
                 {
                     if (rl instanceof ModelResourceLocation m && m.getPath().startsWith("plug_gate")) {
@@ -165,14 +156,10 @@ public class BCSiliconModels {
                     }
                 }
         );
-//        putModel(event, "lens_item#inventory", ModelLensItem.INSTANCE);
         putModel(event, "plug_lens#inventory", ModelLensItem.INSTANCE);
         PluggablePulsar.setModelVariablesForItem();
-//        putModel(event, "plug_pulsar#inventory", new ModelPluggableItem(PULSAR_STATIC.getCutoutQuads(), PULSAR_DYNAMIC.getCutoutQuads()));
         putModel(event, "plug_pulsar#inventory", new ModelPluggableItem(spriteTasks::add, new LazyLoadedValue<>(() -> PULSAR_STATIC.getCutoutQuads()), new LazyLoadedValue<>(() -> PULSAR_DYNAMIC.getCutoutQuads())));
-//        putModel(event, "plug_light_sensor#inventory", new ModelPluggableItem(LIGHT_SENSOR.getCutoutQuads()));
         putModel(event, "plug_light_sensor#inventory", new ModelPluggableItem(spriteTasks::add, new LazyLoadedValue<>(() -> LIGHT_SENSOR.getCutoutQuads())));
-//        putModel(event, "plug_timer#inventory", new ModelPluggableItem(TIMER.getCutoutQuads()));
         putModel(event, "plug_timer#inventory", new ModelPluggableItem(spriteTasks::add, new LazyLoadedValue<>(() -> TIMER.getCutoutQuads())));
         putModel(event, "plug_facade#inventory", ModelFacadeItem.INSTANCE);
 
@@ -186,7 +173,6 @@ public class BCSiliconModels {
     }
 
     private static void putModel(ModelEvent.ModifyBakingResult event, String str, BakedModel model) {
-//        event.getModelRegistry().put(BCModules.SILICON.createModelLocation(str), model);
         event.getModels().replace(BCModules.SILICON.createModelLocation(str), model);
     }
 

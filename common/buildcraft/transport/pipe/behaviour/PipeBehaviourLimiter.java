@@ -111,7 +111,6 @@ public class PipeBehaviourLimiter extends PipeBehaviour {
             }
             String key = "chat.pipe." + (isRf ? "rf" : "power") + ".iron.mode";
             Component chat = Component.translatable(key, limit);
-            // player.sendStatusMessage(chat, true);
             player.displayClientMessage(chat, true);
 
             requestReconfigure();

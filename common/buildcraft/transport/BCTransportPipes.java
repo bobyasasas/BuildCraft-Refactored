@@ -195,7 +195,6 @@ public class BCTransportPipes {
 
         builder.logic(PipeBehaviourObsidian::new, PipeBehaviourObsidian::new);
         obsidianItem = builder.idTex("items_obsidian").flowItem().define();
-        // obsidianFluid = builder.idTex("obsidian_fluids").flowFluid().define();
 
         DyeColor[] colourArray = DyeColor.values();
         String[] texSuffix = new String[16];
@@ -243,9 +242,7 @@ public class BCTransportPipes {
         }
 
         public DefinitionBuilder texPrefix(String prefix) {
-            // if (BCTransportConfig.powerPipeUseOldMjTexture && prefix.endsWith("_power"))
             if (BCTransportConfig.powerPipeUseOldMjTexture && prefix.startsWith("power_")) {
-                // prefix = prefix.substring(0, prefix.length() - "_power".length()) + "_rf";
                 prefix = "rf_" + prefix.substring("power_".length(), prefix.length());
             }
             builder.texturePrefix = "buildcrafttransport:pipes/" + prefix;

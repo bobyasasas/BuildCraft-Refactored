@@ -23,7 +23,6 @@ public class ElementTypeHelp extends ElementType {
     // to 0,0
     // - size[0], size[1]: the size of the help area
     // - area[0-3]: mapping for pos[0], pos[1], size[0], size[1]
-    // - colour: The colour for the help element (overlay)
     // - title: The name of the help element
 
     @Override

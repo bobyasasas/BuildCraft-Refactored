@@ -95,29 +95,6 @@ public class RecipeBuilderShaped {
         return objs;
     }
 
-//    public ShapedOreRecipe buildRotated() {
-//        int fromRows = shape.size();
-//        int toRows = shape.get(0).length();
-//        StringBuilder[] strings = new StringBuilder[toRows];
-//        for (int toRow = 0; toRow < toRows; toRow++) {
-//            strings[toRow] = new StringBuilder();
-//        }
-//        for (String toAdd : shape) {
-//            for (int toRow = 0; toRow < toRows; toRow++) {
-//                strings[toRow].append(toAdd.charAt(toRow));
-//            }
-//        }
-//        Object[] objs = new Object[toRows + objects.size() * 2];
-//        int offset = 0;
-//        for (StringBuilder string : strings) {
-//            objs[offset++] = string.toString();
-//        }
-//        for (char c : objects.keys()) {
-//            objs[offset++] = c;
-//            objs[offset++] = objects.get(c);
-//        }
-//        return new ShapedOreRecipe(result.getItem().getRegistryName(), result, objs);
-//    }
 
     private void ensureValid() {
         if (result.isEmpty()) {
@@ -128,19 +105,10 @@ public class RecipeBuilderShaped {
     public void register() {
         ensureValid();
         ResourceLocation name = ItemUtil.getRegistryName(result.getItem());
-//        ShapedOreRecipe recipe = new ShapedOreRecipe(name, result, createRecipeObjectArray());
-//        ForgeRegistries.RECIPES.register(recipe.setRegistryName(name));
     }
 
     public void registerNbtAware(String regName) {
         ensureValid();
-////        ShapedOreRecipe recipe = new ShapedOreRecipe(result.getItem().getRegistryName(), result, createRecipeObjectArrayNBT());
-//        ShapedRecipe recipe = new ShapedRecipe(result.getItem().getRegistryName(), regName, result, createRecipeObjectArrayNBT());
-//        ForgeRegistries.RECIPES.register(recipe.setRegistryName(regName));
     }
 
-//    public void registerRotated() {
-//        ensureValid();
-//        ForgeRegistries.RECIPES.register(buildRotated().setRegistryName(result.getItem().getRegistryName()));
-//    }
 }

@@ -79,10 +79,6 @@ public class PipeBehaviourStripes extends PipeBehaviour implements IStripesActiv
     private void setDirection(@Nullable Direction newValue) {
         if (direction != newValue) {
             direction = newValue;
-//            if (!pipe.getHolder().getPipeWorld().isRemote) {
-//                pipe.getHolder().scheduleNetworkUpdate(PipeMessageReceiver.BEHAVIOUR);
-//            }
-            // Calen: when world loading, NPE: Cannot read field "isClientSide" because the return value of "buildcraft.api.transport.pipe.IPipeHolder.getPipeWorld()" is null
             pipe.getHolder().runWhenWorldNotNull(
                     () ->
                     {
@@ -173,7 +169,6 @@ public class PipeBehaviourStripes extends PipeBehaviour implements IStripesActiv
                 if (progress < target) {
                     progress += battery.extractPower(0, Math.min(target - progress, MjAPI.MJ * 10));
                     if (progress > 0) {
-//                        world.sendBlockBreakProgress(offsetHash, offset, (int) (progress * 9 / target));
                         world.destroyBlockProgress(offsetHash, offset, (int) (progress * 9 / target));
                     }
                 } else {
@@ -198,16 +193,13 @@ public class PipeBehaviourStripes extends PipeBehaviour implements IStripesActiv
         }
         IPipeHolder holder = pipe.getHolder();
         Level world = holder.getPipeWorld();
-        // Calen
         if (!(world instanceof ServerLevel)) {
             return;
         }
         BlockPos pos = holder.getPipePos();
         FakePlayer player = BuildCraftAPI.fakePlayerProvider.getFakePlayer((ServerLevel) world, holder.getOwner(), pos);
-//        player.inventory.clear();
         player.getInventory().clearContent();
         // set the main hand of the fake player to the stack
-//        player.inventory.setInventorySlotContents(player.inventory.currentItem, event.getStack());
         player.getInventory().setItem(player.getInventory().selected, event.getStack());
         if (PipeApi.stripeRegistry.handleItem(world, pos, direction, event.getStack(), player, this)) {
             event.setStack(StackUtil.EMPTY);
@@ -239,18 +231,14 @@ public class PipeBehaviourStripes extends PipeBehaviour implements IStripesActiv
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {
         if (capability == MjAPI.CAP_REDSTONE_RECEIVER) {
-//            return MjAPI.CAP_REDSTONE_RECEIVER.cast(this);
             return LazyOptional.of(() -> this).cast();
         }
         if (capability == MjAPI.CAP_RECEIVER) {
-//            return MjAPI.CAP_RECEIVER.cast(this);
             return LazyOptional.of(() -> this).cast();
         }
         if (capability == MjAPI.CAP_CONNECTOR) {
-//            return MjAPI.CAP_CONNECTOR.cast(this);
             return LazyOptional.of(() -> this).cast();
         }
-//        return super.getCapability(capability, facing);
         return super.getCapability(capability, facing);
     }
 }

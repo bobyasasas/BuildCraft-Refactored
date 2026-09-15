@@ -14,12 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public enum PlugRobotStationRenderer implements IPlugDynamicRenderer<PluggableRobotStation> {
     INSTANCE;
 
-//    private static final ResourceLocation baseLoc = new ResourceLocation("buildcraftrobotics:models/pluggables/robot_station_base.obj");
 
-//    private TextureAtlasSprite baseSprite;
-//    private final Map<EnumRobotStationState, TextureAtlasSprite> stateSprites = Maps.newEnumMap(EnumRobotStationState.class);
-//    private final Map<EnumRobotStationState, List<MutableQuad>> stateQuads = Maps.newEnumMap(EnumRobotStationState.class);
-//    private final List<MutableQuad> modelBaseQuads = new ArrayList<>();
 
     private static final AdvModelCache cache = new AdvModelCache(BCRoboticsModels.ROBOT_STATION_DYNAMIC, PluggableRobotStation.MODEL_VAR_INFO);
 

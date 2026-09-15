@@ -55,7 +55,6 @@ public class RenderDistiller implements BlockEntityRenderer<TileDistiller_BC8> {
     }
 
     @Override
-//    public void render(TileDistiller_BC8 tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     public void render(TileDistiller_BC8 tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
 
         BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
@@ -68,21 +67,12 @@ public class RenderDistiller implements BlockEntityRenderer<TileDistiller_BC8> {
         profiler.push("distiller");
 
         // 1.18.2: provided
-//        int combinedLight = tile.getWorld().getCombinedLight(tile.getBlockPos(), 0);
         Direction face = state.getValue(BlockBCBase_Neptune.PROP_FACING);
         TankRenderSizes sizes = TANK_SIZES.get(face);
 
 //        // gl state setup
-//        RenderHelper.disableStandardItemLighting();
-//        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-//        GlStateManager.enableBlend();
-//        GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
         // buffer setup
-//        try (AutoTessellator tess = RenderUtil.getThreadLocalUnusedTessellator()) {
-//            BufferBuilder bb = tess.tessellator.getBuffer();
-//            bb.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-//            bb.setTranslation(x, y, z);
 
         profiler.push("model");
         profiler.push("compute");
@@ -96,8 +86,6 @@ public class RenderDistiller implements BlockEntityRenderer<TileDistiller_BC8> {
 
         MutableQuad copy = new MutableQuad(0, null);
         int lightc = combinedLight;
-//        int light_block = (lightc >> 4) & 15;
-//        int light_sky = (lightc >> 20) & 15;
         byte light_block = (byte) ((lightc >> 4) & 15);
         byte light_sky = (byte) ((lightc >> 20) & 15);
         VertexConsumer bb = bufferSource.getBuffer(RenderType.solid());
@@ -117,12 +105,9 @@ public class RenderDistiller implements BlockEntityRenderer<TileDistiller_BC8> {
         renderTank(poseStack.last(), sizes.tankOutLiquid, tile.smoothedTankLiquidOut, combinedLight, combinedOverlay, partialTicks, bb);
 
         // buffer finish
-//        bb.setTranslation(0, 0, 0);
         profiler.popPush("draw");
-//        tess.tessellator.draw();
 
 //        // gl state finish
-//        RenderHelper.enableStandardItemLighting();
 
         profiler.pop();
         profiler.pop();

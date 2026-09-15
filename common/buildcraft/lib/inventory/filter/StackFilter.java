@@ -25,7 +25,6 @@ public enum StackFilter implements IStackFilter {
     FUEL {
         @Override
         public boolean matches(@Nonnull ItemStack stack) {
-//            return FurnaceBlockEntity.getItemBurnTime(stack) > 0;
             return FurnaceBlockEntity.isFuel(stack);
         }
     };

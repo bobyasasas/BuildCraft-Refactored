@@ -34,9 +34,7 @@ public class GuiAssemblyTable extends GuiBC8<ContainerAssemblyTable> {
 
     public GuiAssemblyTable(ContainerAssemblyTable container, Inventory inventory, Component component) {
         super(container, inventory, component);
-//        xSize = SIZE_X;
         imageWidth = SIZE_X;
-//        ySize = SIZE_Y;
         imageHeight = SIZE_Y;
         mainGui.shownElements.add(new LedgerTablePower(mainGui, container.tile, true));
     }
@@ -87,7 +85,6 @@ public class GuiAssemblyTable extends GuiBC8<ContainerAssemblyTable> {
     @Override
     protected void drawForegroundLayer(GuiGraphics guiGraphics) {
         String title = I18n.get("tile.assemblyTableBlock.name");
-//        fontRenderer.drawString(title, guiLeft + (xSize - fontRenderer.getStringWidth(title)) / 2, guiTop + 15, 0x404040);
         guiGraphics.drawString(font, title, leftPos + (float) (imageWidth - font.width(title)) / 2, topPos + 15, 0x404040, false);
     }
 

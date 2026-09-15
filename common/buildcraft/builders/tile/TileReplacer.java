@@ -77,7 +77,6 @@ public class TileReplacer extends TileBC_Neptune implements ITickable, IBCTileMe
                 !invSchematicFrom.getStackInSlot(0).isEmpty() &&
                 !invSchematicTo.getStackInSlot(0).isEmpty())
         {
-//            Header header = BCBuildersItems.snapshot.getHeader(invSnapshot.getStackInSlot(0));
             Header header = BCBuildersItems.snapshotBLUEPRINT.get().getHeader(invSnapshot.getStackInSlot(0));
             if (header != null) {
                 Snapshot snapshot = GlobalSavedDataSnapshots.get(level).getSnapshot(header.key);

@@ -24,9 +24,7 @@ public class GuiTank extends GuiBC8<ContainerTank> {
 
     public GuiTank(ContainerTank container, Inventory inventory, Component component) {
         super(container, inventory, component);
-//        xSize = SIZE_X;
         imageWidth = SIZE_X;
-//        ySize = SIZE_Y;
         imageHeight = SIZE_Y;
     }
 
@@ -45,16 +43,13 @@ public class GuiTank extends GuiBC8<ContainerTank> {
     @Override
     protected void drawForegroundLayer(GuiGraphics guiGraphics) {
         String str = LocaleUtil.localize("tile.tankBlock.name");
-        // int strWidth = fontRenderer.getStringWidth(str);
         int strWidth = font.width(str);
         double titleX = mainGui.rootElement.getCenterX() - strWidth / 2;
         double titleY = mainGui.rootElement.getY() + 6;
-        // fontRenderer.drawString(str, (int) titleX, (int) titleY, 0x404040);
         guiGraphics.drawString(font, str, (int) titleX, (int) titleY, 0x404040, false);
 
         double invX = mainGui.rootElement.getX() + 8;
         double invY = mainGui.rootElement.getY() + SIZE_Y - 96;
-        // fontRenderer.drawString(LocaleUtil.localize("gui.inventory"), (int) invX, (int) invY, 0x404040);
         guiGraphics.drawString(font, LocaleUtil.localize("gui.inventory"), (int) invX, (int) invY, 0x404040, false);
     }
 }

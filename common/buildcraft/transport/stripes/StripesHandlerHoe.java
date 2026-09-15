@@ -34,7 +34,6 @@ public enum StripesHandlerHoe implements IStripesHandlerItem {
         }
 
         pos = pos.relative(direction);
-//        if (stack.onItemUse(
         if (stack.onItemUseFirst(
 //                player,
 //                world,
@@ -61,7 +60,6 @@ public enum StripesHandlerHoe implements IStripesHandlerItem {
             return true;
         }
 
-//        if (direction != Direction.UP && stack.onItemUse(
         if (direction != Direction.UP && stack.onItemUseFirst(
 //                player,
 //                world,

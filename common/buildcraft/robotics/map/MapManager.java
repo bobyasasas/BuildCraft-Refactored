@@ -65,7 +65,6 @@ public class MapManager implements Runnable {
 
     private void updateChunk(LevelAccessor rworld, ChunkAccess chunk, boolean force) {
         MapWorld world = getWorld(rworld);
-        // if (world != null && (force || doUpdate(world, chunk)))
         if (world != null && (chunk instanceof LevelChunk) && (force || doUpdate(world, chunk))) {
             world.updateChunk((LevelChunk) chunk);
         }
@@ -100,7 +99,6 @@ public class MapManager implements Runnable {
 
     @SubscribeEvent
     public void chunkLoaded(ChunkEvent.Load event) {
-        // updateChunkDelayed(event.getWorld(), event.getChunk(), false, (byte) (40 + VecUtil.RANDOM.nextInt(20)));
         updateChunkDelayed(event.getLevel(), event.getChunk(), false, (byte) (40 + rand.nextInt(20)));
     }
 
@@ -110,17 +108,11 @@ public class MapManager implements Runnable {
     }
 
     @SubscribeEvent
-    // public void blockPlaced(BlockEvent.PlaceEvent placeEvent)
     public void blockPlaced(BlockEvent.EntityPlaceEvent placeEvent) {
-        // LevelChunk chunk = placeEvent.world.getChunkFromBlockCoords(placeEvent.pos);
         ChunkAccess chunk = placeEvent.getLevel().getChunk(placeEvent.getPos());
-        // MapWorld world = getWorld(placeEvent.world);
         MapWorld world = getWorld(placeEvent.getLevel());
-        // if (world != null && doUpdate(world, chunk))
         if (world != null && chunk instanceof LevelChunk && doUpdate(world, chunk)) {
-            // int hv = placeEvent.world.getHeight(placeEvent.pos).getY();
             int hv = placeEvent.getLevel().getHeight(Heightmap.Types.WORLD_SURFACE, placeEvent.getPos().getX(), placeEvent.getPos().getZ());
-            // if (placeEvent.pos.getY() >= (hv - 3))
             if (placeEvent.getPos().getY() >= (hv - 3)) {
                 world.updateChunk((LevelChunk) chunk);
             }
@@ -129,12 +121,9 @@ public class MapManager implements Runnable {
 
     @SubscribeEvent
     public void blockBroken(BlockEvent.BreakEvent placeEvent) {
-        // Chunk chunk = placeEvent.world.getChunkFromBlockCoords(placeEvent.pos);
         ChunkAccess chunk = placeEvent.getLevel().getChunk(placeEvent.getPos());
         MapWorld world = getWorld(placeEvent.getLevel());
-        // if (world != null && doUpdate(world, chunk))
         if (world != null && chunk instanceof LevelChunk && doUpdate(world, chunk)) {
-            // int hv = placeEvent.getWorld().getHeight(placeEvent.getPos()).getY();
             int hv = placeEvent.getLevel().getHeight(Heightmap.Types.WORLD_SURFACE, placeEvent.getPos().getX(), placeEvent.getPos().getZ());
             if (placeEvent.getPos().getY() >= (hv - 3)) {
                 world.updateChunk((LevelChunk) chunk);
@@ -170,24 +159,15 @@ public class MapManager implements Runnable {
         }
     }
 
-    // public void initialize()
     public void initialize(ServerStartingEvent event) {
-        // for (WorldServer ws : DimensionManager.getWorlds())
         for (ServerLevel ws : event.getServer().getAllLevels()) {
             MapWorld mw = getWorld(ws);
-            // IChunkProvider provider = ws.getChunkProvider();
             ChunkSource provider = ws.getChunkSource();
-            // if (provider instanceof ChunkProviderServer)
             if (provider instanceof ServerChunkCache) {
-                // for (Object o : ((ChunkProviderServer) provider).func_152380_a())
                 for (ChunkHolder o : ((ServerChunkCache) provider).chunkMap.getChunks()) {
-                    // if (o != null && o instanceof Chunk)
                     if (o != null) {
-                        // Chunk c = (Chunk) o;
                         ChunkAccess c = o.getLastAvailable();
-                        // if (!mw.hasChunk(c.xPosition, c.zPosition))
                         if (!mw.hasChunk(c.getPos().x, c.getPos().z)) {
-                            // mw.updateChunkDelayed(c, (byte) (40 + VecUtil.RANDOM.nextInt(20)));
                             mw.updateChunkDelayed(c, (byte) (40 + rand.nextInt(20)));
                         }
                     }

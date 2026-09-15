@@ -54,7 +54,6 @@ public abstract class TileAutoWorkbenchBase extends TileBC_Neptune implements IT
     private static final ResourceLocation ADVANCEMENT_AUTOCRAFT = new ResourceLocation("buildcraftfactory:lazy_crafting");
 
     // TODO: Store output in the next slot!
-    // (Can be used to differentiate between different recipes)
     public final ItemHandlerSimple invBlueprint;
     public final ItemHandlerSimple invMaterialFilter;
     public final ItemHandlerFiltered invMaterials;
@@ -85,7 +84,6 @@ public abstract class TileAutoWorkbenchBase extends TileBC_Neptune implements IT
     @Override
     protected void onSlotChange(IItemHandlerModifiable handler, int slot, @Nonnull ItemStack before, @Nonnull ItemStack after) {
         super.onSlotChange(handler, slot, before, after);
-//        if (!ItemStack.areItemStacksEqual(before, after))
         if (!StackUtil.isSameItemSameDamageSameTagSameCount(before, after) && !ItemStack.matches(before, after)) {
             crafting.onInventoryChange(handler);
         }
@@ -127,7 +125,6 @@ public abstract class TileAutoWorkbenchBase extends TileBC_Neptune implements IT
             if (id == NET_GUI_TICK) {
                 buffer.writeLong(powerStored);
             } else if (id == NET_GUI_DATA) {
-//                buffer.writeItemStack(crafting.getAssumedResult());
                 buffer.writeItemStack(crafting.getAssumedResult(), false);
             }
         }
@@ -159,7 +156,6 @@ public abstract class TileAutoWorkbenchBase extends TileBC_Neptune implements IT
         return MathUtil.interp(partialTicks, powerStoredLast, powerStored) / POWER_REQUIRED;
     }
 
-    // public InventoryCrafting getWorkbenchCrafting()
     public CraftingContainer getWorkbenchCrafting() {
         return crafting;
     }

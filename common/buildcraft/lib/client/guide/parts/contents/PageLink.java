@@ -17,21 +17,18 @@ public abstract class PageLink implements IContentsLeaf {
     public final PageLine text;
     public final String textKey;
     public final boolean startVisible;
-    // private final String lowerCaseName;
     private final Component lowerCaseName;
     private boolean visible;
 
     public PageLink(PageLine text, boolean startVisible) {
         this.text = text;
         this.startVisible = startVisible;
-//        lowerCaseName = text.text.toLowerCase(Locale.ROOT);
         lowerCaseName = text.text;
         textKey = text.textKey.toLowerCase(Locale.ROOT);
         visible = startVisible;
     }
 
     @Override
-//    public String getSearchName()
     public Component getSearchName() {
         return lowerCaseName;
     }

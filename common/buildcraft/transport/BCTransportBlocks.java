@@ -25,7 +25,6 @@ public class BCTransportBlocks {
 
     public static void preInit() {
         filteredBuffer = HELPER.addBlockAndItem("block.filtered_buffer", BlockPropertiesCreator.metal(), BlockFilteredBuffer::new);
-        // TODO Calen isViewBlocking necessary?
         pipeHolder = HELPER.addBlock("block.pipe_holder", BlockPropertiesCreator.metal().strength(0.25F, 3.0F).noOcclusion().isViewBlocking((state, world, pos) -> false).dynamicShape().forceSolidOn(), BlockPipeHolder::new);
 
         filteredBufferTile = HELPER.registerTile("tile.filtered_buffer", TileFilteredBuffer::new, filteredBuffer);

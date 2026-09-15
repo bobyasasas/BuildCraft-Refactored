@@ -99,32 +99,21 @@ public class MutableQuad {
     }
 
     public BakedQuad toBakedBlock() {
-//        int[] data = new int[28];
         int[] data = new int[32];
-//        vertex_0.toBakedBlock(data, 0);
         vertex_0.toBakedBlock(data, 0);
-//        vertex_1.toBakedBlock(data, 7);
         vertex_1.toBakedBlock(data, 8);
-//        vertex_2.toBakedBlock(data, 14);
         vertex_2.toBakedBlock(data, 16);
-//        vertex_3.toBakedBlock(data, 21);
         vertex_3.toBakedBlock(data, 24);
         return new BakedQuad(data, tintIndex, face, sprite, shade);
     }
 
     public BakedQuad toBakedItem() {
-        // Calen: 1.18.2 added ELEMENT_UV2 1 int
         // size: 7*4 -> 8*4
-//        int[] data = new int[28];
         int[] data = new int[32];
         vertex_0.toBakedItem(data, 0);
-//        vertex_1.toBakedItem(data, 7);
         vertex_1.toBakedItem(data, 8);
-//        vertex_2.toBakedItem(data, 14);
         vertex_2.toBakedItem(data, 16);
-//        vertex_3.toBakedItem(data, 21);
         vertex_3.toBakedItem(data, 24);
-//        return new BakedQuad(data, tintIndex, face, sprite, shade, DefaultVertexFormats.ITEM);
         return new BakedQuad(data, tintIndex, face, sprite, shade);
     }
 
@@ -429,7 +418,6 @@ public class MutableQuad {
         return this;
     }
 
-    // Calen: 0-15 light level -> 16 bit
     public MutableQuad lightb(byte block, byte sky) {
         vertex_0.lighti(block, sky);
         vertex_1.lighti(block, sky);
@@ -449,7 +437,6 @@ public class MutableQuad {
     // range: 0->1
     public MutableQuad lightf(float block, float sky) {
         return lighti((byte) (block * 15), (byte) (sky * 15));
-//        return lighti((short)(((short) (block * 15))<<4), (short)(((short) (sky * 15))<<4));
     }
 
     public MutableQuad lightvf(Vector2f vec) {
@@ -457,7 +444,6 @@ public class MutableQuad {
     }
 
     /** Sets the current light value of every vertex to be the maximum of the given in value, and the current value */
-//    public MutableQuad maxLighti(int block, int sky)
     public MutableQuad maxLighti(Byte block, Byte sky) {
         vertex_0.maxLighti(block, sky);
         vertex_1.maxLighti(block, sky);
@@ -466,7 +452,6 @@ public class MutableQuad {
         return this;
     }
 
-    // Calen
     public MutableQuad overlay(int combinedOverlay) {
         vertex_0.overlay(combinedOverlay);
         vertex_1.overlay(combinedOverlay);

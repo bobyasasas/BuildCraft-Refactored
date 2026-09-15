@@ -28,9 +28,7 @@ public class GuiFiller extends GuiBC8<ContainerFiller> {
         BuildCraftJsonGui jsonGui = (BuildCraftJsonGui) mainGui;
         preLoad(jsonGui);
         jsonGui.load();
-//        xSize = jsonGui.getSizeX();
         imageWidth = jsonGui.getSizeX();
-//        ySize = jsonGui.getSizeY();
         imageHeight = jsonGui.getSizeY();
     }
 
@@ -66,9 +64,7 @@ public class GuiFiller extends GuiBC8<ContainerFiller> {
     }
 
     @Override
-//    public void updateScreen()
     public void containerTick() {
-//        super.updateScreen();
         super.containerTick();
         IFillerPattern pattern = container.getPatternStatementClient().get();
         SPRITE_PATTERN.delegate = pattern == null ? null : pattern.getSprite();

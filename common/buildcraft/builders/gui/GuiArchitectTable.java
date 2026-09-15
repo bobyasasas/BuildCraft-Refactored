@@ -25,14 +25,11 @@ public class GuiArchitectTable extends GuiBC8<ContainerArchitectTable> {
     private static final GuiIcon ICON_PROGRESS = new GuiIcon(TEXTURE_BASE, 0, 166, 24, 17);
     private static final GuiRectangle RECT_PROGRESS = new GuiRectangle(159, 34, 24, 17);
 
-    // private GuiTextField nameField;
     private EditBox nameField;
 
     public GuiArchitectTable(ContainerArchitectTable container, Inventory inventory, Component component) {
         super(container, inventory, component);
-//        xSize = SIZE_X;
         imageWidth = SIZE_X;
-//        ySize = SIZE_Y;
         imageHeight = SIZE_Y;
     }
 
@@ -40,10 +37,8 @@ public class GuiArchitectTable extends GuiBC8<ContainerArchitectTable> {
     public void initWhenOpenGuiOrResizeWindow() {
         super.initWhenOpenGuiOrResizeWindow();
         this.removeWidget(this.nameField);
-//        nameField = new GuiTextField(0, fontRenderer, guiLeft + 90, guiTop + 62, 156, 12);
         nameField = new EditBox(font, leftPos + 90, topPos + 62, 156, 12, Component.literal(""));
         this.addWidget(nameField);
-//        nameField.setText(container.tile.name);
         nameField.setValue(container.tile.name);
         this.setFocused(this.nameField);
     }
@@ -61,38 +56,28 @@ public class GuiArchitectTable extends GuiBC8<ContainerArchitectTable> {
     }
 
     @Override
-//    protected void drawForegroundLayer()
     protected void drawForegroundLayer(GuiGraphics guiGraphics) {
-        // Calen
         String title = LocaleUtil.localize(BCBuildersBlocks.architect.get().getDescriptionId());
         guiGraphics.drawString(font, title, leftPos + (float) (imageWidth - font.width(title)) / 2, topPos + 5, 0x404040, false);
 
-//        nameField.drawTextBox();
         nameField.renderWidget(guiGraphics, 0, 0, Minecraft.getInstance().getFrameTime());
     }
 
     @Override
-//    public void updateScreen()
     public void containerTick() {
-        // Calen FIXED: in 1.12.2 without super.containerTick(), the ledgers will not spread
         super.containerTick();
-//        nameField.updateCursorCounter();
         nameField.tick();
     }
 
     @Override
 //    protected void keyTyped(char typedChar, int keyCode) throws IOException
-//    public boolean charTyped(char typedChar, int keyCode)
     public boolean keyPressed(int typedChar, int keyCode, int modifiers) {
         boolean typed = false;
         if (typedChar != InputConstants.KEY_ESCAPE && nameField.isFocused()) {
-//            typed = nameField.textboxKeyTyped(typedChar, keyCode);
             typed = nameField.keyPressed(typedChar, keyCode, modifiers) || this.nameField.canConsumeInput();
-//            container.sendNameToServer(nameField.getText().trim());
             container.sendNameToServer(nameField.getValue().trim());
         }
         if (!typed) {
-//            super.keyTyped(typedChar, keyCode);
             return super.keyPressed(typedChar, keyCode, modifiers);
         } else {
             return true;
@@ -103,13 +88,10 @@ public class GuiArchitectTable extends GuiBC8<ContainerArchitectTable> {
     public boolean charTyped(char typedChar, int keyCode) {
         boolean typed = false;
         if (typedChar != InputConstants.KEY_ESCAPE && nameField.isFocused()) {
-//            typed = nameField.textboxKeyTyped(typedChar, keyCode);
             typed = nameField.charTyped(typedChar, keyCode) || this.nameField.canConsumeInput();
-//            container.sendNameToServer(nameField.getText().trim());
             container.sendNameToServer(nameField.getValue().trim());
         }
         if (!typed) {
-//            super.keyTyped(typedChar, keyCode);
             return super.charTyped(typedChar, keyCode);
         } else {
             return true;
@@ -120,7 +102,6 @@ public class GuiArchitectTable extends GuiBC8<ContainerArchitectTable> {
 //    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         super.mouseClicked(mouseX, mouseY, mouseButton);
-//        return nameField.mouseClicked(mouseX, mouseY, mouseButton);
         return nameField.mouseClicked(mouseX - leftPos, mouseY - topPos, mouseButton);
     }
 }

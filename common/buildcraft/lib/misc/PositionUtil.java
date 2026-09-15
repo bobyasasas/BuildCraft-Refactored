@@ -458,7 +458,6 @@ public class PositionUtil {
         final int ddz = difference.getZ() > 0 ? 1 : -1;
 
         // start from 1/2 in a block
-        // (as we want to compare to the centre of blocks rather than the lower corner)
         int dx = count / 2;
         int dy = count / 2;
         int dz = count / 2;
@@ -493,7 +492,6 @@ public class PositionUtil {
     public static void forAllOnPath2d(int a1, int b1, int a2, int b2, PathIterator2d iter) {
         // Find the smallest number 'm' and smallest number 'o'
         // such that a * m + o = b
-        // then draw a straight line (1, m)
 
         // First swap a with b if b is smaller than a
 

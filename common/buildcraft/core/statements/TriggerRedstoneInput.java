@@ -35,7 +35,6 @@ public class TriggerRedstoneInput extends BCStatement implements ITriggerInterna
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("gate.trigger.redstone.input." + (active ? "active" : "inactive"));
         return Component.translatable("gate.trigger.redstone.input." + (active ? "active" : "inactive"));
     }
 

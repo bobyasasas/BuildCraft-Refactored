@@ -53,7 +53,6 @@ public class BCBuildersSprites {
     public static final Map<Direction.Axis, SpriteHolder> PARAM_AXIS;
     public static final Map<Direction, SpriteHolder> PARAM_FACE;
     public static final Map<PatternSpherePart.SpherePartType, SpriteHolder> FILLER_SPHERE_PART;
-    // Calen
     public static final SpriteHolder ARCHITECT_SCAN;
 
     static {
@@ -118,7 +117,6 @@ public class BCBuildersSprites {
             FILLER_SPHERE_PART.put(type, getHolder("filler/patterns/sphere_" + type.lowerCaseName));
         }
 
-        // Calen
         ARCHITECT_SCAN = getHolder("block/scan");
     }
 

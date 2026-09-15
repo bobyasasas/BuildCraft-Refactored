@@ -28,7 +28,6 @@ public class ChunkUtil {
         LevelChunk chunk = lastChunk.get();
 
         if (chunk != null) {
-//            if (chunk.isLoaded())
             ChunkAccess chunkAccess = world.getChunkSource().getChunk(x, z, ChunkStatus.FULL, false);
             if (chunkAccess != null) {
                 if (chunk.getLevel() == world && chunk.getPos().x == x && chunk.getPos().z == z) {
@@ -39,11 +38,6 @@ public class ChunkUtil {
             }
         }
 
-//        if (force) {
-//            chunk = world.getChunkProvider().provideChunk(x, z);
-//        } else {
-//            chunk = world.getChunkProvider().getLoadedChunk(x, z);
-//        }
         chunk = world.getChunkSource().getChunk(x, z, force);
 
         if (chunk != null) {

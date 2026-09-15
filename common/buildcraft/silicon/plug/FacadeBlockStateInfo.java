@@ -21,7 +21,6 @@ public class FacadeBlockStateInfo implements IFacadeState {
     public final boolean isTransparent;
     public final boolean isVisible;
     public final boolean[] isSideSolid = new boolean[6];
-//    public final BlockFaceShape[] blockFaceShape = new BlockFaceShape[6];
 
     public FacadeBlockStateInfo(BlockState state, ItemStack requiredStack, ImmutableSet<Property<?>> varyingProperties) {
         this.state = Objects.requireNonNull(state, "state must not be null!");
@@ -30,16 +29,11 @@ public class FacadeBlockStateInfo implements IFacadeState {
                 "state.getBlock.getRegistryName() must not be null!");
         this.requiredStack = requiredStack;
         this.varyingProperties = varyingProperties;
-//        this.isTransparent = !state.isOpaqueCube();
-        // TODO Calen state.canOcclude() or !state.canOcclude() ?
         this.isTransparent = state.canOcclude();
         this.isVisible = !requiredStack.isEmpty();
         BlockGetter access = new SingleBlockAccess(state);
         for (Direction side : Direction.VALUES) {
-//            isSideSolid[side.ordinal()] = state.isSideSolid(access, BlockPos.ZERO, side);
             isSideSolid[side.ordinal()] = state.isFaceSturdy(access, BlockPos.ZERO, side);
-            // Calen: use VoxelShape, no blockFaceShape
-//            blockFaceShape[side.ordinal()] = state.getBlockFaceShape(access, BlockPos.ZERO, side);
         }
     }
 

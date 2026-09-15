@@ -32,7 +32,6 @@ public class ActionPowerPulsar extends BCStatement implements IActionInternalSid
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize(constant ? "gate.action.pulsar.constant" : "gate.action.pulsar.single");
         return Component.translatable(constant ? "gate.action.pulsar.constant" : "gate.action.pulsar.single");
     }
 

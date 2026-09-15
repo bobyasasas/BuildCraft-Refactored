@@ -38,9 +38,6 @@ public class ActionStationAcceptFluids extends BCStatement implements IActionInt
     }
 
     // @Override
-    // public void registerIcons(TextureAtlasSpriteRegister iconRegister) {
-    // icon = iconRegister.registerIcon("buildcraftrobotics:triggers/action_station_accept_fluids");
-    // }
 
     @Override
     public int maxParameters() {

@@ -49,7 +49,6 @@ public class AIRobotDeliverRequested extends AIRobot {
                 return;
             }
 
-            // IInvSlot slot = InvUtils.getItem(robot, new ArrayStackOrListFilter(requested.getStack()));
             IInvSlot slot = InventoryUtil.getItem(robot.getCapability(CapUtil.CAP_ITEMS).orElse(null), new ArrayStackOrListFilter(requested.getStack()));
 
             if (slot == null) {
@@ -66,7 +65,6 @@ public class AIRobotDeliverRequested extends AIRobot {
             }
             ItemStack newStack = requester.offerItem(requested.getSlot(), slot.getStackInSlot().copy());
 
-            // if (newStack == null || newStack.getCount() != slot.getStackInSlot().getCount())
             if (newStack.isEmpty() || newStack.getCount() != slot.getStackInSlot().getCount()) {
                 slot.setStackInSlot(newStack);
             }

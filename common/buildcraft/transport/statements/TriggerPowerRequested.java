@@ -37,7 +37,6 @@ public class TriggerPowerRequested extends BCStatement implements ITriggerIntern
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("gate.trigger.pipe.requestsEnergy");
         return Component.translatable("gate.trigger.pipe.requestsEnergy");
     }
 

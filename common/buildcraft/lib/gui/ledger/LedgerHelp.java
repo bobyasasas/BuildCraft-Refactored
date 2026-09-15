@@ -114,7 +114,6 @@ public class LedgerHelp extends Ledger_Neptune {
             }
             elements.clear();
         }
-//        GlStateManager.color(1, 1, 1);
         RenderUtil.color(1, 1, 1);
     }
 }

@@ -25,7 +25,6 @@ public class BCSiliconConfig {
     private static Configuration config;
 
     public static boolean renderLaserBeams = true;
-    // Calen
     public static boolean differStatesOfNoteBlockForFacade = false;
     private static EnumFacadeFilterType facadeBlockNamespaceFilterType = EnumFacadeFilterType.BLACK_LIST;
     private static EnumFacadeFilterType facadeBlockIdFilterType = EnumFacadeFilterType.BLACK_LIST;
@@ -34,7 +33,6 @@ public class BCSiliconConfig {
     public static boolean facadesNotInCreativeModTabCanBeCrafted = true;
 
     private static ConfigCategory<Boolean> propRenderLaserBeams;
-    // Calen
     private static ConfigCategory<Boolean> propDifferStatesOfNoteBlockForFacade;
     private static ConfigCategory<EnumFacadeFilterType> propFacadeBlockNamespaceFilterType;
     private static ConfigCategory<EnumFacadeFilterType> propFacadeBlockIdFilterType;
@@ -43,14 +41,11 @@ public class BCSiliconConfig {
     private static ConfigCategory<Boolean> propFacadesNotInCreativeModTabCanBeCrafted;
 
     public static void preInit() {
-//        Configuration config = BCCoreConfig.config;
         BCModules module = BCModules.SILICON;
         config = new Configuration(module);
         createProps();
 
-//        reloadConfig(EnumRestartRequirement.NONE);
         reloadConfig();
-//        MinecraftForge.EVENT_BUS.register(BCSiliconConfig.class);
         BCConfig.registerReloadListener(module, BCSiliconConfig::reloadConfig);
     }
 
@@ -63,7 +58,6 @@ public class BCSiliconConfig {
                         EnumRestartRequirement.NONE,
                         "renderLaserBeams", true);
 
-        // Calen
         propDifferStatesOfNoteBlockForFacade = config
                 .define(display,
                         "If different textures in resource packs are used for different instruments and notes, or whether powered, please set this [true]",
@@ -98,7 +92,6 @@ public class BCSiliconConfig {
                         "facadesNotInCreativeModTabCanBeCrafted", true);
     }
 
-    // public static void reloadConfig(EnumRestartRequirement restarted)
     public static void reloadConfig() {
         renderLaserBeams = propRenderLaserBeams.get();
         differStatesOfNoteBlockForFacade = propDifferStatesOfNoteBlockForFacade.get();
@@ -119,13 +112,7 @@ public class BCSiliconConfig {
     }
 
 //    @SubscribeEvent
-//    public static void onConfigChange(OnConfigChangedEvent cce) {
-//        if (BCModules.isBcMod(cce.getModID())) {
-//            reloadConfig(EnumRestartRequirement.NONE);
-//        }
-//    }
 
-    // Calen
     private enum EnumFacadeFilterType {
         BLACK_LIST,
         WHITE_LIST,

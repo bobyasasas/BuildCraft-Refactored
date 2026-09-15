@@ -28,22 +28,17 @@ public class BlockAutoWorkbenchFluids extends BlockBCTile_Neptune<TileAutoWorkbe
     }
 
     @Override
-//    public TileBC_Neptune createTileEntity(World world, IBlockState state)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
         return new TileAutoWorkbenchFluids(pos, state);
     }
 
     @Override
-//    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, Player player, InteractionHand hand, Direction side, float hitX, float hitY, float hitZ)
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!world.isClientSide) {
-            // TODO Calen tile impl MenuProvider
-//            BCFactoryGuis.AUTO_WORKBENCH_FLUIDS.openGUI(player, pos);
             if (world.getBlockEntity(pos) instanceof IBCTileMenuProvider tile) {
                 MessageUtil.serverOpenTileGui(player, tile, pos);
             }
         }
-//        return true;
         return InteractionResult.SUCCESS;
     }
 }

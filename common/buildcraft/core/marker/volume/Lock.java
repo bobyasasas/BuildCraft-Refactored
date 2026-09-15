@@ -120,7 +120,6 @@ public class Lock {
             @Override
             public CompoundTag writeToNBT(CompoundTag nbt) {
                 nbt.put("pos", NbtUtils.writeBlockPos(pos));
-//                nbt.setString("block", Block.REGISTRY.getNameForObject(block).toString());
                 nbt.putString("block", ForgeRegistries.BLOCKS.getKey(block).toString());
                 return nbt;
             }
@@ -128,21 +127,18 @@ public class Lock {
             @Override
             public void readFromNBT(CompoundTag nbt) {
                 pos = NbtUtils.readBlockPos(nbt.getCompound("pos"));
-//                block = Block.REGISTRY.getObject(new ResourceLocation(nbt.getString("block")));
                 block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(nbt.getString("block")));
             }
 
             @Override
             public void toBytes(FriendlyByteBuf buf) {
                 MessageUtil.writeBlockPos(buf, pos);
-//                buf.writeUtf(Block.REGISTRY.getNameForObject(block).toString());
                 buf.writeUtf(ForgeRegistries.BLOCKS.getKey(block).toString());
             }
 
             @Override
             public void fromBytes(FriendlyByteBuf buf) {
                 pos = MessageUtil.readBlockPos(buf);
-//                block = Block.REGISTRY.getObject(new ResourceLocation(buf.readString(1024)));
                 block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(buf.readUtf(1024)));
             }
 

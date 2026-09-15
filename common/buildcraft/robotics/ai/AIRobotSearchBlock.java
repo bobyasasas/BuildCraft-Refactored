@@ -42,7 +42,6 @@ public class AIRobotSearchBlock extends AIRobot {
             blockIter = new BlockScannerExpanding().iterator();
         } else {
             if (zone != null) {
-                // BlockPos pos = new BlockPos(iRobot);
                 BlockPos pos = iRobot.blockPosition();
                 blockIter = new BlockScannerZoneRandom(pos, iRobot.level().random, zone).iterator();
             } else {
@@ -56,7 +55,6 @@ public class AIRobotSearchBlock extends AIRobot {
 
     @Override
     public void start() {
-        // blockScanner = new PathFindingSearch(robot.level, new BlockPos(robot), blockIter, pathFound, maxDistanceToEnd, 96, zone);
         blockScanner = new PathFindingSearch(robot.level(), robot.blockPosition(), blockIter, pathFound, maxDistanceToEnd, 96, zone);
         blockScannerJob = new IterableAlgorithmRunner(blockScanner);
         blockScannerJob.start();
@@ -134,7 +132,6 @@ public class AIRobotSearchBlock extends AIRobot {
     }
 
     @Override
-    // public int getEnergyCost()
     public long getPowerCost() {
         return 2 * MjAPI.MJ / 10;
     }

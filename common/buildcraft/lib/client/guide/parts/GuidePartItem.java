@@ -23,27 +23,19 @@ public abstract class GuidePartItem extends GuidePart {
         super(gui);
     }
 
-    // protected void drawItemStack(ItemStackKey stack, int x, int y)
     protected void drawItemStack(GuiGraphics guiGraphics, ItemStackKey stack, int x, int y) {
-//        drawItemStack(stack.baseStack, x, y);
         drawItemStack(guiGraphics, stack.baseStack, x, y);
     }
 
-    // protected void drawItemStack(ItemStack stack, int x, int y)
     protected void drawItemStack(GuiGraphics guiGraphics, ItemStack stack, int x, int y) {
         if (stack != null && !stack.isEmpty()) {
-//            GlStateManager.color(1, 1, 1);
             RenderUtil.color(1, 1, 1);
-//            Font fr = Minecraft.getInstance().fontRenderer;
             Font fr = Minecraft.getInstance().font;
-//            gui.mc.getRenderItem().renderItemIntoGUI(stack, x, y);
             guiGraphics.renderFakeItem(stack, x, y);
-//            gui.mc.getRenderItem().renderItemOverlays(fr, stack, x, y);
             guiGraphics.renderItemDecorations(fr, stack, x, y);
             if (STACK_RECT.offset(x, y).contains(gui.mouse)) {
                 gui.tooltipStack = stack;
             }
-//            GlStateManager.color(1, 1, 1);
             RenderUtil.color(1, 1, 1);
         }
     }

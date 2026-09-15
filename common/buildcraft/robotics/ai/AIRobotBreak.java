@@ -43,7 +43,6 @@ public class AIRobotBreak extends AIRobot {
         robot.setItemActive(true);
         state = robot.level().getBlockState(blockToBreak);
         hardness = state.getDestroySpeed(robot.level(), blockToBreak);
-        //        speed = getBreakSpeed(robot, robot.getHeldItem(), state, blockToBreak);
         speed = getBreakSpeed(robot, robot.getMainHandItem(), state, blockToBreak);
     }
 
@@ -51,7 +50,6 @@ public class AIRobotBreak extends AIRobot {
     public void update() {
         if (state == null) {
             state = robot.level().getBlockState(blockToBreak);
-//            if (state.getBlock().isAir(robot.level, blockToBreak))
             if (state.isAir()) {
                 setSuccess(false);
                 terminate();
@@ -59,7 +57,6 @@ public class AIRobotBreak extends AIRobot {
             }
             state = robot.level().getBlockState(blockToBreak);
             hardness = state.getDestroySpeed(robot.level(), blockToBreak);
-//            speed = getBreakSpeed(robot, robot.getHeldItem(), state, blockToBreak);
             speed = getBreakSpeed(robot, robot.getMainHandItem(), state, blockToBreak);
         }
 
@@ -82,7 +79,6 @@ public class AIRobotBreak extends AIRobot {
 
             boolean continueBreaking = true;
 
-            // if (robot.getMainHandItem() != null)
             if (!robot.getMainHandItem().isEmpty()) {
                 FakePlayer fakePlayer = FakePlayerProvider.INSTANCE.getFakePlayer((ServerLevel) robot.level(), FakePlayerProvider.NULL_PROFILE);
                 if (robot.getMainHandItem().getItem().onBlockStartBreak(robot.getMainHandItem(), blockToBreak, fakePlayer)) {
@@ -91,12 +87,9 @@ public class AIRobotBreak extends AIRobot {
             }
 
             if (continueBreaking && BlockUtil.harvestBlock((ServerLevel) robot.level(), blockToBreak, robot.getMainHandItem(), FakePlayerProvider.NULL_PROFILE)) {
-                // robot.worldObj.playAuxSFXAtEntity(null, 2001, blockToBreak, Block.getStateId(state));
                 SoundUtil.playBlockBreak(robot.level(), blockToBreak, state);
 
-                // if (robot.getMainHandItem() != null)
                 if (!robot.getMainHandItem().isEmpty()) {
-                    // robot.getMainHandItem().getItem().onBlockDestroyed(robot.getMainHandItem(), robot.level, state.getBlock(), blockToBreak, robot);
                     robot.getMainHandItem().getItem().mineBlock(robot.getMainHandItem(), robot.level(), state, blockToBreak, robot);
 
                     if (robot.getMainHandItem().getCount() == 0) {
@@ -124,13 +117,11 @@ public class AIRobotBreak extends AIRobot {
         float f = (stack == null || stack.isEmpty()) ? 1.0F : stack.getItem().getDestroySpeed(stack, state);
 
         if (f > 1.0F) {
-            // int i = EnchantmentHelper.getEfficiencyModifier(robot);
             int i = EnchantmentHelper.getBlockEfficiency(robot);
 
             if (i > 0) {
                 float f1 = i * i + 1;
 
-                // boolean canHarvest = ForgeHooks.canToolHarvestBlock(robot.level, pos, usingItem);
                 boolean canHarvest = ForgeHooks.isCorrectToolForDrops(robot.level().getBlockState(pos), BlockUtil.getFakePlayerWithTool((ServerLevel) robot.level(), usingItem, FakePlayerProvider.NULL_PROFILE));
 
                 if (!canHarvest && f <= 1.0F) {
@@ -147,9 +138,7 @@ public class AIRobotBreak extends AIRobot {
     }
 
     @Override
-    // public int getEnergyCost()
     public long getPowerCost() {
-        // return (int) Math.ceil((float) BuilderAPI.BREAK_ENERGY * 2 / 30.0F);
         return (int) Math.ceil((float) 16 * MjAPI.MJ * 2 / 30.0F);
     }
 

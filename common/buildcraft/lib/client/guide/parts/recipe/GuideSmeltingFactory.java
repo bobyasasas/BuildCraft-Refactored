@@ -22,26 +22,19 @@ import java.util.Arrays;
 
 public class GuideSmeltingFactory implements GuidePartFactory {
     @Nonnull
-//    private final ItemStack input;
     private final NonNullList<Ingredient> input;
     private final ItemStack output;
     private final int hash;
 
-    // public GuideSmeltingFactory(ItemStack input, ItemStack output)
     public GuideSmeltingFactory(NonNullList<Ingredient> input, ItemStack output) {
-//        this.input = StackUtil.asNonNull(input);
         this.input = input;
         this.output = StackUtil.asNonNull(output);
-//        this.hash = Arrays.hashCode(new int[] { input.serializeNBT().hashCode(), output.serializeNBT().hashCode() });
         this.hash = Arrays.hashCode(new int[] { input.hashCode(), output.serializeNBT().hashCode() });
     }
 
     public static GuideSmeltingFactory create(ItemStack stack) {
-//        for (Entry<ItemStack, ItemStack> entry : FurnaceRecipes.instance().getSmeltingList().entrySet())
         for (SmeltingRecipe recipe : Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeType.SMELTING)) {
-//            if (ItemStack.areItemsEqual(stack, entry.getValue()))
             if (StackUtil.isSameItemSameDamage(stack, recipe.getResultItem(Minecraft.getInstance().level.registryAccess()))) {
-//                return new GuideSmeltingFactory(entry.getKey(), stack);
                 return new GuideSmeltingFactory(recipe.getIngredients(), stack);
             }
         }
@@ -71,9 +64,7 @@ public class GuideSmeltingFactory implements GuidePartFactory {
         // Shortcut out of this full itemstack comparison as its really expensive
         if (hash != other.hash) return false;
 
-//        return ItemStack.areItemStacksEqual(input, other.input)//
         return input.equals(other.input)//
-//                && ItemStack.areItemStacksEqual(output, other.output);
                 && ItemStack.matches(output, other.output);
     }
 }

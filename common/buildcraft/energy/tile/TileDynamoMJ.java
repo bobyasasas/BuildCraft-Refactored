@@ -171,11 +171,8 @@ public class TileDynamoMJ extends TileBC_Neptune implements ITickable, IEngineLi
             if (isFacingReceiver(current)) {
                 if (currentDirection != current) {
                     currentDirection = current;
-                    // makeTileCache();
                     sendNetworkUpdate(NET_RENDER_DATA);
                     redrawBlock();
-                    // TODO Calen notifyNeighborsRespectDebug???
-                    // world.notifyNeighborsRespectDebug(getPos(), getBlockType(), true);
                     return InteractionResult.SUCCESS;
                 }
                 return InteractionResult.FAIL;
@@ -284,7 +281,6 @@ public class TileDynamoMJ extends TileBC_Neptune implements ITickable, IEngineLi
     @Override
     public void onNeighbourBlockChanged(Block block, BlockPos nehighbour) {
         super.onNeighbourBlockChanged(block, nehighbour);
-        // isRedstonePowered = world.isBlockIndirectlyGettingPowered(getPos()) > 0;
         isRedstonePowered = level.hasNeighborSignal(getBlockPos());
     }
 
@@ -377,10 +373,6 @@ public class TileDynamoMJ extends TileBC_Neptune implements ITickable, IEngineLi
     }
 
     // Uncomment out for constant power
-    // public float getActualOutput() {
-    // float heatLevel = getIdealHeatLevel();
-    // return getCurrentOutput() * heatLevel;
-    // }
 
     public boolean isActive() {
         return true;
@@ -400,8 +392,6 @@ public class TileDynamoMJ extends TileBC_Neptune implements ITickable, IEngineLi
 
         if (getPowerStage() == EnumPowerStage.OVERHEAT) {
             // TODO: turn engine off
-            // worldObj.createExplosion(null, xCoord, yCoord, zCoord, explosionRange(), true);
-            // worldObj.setBlockToAir(xCoord, yCoord, zCoord);
         }
 
         if (currentRF > MAX_RF) {
@@ -550,7 +540,6 @@ public class TileDynamoMJ extends TileBC_Neptune implements ITickable, IEngineLi
 
     protected boolean isValidUpgrade(int slot, ItemStack stack) {
         Item item = stack.getItem();
-        // return TileEngineRF.RF_UPGRADE.containsKey(item);
         return TileEngineRF.RF_UPGRADE.keySet().stream().anyMatch(reg -> reg.get() == item);
     }
 
@@ -564,19 +553,15 @@ public class TileDynamoMJ extends TileBC_Neptune implements ITickable, IEngineLi
         }
         if (!current.isEmpty()) {
             if (EntityUtil.getWrenchHand(player) != null) {
-                // return false;
                 return InteractionResult.PASS;
             }
             if (current.getItem() instanceof IItemPipe) {
-                // return false;
                 return InteractionResult.PASS;
             }
         }
         if (!level.isClientSide) {
-            // BCEnergyGuis.DYNAMO_MJ.openGUI(player, getPos());
             MessageUtil.serverOpenTileGui(player, this);
         }
-        // return true;
         return InteractionResult.SUCCESS;
     }
 
@@ -587,7 +572,6 @@ public class TileDynamoMJ extends TileBC_Neptune implements ITickable, IEngineLi
             if (stack.isEmpty()) {
                 continue;
             }
-            // Long add = TileEngineRF.RF_UPGRADE.get(stack.getItem());
             Long add = TileEngineRF.RF_UPGRADE.entrySet().stream().filter(entry -> entry.getKey().get() == stack.getItem()).map(Map.Entry::getValue).findFirst().orElse(null);
             if (add != null) {
                 value += add;

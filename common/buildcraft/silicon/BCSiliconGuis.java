@@ -18,29 +18,12 @@ public enum BCSiliconGuis {
     INTEGRATION_TABLE,
     GATE;
 
-//    public void openGUI(EntityPlayer player) {
-//        player.openGui(BCSilicon.INSTANCE, ordinal(), player.getEntityWorld(), 0, 0, 0);
-//    }
 
-//    public void openGUI(EntityPlayer player, BlockPos pos) {
-//        openGui(player, pos, 0);
-//    }
 
-//    public void openGui(EntityPlayer player, BlockPos pos, int data) {
-//        int fullId = (data << 8) | ordinal();
-//        player.openGui(BCSilicon.INSTANCE, fullId, player.getEntityWorld(), pos.getX(), pos.getY(), pos.getZ());
-//    }
 
-    // Calen: only for GATE in Server Thread
     public void openGui(Player player, MenuProvider provider, BlockPos pos, int data, MessageUpdateTile msg) {
         int fullId = data << 8;
-//        player.openGui(BCSilicon.INSTANCE, fullId, player.getEntityWorld(), pos.getX(), pos.getY(), pos.getZ());
         if (player instanceof ServerPlayer serverPlayer) {
-//            player.openMenu(state.getMenuProvider(player.level, pos));
-//            if (player.level.getBlockEntity(pos) instanceof MenuProvider tile)
-//            {
-//                NetworkHooks.openGui(serverPlayer, tile, pos);
-//            }
             if (this == GATE) {
                 NetworkHooks.openScreen(
                         serverPlayer, provider, buf ->

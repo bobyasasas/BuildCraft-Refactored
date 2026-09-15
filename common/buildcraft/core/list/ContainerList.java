@@ -40,12 +40,10 @@ public class ContainerList extends ContainerBC_Neptune<ItemList_BC8> {
 
     public ListHandler.Line[] lines;
 
-    // final WidgetListSlot[][] slots;
     public final WidgetListSlot[][] slots;
 
     // class WidgetListSlot extends WidgetPhantomSlot
     public class WidgetListSlot extends WidgetPhantomSlot {
-        // final int lineIndex, slotIndex;
         public final int lineIndex, slotIndex;
 
         public WidgetListSlot(int lineIndex, int slotIndex) {
@@ -78,7 +76,6 @@ public class ContainerList extends ContainerBC_Neptune<ItemList_BC8> {
     }
 
     @Override
-//    public boolean canInteractWith(EntityPlayer player)
     public boolean stillValid(Player player) {
         return !getListItemStack().isEmpty();
     }

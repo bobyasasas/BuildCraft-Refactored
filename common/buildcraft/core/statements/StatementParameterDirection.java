@@ -27,7 +27,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-// Calen: never used in 1.12.2
 
 /** Directions *might* be replaced with individual triggers and actions per direction. Not sure yet. */
 //@Deprecated
@@ -40,17 +39,11 @@ public class StatementParameterDirection implements IStatementParameter {
     @Nullable
     private Direction direction = null;
 
-//    @OnlyIn(Dist.CLIENT)
-//    public void registerIcons(TextureAtlas map) {
-//        sprites = new TextureAtlasSprite[] {
 //            map.registerSprite(new ResourceLocation("buildcraftcore:triggers/trigger_dir_down")),
 //            map.registerSprite(new ResourceLocation("buildcraftcore:triggers/trigger_dir_up")),
 //            map.registerSprite(new ResourceLocation("buildcraftcore:triggers/trigger_dir_north")),
 //            map.registerSprite(new ResourceLocation("buildcraftcore:triggers/trigger_dir_south")),
 //            map.registerSprite(new ResourceLocation("buildcraftcore:triggers/trigger_dir_west")),
-//            map.registerSprite(new ResourceLocation("buildcraftcore:triggers/trigger_dir_east"))
-//        };
-//    }
 
     public StatementParameterDirection() {
 
@@ -147,7 +140,6 @@ public class StatementParameterDirection implements IStatementParameter {
         StatementParameterDirection d = new StatementParameterDirection();
         Direction dir = d.getDirection();
         if (dir != null && dir.getAxis() != Axis.Y) {
-//            d.direction = dir.rotateY();
             d.direction = dir.getClockWise();
         }
         return d;

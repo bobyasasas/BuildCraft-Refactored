@@ -46,8 +46,8 @@ public class JsonUtil {
     {
         if (json.isJsonPrimitive() && json.getAsJsonPrimitive().isString()) {
             String name = json.getAsString();
-            ResourceLocation fluidName = new ResourceLocation(name); // Calen
-            Fluid fluid = ForgeRegistries.FLUIDS.getValue(fluidName); // Calen
+            ResourceLocation fluidName = new ResourceLocation(name);
+            Fluid fluid = ForgeRegistries.FLUIDS.getValue(fluidName);
             if (fluid == null) {
                 throw failAndListFluids(name);
             } else {
@@ -55,7 +55,6 @@ public class JsonUtil {
             }
         } else if (json.isJsonObject()) {
             JsonObject obj = json.getAsJsonObject();
-//            String id = JsonUtils.getString(obj, "id");
             String id = GsonHelper.getAsString(obj, "id");
             ResourceLocation fluidName = new ResourceLocation(id);
             Fluid fluid = ForgeRegistries.FLUIDS.getValue(fluidName);
@@ -64,7 +63,6 @@ public class JsonUtil {
             }
             int amount = 1;
             if (obj.has("amount")) {
-//                amount = JsonUtils.getInt(obj, "amount");
                 amount = GsonHelper.getAsInt(obj, "amount");
             }
             // TODO: NBT
@@ -96,7 +94,6 @@ public class JsonUtil {
             }
         } else if (json.isJsonObject()) {
             JsonObject obj = json.getAsJsonObject();
-//            String id = JsonUtils.getString(obj, "id");
             String id = GsonHelper.getAsString(obj, "id");
             ResourceLocation loc = new ResourceLocation(id);
             if (!ForgeRegistries.ITEMS.containsKey(loc)) {
@@ -111,12 +108,10 @@ public class JsonUtil {
             if (obj.has("data")) {
                 meta = JsonUtil.getInt(obj, "data");
             } else if (obj.has("meta")) {
-//                BCLog.logger.warn("[lib.recipe] Found deprecated item 'meta' tag inside of " + json);
                 BCLog.logger.error("[lib.recipe] Found deprecated item 'meta' tag inside of " + json);
                 meta = JsonUtil.getInt(obj, "meta");
             }
             // TODO: NBT!
-//            return new ItemStack(item, count, meta);
             return new ItemStack(item, count);
         } else {
             throw new JsonSyntaxException("Expected either a string or an object, got " + json);
@@ -221,7 +216,6 @@ public class JsonUtil {
      */
     public static MutableComponent getTextComponent(JsonObject json, String subPrefix, String localePrefix) {
         if (json.has(subPrefix)) {
-//            String str = JsonUtils.getString(json, subPrefix);
             String str = GsonHelper.getAsString(json, subPrefix);
             Object[] args;
             if (json.has(subPrefix + "_args")) {
@@ -231,7 +225,6 @@ public class JsonUtil {
             }
             return Component.translatable(localePrefix + str, args);
         } else if (json.has(subPrefix + "_raw")) {
-//            return Component.literal(JsonUtils.getString(json, subPrefix + "_raw"));
             return Component.literal(GsonHelper.getAsString(json, subPrefix + "_raw"));
         } else {
             throw new JsonSyntaxException(
@@ -251,7 +244,6 @@ public class JsonUtil {
         if (!obj.has(sub)) {
             return _default;
         }
-//        String str = JsonUtils.getString(obj, sub).toLowerCase(Locale.ROOT);
         String str = GsonHelper.getAsString(obj, sub).toLowerCase(Locale.ROOT);
         int index = str.indexOf(':');
         if (index < 0) {
@@ -587,7 +579,6 @@ public class JsonUtil {
             JsonElement alternate = parent.get(key);
             if (element instanceof JsonObject && alternate instanceof JsonObject) {
                 object.add(key, inheritTags(alternate.getAsJsonObject(), element.getAsJsonObject()));
-                // } else if (element instanceof JsonArray && alternate instanceof JsonArray) {
             } else {
                 object.add(key, element);
             }
@@ -602,7 +593,6 @@ public class JsonUtil {
         return object;
     }
 
-    // Calen
 
     public static JsonElement serializeFluidStack(FluidStack fluidStack) {
         JsonObject json = new JsonObject();

@@ -45,9 +45,7 @@ public class AIRobotUseToolOnBlock extends AIRobot {
 
             Player player = FakePlayerProvider.INSTANCE.getFakePlayer((ServerLevel) robot.level(), FakePlayerProvider.NULL_PROFILE);
             if (BlockUtil.useItemOnBlock(robot.level(), player, stack, useToBlock, Direction.UP)) {
-//                if (robot.getHeldItem().isItemStackDamageable())
                 if (robot.getMainHandItem().isDamageableItem()) {
-//                    robot.getHeldItem().damageItem(1, robot);
                     robot.getMainHandItem().setDamageValue(robot.getMainHandItem().getDamageValue() - 1);
 
                     if (robot.getMainHandItem().getDamageValue() >= robot.getMainHandItem().getMaxDamage()) {
@@ -58,7 +56,6 @@ public class AIRobotUseToolOnBlock extends AIRobot {
                 }
             } else {
                 setSuccess(false);
-//                if (!robot.getHeldItem().isItemStackDamageable())
                 if (!robot.getMainHandItem().isDamageableItem()) {
                     BlockUtil.dropItem((ServerLevel) robot.level(), VecUtil.getPos(robot), 6000, stack);
                     robot.setItemInUse(StackUtil.EMPTY);
@@ -75,7 +72,6 @@ public class AIRobotUseToolOnBlock extends AIRobot {
     }
 
     @Override
-    // public int getEnergyCost()
     public long getPowerCost() {
         return 8 * MjAPI.MJ / 10;
     }

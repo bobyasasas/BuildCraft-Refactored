@@ -24,19 +24,16 @@ public abstract class RenderEngine_BC8<T extends TileEngineBase_BC8> implements 
     // TODO: Cache the model!
 
     @Override
-//    public void renderTileEntityFast(@Nonnull T engine, double x, double y, double z, float partialTicks, int destroyStage, float partial, @Nonnull BufferBuilder vb)
     public void render(T engine, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int lightc, int combinedOverlay) {
         ProfilerFiller profiler = Minecraft.getInstance().getProfiler();
         profiler.push("bc");
         profiler.push("engine");
 
         profiler.push("compute");
-//        vb.setTranslation(x, y, z);
         poseStack.pushPose();
         MutableQuad[] quads = getEngineModel(engine, partialTicks);
         profiler.popPush("render");
         MutableQuad copy = new MutableQuad(0, null);
-//        int lightc = engine.getLevel().getLightEngine().getRawBrightness(engine.getBlockPos(), 0);
         int light_block = (lightc >> 4) & 15;
         int light_sky = (lightc >> 20) & 15;
         VertexConsumer vb = bufferSource.getBuffer(RenderType.cutout());
@@ -47,7 +44,6 @@ public abstract class RenderEngine_BC8<T extends TileEngineBase_BC8> implements 
             copy.multShade();
             copy.render(poseStack.last(), vb);
         }
-//        vb.setTranslation(0, 0, 0);
         poseStack.popPose();
 
         profiler.pop();

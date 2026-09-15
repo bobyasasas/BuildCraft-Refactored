@@ -11,7 +11,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.world.entity.player.Player;
 
 public interface IFastAddonRenderer<T extends Addon> {
-    //    void renderAddonFast(T addon, Player player, float partialTicks, BufferBuilder bb);
     void renderAddonFast(T addon, Player player, PoseStack.Pose pose, float partialTicks, VertexConsumer bb);
 
     default IFastAddonRenderer<T> then(IFastAddonRenderer<? super T> after) {

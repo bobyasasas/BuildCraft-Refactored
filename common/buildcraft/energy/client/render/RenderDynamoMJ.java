@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.util.profiling.ProfilerFiller;
 
 public class RenderDynamoMJ implements BlockEntityRenderer<TileDynamoMJ> {
-    // public static final RenderDynamoMJ INSTANCE = new RenderDynamoMJ();
 
     public RenderDynamoMJ(BlockEntityRendererProvider.Context context) {
     }
@@ -27,11 +26,9 @@ public class RenderDynamoMJ implements BlockEntityRenderer<TileDynamoMJ> {
         profiler.push("engine");
 
         profiler.push("compute");
-        // vb.setTranslation(x, y, z);
         MutableQuad[] quads = BCEnergyModels.getMjDynamoQuads(engine, partialTicks);
         profiler.popPush("render");
         MutableQuad copy = new MutableQuad(0, null);
-        // int lightc = engine.getWorld().getCombinedLight(engine.getPos(), 0);
         int light_block = (lightc >> 4) & 15;
         int light_sky = (lightc >> 20) & 15;
         VertexConsumer vb = bufferSource.getBuffer(RenderType.cutout());
@@ -41,7 +38,6 @@ public class RenderDynamoMJ implements BlockEntityRenderer<TileDynamoMJ> {
             copy.multShade();
             copy.render(poseStack.last(), vb);
         }
-        // vb.setTranslation(0, 0, 0);
 
         profiler.pop();
         profiler.pop();

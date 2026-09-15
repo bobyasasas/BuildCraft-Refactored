@@ -16,7 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public enum PluggableRegistry implements IPluggableRegistry {
     INSTANCE;
 
-    // private final Map<ResourceLocation, PluggableDefinition> registered = new HashMap<>();
     private final Map<ResourceLocation, PluggableDefinition> registered = new ConcurrentHashMap<>();
 
     @Override

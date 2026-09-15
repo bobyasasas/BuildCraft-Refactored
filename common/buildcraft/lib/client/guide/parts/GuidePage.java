@@ -22,7 +22,6 @@
 
  public class GuidePage extends GuidePageBase {
      public final ImmutableList<GuidePart> parts;
-     // public final String title;
      public final Component title;
      public final String titleKey;
      public final GuideChapter chapterContents;
@@ -30,8 +29,6 @@
 
      public GuidePage(GuiGuide gui, List<GuidePart> parts, PageValue<?> entry) {
          super(gui);
-         // Calen: here is called when opening guide page
-//         this.title = StringUtilBC.formatStringForWhite(entry.title);
          this.title = Component.literal(StringUtilBC.formatStringForWhite(entry.title.getString()));
          this.titleKey = StringUtilBC.formatStringForWhite(entry.titleKey);
          this.chapterContents = new GuideChapterContents(gui);
@@ -40,7 +37,6 @@
          // Defensive copy as we modify it
          parts = new ArrayList<>();
          // First: Prepend the list with a chapter title
-//         parts.add(new GuideChapterWithin(gui, title));
          parts.add(new GuideChapterWithin(gui, titleKey, title));
 
          // Re-add everything that we missed before
@@ -63,7 +59,6 @@
          linksToThis.removeAll(parts);
 
          if (!linksToOther.isEmpty()) {
-//             parts.add(new GuideChapterWithin(gui, LocaleUtil.localize("buildcraft.guide.meta.group.linking_to")));
              parts.add(new GuideChapterWithin(gui, "buildcraft.guide.meta.group.linking_to", Component.translatable("buildcraft.guide.meta.group.linking_to")));
              for (GuidePartGroup g : linksToOther) {
                  parts.add(g);
@@ -72,7 +67,6 @@
          }
 
          if (!linksToThis.isEmpty()) {
-//             parts.add(new GuideChapterWithin(gui, LocaleUtil.localize("buildcraft.guide.meta.group.linked_from")));
              parts.add(new GuideChapterWithin(gui, "buildcraft.guide.meta.group.linked_from", Component.translatable("buildcraft.guide.meta.group.linked_from")));
              for (GuidePartGroup g : linksToThis) {
                  parts.add(g);
@@ -103,7 +97,6 @@
      }
 
      @Override
-//     public String getTitle()
      public Component getTitle() {
          return title;
      }

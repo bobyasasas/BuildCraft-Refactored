@@ -27,7 +27,6 @@ public enum StripesHandlerMinecartDestroy implements IStripesHandlerBlock {
     @Override
     public boolean handle(Level world, BlockPos pos, Direction direction, Player player, IStripesActivator activator) {
         AABB box = new AABB(pos, pos.offset(1, 1, 1));
-//        List<EntityMinecart> minecarts = world.getEntitiesWithinAABB(EntityMinecart.class, box);
         List<AbstractMinecart> minecarts = world.getEntitiesOfClass(AbstractMinecart.class, box);
 
         if (minecarts.size() > 0) {
@@ -35,7 +34,6 @@ public enum StripesHandlerMinecartDestroy implements IStripesHandlerBlock {
             AbstractMinecart cart = minecarts.get(0);
             if (cart instanceof MinecartChest) {
                 // good job, Mojang. :<
-//                EntityMinecartContainer container = (EntityMinecartContainer) cart;
                 MinecartChest container = (MinecartChest) cart;
                 for (int i = 0; i < container.getContainerSize(); i++) {
                     ItemStack s = container.getItem(i);
@@ -49,7 +47,6 @@ public enum StripesHandlerMinecartDestroy implements IStripesHandlerBlock {
                 }
             }
             cart.kill();
-//            activator.sendItem(StackUtil.asNonNull(cart.getCartItem()), direction);
             activator.sendItem(StackUtil.asNonNull(cart.getPickResult()), direction);
             return true;
         }

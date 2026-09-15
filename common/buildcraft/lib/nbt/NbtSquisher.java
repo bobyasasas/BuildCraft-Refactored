@@ -24,7 +24,6 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 public class NbtSquisher {
-    // public static final Profiler profiler = new Profiler();
     public static final ProfilerFiller profiler = ProfilerUtil.newProfiler();
 
     /** Used by testing classes to replace ByteBuf instances with PrintingByteBuf -- but we don't have that
@@ -77,14 +76,12 @@ public class NbtSquisher {
         to.write(NbtSquishConstants.BUILDCRAFT_MAGIC_1);
         to.write(NbtSquishConstants.BUILDCRAFT_MAGIC_2);
         to.write(TYPE_MC_GZIP);
-//        CompressedStreamTools.writeCompressed(nbt, to);
         NbtIo.writeCompressed(nbt, to);
     }
 
     public static void squishVanillaUncompressed(CompoundTag nbt, DataOutput to) throws IOException {
         to.writeShort(NbtSquishConstants.BUILDCRAFT_MAGIC);
         to.write(TYPE_MC);
-//        CompressedStreamTools.write(nbt, to);
         NbtIo.write(nbt, to);
     }
 
@@ -124,10 +121,8 @@ public class NbtSquisher {
             // Defiantly a BC stream
             int type = stream.read();
             if (type == TYPE_MC) {
-//                return CompressedStreamTools.read(new DataInputStream(stream));
                 return NbtIo.read(new DataInputStream(stream));
             } else if (type == TYPE_MC_GZIP) {
-//                return CompressedStreamTools.readCompressed(stream);
                 return NbtIo.readCompressed(stream);
             } else if (type == TYPE_BC_1) {
                 return readBuildCraftV1Direct(new DataInputStream(stream));
@@ -140,7 +135,6 @@ public class NbtSquisher {
             // Defiantly a GZIP stream
             // Assume its a vanilla file
             stream.reset();
-//            return CompressedStreamTools.readCompressed(stream);
             return NbtIo.readCompressed(stream);
         }
         // Its not a new BC style nbt, try to red it as if it was an older style nbt
@@ -150,10 +144,8 @@ public class NbtSquisher {
         int type = stream.read();
 
         if (type == TYPE_MC) {
-//            return CompressedStreamTools.read(new DataInputStream(stream));
             return NbtIo.read(new DataInputStream(stream));
         } else if (type == TYPE_MC_GZIP) {
-//            return CompressedStreamTools.readCompressed(stream);
             return NbtIo.readCompressed(stream);
         } else if (type == TYPE_BC_1) {
             return readBuildCraftV1Direct(new DataInputStream(stream));
@@ -162,7 +154,6 @@ public class NbtSquisher {
         } else if (type == Tag.TAG_COMPOUND) {
             // Assume vanilla, but reset back to the first byte as vanilla needs
             stream.reset();
-//            return CompressedStreamTools.read(new DataInputStream(stream));
             return NbtIo.read(new DataInputStream(stream));
         } else {
             throw new InvalidInputDataException("Cannot handle unknown saved NBT type " + type);

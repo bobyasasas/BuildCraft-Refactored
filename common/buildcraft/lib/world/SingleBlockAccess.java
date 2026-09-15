@@ -31,9 +31,7 @@ public class SingleBlockAccess implements BlockGetter {
     }
 
     @Override
-//    public int getCombinedLight(BlockPos pos, int lightValue)
     public int getLightEmission(BlockPos pos) {
-//        return lightValue << 4;
         return 0;
     }
 
@@ -48,17 +46,8 @@ public class SingleBlockAccess implements BlockGetter {
     }
 
 //    @Override
-//    public boolean isEmptyBlock(BlockPos pos) {
-////        return getBlockState(pos).getBlock().isAir(state, this, pos);
-//        return getBlockState(pos).isAir();
-//    }
 
 //    @Override
-////    public Biome getBiome(BlockPos pos) {
-//    public Holder<Biome> getBiome(BlockPos pos) {
-////        this.getBiomeManager().getBiome(pos);
-//        return ForgeRegistries.BIOMES.getHolder(Biomes.PLAINS).get();
-//    }
 
     @Override
     public int getHeight() {
@@ -66,24 +55,10 @@ public class SingleBlockAccess implements BlockGetter {
     }
 
 //    @Override
-//    public int getStrongPower(BlockPos pos, Direction direction)
-//    public int getDirectSignal(BlockPos pos, Direction direction) {
-//        return 0;
-//    }
 
 //    @Override
-//    public RealmsServer.WorldType getWorldType() {
-//        return RealmsServer.WorldType.DEBUG_ALL_BLOCK_STATES;
-//    }
 
 //    @Override
-//    public boolean isSideSolid(BlockPos pos, Direction side, boolean _default)
-//    public boolean isFaceSturdy(BlockPos pos, Direction side, boolean _default) {
-//        if (POS.equals(pos)) {
-//            return _default;
-//        }
-//        return state.isFaceSturdy(this, pos, side);
-//    }
 
     @Override
     public int getMinBuildHeight() {

@@ -8,7 +8,6 @@ import net.minecraft.util.Mth;
 
 import java.util.Date;
 
-// Calen 1.18.2 from 1.8.9
 public class IterableAlgorithmRunner extends Thread {
 
     private IIterableAlgorithm pathFinding;

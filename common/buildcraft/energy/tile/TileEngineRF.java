@@ -55,7 +55,6 @@ public class TileEngineRF extends TileEngineBase_BC8 implements IBCTileMenuProvi
     public static final double HEAT_RATE = 0.06;
     public static final double COOLDOWN_RATE = 0.01;
 
-    // public static final Map<Item, Long> RF_UPGRADE = new LinkedHashMap<>();
     public static final Map<RegistryObject<ItemBC_Neptune>, Long> RF_UPGRADE = new LinkedHashMap<>();
 
     static {
@@ -108,7 +107,6 @@ public class TileEngineRF extends TileEngineBase_BC8 implements IBCTileMenuProvi
 
     protected boolean isValidUpgrade(int slot, ItemStack stack) {
         Item item = stack.getItem();
-        // return RF_UPGRADE.containsKey(item);
         return RF_UPGRADE.keySet().stream().anyMatch(reg -> reg.get() == item);
     }
 
@@ -124,19 +122,15 @@ public class TileEngineRF extends TileEngineBase_BC8 implements IBCTileMenuProvi
         }
         if (!current.isEmpty()) {
             if (EntityUtil.getWrenchHand(player) != null) {
-                // return false;
                 return InteractionResult.PASS;
             }
             if (current.getItem() instanceof IItemPipe) {
-                // return false;
                 return InteractionResult.PASS;
             }
         }
         if (!level.isClientSide) {
-            // BCEnergyGuis.ENGINE_RF.openGUI(player, getPos());
             MessageUtil.serverOpenTileGui(player, this);
         }
-        // return true;
         return InteractionResult.SUCCESS;
     }
 
@@ -174,7 +168,6 @@ public class TileEngineRF extends TileEngineBase_BC8 implements IBCTileMenuProvi
             if (stack.isEmpty()) {
                 continue;
             }
-            // Long add = RF_UPGRADE.get(stack.getItem());
             Long add = RF_UPGRADE.entrySet().stream().filter(entry -> entry.getKey().get() == stack.getItem()).map(Map.Entry::getValue).findFirst().orElse(null);
             if (add != null) {
                 value += add;

@@ -20,24 +20,6 @@ public class GuideImage extends GuidePart {
     public GuideImage(GuiGuide gui, ISprite sprite, int srcWidth, int srcHeight, int width, int height) {
         super(gui);
         this.sprite = sprite;
-/*
-        int w = width;
-        int h = height;
-        if (h <= 0) {
-            h = srcHeight;
-        }
-        if (w <= 0) {
-            int sf = GuiGuide.PAGE_LEFT_TEXT.width / srcWidth;
-            if (sf == 0) {
-                int df = 1 + srcWidth / GuiGuide.PAGE_LEFT_TEXT.width;
-                w = srcWidth / df;
-                h /= df;
-            } else {
-                w = srcWidth * sf;
-                h *= sf;
-            }
-        }
-*/
         this.width = width;
         this.height = height;
         icon = new GuiSpriteScaled(sprite, width, height);
@@ -70,7 +52,6 @@ public class GuideImage extends GuidePart {
             current = current.nextPage();
         }
         if (index == current.page) {
-            // icon.drawScaledInside(x, y + current.pixel, this.width, this.height);
         }
         return current.nextLine(this.height + 1, height);
     }

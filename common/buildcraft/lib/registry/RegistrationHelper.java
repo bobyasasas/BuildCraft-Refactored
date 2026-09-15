@@ -38,8 +38,6 @@ import java.util.function.Supplier;
  * forge does in the future.)
  */
 public final class RegistrationHelper {
-//    private static final Map<String, Block> oredictBlocks = new HashMap<>();
-//    private static final Map<String, Item> oredictItems = new HashMap<>();
 
     private final IEventBus MOD_EVENT_BUS;
 
@@ -61,7 +59,7 @@ public final class RegistrationHelper {
         TILE_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, namespace);
         ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, namespace);
         PARTICLE_TYPES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, namespace);
-        MOD_EVENT_BUS = ((FMLModContainer) ModList.get().getModContainerById(namespace).get()).getEventBus(); // Calen: don't use FMLJavaModLoadingContext.get().getModEventBus()
+        MOD_EVENT_BUS = ((FMLModContainer) ModList.get().getModContainerById(namespace).get()).getEventBus();
         BLOCKS.register(MOD_EVENT_BUS);
         ITEMS.register(MOD_EVENT_BUS);
         TILE_ENTITIES.register(MOD_EVENT_BUS);
@@ -71,39 +69,12 @@ public final class RegistrationHelper {
         this.namespace = namespace;
     }
 
-//    public static void registerOredictEntries() {
-//        for (Entry<String, Item> entry : oredictItems.entrySet()) {
-//            OreDictionary.registerOre(entry.getKey(), entry.getValue());
-//        }
-//        for (Entry<String, Block> entry : oredictBlocks.entrySet()) {
-//            OreDictionary.registerOre(entry.getKey(), entry.getValue());
-//        }
-//    }
 
 //    @SubscribeEvent
-//    public final void onRegisterBlocks(RegistryEvent.Register<Block> event){
-//        for (Block block : blocks){
-//            event.getRegistry().register(block);
-//        }
-//    }
 
 //    @SubscribeEvent
-//    public final void onRegisterItems(RegistryEvent.Register<Item> event) {
-//        for (Item item : items) {
-//            event.getRegistry().register(item);
-//        }
-//    }
 
-    // Calen: not still used in 1.18.2
 //    @SubscribeEvent
-//    @SideOnly(Side.CLIENT)
-//    public final void onModelRegistry(ModelRegistryEvent event) {
-//        for (Item item : items) {
-//            if (item instanceof IItemBuildCraft) {
-//                ((IItemBuildCraft) item).registerVariants();
-//            }
-//        }
-//    }
 
     @Nullable
     public <I extends Item> RegistryObject<I> addItem(String id, Item.Properties properties, BiFunction<String, Item.Properties, I> item) {
@@ -126,7 +97,6 @@ public final class RegistrationHelper {
 
     @Nullable
     public <I extends Item> RegistryObject<I> addItem(String idBC, String registryId, Item.Properties properties, BiFunction<String, Item.Properties, I> item, boolean force) {
-//        if (force || RegistryConfig.isEnabled(item))
         if (force || RegistryConfig.isEnabledItem(idBC)) {
             return addForcedItem(idBC, registryId, properties, item);
         } else {
@@ -135,18 +105,6 @@ public final class RegistrationHelper {
     }
 
     public <I extends Item> RegistryObject<I> addForcedItem(String idBC, Item.Properties properties, BiFunction<String, Item.Properties, I> item) {
-//        items.add(item);
-//        if (item instanceof IItemBuildCraft) {
-//            IItemBuildCraft itemBC = (IItemBuildCraft) item;
-//            String id = itemBC.id();
-//            if (!id.isEmpty()) {
-//                String[] oldRegNames = TagManager.getMultiTag(id, EnumTagTypeMulti.OLD_REGISTRY_NAME);
-//                MigrationManager.INSTANCE.addItemMigration(item, oldRegNames);
-//                if (TagManager.hasTag(id, EnumTagType.OREDICT_NAME)) {
-//                    oredictItems.put(TagManager.getTag(id, EnumTagType.OREDICT_NAME), item);
-//                }
-//            }
-//        }
         String registryId = TagManager.getTag(idBC, EnumTagType.REGISTRY_NAME).replace(this.namespace + ":", "");
         RegistryObject<I> reg = ITEMS.register(registryId, () -> item.apply(idBC, properties));
         items.add(reg);
@@ -179,15 +137,12 @@ public final class RegistrationHelper {
     }
 
     @Nullable
-//    public <B extends Block> RegistryObject<B> addBlock(B block)
     public <B extends Block> RegistryObject<B> addBlock(String idBC, BlockBehaviour.Properties properties, BiFunction<String, BlockBehaviour.Properties, B> block) {
         return addBlock(idBC, properties, block, false);
     }
 
     @Nullable
-//    public <B extends Block> RegistryObject<B> addBlock(B block, boolean force)
     public <B extends Block> RegistryObject<B> addBlock(String idBC, BlockBehaviour.Properties properties, BiFunction<String, BlockBehaviour.Properties, B> block, boolean force) {
-//        if (force || RegistryConfig.isEnabled(block))
         if (force || RegistryConfig.isEnabledBlock(idBC)) {
             return addForcedBlock(idBC, properties, block);
         } else {
@@ -196,7 +151,6 @@ public final class RegistrationHelper {
     }
 
     public <B extends Block> RegistryObject<B> addBlock(String idBC, String regId, BlockBehaviour.Properties properties, BiFunction<String, BlockBehaviour.Properties, B> block, boolean force) {
-//        if (force || RegistryConfig.isEnabled(block))
         if (force || RegistryConfig.isEnabledBlock(idBC)) {
             return addForcedBlock(idBC, regId, properties, block);
         } else {
@@ -204,20 +158,7 @@ public final class RegistrationHelper {
         }
     }
 
-    // public <B extends Block> RegistryObject<B> addForcedBlock(B block)
     public <B extends Block> RegistryObject<B> addForcedBlock(String idBC, BlockBehaviour.Properties properties, BiFunction<String, BlockBehaviour.Properties, B> block) {
-//        blocks.add(block);
-//        if (block instanceof BlockBCBase_Neptune) {
-//            String id = ((BlockBCBase_Neptune) block).id;
-//            if (!id.isEmpty()) {
-//                String[] oldRegNames = TagManager.getMultiTag(id, EnumTagTypeMulti.OLD_REGISTRY_NAME);
-//                MigrationManager.INSTANCE.addBlockMigration(block, oldRegNames);
-//                if (TagManager.hasTag(id, EnumTagType.OREDICT_NAME)) {
-//                    oredictBlocks.put(TagManager.getTag(id, EnumTagType.OREDICT_NAME), block);
-//                }
-//            }
-//        }
-//        return block;
         String registryId = TagManager.getTag(idBC, EnumTagType.REGISTRY_NAME).replace(this.namespace + ":", "");
         RegistryObject<B> reg = BLOCKS.register(registryId, () -> block.apply(idBC, properties));
         blocks.add(reg);
@@ -231,19 +172,16 @@ public final class RegistrationHelper {
     }
 
     @Nullable
-//    public <B extends BlockBCBase_Neptune> RegistryObject<B> addBlockAndItem(B block)
     public <B extends BlockBCBase_Neptune> RegistryObject<B> addBlockAndItem(String idBCBlock, BlockBehaviour.Properties properties, BiFunction<String, BlockBehaviour.Properties, B> block) {
         return addBlockAndItem(idBCBlock, properties, block, false, ItemBlockBC_Neptune::new);
     }
 
     @Nullable
-//    public <B extends BlockBCBase_Neptune> RegistryObject<B> addBlockAndItem(B block, boolean force)
     public <B extends BlockBCBase_Neptune> RegistryObject<B> addBlockAndItem(String idBCBlock, BlockBehaviour.Properties properties, BiFunction<String, BlockBehaviour.Properties, B> block, boolean force) {
         return addBlockAndItem(idBCBlock, properties, block, force, ItemBlockBC_Neptune::new);
     }
 
     @Nullable
-//    public <B extends BlockBCBase_Neptune, I extends Item & IItemBuildCraft> RegistryObject<B> addBlockAndItem(B block, Function<B, I> itemBlockConstructor)
     public <B extends BlockBCBase_Neptune, I extends Item & IItemBuildCraft> RegistryObject<B> addBlockAndItem(String idBCBlock, BlockBehaviour.Properties properties, BiFunction<String, BlockBehaviour.Properties, B> block, BiFunction<B, Item.Properties, I> itemBlockConstructor) {
         return addBlockAndItem(idBCBlock, properties, block, false, itemBlockConstructor);
     }
@@ -252,16 +190,13 @@ public final class RegistrationHelper {
         return addBlockAndItem(idBCBlock, regId, properties, block, false, itemBlockConstructor);
     }
 
-    // public <B extends BlockBCBase_Neptune, I extends Item & IItemBuildCraft> RegistryObject<B> addBlockAndItem(B block, boolean force, Function<B, I> itemBlockConstructor)
     public <B extends BlockBCBase_Neptune, I extends Item & IItemBuildCraft> RegistryObject<B> addBlockAndItem(String idBCBlock, BlockBehaviour.Properties properties, BiFunction<String, BlockBehaviour.Properties, B> block, boolean force, BiFunction<B, Item.Properties, I> itemBlockConstructor) {
         RegistryObject<B> added = addBlock(idBCBlock, properties, block, force);
         if (added != null) {
             String idBCItem = "item." + idBCBlock;
-//            addForcedItem(itemBlockConstructor.apply(added));
             addForcedBlockItem(idBCItem, () -> itemBlockConstructor.apply(added.get(), ItemPropertiesCreator.blockItem()));
         } else {
             // FIXME: This won't work if the item has a different reg name to the block!
-//            RegistryConfig.setDisabled("items", block.getRegistryName().getResourcePath());
             RegistryConfig.setDisabled("items", idBCBlock);
         }
         return added;
@@ -271,11 +206,9 @@ public final class RegistrationHelper {
         RegistryObject<B> added = addBlock(idBCBlock, regId, properties, block, force);
         if (added != null) {
             String idBCItem = "item." + idBCBlock;
-//            addForcedItem(itemBlockConstructor.apply(added));
             addForcedBlockItem(idBCItem, regId, () -> itemBlockConstructor.apply(added.get(), ItemPropertiesCreator.blockItem()));
         } else {
             // FIXME: This won't work if the item has a different reg name to the block!
-//            RegistryConfig.setDisabled("items", block.getRegistryName().getResourcePath());
             RegistryConfig.setDisabled("items", idBCBlock);
         }
         return added;
@@ -283,15 +216,9 @@ public final class RegistrationHelper {
 
     public <T extends BlockEntity> RegistryObject<BlockEntityType<T>> registerTile(String idBC, BlockEntityType.BlockEntitySupplier<T> blockEntityConstructor, RegistryObject<? extends Block> block) {
         String regName = TagManager.getTag(idBC, EnumTagType.REGISTRY_NAME).replace(this.namespace + ":", "");
-//        String[] alternatives = TagManager.getMultiTag(id, EnumTagTypeMulti.OLD_REGISTRY_NAME);
-//        GameRegistry.registerTileEntity(clazz, regName);
-//        return register.register(
 //                regName,
 //                () -> BlockEntityType.Builder.of(
 //                        blockEntityConstructor,
-//                        block.get()
-//                ).build(null)
-//        );
         return TILE_ENTITIES.register(
                 regName,
                 () -> BlockEntityType.Builder.of(
@@ -300,9 +227,7 @@ public final class RegistrationHelper {
                 ).build(Util.fetchChoiceType(References.BLOCK_ENTITY, regName)));
     }
 
-    // Calen 1.18.2
     public <E extends LivingEntity> RegistryObject<EntityType<E>> addEntity(String idBC, Supplier<EntityType.Builder<E>> entityTypeBuilder, String registryName, Supplier<AttributeSupplier.Builder> attributes) {
-        // String regName = TagManager.getTag(idBC, EnumTagType.REGISTRY_NAME).replace(this.namespace + ":", "");
         RegistryObject<EntityType<E>> ret = ENTITIES.register(registryName, () -> entityTypeBuilder.get().build(registryName));
         EntityAttributesRegisterer r = (event) -> event.put(ret.get(), attributes.get().build());
         MOD_EVENT_BUS.addListener(r::registerEntityAttributes);

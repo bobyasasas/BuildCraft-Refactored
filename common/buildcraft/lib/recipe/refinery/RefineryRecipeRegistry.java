@@ -26,31 +26,22 @@ import java.util.stream.Stream;
 public enum RefineryRecipeRegistry implements IRefineryRecipeManager {
     INSTANCE;
 
-    // public final IRefineryRegistry<IDistillationRecipe> distillationRegistry = new SingleRegistry<>();
     public final IRefineryRegistry<IDistillationRecipe> distillationRegistry = new SingleRegistry(IDistillationRecipe.TYPE);
-    // public final IRefineryRegistry<IHeatableRecipe> heatableRegistry = new SingleRegistry<>();
     public final IRefineryRegistry<IHeatableRecipe> heatableRegistry = new SingleRegistry(IHeatableRecipe.TYPE);
-    // public final IRefineryRegistry<ICoolableRecipe> coolableRegistry = new SingleRegistry<>();
     public final IRefineryRegistry<ICoolableRecipe> coolableRegistry = new SingleRegistry(ICoolableRecipe.TYPE);
 
     @Override
-//    public IHeatableRecipe createHeatingRecipe(FluidStack in, FluidStack out, int heatFrom, int heatTo)
     public IHeatableRecipe createHeatingRecipe(ResourceLocation id, FluidStack in, FluidStack out, int heatFrom, int heatTo) {
-//        return new HeatableRecipe(in, out, heatFrom, heatTo);
         return new HeatableRecipe(id, in, out, heatFrom, heatTo);
     }
 
     @Override
-//    public ICoolableRecipe createCoolableRecipe(FluidStack in, FluidStack out, int heatFrom, int heatTo)
     public ICoolableRecipe createCoolableRecipe(ResourceLocation id, FluidStack in, FluidStack out, int heatFrom, int heatTo) {
-//        return new CoolableRecipe(in, out, heatFrom, heatTo);
         return new CoolableRecipe(id, in, out, heatFrom, heatTo);
     }
 
     @Override
-//    public IDistillationRecipe createDistillationRecipe(FluidStack in, FluidStack outGas, FluidStack outLiquid, long powerRequired)
     public IDistillationRecipe createDistillationRecipe(ResourceLocation id, FluidStack in, FluidStack outGas, FluidStack outLiquid, long powerRequired) {
-//        return new DistillationRecipe(powerRequired, in, outGas, outLiquid);
         return new DistillationRecipe(id, powerRequired, in, outGas, outLiquid);
     }
 
@@ -70,9 +61,7 @@ public enum RefineryRecipeRegistry implements IRefineryRecipeManager {
     }
 
     private static class SingleRegistry<R extends IRefineryRecipe> implements IRefineryRegistry<R> {
-        // private final List<R> allRecipes = new LinkedList<>();
         private final List<R> unregisteredRecipes = new LinkedList<>();
-        // Calen
         private final RecipeType<R> type;
 
         private SingleRegistry(RecipeType<R> type) {
@@ -80,44 +69,27 @@ public enum RefineryRecipeRegistry implements IRefineryRecipeManager {
         }
 
         @Override
-//        public Stream<R> getRecipes(Predicate<R> filter)
         public Stream<R> getRecipes(Level world, Predicate<R> filter) {
-//            return allRecipes.stream().filter(filter);
-//            return world.getRecipeManager().byType(type).values().stream().filter(filter);
             Collection<R> ret = Lists.newArrayList();
             ret.addAll(unregisteredRecipes);
-//            ret.addAll(world.getRecipeManager().byType(type).values().stream().map(r -> (R) r).toList());
             world.getRecipeManager().byType(type).values().forEach(r -> ret.add((R) r));
-//            Collection<? extends Recipe> recipes = world.getRecipeManager().byType(type).values();
-//            for(Recipe r : recipes) {
-//                ret.add((R) r);
-//            }
             return ret.stream().filter(filter);
         }
 
         @Override
-//        public Collection<R> getAllRecipes()
         public Collection<R> getAllRecipes(Level world) {
-//            return allRecipes;
             Collection<R> ret = Lists.newArrayList();
             ret.addAll(unregisteredRecipes);
-//            ret.addAll(world.getRecipeManager().byType(type).values().stream().map(r -> (R) r).toList());
             world.getRecipeManager().byType(type).values().forEach(r -> ret.add((R) r));
-//            Collection<? extends Recipe> recipes = world.getRecipeManager().byType(type).values();
-//            for(Recipe r : recipes) {
-//                ret.add((R) r);
-//            }
             return ret;
         }
 
         @Override
         @Nullable
-//        public R getRecipeForInput(@Nullable FluidStack fluid)
         public R getRecipeForInput(Level world, @Nullable FluidStack fluid) {
             if (fluid == null) {
                 return null;
             }
-//            for (R recipe : allRecipes)
             for (R recipe : getAllRecipes(world)) {
                 if (recipe.in().isFluidEqual(fluid)) {
                     return recipe;
@@ -127,10 +99,8 @@ public enum RefineryRecipeRegistry implements IRefineryRecipeManager {
         }
 
         @Override
-//        public Collection<R> removeRecipes(Predicate<R> toRemove)
         public Collection<R> removeUnregisteredRecipes(Predicate<R> toRemove) {
             List<R> removed = new ArrayList<>();
-//            Iterator<R> iter = allRecipes.iterator();
             Iterator<R> iter = unregisteredRecipes.iterator();
             while (iter.hasNext()) {
                 R recipe = iter.next();
@@ -143,10 +113,8 @@ public enum RefineryRecipeRegistry implements IRefineryRecipeManager {
         }
 
         @Override
-//        public R addRecipe(R recipe)
         public R addUnregisteredRecipe(R recipe) {
             if (recipe == null) throw new NullPointerException("recipe");
-//            ListIterator<R> iter = allRecipes.listIterator();
             ListIterator<R> iter = unregisteredRecipes.listIterator();
             while (iter.hasNext()) {
                 R existing = iter.next();
@@ -155,7 +123,6 @@ public enum RefineryRecipeRegistry implements IRefineryRecipeManager {
                     return recipe;
                 }
             }
-//            allRecipes.add(recipe);
             unregisteredRecipes.add(recipe);
             return recipe;
         }
@@ -165,7 +132,6 @@ public enum RefineryRecipeRegistry implements IRefineryRecipeManager {
         private final ResourceLocation id;
         private final FluidStack in;
 
-        // public RefineryRecipe(FluidStack in)
         public RefineryRecipe(ResourceLocation id, FluidStack in) {
             this.id = id;
             this.in = in;
@@ -202,13 +168,6 @@ public enum RefineryRecipeRegistry implements IRefineryRecipeManager {
         }
 
 //    @Override
-//    public NonNullList<Ingredient> getIngredients() {
-//        NonNullList<Ingredient> nonnulllist = NonNullList.create();
-//        nonnulllist.add(Ingredient.of);
-//        nonnulllist.add(this.middleInput);
-//        nonnulllist.add(this.bottomOptional);
-//        return nonnulllist;
-//    }
 
 
         @Override
@@ -221,9 +180,7 @@ public enum RefineryRecipeRegistry implements IRefineryRecipeManager {
         private final FluidStack outGas, outLiquid;
         private final long powerRequired;
 
-        // public DistillationRecipe(long powerRequired, FluidStack in, FluidStack outGas, FluidStack outLiquid)
         public DistillationRecipe(ResourceLocation id, long powerRequired, FluidStack in, FluidStack outGas, FluidStack outLiquid) {
-//            super(in);
             super(id, in);
             this.powerRequired = powerRequired;
             this.outGas = outGas;
@@ -255,9 +212,7 @@ public enum RefineryRecipeRegistry implements IRefineryRecipeManager {
         private final FluidStack out;
         private final int heatFrom, heatTo;
 
-        // public HeatExchangeRecipe(FluidStack in, FluidStack out, int heatFrom, int heatTo)
         public HeatExchangeRecipe(ResourceLocation id, FluidStack in, FluidStack out, int heatFrom, int heatTo) {
-//            super(in);
             super(id, in);
             this.out = out;
             this.heatFrom = heatFrom;
@@ -281,9 +236,7 @@ public enum RefineryRecipeRegistry implements IRefineryRecipeManager {
     }
 
     public static class HeatableRecipe extends HeatExchangeRecipe implements IHeatableRecipe {
-        // public HeatableRecipe(FluidStack in, FluidStack out, int heatFrom, int heatTo)
         public HeatableRecipe(ResourceLocation id, FluidStack in, FluidStack out, int heatFrom, int heatTo) {
-//            super(in, out, heatFrom, heatTo);
             super(id, in, out, heatFrom, heatTo);
         }
 
@@ -294,9 +247,7 @@ public enum RefineryRecipeRegistry implements IRefineryRecipeManager {
     }
 
     public static class CoolableRecipe extends HeatExchangeRecipe implements ICoolableRecipe {
-        // public CoolableRecipe(FluidStack in, FluidStack out, int heatFrom, int heatTo)
         public CoolableRecipe(ResourceLocation id, FluidStack in, FluidStack out, int heatFrom, int heatTo) {
-//            super(in, out, heatFrom, heatTo);
             super(id, in, out, heatFrom, heatTo);
         }
 

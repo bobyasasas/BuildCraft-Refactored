@@ -31,19 +31,15 @@ public class BCSiliconBlocks {
         assemblyTable = createLaserTable(EnumLaserTableType.ASSEMBLY_TABLE, "block.assembly_table");
         advancedCraftingTable = createLaserTable(EnumLaserTableType.ADVANCED_CRAFTING_TABLE, "block.advanced_crafting_table");
         integrationTable = createLaserTable(EnumLaserTableType.INTEGRATION_TABLE, "block.integration_table");
-        // if (BCLib.DEV) {
         chargingTable = createLaserTable(EnumLaserTableType.CHARGING_TABLE, "block.charging_table");
         programmingTable = createLaserTable(EnumLaserTableType.PROGRAMMING_TABLE, "block.programming_table");
-        // }
 
         laserTile = HELPER.registerTile("tile.laser", TileLaser::new, laser);
         assemblyTableTile = HELPER.registerTile("tile.assembly_table", TileAssemblyTable::new, assemblyTable);
         advancedCraftingTableTile = HELPER.registerTile("tile.advanced_crafting_table", TileAdvancedCraftingTable::new, advancedCraftingTable);
         integrationTableTile = HELPER.registerTile("tile.integration_table", TileIntegrationTable::new, integrationTable);
-        // if (BCLib.DEV) {
         chargingTableTile = HELPER.registerTile("tile.charging_table", TileChargingTable::new, chargingTable);
         programmingTableTile = HELPER.registerTile("tile.programming_table", TileProgrammingTable_Neptune::new, programmingTable);
-        // }
     }
 
     private static RegistryObject<BlockLaserTable> createLaserTable(EnumLaserTableType type, String tagId) {

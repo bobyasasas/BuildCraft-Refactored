@@ -17,8 +17,6 @@ public class ListMatchHandlerClass extends ListMatchHandler {
     public boolean matches(Type type, @Nonnull ItemStack stack, @Nonnull ItemStack target, boolean precise) {
         if (type == Type.TYPE) {
             Class<?> kl = stack.getItem().getClass();
-            // Calen FIX: target.getItem().getClass()!
-//            return ListRegistry.itemClassAsType.contains(kl) && kl.equals(target.getClass());
             return ListRegistry.itemClassAsType.contains(kl) && kl.equals(target.getItem().getClass());
         }
         return false;

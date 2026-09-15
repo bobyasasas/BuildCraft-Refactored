@@ -81,7 +81,6 @@ public class PageEntryItemStack extends PageValueType<ItemStackValueFilter> {
             }
             NonNullList<ItemStack> stacks = NonNullList.create();
             prof.push("search");
-//            item.getSubItems(CreativeTabs.SEARCH, stacks);
             ItemUtil.fillItemCategory(item, CreativeModeTabs.SEARCH, stacks);
             prof.popPush("itr_search");
             if (stacks.size() > 200) {
@@ -125,7 +124,6 @@ public class PageEntryItemStack extends PageValueType<ItemStackValueFilter> {
         final ItemStack stack;
         final boolean matchMeta, matchNbt;
         if (jStack.isJsonPrimitive()) {
-//            String str = JsonUtils.getString(jStack, "stack");
             String str = GsonHelper.convertToString(jStack, "stack");
             if (str.startsWith("{") && str.endsWith("}")) {
                 stack = MarkdownPageLoader.loadComplexItemStack(str.substring(1, str.length() - 1));
@@ -161,11 +159,9 @@ public class PageEntryItemStack extends PageValueType<ItemStackValueFilter> {
 
     @Override
     public Component getTitle(ItemStackValueFilter value) {
-//        return value.stack.baseStack.getDisplayName();
         return value.stack.baseStack.getHoverName();
     }
 
-    // Calen
     @Override
     public String getTitleKey(ItemStackValueFilter value) {
         return value.stack.baseStack.getItem().getDescriptionId(value.stack.baseStack);
@@ -194,13 +190,8 @@ public class PageEntryItemStack extends PageValueType<ItemStackValueFilter> {
                 return false;
             }
             if (entry.matchMeta) {
-//                if (base.getMetadata() != test.getMetadata()){
-//                    return false;
-//                }
-//                throw new RuntimeException("[lib.guide.debug] Meta not supported in 1.18.2!"); // Calen
             }
             if (entry.matchNbt) {
-//                if (!ItemStack.areItemStackTagsEqual(base, test))
                 if (!StackUtil.isSameTag(base, test)) {
                     return false;
                 }
@@ -223,7 +214,6 @@ public class PageEntryItemStack extends PageValueType<ItemStackValueFilter> {
 
     @Override
     public void addPageEntries(ItemStackValueFilter value, GuiGuide gui, List<GuidePart> parts) {
-//        XmlPageLoader.appendAllCrafting(value.stack.baseStack, parts, gui, new Profiler());
         XmlPageLoader.appendAllCrafting(value.stack.baseStack, parts, gui, ProfilerUtil.newProfiler());
     }
 }

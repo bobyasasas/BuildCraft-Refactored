@@ -55,15 +55,12 @@ public class VariablePartTextureExpand extends JsonVariableModelPart {
             float[] t = bakePosition(to);
             float[] size = { t[0] - f[0], t[1] - f[1], t[2], f[2] };
             boolean s = shade.evaluate();
-//            int l = (int) (light.evaluate() & 15);
             byte l = (byte) (light.evaluate() & 15);
             int rgba = RenderUtil.swapARGBforABGR((int) colour.evaluate());
 
             VariablePartCuboidBase.VariableFaceData data = faceUv.evaluate(spriteLookup);
             // TODO: Use the UV data! (only take part of the texture)
-//            ItemLayerModel model = new ItemLayerModel(ImmutableList.of(new ResourceLocation(".")));
             ItemLayerModel model = Loader.INSTANCE.read(new JsonObject(), null);
-//            BakedModel baked = model.bake(ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, (loc) -> data.sprite);
             BakedModel baked = model.bake(
                     StandaloneGeometryBakingContext.create(new ResourceLocation("")),
                     null,
@@ -83,7 +80,6 @@ public class VariablePartTextureExpand extends JsonVariableModelPart {
                 mut.translated(f[0], f[1], f[2]);
                 mut.setCalculatedNormal();
                 mut.setShade(s);
-//                mut.lighti(l, 0);
                 mut.lightb(l, (byte) 0);
                 mut.colouri(rgba);
                 mut.setSprite(data.sprite.get());

@@ -24,18 +24,14 @@ public class MessageZoneMapResponse implements IMessage {
     }
 
     @Override
-//    public void fromBytes(ByteBuf buf)
     public void fromBytes(FriendlyByteBuf buf) {
         key = new ZonePlannerMapChunkKey(buf);
-//        data = new ZonePlannerMapChunk(new PacketBuffer(buf));
         data = new ZonePlannerMapChunk(new FriendlyByteBuf(buf));
     }
 
     @Override
-//    public void toBytes(ByteBuf buf)
     public void toBytes(FriendlyByteBuf buf) {
         key.toBytes(buf);
-//        data.write(new PacketBuffer(buf));
         data.write(new FriendlyByteBuf(buf));
     }
 

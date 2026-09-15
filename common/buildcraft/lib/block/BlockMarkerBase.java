@@ -55,57 +55,29 @@ public abstract class BlockMarkerBase extends BlockBCTile_Neptune<TileMarker> im
 
     public BlockMarkerBase(String idBC, BlockBehaviour.Properties props) {
         super(idBC, props);
-//        setHardness(0.25f);
 
         this.registerDefaultState(this.getStateDefinition().any()
                         .setValue(BuildCraftProperties.BLOCK_FACING_6, Direction.UP)
-//                        .setValue(BuildCraftProperties.ACTIVE, false) // Calen: only changes, never used
         );
     }
 
     @Override
-//    protected BlockStateContainer createBlockState()
     protected void createBlockStateDefinition(@Nonnull StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(BuildCraftProperties.BLOCK_FACING_6);
-//        builder.add(BuildCraftProperties.ACTIVE); // Calen: only changes, never used
     }
 
 //    @Override
-//    public int getMetaFromState(IBlockState state) {
-//        return state.getValue(BuildCraftProperties.BLOCK_FACING_6).getIndex();
-//    }
 
 //    @Override
-//    public IBlockState getStateFromMeta(int meta) {
-//        return getDefaultState().withProperty(BuildCraftProperties.BLOCK_FACING_6, EnumFacing.getFront(meta));
-//    }
-
-    // Calen: ACTIVE only changes, but never used
-//    @Override
-//    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-//        TileEntity tile = world.getTileEntity(pos);
-//        if (tile instanceof TileMarker) {
-//            TileMarker<?> marker = (TileMarker<?>) tile;
-//            state = state.withProperty(BuildCraftProperties.ACTIVE, marker.isActiveForRender());
-//        }
-//        return state;
-//    }
-
-    // Calen: 1.18.2 moved to FMLClientSetupEvent: ItemBlockRenderTypes.setRenderLayer(BCCoreBlocks.MARKER_VOLUME.get(), RenderType.cutout());
-//    @Override
-//    @OnlyIn(Dist.CLIENT)
-//    public RenderType getBlockLayer() { return RenderType.cutout(); }
 
 //    @Override
-//    public boolean isFullCube(BlockState state) {
-//        return false;
-//    }
 
 //    @Override
-//    public boolean isOpaqueCube(BlockState state) {
-//         return false;
-//    }
+
+//    @Override
+
+//    @Override
 
     @Override
     public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
@@ -118,19 +90,16 @@ public abstract class BlockMarkerBase extends BlockBCTile_Neptune<TileMarker> im
     }
 
     @Override
-//    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos)
     public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return Shapes.empty();
     }
 
     @Override
-//    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
     public VoxelShape getShape(BlockState state, BlockGetter source, BlockPos pos, CollisionContext context) {
         return BOUNDING_BOXES.get(state.getValue(BuildCraftProperties.BLOCK_FACING_6));
     }
 
     @Override
-//    public BlockState getStateForPlacement(Level world, BlockPos pos, Direction facing, float hitX, float hitY, float hitZ, int meta, LivingEntity placer, InteractionHand hand)
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction facing = context.getClickedFace();
         BlockState state = defaultBlockState();
@@ -139,13 +108,11 @@ public abstract class BlockMarkerBase extends BlockBCTile_Neptune<TileMarker> im
     }
 
     @Override
-//    public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing side)
     public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         Direction facing = state.getValue(BuildCraftProperties.BLOCK_FACING_6);
         Direction sideOn = facing.getOpposite();
         BlockPos otherPos = pos.relative(sideOn);
         BlockState otherState = world.getBlockState(otherPos);
-//        return world.isSideSolid(pos.offset(side.getOpposite()), side);
         return otherState.isFaceSturdy(world, otherPos, facing, SupportType.CENTER);
     }
 
@@ -154,8 +121,6 @@ public abstract class BlockMarkerBase extends BlockBCTile_Neptune<TileMarker> im
         if (state.getBlock() != this) {
             return;
         }
-//        Direction sideOn = state.getValue(BuildCraftProperties.BLOCK_FACING_6);
-//        if (!canPlaceBlockOnSide(world, pos, sideOn))
         if (!canSurvive(state, world, pos)) {
             world.destroyBlock(pos, true);
         }

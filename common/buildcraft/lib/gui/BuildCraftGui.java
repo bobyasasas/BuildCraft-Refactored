@@ -116,7 +116,6 @@ public class BuildCraftGui {
      * Creates a new {@link BuildCraftGui} that takes it's {@link #rootElement} from the {@link AbstractContainerMenu}'s
      * size.
      */
-//    public static IGuiArea createWindowedArea(GuiContainer gui)
     public static IGuiArea createWindowedArea(AbstractContainerScreen<?> gui) {
         return IGuiArea.create(gui::getGuiLeft, gui::getGuiTop, gui::getXSize, gui::getYSize);
     }
@@ -170,7 +169,6 @@ public class BuildCraftGui {
         return tooltips;
     }
 
-    // private int drawTooltip(ToolTip tooltip, double x, double y)
     private int drawTooltip(ToolTip tooltip, GuiGraphics guiGraphics, double x, double y) {
         int _x = (int) Math.round(x);
         int _y = (int) Math.round(y);
@@ -180,13 +178,10 @@ public class BuildCraftGui {
     }
 
     public void drawBackgroundLayer(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY, Runnable menuBackgroundRenderer) {
-        // Calen: smoother than the in-para partialTicks
         // FIX FOR MC-121719 // https://bugs.mojang.com/browse/MC-121719
-//        partialTicks = mc.getRenderPartialTicks();
         partialTicks = mc.getFrameTime();
         // END FIX
 
-//        RenderHelper.disableStandardItemLighting();
         RenderUtil.disableStandardItemLighting();
         this.lastPartialTicks = partialTicks;
         mouse.setMousePosition(mouseX, mouseY);
@@ -194,7 +189,6 @@ public class BuildCraftGui {
             menuBackgroundRenderer.run();
         }
 
-//        GlStateManager.color(1, 1, 1, 1);
         RenderUtil.color(1, 1, 1, 1);
         if (isDebuggingShown.evaluate()) {
             SPRITE_DEBUG.drawAt(guiGraphics, 0, 0);
@@ -231,16 +225,12 @@ public class BuildCraftGui {
         }
     }
 
-    // public void preDrawForeground()
     public void preDrawForeground(PoseStack poseStack) {
-//        GlStateManager.pushMatrix();
         poseStack.pushPose();
-//        GlStateManager.translate(-rootElement.getX(), -rootElement.getY(), 0);
         poseStack.translate(-rootElement.getX(), -rootElement.getY(), 0);
     }
 
     public void postDrawForeground(PoseStack poseStack) {
-//        GlStateManager.popMatrix();
         poseStack.popPose();
     }
 
@@ -250,7 +240,6 @@ public class BuildCraftGui {
      * {@link GL11#GL_DEPTH_TEST} will have been disabled for this.
      */
     public void drawElementForegrounds(Runnable menuBackgroundRenderer, GuiGraphics guiGraphics) {
-        // Calen: if disableDepth, tooltip will be under currentMenu
         RenderUtil.enableDepth();
 
         for (IGuiElement element : shownElements) {
@@ -262,9 +251,7 @@ public class BuildCraftGui {
         IMenuElement m = currentMenu;
         if (m != null) {
             if (m.shouldFullyOverride() && menuBackgroundRenderer != null) {
-//                GlStateManager.disableDepth();
                 menuBackgroundRenderer.run();
-//                GlStateManager.enableDepth();
             }
             m.drawBackground(lastPartialTicks, guiGraphics);
             m.drawForeground(guiGraphics, lastPartialTicks);
@@ -303,7 +290,6 @@ public class BuildCraftGui {
                 guiGraphics.fill(sx - 1, sy - 1, sx, ey + 2, colourDark);
                 guiGraphics.fill(ex + 1, sy - 1, ex + 2, ey + 2, colourDark);
 
-//                fr.drawStringWithShadow(name, x, y, -1);
                 guiGraphics.drawString(fr, name, x, y, -1, true);
 
                 int w = fr.width(name) + 3;
@@ -321,7 +307,6 @@ public class BuildCraftGui {
                 y += fr.lineHeight + 2;
 
                 for (String line : info) {
-//                    fr.drawStringWithShadow(line, x + 7, y, -1);
                     guiGraphics.drawString(fr, line, x + 7, y, -1, true);
                     y += fr.lineHeight + 2;
                 }
@@ -334,7 +319,6 @@ public class BuildCraftGui {
      * @return True if the {@link #currentMenu} {@link IMenuElement#shouldFullyOverride() fully overrides} other mouse
      * clicks, false otherwise.
      */
-//    public boolean onMouseClicked(int mouseX, int mouseY, int mouseButton)
     public boolean onMouseClicked(double mouseX, double mouseY, int mouseButton) {
         mouse.setMousePosition(mouseX, mouseY);
 
@@ -361,13 +345,11 @@ public class BuildCraftGui {
         return false;
     }
 
-    // public void onMouseDragged(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick)
     public void onMouseDragged(double mouseX, double mouseY, int clickedMouseButton) {
         mouse.setMousePosition(mouseX, mouseY);
 
         IMenuElement m = currentMenu;
         if (m != null) {
-//            m.onMouseDragged(clickedMouseButton, timeSinceLastClick);
             m.onMouseDragged(clickedMouseButton);
             if (m.shouldFullyOverride()) {
                 return;
@@ -376,13 +358,11 @@ public class BuildCraftGui {
 
         for (IGuiElement element : shownElements) {
             if (element instanceof IInteractionElement) {
-//                ((IInteractionElement) element).onMouseDragged(clickedMouseButton, timeSinceLastClick);
                 ((IInteractionElement) element).onMouseDragged(clickedMouseButton);
             }
         }
     }
 
-    // Calen 1.18.2
     public void mouseScrolled(double mouseX, double mouseY, double delta) {
         mouse.setMousePosition(mouseX, mouseY);
 
@@ -393,7 +373,6 @@ public class BuildCraftGui {
         }
     }
 
-    // public void onMouseReleased(int mouseX, int mouseY, int state)
     public void onMouseReleased(double mouseX, double mouseY, int state) {
         mouse.setMousePosition(mouseX, mouseY);
 
@@ -412,12 +391,10 @@ public class BuildCraftGui {
         }
     }
 
-    // public boolean onKeyTyped(char typedChar, int keyCode)
     public boolean onKeyTyped(int typedChar, int keyCode, int modifiers) {
         boolean action = false;
         IMenuElement m = currentMenu;
         if (m != null) {
-//            action = m.onKeyPress(typedChar, keyCode);
             action = m.onKeyPress(typedChar, keyCode, modifiers);
             if (action && m.shouldFullyOverride()) {
                 return true;
@@ -436,7 +413,6 @@ public class BuildCraftGui {
         boolean action = false;
         IMenuElement m = currentMenu;
         if (m != null) {
-//            action = m.onKeyPress(typedChar, keyCode);
             action = m.charTyped(typedChar, keyCode);
             if (action && m.shouldFullyOverride()) {
                 return true;

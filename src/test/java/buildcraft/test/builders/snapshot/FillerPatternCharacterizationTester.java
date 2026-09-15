@@ -150,7 +150,6 @@ public class FillerPatternCharacterizationTester extends VanillaSetupBaseTester 
     @Test
     public void sphereFilledOuterEqualsBoxShellOnOddCubes_quirk() {
         // Characterization baseline, not a correctness claim: on a 5x5x5 "filled outer" fills every cell that the
-        // box shell fills (125 - 27 interior = 98)
         assertCounts(fill(emptyTemplate(new BlockPos(5, 5, 5)), BCBuildersStatements.PATTERN_SPHERE::fillTemplate,
             new IStatementParameter[] { PatternParameterHollow.FILLED_OUTER }),//
             "sphere filled-outer 5x5x5", 25, 16, 16, 16, 25);
@@ -181,7 +180,6 @@ public class FillerPatternCharacterizationTester extends VanillaSetupBaseTester 
     public void nonePatternReturnsFalseAndChangesNothing() {
         Template template = emptyTemplate(new BlockPos(3, 3, 3));
         IFilledTemplate filled = template.getFilledTemplate();
-        // Characterization baseline: PATTERN_NONE is the only pattern that refuses to fill (returns false)
         Assert.assertFalse(BCBuildersStatements.PATTERN_NONE.fillTemplate(filled, new IStatementParameter[0]));
         Assert.assertTrue(template.data.isEmpty());
     }

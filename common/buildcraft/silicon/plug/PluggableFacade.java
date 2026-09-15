@@ -65,16 +65,12 @@ public class PluggableFacade extends PipePluggable implements IFacade {
     public static final int SIZE = 2;
     public final FacadeInstance states;
     public final boolean isSideSolid;
-    // Calen: seems not still useful in 1.18.2
-//    public final BlockFaceShape blockFaceShape;
     public int activeState;
 
     public PluggableFacade(PluggableDefinition definition, IPipeHolder holder, Direction side, FacadeInstance states) {
         super(definition, holder, side);
         this.states = states;
         isSideSolid = states.areAllStatesSolid(side);
-        // Calen: seems not still useful in 1.18.2
-//        blockFaceShape = states.getBlockFaceShape(side);
     }
 
     public PluggableFacade(PluggableDefinition def, IPipeHolder holder, Direction side, CompoundTag nbt) {
@@ -92,8 +88,6 @@ public class PluggableFacade extends PipePluggable implements IFacade {
         this.states = FacadeInstance.readFromNbt(nbt.getCompound("facade"));
         activeState = MathUtil.clamp(nbt.getInt("activeState"), 0, states.phasedStates.length - 1);
         isSideSolid = states.areAllStatesSolid(side);
-        // Calen: seems not still useful in 1.18.2
-//        blockFaceShape = states.getBlockFaceShape(side);
     }
 
     @Override
@@ -111,8 +105,6 @@ public class PluggableFacade extends PipePluggable implements IFacade {
         PacketBufferBC buf = PacketBufferBC.asPacketBufferBc(buffer);
         states = FacadeInstance.readFromBuffer(buf);
         isSideSolid = buf.readBoolean();
-        // Calen: seems not still useful in 1.18.2
-//        blockFaceShape = buf.readEnum(SupportType.class);
     }
 
     @Override
@@ -120,8 +112,6 @@ public class PluggableFacade extends PipePluggable implements IFacade {
         PacketBufferBC buf = PacketBufferBC.asPacketBufferBc(buffer);
         states.writeToBuffer(buf);
         buf.writeBoolean(isSideSolid);
-        // Calen: seems not still useful in 1.18.2
-//        buf.writeEnum(blockFaceShape);
     }
 
     // Pluggable methods
@@ -147,20 +137,14 @@ public class PluggableFacade extends PipePluggable implements IFacade {
     }
 
     @Override
-//    public float getExplosionResistance(@Nullable Entity exploder, Explosion explosion)
     public float getExplosionResistance(@Nonnull Entity exploder, Explosion explosion) {
-//        return states.phasedStates[activeState].stateInfo.state.getBlock().getExplosionResistance(exploder);
         BlockState state = states.phasedStates[activeState].stateInfo.state;
         Level level = exploder.level();
         BlockPos pos = exploder.blockPosition();
         return state.getBlock().getExplosionResistance(state, level, pos, explosion);
     }
 
-    // Calen: seems not still useful in 1.18.2
 //    @Override
-//    public BlockFaceShape getBlockFaceShape() {
-//        return blockFaceShape;
-//    }
 
     @Override
     public ItemStack getPickStack() {
@@ -173,8 +157,6 @@ public class PluggableFacade extends PipePluggable implements IFacade {
         if (states.type == FacadeType.Basic) {
             FacadePhasedState facadeState = states.phasedStates[activeState];
             BlockState blockState = facadeState.stateInfo.state;
-//            RenderType targetLayer = blockState.getBlock().getBlockLayer();
-            // Calen true -> Block  false -> Item
             RenderType targetLayer = ItemBlockRenderTypes.getRenderType(blockState, true);
             if (targetLayer == RenderType.translucent()) {
                 if (layer != targetLayer) {

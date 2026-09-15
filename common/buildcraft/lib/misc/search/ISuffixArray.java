@@ -6,10 +6,8 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import java.util.List;
 
 public interface ISuffixArray<T> {
-    // void add(T obj, String name);
     void add(T obj, Component name);
 
-    // void generate(Profiler prof);
     void generate(ProfilerFiller prof);
 
     SearchResult<T> search(String substring, int maxResults);

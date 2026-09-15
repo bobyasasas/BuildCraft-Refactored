@@ -16,7 +16,6 @@ public class ListTester extends VanillaSetupBaseTester {
         ItemStack ironAxe = new ItemStack(Items.IRON_AXE);
         ItemStack woodenShovel = new ItemStack(Items.WOODEN_SHOVEL);
         ItemStack woodenAxeDamaged = new ItemStack(Items.WOODEN_AXE);
-//        woodenAxeDamaged.setItemDamage(26);
         woodenAxeDamaged.setDamageValue(26);
         ItemStack apple = new ItemStack(Items.APPLE);
 

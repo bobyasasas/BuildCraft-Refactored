@@ -26,17 +26,14 @@ public abstract class BoardRobotGenericBreakBlock extends BoardRobotGenericSearc
 
     @Override
     public final void update() {
-        // if (!isExpectedTool(null) && robot.getHeldItem() == null)
         if (!isExpectedTool(StackUtil.EMPTY) && robot.getMainHandItem().isEmpty()) {
             startDelegateAI(new AIRobotFetchAndEquipItemStack(robot, new IStackFilter() {
                 @Override
                 public boolean matches(@Nonnull ItemStack stack) {
-                    // return stack != null && (stack.getDamageValue() < stack.getMaxDamage()) && isExpectedTool(stack);
                     return !stack.isEmpty() && (stack.getDamageValue() < stack.getMaxDamage()) && isExpectedTool(stack);
                 }
             }));
         }
-        // else if (robot.getHeldItem() != null && robot.getHeldItem().getItemDamage() >= robot.getHeldItem().getMaxDamage())
         else if (!robot.getMainHandItem().isEmpty() && robot.getMainHandItem().getDamageValue() >= robot.getMainHandItem().getMaxDamage()) {
             startDelegateAI(new AIRobotGotoStationAndUnload(robot));
         } else if (blockFound() != null) {

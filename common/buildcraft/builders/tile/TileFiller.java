@@ -119,7 +119,6 @@ public class TileFiller extends TileBC_Neptune implements ITickable, IDebuggable
     }
 
     @Override
-//    public void onPlacedBy(EntityLivingBase placer, ItemStack stack)
     public void onPlacedBy(LivingEntity placer, ItemStack stack) {
         super.onPlacedBy(placer, stack);
         if (level.isClientSide) {
@@ -140,7 +139,6 @@ public class TileFiller extends TileBC_Neptune implements ITickable, IDebuggable
             if (addon != null) {
                 volumeBox.locks.add(
                         new Lock(
-//                                new Lock.Cause.CauseBlock(pos, blockState.getBlock()),
                                 new Lock.Cause.CauseBlock(worldPosition, blockState.getBlock()),
                                 new Lock.Target.TargetAddon(addon.getSlot()),
                                 new Lock.Target.TargetRemove(),
@@ -150,7 +148,6 @@ public class TileFiller extends TileBC_Neptune implements ITickable, IDebuggable
                                 )
                         )
                 );
-//                volumeBoxes.markDirty();
                 volumeBoxes.setDirty();
                 addon.updateBuildingInfo();
                 markerBox = false;
@@ -160,7 +157,6 @@ public class TileFiller extends TileBC_Neptune implements ITickable, IDebuggable
                 box.setMax(volumeBox.box.max());
                 volumeBox.locks.add(
                         new Lock(
-//                                new Lock.Cause.CauseBlock(pos, blockState.getBlock()),
                                 new Lock.Cause.CauseBlock(worldPosition, blockState.getBlock()),
                                 new Lock.Target.TargetRemove(),
                                 new Lock.Target.TargetResize(),
@@ -188,7 +184,6 @@ public class TileFiller extends TileBC_Neptune implements ITickable, IDebuggable
             int slot,
             @Nonnull ItemStack before,
             @Nonnull ItemStack after) {
-        // if (!level.isClientSide)
         if (!level.isClientSide && !StackUtil.isSameItemSameDamageSameTagSameCount(before, after)) {
             if (handler == invResources) {
                 Optional.ofNullable(getBuilder()).ifPresent(SnapshotBuilder::resourcesChanged);
@@ -219,17 +214,13 @@ public class TileFiller extends TileBC_Neptune implements ITickable, IDebuggable
     }
 
     @Override
-//    public void validate()
     public void clearRemoved() {
-//        super.validate();
         super.clearRemoved();
         builder.validate();
     }
 
     @Override
-//    public void invalidate()
     public void setRemoved() {
-//        super.invalidate();
         super.setRemoved();
         builder.invalidate();
     }
@@ -342,9 +333,7 @@ public class TileFiller extends TileBC_Neptune implements ITickable, IDebuggable
     // Read-write
 
     @Override
-//    public CompoundTag writeToNBT(CompoundTag nbt)
     public void saveAdditional(CompoundTag nbt) {
-//        super.writeToNBT(nbt);
         super.saveAdditional(nbt);
         nbt.put("battery", battery.serializeNBT());
         nbt.putBoolean("canExcavate", canExcavate);
@@ -360,13 +349,10 @@ public class TileFiller extends TileBC_Neptune implements ITickable, IDebuggable
         nbt.putBoolean("markerBox", markerBox);
         nbt.put("patternStatement", patternStatement.writeToNbt());
         Optional.ofNullable(getBuilder()).ifPresent(builder -> nbt.put("builder", builder.serializeNBT()));
-//        return nbt;
     }
 
     @Override
-//    public void readFromNBT(CompoundTag nbt)
     public void load(CompoundTag nbt) {
-//        super.readFromNBT(nbt);
         super.load(nbt);
         battery.deserializeNBT(nbt.getCompound("battery"));
         canExcavate = nbt.getBoolean("canExcavate");
@@ -383,10 +369,6 @@ public class TileFiller extends TileBC_Neptune implements ITickable, IDebuggable
         }
         markerBox = nbt.getBoolean("markerBox");
         patternStatement.readFromNbt(nbt.getCompound("patternStatement"));
-//        updateBuildingInfo();
-//        if (nbt.contains("builder")) {
-//            Optional.ofNullable(getBuilder()).ifPresent(builder -> builder.deserializeNBT(nbt.getCompound("builder")));
-//        }
         CompoundTag copy = nbt.copy();
         runWhenWorldNotNull(() ->
                 {
@@ -401,11 +383,6 @@ public class TileFiller extends TileBC_Neptune implements ITickable, IDebuggable
     // Rendering
 
 //    @Override
-//    @OnlyIn(Dist.CLIENT)
-//    public boolean hasFastRenderer()
-//    {
-//        return true;
-//    }
 
     @Nonnull
     @Override
@@ -415,22 +392,9 @@ public class TileFiller extends TileBC_Neptune implements ITickable, IDebuggable
     }
 
 //    @Override
-//    @OnlyIn(Dist.CLIENT)
-//    public double getMaxRenderDistanceSquared() {
-//        return Double.MAX_VALUE;
-//    }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-//        left.add("battery = " + battery.getDebugString());
-//        left.add("box = " + box);
-//        left.add("pattern = " + patternStatement.get());
-//        left.add("mode = " + mode);
-//        left.add("is_finished = " + finished);
-//        left.add("lockedTicks = " + lockedTicks);
-//        left.add("addon = " + addon);
-//        left.add("markerBox = " + markerBox);
         left.add(Component.literal("battery = " + battery.getDebugString()));
         left.add(Component.literal("box = " + box));
         left.add(Component.literal("pattern = " + patternStatement.get()));

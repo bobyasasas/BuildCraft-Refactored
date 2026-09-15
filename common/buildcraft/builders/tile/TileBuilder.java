@@ -131,13 +131,11 @@ public class TileBuilder extends TileBC_Neptune implements ITickable, IDebuggabl
 
     @Override
     protected void onSlotChange(IItemHandlerModifiable handler, int slot, @Nonnull ItemStack before, @Nonnull ItemStack after) {
-        // if (!level.isClientSide)
         if (!level.isClientSide && !StackUtil.isSameItemSameDamageSameTagSameCount(before, after)) {
             if (handler == invSnapshot) {
                 currentBasePosIndex = 0;
                 snapshot = null;
                 if (after.getItem() instanceof ItemSnapshot) {
-//                    Snapshot.Header header = BCBuildersItems.snapshot.getHeader(after);
                     Snapshot.Header header = BCBuildersItems.snapshotBLUEPRINT.get().getHeader(after);
                     if (header != null) {
                         Snapshot newSnapshot = GlobalSavedDataSnapshots.get(level).getSnapshot(header.key);
@@ -157,19 +155,14 @@ public class TileBuilder extends TileBC_Neptune implements ITickable, IDebuggabl
     }
 
     @Override
-//    public void validate()
     public void clearRemoved() {
-//        super.validate();
         super.clearRemoved();
         templateBuilder.validate();
         blueprintBuilder.validate();
     }
 
-    // Calen when this called, #saveAdditional has already been called
     @Override
-//    public void invalidate()
     public void setRemoved() {
-//        super.invalidate();
         super.setRemoved();
         templateBuilder.invalidate();
         blueprintBuilder.invalidate();
@@ -213,7 +206,6 @@ public class TileBuilder extends TileBC_Neptune implements ITickable, IDebuggabl
                 basePoses.addAll(PositionUtil.getAllOnPath(path.get(i - 1), path.get(i)));
             }
         } else {
-            // Calen: without this, may get Air block when chunk unloading, without BlockBCBase_Neptune.PROP_FACING
             BlockState state = level.getBlockState(worldPosition);
             if (!(state.getBlock() instanceof BlockBuilder)) {
                 return;
@@ -227,7 +219,6 @@ public class TileBuilder extends TileBC_Neptune implements ITickable, IDebuggabl
     }
 
     @Override
-//    public void onPlacedBy(EntityLivingBase placer, ItemStack stack)
     public void onPlacedBy(LivingEntity placer, ItemStack stack) {
         super.onPlacedBy(placer, stack);
         Direction facing = level.getBlockState(worldPosition).getValue(BlockBCBase_Neptune.PROP_FACING);
@@ -300,7 +291,6 @@ public class TileBuilder extends TileBC_Neptune implements ITickable, IDebuggabl
                 buffer.writeBoolean(canExcavate);
             }
             if (id == NET_SNAPSHOT_TYPE) {
-                // Calen: to update blockstate
                 BlockState state = level.getBlockState(worldPosition);
                 if (state.getBlock() instanceof BlockBCBase_Neptune blockBC) {
                     blockBC.checkActualStateAndUpdate(state, level, worldPosition, this);
@@ -325,7 +315,6 @@ public class TileBuilder extends TileBC_Neptune implements ITickable, IDebuggabl
                 } else {
                     path = null;
                 }
-                // Calen: calling level.getBlockState when loading world will get Air Block
                 runWhenWorldNotNull(this::updateBasePoses, true);
                 if (buffer.readBoolean()) {
                     snapshotType = buffer.readEnum(EnumSnapshotType.class);
@@ -367,9 +356,7 @@ public class TileBuilder extends TileBC_Neptune implements ITickable, IDebuggabl
 
 
     @Override
-//    public CompoundTag writeToNBT(CompoundTag nbt)
     public void saveAdditional(CompoundTag nbt) {
-//        super.writeToNBT(nbt);
         super.saveAdditional(nbt);
         if (path != null) {
             nbt.put("path", NBTUtilBC.writeCompoundList(path.stream().map(NbtUtils::writeBlockPos)));
@@ -378,13 +365,10 @@ public class TileBuilder extends TileBC_Neptune implements ITickable, IDebuggabl
         nbt.putBoolean("canExcavate", canExcavate);
         nbt.put("rotation", NBTUtilBC.writeEnum(rotation));
         Optional.ofNullable(getBuilder()).ifPresent(builder -> nbt.put("builder", builder.serializeNBT()));
-//        return nbt;
     }
 
     @Override
-//    public void readFromNBT(CompoundTag nbt)
     public void load(CompoundTag nbt) {
-//        super.readFromNBT(nbt);
         super.load(nbt);
         if (nbt.contains("path")) {
             path =
@@ -394,13 +378,9 @@ public class TileBuilder extends TileBC_Neptune implements ITickable, IDebuggabl
                 .collect(Collectors.toList());
         canExcavate = nbt.getBoolean("canExcavate");
         rotation = NBTUtilBC.readEnum(nbt.get("rotation"), Rotation.class);
-        // Calen: don't save/load currentBox/currentBasePosIndex/snapshotType/snapshot withNBT, or this will make the builder destroy the placed block and place again
-        // Calen FIX: the items prepared to build will not disappear after tileentity reloaded in 1.18.2
         runWhenWorldNotNull(() ->
                 {
-                    // Calen FIX: the items prepared to build will not disappear after tileentity reloaded in 1.18.2
                     if (snapshot == null) {
-                        // Calen: load snapshot, this should before builder#deserializeNBT
                         itemManager.getCapability(CapUtil.CAP_ITEMS).ifPresent(h ->
                         {
                             ItemStack stack = h.getStackInSlot(0);
@@ -414,7 +394,6 @@ public class TileBuilder extends TileBC_Neptune implements ITickable, IDebuggabl
                         updateSnapshot(false);
                         Optional.ofNullable(getBuilder())
                                 .ifPresent(builder -> builder.deserializeNBT(nbt.getCompound("builder")));
-                        // Calen: make the required items able to be seen, this should after builder#deserializeNBT
                         itemManager.getCapability(CapUtil.CAP_ITEMS).ifPresent(h ->
                         {
                             ItemStack stack = h.getStackInSlot(0);
@@ -423,7 +402,6 @@ public class TileBuilder extends TileBC_Neptune implements ITickable, IDebuggabl
                             }
                         });
                     }
-                    // Calen: check snapshot type and update blockstate
                     BlockState state = level.getBlockState(worldPosition);
                     if (state.getBlock() instanceof BlockBuilder builder) {
                         builder.checkActualStateAndUpdate(state, level, worldPosition, this);
@@ -441,10 +419,6 @@ public class TileBuilder extends TileBC_Neptune implements ITickable, IDebuggabl
     }
 
 //    @Override
-//    @OnlyIn(Dist.CLIENT)
-//    public boolean hasFastRenderer() {
-//        return true;
-//    }
 
     @Nonnull
     @Override
@@ -453,20 +427,10 @@ public class TileBuilder extends TileBC_Neptune implements ITickable, IDebuggabl
         return BoundingBoxUtil.makeFrom(worldPosition, getBox(), path);
     }
 
-    // Calen: moved to RenderBuilder#getViewDistance
 //    @Override
-//    @OnlyIn(Dist.CLIENT)
-//    public double getMaxRenderDistanceSquared() {
-//        return Double.MAX_VALUE;
-//    }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-//        left.add("battery = " + battery.getDebugString());
-//        left.add("basePoses = " + (basePoses == null ? "null" : basePoses.size()));
-//        left.add("currentBasePosIndex = " + currentBasePosIndex);
-//        left.add("isDone = " + isDone);
         left.add(Component.literal("battery = " + battery.getDebugString()));
         left.add(Component.literal("basePoses = " + (basePoses == null ? "null" : basePoses.size())));
         left.add(Component.literal("currentBasePosIndex = " + currentBasePosIndex));

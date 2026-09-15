@@ -140,9 +140,7 @@ public class InventoryUtil {
     /** Adds the given {@link ItemStack} to the player's inventory, or drops it in front of them if their was not enough
      * room. */
     public static void addToPlayer(Player player, ItemStack stack) {
-//        if (player.inventory.addItemStackToInventory(stack))
         if (player.getInventory().add(stack)) {
-//            player.inventoryContainer.detectAndSendChanges();
             player.containerMenu.broadcastChanges();
         } else {
             player.drop(stack, false, false);
@@ -151,11 +149,9 @@ public class InventoryUtil {
 
     // NBT migration
 
-    // Calen: from 1.8.9
 
     public static IInvSlot getItem(IItemHandler inv, IStackFilter filter) {
         for (IInvSlot s : InventoryIterator.getIterable(inv)) {
-            // if (s.getStackInSlot() != null && filter.matches(s.getStackInSlot()))
             if (!s.getStackInSlot().isEmpty() && filter.matches(s.getStackInSlot())) {
                 return s;
             }
@@ -172,7 +168,6 @@ public class InventoryUtil {
         if (inv instanceof ChestBlockEntity) {
             ChestBlockEntity adjacent = BlockUtil.getOtherDoubleChest((ChestBlockEntity) inv);
             if (adjacent != null) {
-                // return new InventoryLargeChest("", (TileEntityChest) inv, adjacent);
                 return new CompoundContainer(inv, adjacent);
             }
             return inv;

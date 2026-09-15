@@ -46,7 +46,6 @@ public class NbtSquishMap {
 
     public void addTag(Tag nbt) {
         if (nbt instanceof StringTag) {
-//            String val = ((StringTag) nbt).getString();
             String val = ((StringTag) nbt).getAsString();
             if (!strings.contains(val)) {
                 strings.add(val);
@@ -96,7 +95,6 @@ public class NbtSquishMap {
         } else if (nbt instanceof ListTag) {
             ListTag list = (ListTag) nbt;
             if (!complex.contains(list)) {
-//                for (int i = 0; i < list.tagCount(); i++)
                 for (int i = 0; i < list.size(); i++) {
                     addTag(list.get(i));
                 }
@@ -121,7 +119,6 @@ public class NbtSquishMap {
     public int indexOfTag(Tag nbt) {
         int offset = 0;
         if (nbt instanceof ByteTag) {
-//            return bytes.indexOf(((ByteTag) nbt).getByte());
             return bytes.indexOf(((ByteTag) nbt).getAsByte());
         } else {
             offset += bytes.size();
@@ -166,7 +163,6 @@ public class NbtSquishMap {
             offset += intArrays.size();
         }
         if (nbt instanceof StringTag) {
-//            return offset + strings.indexOf(((StringTag) nbt).getString());
             return offset + strings.indexOf(((StringTag) nbt).getAsString());
         } else {
             offset += strings.size();
@@ -184,37 +180,31 @@ public class NbtSquishMap {
             throw new IndexOutOfBoundsException(index + " was less than 0!");
         }
         if (index < bytes.size()) {
-//            return new ByteTag(bytes.get(index));
             return ByteTag.valueOf(bytes.get(index));
         }
         index -= bytes.size();
 
         if (index < shorts.size()) {
-//            return new ShortTag(shorts.get(index));
             return ShortTag.valueOf(shorts.get(index));
         }
         index -= shorts.size();
 
         if (index < ints.size()) {
-//            return new IntTag(ints.get(index));
             return IntTag.valueOf(ints.get(index));
         }
         index -= ints.size();
 
         if (index < longs.size()) {
-//            return new LongTag(longs.get(index));
             return LongTag.valueOf(longs.get(index));
         }
         index -= longs.size();
 
         if (index < floats.size()) {
-//            return new FloatTag(floats.get(index));
             return FloatTag.valueOf(floats.get(index));
         }
         index -= floats.size();
 
         if (index < doubles.size()) {
-//            return new DoubleTag(doubles.get(index));
             return DoubleTag.valueOf(doubles.get(index));
         }
         index -= doubles.size();

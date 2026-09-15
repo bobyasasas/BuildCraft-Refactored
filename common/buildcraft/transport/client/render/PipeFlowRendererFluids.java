@@ -33,7 +33,6 @@ public enum PipeFlowRendererFluids implements IPipeFlowRenderer<PipeFlowFluids> 
     INSTANCE;
 
     @Override
-//    public void render(PipeFlowFluids flow, double x, double y, double z, float partialTicks, BufferBuilder vb)
     public void render(PipeFlowFluids flow, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         VertexConsumer fluidBuffer = bufferSource.getBuffer(FluidRenderer.FROZEN_FLUID_RENDER_TYPE_TRANSLUCENT);
         FluidStack forRender = flow.getFluidStackForRender();
@@ -51,17 +50,11 @@ public enum PipeFlowRendererFluids implements IPipeFlowRenderer<PipeFlowFluids> 
         Vec3[] offsets = flow.getOffsetsForRender(partialTicks);
 
         int blocklight = forRender.getRawFluid().getFluidType().getLightLevel(forRender);
-//        IPipeHolder holder = flow.pipe.getHolder();
-//        combinedLight = holder.getPipeWorld().getCombinedLight(holder.getPipePos(), blocklight);
         combinedLight = RenderUtil.combineWithFluidLight(combinedLight, (byte) blocklight);
 
         FluidRenderer.vertex.lighti(combinedLight);
         FluidRenderer.vertex.overlay(combinedOverlay);
 
-//        try (AutoTessellator tess = RenderUtil.getThreadLocalUnusedTessellator()) {
-//            BufferBuilder fluidBuffer = tess.tessellator.getBuffer();
-//            fluidBuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-//            fluidBuffer.setTranslation(x, y, z);
 
         boolean gas = forRender.getRawFluid().getFluidType().isLighterThanAir();
         boolean horizontal = false;
@@ -70,7 +63,6 @@ public enum PipeFlowRendererFluids implements IPipeFlowRenderer<PipeFlowFluids> 
         prof.popPush("build");
         for (Direction face : Direction.VALUES) {
             double size = ((Pipe) flow.pipe).getConnectedDist(face);
-//            double amount = amounts[face.getIndex()];
             double amount = amounts[face.get3DDataValue()];
             if (face.getAxis() != Axis.Y) {
                 horizontal |= flow.pipe.isConnected(face) && amount > 0;
@@ -86,11 +78,9 @@ public enum PipeFlowRendererFluids implements IPipeFlowRenderer<PipeFlowFluids> 
                 radius = new Vec3(perc * 0.24, radius.y, perc * 0.24);
             }
 
-//            Vec3 offset = offsets[face.getIndex()];
             Vec3 offset = offsets[face.get3DDataValue()];
             if (offset == null) offset = Vec3.ZERO;
             center = center.add(offset);
-//            fluidBuffer.setTranslation(x - offset.x, y - offset.y, z - offset.z);
             poseStack.pushPose();
 
             poseStack.translate(-offset.x, -offset.y, -offset.z);
@@ -112,7 +102,6 @@ public enum PipeFlowRendererFluids implements IPipeFlowRenderer<PipeFlowFluids> 
 
         Vec3 offset = offsets[EnumPipePart.CENTER.getIndex()];
         if (offset == null) offset = Vec3.ZERO;
-//            fluidBuffer.setTranslation(x - offset.x, y - offset.y, z - offset.z);
         poseStack.pushPose();
         poseStack.translate(-offset.x, -offset.y, -offset.z);
         PoseStack.Pose pose = poseStack.last();
@@ -147,18 +136,9 @@ public enum PipeFlowRendererFluids implements IPipeFlowRenderer<PipeFlowFluids> 
         }
 
 //            // gl state setup
-//            RenderHelper.disableStandardItemLighting();
-//            Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-//            GlStateManager.enableBlend();
-//            GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-//            GlStateManager.enableCull();
 
         prof.popPush("draw");
-//            fluidBuffer.setTranslation(0, 0, 0);
-//            tess.tessellator.draw();
-//        }
 
-//        RenderHelper.enableStandardItemLighting();
 
         FluidRenderer.vertex.lighti((byte) 0xF, (byte) 0xF);
         prof.pop();

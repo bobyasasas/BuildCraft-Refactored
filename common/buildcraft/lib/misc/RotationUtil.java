@@ -77,7 +77,6 @@ public class RotationUtil {
         throw new IllegalArgumentException();
     }
 
-    // Calen
     public static Direction rotateFacing(Direction facing, Rotation rotation) {
         return rotation.rotate(facing);
     }

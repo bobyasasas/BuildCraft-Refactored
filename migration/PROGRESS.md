@@ -2,18 +2,18 @@
 
 > **本文件由 migration/scripts/progress.py 自动生成，禁止手改；更新任务请编辑 migration/tasks.json 或用 `--set` 命令。**
 >
-> 生成时间：2026-09-15 02:15:16 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-15）
+> 生成时间：2026-09-15 02:44:59 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-15）
 
 ## 总览
 
-**总任务数 28** ｜ pending(未完成)=18、in_progress(进行中)=0、partial(部分完成)=0、unverified(未验证)=0、done(已完成)=10 ｜ **完成率 36%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
+**总任务数 28** ｜ pending(未完成)=17、in_progress(进行中)=0、partial(部分完成)=0、unverified(未验证)=0、done(已完成)=11 ｜ **完成率 39%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
 
 ## 阶段汇总
 
 | 阶段 | 任务数 | done | 完成率 |
 |---|---:|---:|---:|
 | Phase 0 基线固化 | 6 | 6 | 100% |
-| Phase 1 工程化整备 | 5 | 4 | 80% |
+| Phase 1 工程化整备 | 5 | 5 | 100% |
 | Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109 | 9 | 0 | 0% |
 | Phase 3 功能验证金字塔 | 8 | 0 | 0% |
 
@@ -30,7 +30,7 @@
 | M1.1 | Gradle 多项目拆分 | done（已完成） | settings.gradle 正式 include BuildCraftAPI/expression/主体模块，各模块可独立构建，srcDir 拼装方式移除 | evidence：settings.gradle include :buildcraftapi/:expression/:主体(根)，srcDir 拼装（api 262 文件+expression 166 文件）全部移除；:buildcraftapi:build 与 :expression:build 独立成功；根 build 退出码0、test 95 全绿；jar 条目 9210 与 api class 数拆分前后一致（360 个）；子模块工作树 clean |
 | M1.2 | client 边界基线（源集分离推迟至 M2.7） | done（已完成） | client 边界清单入库：client 路径文件 234 个、混编文件 132 个（含 262 处 @OnlyIn 分布）、引用锚定分析（222 锚定/12 可独立移动），作为 M2.7 依赖倒置工作清单 | 引用闭包分析：common 262 处 @OnlyIn（成员级 179/类级 83）、混编文件 132 个；234 个 client 路径文件中 222 个被 common 锚定，解缠需 M2.7 级依赖倒置；主 agent 裁决固化边界清单 migration/snapshots/client-boundary-baseline.json<br>notes: 原 acceptance（client 源集+@OnlyIn 显著下降）经引用闭包分析证实 1.20.1 上不可达，2026-09-15 主 agent 裁决改道 |
 | M1.3 | 完整 CI 流水线 | done（已完成） | GitHub Actions 含 build+test+JaCoCo 覆盖率报告并上传 artifact | evidence：./gradlew test jacocoTestReport 成功，根工程(common)行覆盖率 4.54%（INSTRUCTION 4.44%）；CI baseline-build 追加 jacocoTestReport + upload-artifact（jacoco-report），run 34934135627 双 job 绿（baseline-build+progress-check，artifact jacoco-report 6.5MB） |
-| M1.4 | 死代码与卫生清理 | pending（未完成） | 注释掉的代码行（基线 3546）与 Calen 移植注释（基线 688）清零或显著下降；test.py、testsuite/、.travis.yml 移除；数字记录在 evidence | — |
+| M1.4 | 死代码与卫生清理 | done（已完成） | 注释掉的代码行（基线 3546）与 Calen 移植注释（基线 688）清零或显著下降；test.py、testsuite/、.travis.yml 移除；数字记录在 evidence | evidence：注释代码行 10895→0（-10895，766 个文件；另删确认的 /* */ 死代码块 4 文件 105 行）；Calen 注释 688→3（-685：整行 647→0、行尾 38→0，3 处 javadoc/块注释文档按保守原则保留）；test.py/.travis.yml/testsuite//setupSubProjects 已移除；build 退出码0、root test 95 + :expression:test 58 全绿；jar class 数不变（2989 个：根 2560 + expression 429） |
 | M1.5 | 许可证决策落地 | done（已完成） | MMPL 1.0.1 与 MPL 2.0 二选一，mods.toml 与 LICENSE 一致，license_checker 脚本通过 | evidence：用户拍板 MPL 2.0；LICENSE=MPL 2.0 全文、LICENSE-NEW 移除；mods.toml 8 mod license=MPL-2.0；license_check.py exit 0（校验 LICENSE 哈希/元数据/无 MMPL 残留/源码头豁免 127 个文件保留历史头：主仓 108+子模块 19）；./gradlew build 退出码 0 |
 | M2.1 | 构建系统迁移 | pending（未完成） | ModDevGradle + Java 25 + Gradle 9.1，空 mod 骨架在 26.1.2 下 runClient 可启动 | — |
 | M2.2 | 垂直切片：buildcraftcore | pending（未完成） | 核心方块（发动机/基础管道）在 26.1.2 全链路（注册/逻辑/渲染/GameTest）可用 | — |
@@ -52,18 +52,18 @@
 
 ## 代码实时指标
 
-采集时间：2026-09-15 02:15:16；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
+采集时间：2026-09-15 02:44:59；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
 
 | 指标 | 当前值 | 调研基线(2026-09) | 目标 |
 |---|---:|---:|---|
 | .java 文件总数 | 1,782 | 1772（main 1510 + API 子模块 262） | 无目标(参考) |
-| .java 总行数 | 196,167 | — | 无目标(参考) |
-| Forge import 文件数 | 550 | 549 | 0 |
-| Forge import 出现次数 | 1,412 | — | 0 |
-| TODO 出现次数 | 222 | 222 | 随 M1.4 下降 |
-| FIXME 出现次数 | 24 | 24 | 随 M1.4 下降 |
-| @OnlyIn(Dist.CLIENT) 出现次数 | 279 | 279 | 随 M1.2 下降 |
-| RegistryObject 涉及文件数 | 42 | 42 | 0 |
+| .java 总行数 | 184,220 | — | 无目标(参考) |
+| Forge import 文件数 | 549 | 549 | 0 |
+| Forge import 出现次数 | 1,408 | — | 0 |
+| TODO 出现次数 | 173 | 222 | 随 M1.4 下降 |
+| FIXME 出现次数 | 23 | 24 | 随 M1.4 下降 |
+| @OnlyIn(Dist.CLIENT) 出现次数 | 250 | 279 | 随 M1.2 下降 |
+| RegistryObject 涉及文件数 | 39 | 42 | 0 |
 
 ## 维护方式
 

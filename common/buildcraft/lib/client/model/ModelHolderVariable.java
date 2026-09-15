@@ -34,7 +34,6 @@ import java.util.Set;
  * The json model definition of a variable model matches the vanilla format, except that any of the static numbers may
  * be replaced with an expression, that may use any of the variables you have defined. */
 public class ModelHolderVariable extends ModelHolder {
-    // public final Map<String, TextureAtlasSprite> customSprites = new HashMap<>();
     public final Map<String, LazyLoadedValue<TextureAtlasSprite>> customSprites = new HashMap<>();
     private final FunctionContext context;
     private JsonVariableModel rawModel;
@@ -71,7 +70,6 @@ public class ModelHolderVariable extends ModelHolder {
         }
     }
 
-    // Calen 1.20.1
     @Override
     protected void onDatagenTextureRegister(Set<ResourceLocation> toRegisterSprites, ExistingFileHelper fileHelper) {
         rawModel = null;
@@ -101,7 +99,6 @@ public class ModelHolderVariable extends ModelHolder {
     private ModelUtil.TexturedFace lookupTexture(String lookup) {
         int attempts = 0;
         JsonTexture texture = new JsonTexture(lookup);
-//        TextureAtlasSprite sprite;
         LazyLoadedValue<TextureAtlasSprite> sprite;
         while (texture.location.startsWith("#") && attempts < 10) {
             JsonTexture tex = rawModel.textures.get(texture.location);
@@ -113,12 +110,9 @@ public class ModelHolderVariable extends ModelHolder {
         if (lookup.startsWith("~")) {
             sprite = customSprites.get(lookup.substring(1));
             if (sprite == null) {
-//                sprite = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
                 sprite = SpriteUtil.missingSprite();
             }
         } else {
-//            sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(lookup);
-//            sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(lookup));
             String _lookup = lookup;
             sprite = new LazyLoadedValue<>(() -> Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation(_lookup)));
         }

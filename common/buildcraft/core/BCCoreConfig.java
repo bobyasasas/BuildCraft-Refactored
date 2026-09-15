@@ -22,13 +22,11 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import java.io.File;
 
 public class BCCoreConfig {
-    // private static final List<Consumer<EnumRestartRequirement>> reloadListeners = new ArrayList<>();
 
     public static final Configuration config;
     public static Configuration objConfig;
     public static FileConfigManager detailedConfigManager;
 
-    // Calen 1.20.1: use datagen
     public static boolean worldGen;
     public static boolean worldGenWaterSpring;
     public static boolean minePlayerProtected;
@@ -70,7 +68,6 @@ public class BCCoreConfig {
     private static ConfigCategory<Double> propMjPerRf;
     private static ConfigCategory<BCLibConfig.PowerMode> propPowerMode;
 
-    // Calen: just ensure <clinit> run and registered to RegistryConfig#modObjectConfigs
     public static synchronized void clinit() {
     }
 
@@ -81,10 +78,7 @@ public class BCCoreConfig {
         File forgeConfigFolder = FMLPaths.CONFIGDIR.get().toFile();
         File buildCraftConfigFolder = new File(forgeConfigFolder, "buildcraft");
 
-//        config = new Configuration(new File(buildCraftConfigFolder, "main.cfg"));
         objConfig = RegistryConfig.setRegistryConfig(BCCore.MODID, "objects");
-        // Calen: thread safety
-//        BCLibConfig.guiConfigFile = new File(buildCraftConfigFolder, "gui.json");
         BCLibConfig.getGuiConfigFileAndEnsureCreated();
 
         detailedConfigManager = new FileConfigManager(
@@ -95,10 +89,7 @@ public class BCCoreConfig {
 
         createProps();
 
-//        reloadConfig(EnumRestartRequirement.GAME);
         reloadConfig();
-//        addReloadListener(BCCoreConfig::reloadConfig);
-//        MinecraftForge.EVENT_BUS.register(BCCoreConfig.class);
         BCConfig.registerReloadListener(module, BCCoreConfig::reloadConfig);
     }
 
@@ -111,7 +102,6 @@ public class BCCoreConfig {
 
         EnumRestartRequirement none = EnumRestartRequirement.NONE;
         EnumRestartRequirement world = EnumRestartRequirement.WORLD;
-//        EnumRestartRequirement game = EnumRestartRequirement.GAME;
 
         propColourBlindMode = config
                 .define(display,
@@ -293,39 +283,16 @@ public class BCCoreConfig {
                 BCLibConfig.PowerMode.MJ_ONLY);
     }
 
-//    public static void addReloadListener(Consumer<EnumRestartRequirement> listener) {
-//        reloadListeners.add(listener);
-//    }
 
 //    @SubscribeEvent
-//    public static void onConfigChange(OnConfigChangedEvent cce) {
-//        if (BCModules.isBcMod(cce.getModID())) {
-//            EnumRestartRequirement req = EnumRestartRequirement.NONE;
-//            if (Loader.instance().isInState(LoaderState.AVAILABLE)) {
 //                // The loaders state will be LoaderState.SERVER_STARTED when we are in a world
-//                req = EnumRestartRequirement.WORLD;
-//            }
-//            for (Consumer<EnumRestartRequirement> listener : reloadListeners) {
-//                listener.accept(req);
-//            }
-//        }
-//    }
 
     public static void postInit() {
         ConfigUtil.setLang(config);
-//        saveConfigs();
         saveCoreConfigs();
         saveObjConfigs();
     }
 
-    // public static void saveConfigs() {
-    //     if (config.hasChanged()) {
-    //         config.save();
-    //     }
-    //     if (objConfig.hasChanged()) {
-    //         objConfig.save();
-    //     }
-    // }
     public static void saveCoreConfigs() {
         if (config.hasChanged()) {
             config.save();
@@ -338,7 +305,6 @@ public class BCCoreConfig {
         }
     }
 
-    // public static void reloadConfig(EnumRestartRequirement restarted)
     public static void reloadConfig() {
         minePlayerProtected = propMinePlayerProtected.get();
         BCLibConfig.useColouredLabels = propUseColouredLabels.get();
@@ -361,19 +327,14 @@ public class BCCoreConfig {
         miningMultiplier = MathUtil.clamp(propMiningMultiplier.get(), 1, 200);
         miningMaxDepth = propMiningMaxDepth.get();
 
-//        if (EnumRestartRequirement.WORLD.hasBeenRestarted(restarted)) {
         BCLibConfig.chunkLoadingLevel = propChunkLoadLevel.get();
 
-//            if (EnumRestartRequirement.GAME.hasBeenRestarted(restarted)) {
         worldGen = propWorldGen.get();
         worldGenWaterSpring = propWorldGenWaterSpring.get();
         BCLibConfig.useSwappableSprites = propUseSwappableSprites.get();
         BCLibConfig.mjRfConversion = MjRfConversion.createParsed(propMjPerRf.get());
         BCLibConfig.powerMode = propPowerMode.get();
-//            }
-//        }
         BCLibConfig.refreshConfigs();
-//        saveConfigs();
         saveCoreConfigs();
         saveObjConfigs();
     }

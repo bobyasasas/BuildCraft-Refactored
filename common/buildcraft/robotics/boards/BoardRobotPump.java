@@ -41,11 +41,8 @@ public class BoardRobotPump extends RedstoneBoardRobot {
 
     @Override
     public void update() {
-        // final IWorldProperty isFluidSource = BuildCraftAPI.getWorldProperty("fluidSource");
-        // FluidStack tank = robot.getTankInfo(null)[0].fluid;
         FluidStack tank = robot.getCapability(CapUtil.CAP_FLUIDS).orElse(null).getFluidInTank(0);
 
-        // if (tank != null && tank.amount > 0)
         if (!tank.isEmpty()) {
             startDelegateAI(new AIRobotGotoStationAndUnloadFluids(robot));
         } else {
@@ -55,7 +52,6 @@ public class BoardRobotPump extends RedstoneBoardRobot {
 
                 @Override
                 public boolean matches(Level world, BlockPos pos) {
-                    // if (isFluidSource.get(world, pos) && !robot.getRegistry().isTaken(new ResourceIdBlock(pos)))
                     if (world.getBlockState(pos).getFluidState().isSource() && !robot.getRegistry().isTaken(new ResourceIdBlock(pos))) {
                         return matchesGateFilter(world, pos);
                     } else {
@@ -104,14 +100,11 @@ public class BoardRobotPump extends RedstoneBoardRobot {
             return true;
         }
 
-        // Block block;
         BlockState blockState;
         synchronized (world) {
-            // block = blockState.getBlock();
             blockState = world.getBlockState(pos);
         }
 
-        // Fluid fluid = FluidRegistry.lookupFluidForBlock(block);
         FluidStack fluid = new FluidStack(blockState.getFluidState().getType(), 1);
 
         return fluidFilter.matches(fluid);

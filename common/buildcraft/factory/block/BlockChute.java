@@ -52,28 +52,21 @@ public class BlockChute extends BlockBCTile_Neptune<TileChute> implements IBlock
     }
 
     @Override
-//    public TileBC_Neptune createTileEntity(World world, IBlockState state)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
         return new TileChute(pos, state);
     }
 
     @Override
-//    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, Player player, InteractionHand hand, Direction side, float hitX, float hitY, float hitZ)
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!world.isClientSide) {
-//            BCFactoryGuis.CHUTE.openGUI(player, pos);
             if (world.getBlockEntity(pos) instanceof TileChute tile) {
                 MessageUtil.serverOpenTileGui(player, tile);
             }
         }
-//        return true;
         return InteractionResult.SUCCESS;
     }
 
 //    @Override
-//    public boolean isOpaqueCube(IBlockState state) {
-//        return false;
-//    }
 
     @Override
     public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
@@ -86,9 +79,6 @@ public class BlockChute extends BlockBCTile_Neptune<TileChute> implements IBlock
     }
 
 //    @Override
-//    public boolean isFullCube(IBlockState state) {
-//        return false;
-//    }
 
     @Override
     protected void addProperties(List<Property<?>> properties) {
@@ -96,7 +86,6 @@ public class BlockChute extends BlockBCTile_Neptune<TileChute> implements IBlock
         properties.addAll(CONNECTED_MAP.values());
     }
 
-    // Calen: not found a similar method like getActualState of 1.12.2
     @Override
     public BlockState getActualState(BlockState state, LevelAccessor world, BlockPos pos, BlockEntity tile) {
         for (Direction side : Direction.VALUES) {

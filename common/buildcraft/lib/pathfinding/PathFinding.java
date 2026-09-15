@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-// Calen 1.18.2 from 1.8.9
 
 /** This class implements a 3D path finding based on the A* algorithm, following guidelines documented on
  * http://www.policyalmanac.org/games/aStarTutorial.htm . */
@@ -203,7 +202,6 @@ public class PathFinding implements IIterableAlgorithm {
             return end.getX() == x && end.getY() == y && end.getZ() == z;
         } else {
             BlockPos pos = new BlockPos(x, y, z);
-            // return BuildCraftAPI.isSoftBlock(world, pos) && distanceSq(new BlockPos(pos), end) <= maxDistanceToEndSq;
             return BlockUtil.isSoftBlock(world, pos) && distanceSq(new BlockPos(pos), end) <= maxDistanceToEndSq;
         }
     }
@@ -223,7 +221,6 @@ public class PathFinding implements IIterableAlgorithm {
                     } else if (endReached(x, y, z)) {
                         resultMoves[dx + 1][dy + 1][dz + 1] = 2;
                     }
-                    // else if (!BuildCraftAPI.isSoftBlock(world, new BlockPos(x, y, z)))
                     else if (!BlockUtil.isSoftBlock(world, new BlockPos(x, y, z))) {
                         resultMoves[dx + 1][dy + 1][dz + 1] = 0;
                     } else {

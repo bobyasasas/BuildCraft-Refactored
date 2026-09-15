@@ -14,11 +14,6 @@ public class CommandBuildCraft {
             LiteralArgumentBuilder.<CommandSourceStack>literal(NAME)
                     .requires((req) -> req.hasPermission(0));
 
-//    public CommandBuildCraft() {
-//        addSubcommand(new CommandVersion());
-//        addSubcommand(new CommandChangelog());
-//        addSubcommand(new CommandReloadRegistries());
-//    }
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         new CommandVersion().addSubcommand(COMMAND);

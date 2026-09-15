@@ -77,7 +77,6 @@ public class TravellingItem {
 
     public TravellingItem(CompoundTag nbt, long tickNow) {
         clientItemLink = () -> ItemStack.EMPTY;
-//        stack = new ItemStack(nbt.getCompound("stack"));
         stack = ItemStack.of(nbt.getCompound("stack"));
         int c = nbt.getByte("colour");
         this.colour = c == 0 ? null : DyeColor.byId(c - 1);
@@ -184,7 +183,6 @@ public class TravellingItem {
         float interp = (afterTick + partialTicks) / diff;
         interp = Math.max(0, Math.min(1, interp));
 
-//        Vec3 center = new Vec3(pos).addVector(0.5, 0.5, 0.5);
         Vec3 center = Vec3.atLowerCornerOf(pos).add(0.5, 0.5, 0.5);
         Vec3 vecSide = side == null ? center : VecUtil.offset(center, side, flow.getPipeLength(side));
 

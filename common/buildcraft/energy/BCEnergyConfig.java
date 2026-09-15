@@ -18,12 +18,9 @@ import java.util.*;
 public class BCEnergyConfig {
     private static Configuration config;
 
-    // Calen: remove the json file
     public static boolean enableOilOceanBiome;
-    // Calen: remove the json file
     public static boolean enableOilDesertBiome;
 
-    // Calen: remove the json file
     @Deprecated(forRemoval = true)
     public static boolean enableOilGeneration;
     public static double oilWellGenerationRate;
@@ -81,20 +78,16 @@ public class BCEnergyConfig {
     private static ConfigCategory<SpecialEventType> propChristmasEventType;
 
     public static void preInit() {
-//        Configuration config = BCCoreConfig.config;
         BCModules module = BCModules.ENERGY;
         config = new Configuration(module);
         createProps();
 
-//        reloadConfig(EnumRestartRequirement.GAME);
         reloadConfig();
-//        BCCoreConfig.addReloadListener(BCEnergyConfig::reloadConfig);
         BCConfig.registerReloadListener(module, BCEnergyConfig::reloadConfig);
     }
 
     public static void createProps() {
         EnumRestartRequirement world = EnumRestartRequirement.WORLD;
-//        EnumRestartRequirement game = EnumRestartRequirement.GAME;
 
         propEnableOilOceanBiome = config
                 .define("worldgen.oil",
@@ -223,7 +216,6 @@ public class BCEnergyConfig {
                         "excludedDimensionsIsBlacklist", true);
 
 
-        // TODO Calen default false??? but oil is sticky in 1.12.2...
         propOilIsSticky = config
                 .define("general",
                         "Should oil be dense and drag entities down?",
@@ -249,9 +241,7 @@ public class BCEnergyConfig {
                         "enableMjDynamo", false);
     }
 
-    // public static void reloadConfig(EnumRestartRequirement restarted)
     public static void reloadConfig() {
-//        if (EnumRestartRequirement.WORLD.hasBeenRestarted(restarted)) {
 
         addBiomeNames(propExcludedBiomes, excludedBiomes);
         addBiomeNames(propExcessiveBiomes, excessiveBiomes);
@@ -261,7 +251,6 @@ public class BCEnergyConfig {
         excludedBiomesIsBlackList = propExcludedBiomesIsBlacklist.get();
         excludedDimensionsIsBlackList = propExcludedDimensionsIsBlacklist.get();
 
-//            if (EnumRestartRequirement.GAME.hasBeenRestarted(restarted)) {
         enableOilOceanBiome = propEnableOilOceanBiome.get();
         enableOilDesertBiome = propEnableOilDesertBiome.get();
 
@@ -283,10 +272,7 @@ public class BCEnergyConfig {
         largeOilGenProb = propLargeOilGenProb.get() / 100;
 
         christmasEventStatus = propChristmasEventType.get();
-//            } else {
         validateBiomeNames();
-//            }
-//        }
 
         saveConfigs();
     }

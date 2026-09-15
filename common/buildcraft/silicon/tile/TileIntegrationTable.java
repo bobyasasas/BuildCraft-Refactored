@@ -83,11 +83,9 @@ public class TileIntegrationTable extends TileLaserTableBase implements IHasWork
     private void updateRecipe() {
         if (recipe != null) {
             ItemStack output = getOutput();
-            // if (!output.isEmpty() && extract(recipe.getCenterStack(), recipe.getRequirements(output), true))
             if (!output.isEmpty() && extract(recipe.getCenterStack(), recipe.getRequirements(), true))
                 return;
         }
-        // recipe = IntegrationRecipeRegistry.INSTANCE.getRecipeFor(invTarget.getStackInSlot(0), invToIntegrate.stacks);
         recipe = IntegrationRecipeRegistry.INSTANCE.getRecipeFor(invTarget.getStackInSlot(0), invToIntegrate.stacks, level);
     }
 
@@ -98,7 +96,6 @@ public class TileIntegrationTable extends TileLaserTableBase implements IHasWork
     @Override
     public long getTarget() {
         ItemStack output = getOutput();
-        // return recipe != null && isSpaceEnough(output) ? recipe.getRequiredMicroJoules(output) : 0;
         return recipe != null && isSpaceEnough(output) ? recipe.getRequiredMicroJoules() : 0;
     }
 
@@ -114,7 +111,6 @@ public class TileIntegrationTable extends TileLaserTableBase implements IHasWork
 
         if (getTarget() > 0 && power >= getTarget()) {
             ItemStack output = getOutput();
-            // extract(recipe.getCenterStack(), recipe.getRequirements(output), false);
             extract(recipe.getCenterStack(), recipe.getRequirements(), false);
             ItemStack result = invResult.getStackInSlot(0);
             if (!result.isEmpty()) {
@@ -175,17 +171,13 @@ public class TileIntegrationTable extends TileLaserTableBase implements IHasWork
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
         super.getDebugInfo(left, right, side);
-//        left.add("recipe - " + recipe);
         left.add(Component.literal("recipe - " + recipe));
-//        left.add("target - " + getTarget());
         left.add(Component.literal("target - " + getTarget()));
     }
 
     private IntegrationRecipe lookupRecipe(String name) {
-        // return IntegrationRecipeRegistry.INSTANCE.getRecipe(new ResourceLocation(name));
         return IntegrationRecipeRegistry.INSTANCE.getRecipe(new ResourceLocation(name), level);
     }
 

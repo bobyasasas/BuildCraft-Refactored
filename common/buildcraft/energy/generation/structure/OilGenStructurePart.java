@@ -99,7 +99,6 @@ public abstract class OilGenStructurePart {
         // 1.18.2: Only for NBT Serialize
         public final Object[] predicateArgs;
 
-        // public GenByPredicate(Box containingBox, ReplaceType replaceType, Predicate<BlockPos> predicate)
         public GenByPredicate(Box containingBox, ReplaceType replaceType, Object... predicateArgs) {
             super(containingBox, replaceType);
             this.predicateArgs = predicateArgs;
@@ -204,7 +203,6 @@ public abstract class OilGenStructurePart {
                     int pz = z - box.min().getZ();
 
                     if (pattern[px][pz]) {
-//                        BlockPos upper = world.getHeight(new BlockPos(x, 0, z)).down();
                         BlockPos upper = world.getHeightmapPos(
                                 world instanceof WorldGenRegion ? Heightmap.Types.WORLD_SURFACE_WG : Heightmap.Types.WORLD_SURFACE,
                                 new BlockPos(x, 0, z)
@@ -281,7 +279,6 @@ public abstract class OilGenStructurePart {
             count += tubeY.countOilBlocks();
             BlockPos base = worldTop;
             for (int r = radius; r >= 0; r--) {
-                // BCLog.logger.info(" - " + base + " = " + r);
                 OilGenStructurePart struct = OilGenerator.createTube(base, height, r, Axis.Y);
                 struct.generate(world, struct.box);
                 base = base.offset(0, height, 0);
@@ -308,7 +305,6 @@ public abstract class OilGenStructurePart {
 
         @Override
         protected void generateWithin(LevelAccessor world, Box intersect) {
-            // NO-OP (this one is called separately)
         }
 
         @Override
@@ -318,7 +314,6 @@ public abstract class OilGenStructurePart {
 
         public void generate(LevelAccessor world, int count) {
             BlockState state = BCCoreBlocks.springOil.get().defaultBlockState();
-//            state = state.setValue(BuildCraftProperties.SPRING_TYPE, EnumSpring.OIL);
             world.setBlock(pos, state, Block.UPDATE_ALL);
             BlockEntity tile = world.getBlockEntity(pos);
             TileSpringOil spring;
@@ -327,8 +322,6 @@ public abstract class OilGenStructurePart {
             } else {
                 BCLog.logger.warn("[energy.gen.oil] Setting the blockstate didn't also set the tile at [" + pos + "], something goes wrong...");
                 spring = new TileSpringOil(pos, state);
-//                spring.setLevel(world);
-//                world.setBlockEntity(spring);
             }
             spring.totalSources = count;
             if (BCLib.DEV) {

@@ -19,7 +19,6 @@ public class ContainerEngineRF extends ContainerBCTile<TileEngineRF> {
 
         addFullPlayerInventory(95);
         for (int slot = 0; slot < 4; slot++) {
-            // addSlotToContainer(new SlotBase(engine.invUpgrades, slot, 62 + 18 * slot, 44));
             addSlot(new SlotBase(engine.invUpgrades, slot, 62 + 18 * slot, 44));
         }
     }

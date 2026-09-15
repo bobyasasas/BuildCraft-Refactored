@@ -65,7 +65,6 @@ public class LocaleUtil {
      * @param key The key to localize
      * @return The localized key, or the input key if no localization was found. */
     public static String localize(String key) {
-//        String localized = I18n.get(key);
         String localized = Component.translatable(key).getString();
         if (localized == key) {
             if (DEBUG && failedStrings.add(localized)) {
@@ -83,18 +82,6 @@ public class LocaleUtil {
      * @param args The arguments to put into the localized key
      * @return The localized string. */
     public static String localize(String key, Object... args) {
-//        String localized = I18n.translateToLocal(key);
-//        if (localized == key) {
-//            if (DEBUG && failedStrings.add(localized)) {
-//                BCLog.logger.warn("[lib.locale] Attempted to localize '" + key + "' but no localization existed!");
-//            }
-//            return key + " " + Arrays.toString(args);
-//        }
-//        try {
-//            return String.format(localized, args);
-//        } catch (IllegalFormatException ife) {
-//            return "Bad Format: " + ife.getMessage();
-//        }
 
         try {
             String localized = Component.translatable(key, args).getString();
@@ -121,11 +108,9 @@ public class LocaleUtil {
     /** @param colour The {@link DyeColor} to localize.
      * @return a localised name for the given colour. */
     public static String localizeColour(DyeColor colour) {
-//        return localize("item.fireworksCharge." + colour.getName());
         return localize("item.minecraft.firework_star." + colour.getName());
     }
 
-    // Calen
 
     /** item.minecraft.firework_star.colorless is defined by BC, not MC. */
     public static String getColorTranslateKey(DyeColor colour) {
@@ -138,7 +123,6 @@ public class LocaleUtil {
         return localize("direction." + (face == null ? "center" : face.getName()));
     }
 
-    // Calen
     public static Component localizeFacingComponent(@Nullable Direction face) {
         return Component.translatable("direction." + (face == null ? "center" : face.getName()));
     }
@@ -189,7 +173,6 @@ public class LocaleUtil {
         }
     }
 
-    // Calen
     public static MutableComponent localizeFluidStaticAmountComponent(int fluidAmount, int capacity) {
         if (fluidAmount <= 0) {
             if (capacity > 0) {
@@ -229,7 +212,6 @@ public class LocaleUtil {
         return localize(localeKeyFluidFlow, amount);
     }
 
-    // Calen
     public static MutableComponent localizeFluidFlowToTranslatableComponent(int milliBucketsPerTick) {
         String amount;
         if (BCLibConfig.useBucketsFlow) {
@@ -247,7 +229,6 @@ public class LocaleUtil {
         return localize(localeKeyMjStatic, MjAPI.formatMj(mj));
     }
 
-    // Calen
     public static MutableComponent localizeMjComponent(long mj) {
         if (BCLibConfig.powerMode == PowerMode.DISPLAY_RF) {
             return localizeRfComponent((int) (mj / MjAPI.getRfConversion().mjPerRf));
@@ -263,7 +244,6 @@ public class LocaleUtil {
         return localize(localeKeyMjFlow, MjAPI.formatMj(mj));
     }
 
-    // Calen
     public static MutableComponent localizeMjFlowComponent(long mj) {
         if (BCLibConfig.powerMode == PowerMode.DISPLAY_RF) {
             return localizeRfFlowComponent((int) (mj / MjAPI.getRfConversion().mjPerRf));
@@ -295,14 +275,9 @@ public class LocaleUtil {
     }
 
     public static String localizeHeat(double heat) {
-        // if (BCLibConfig.useLongLocalizedName) {
-        // return localize("buildcraft.heat.long", heat);
-        // } else {
         return String.format("%.2f \u00B0C", heat);
-        // }
     }
 
-    // Calen
     public static boolean modLangResourceNotLoaded() {
         return Component.translatable("color.clear").getString().equals("color.clear");
     }

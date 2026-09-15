@@ -15,26 +15,13 @@ public class ItemRedstoneChipset extends ItemBC_Neptune implements IChipset {
     }
 
 //    @Override
-//    @SideOnly(Side.CLIENT)
-//    public void addModelVariants(TIntObjectHashMap<ModelResourceLocation> variants) {
-//        for (EnumRedstoneChipset type : EnumRedstoneChipset.values()) {
-//            addVariant(variants, type.ordinal(), type.getName());
-//        }
-//    }
 
     // 1.18.2: different item obj
 //    @Override
-//    public void addSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-//        for (EnumRedstoneChipset type : EnumRedstoneChipset.values()) {
-//            subItems.add(new ItemStack(this, 1, type.ordinal()));
-//        }
-//    }
 
 
     @Override
-//    public String getUnlocalizedName(ItemStack stack)
     public String getDescriptionId(ItemStack stack) {
-//        return "item.redstone_" + EnumRedstoneChipset.values()[stack.getMetadata()].getName() + "_chipset";
         return "item.redstone_" + type.name().toLowerCase() + "_chipset.name";
     }
 

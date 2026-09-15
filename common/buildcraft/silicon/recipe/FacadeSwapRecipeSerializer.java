@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 
 public class FacadeSwapRecipeSerializer extends SimpleCraftingRecipeSerializer<FacadeSwapRecipe> {
-    // Calen
     public static final FacadeSwapRecipeSerializer INSTANCE;
 
     static {

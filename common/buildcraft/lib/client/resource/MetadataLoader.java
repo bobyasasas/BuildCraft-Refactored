@@ -12,7 +12,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-// Calen: never used in 1.12.2
 
 /** Alternate metadata loader for {@link ResourceMetadata#getSection(MetadataSectionSerializer)} */
 @Deprecated(forRemoval = true)
@@ -23,8 +22,6 @@ public class MetadataLoader {
     private static void register() {
         if (!hasRegistered) {
             hasRegistered = true;
-//            MetadataSerializer metaReg = Minecraft.getInstance().getResourcePackRepository().rprMetadataSerializer;
-//            metaReg.registerMetadataSectionType(DataMetadataSection.DESERIALISER, DataMetadataSection.class);
         }
     }
 
@@ -34,23 +31,14 @@ public class MetadataLoader {
         ResourceManager resManager = Minecraft.getInstance().getResourceManager();
         register();
         try {
-//            List<IResource> resources = resManager.getAllResources(location);
             List<Resource> resources = resManager.getResourceStack(location);
             DataMetadataSection section = null;
             for (Resource resource : resources) {
-//                section = resource.getMetadata(DataMetadataSection.SECTION_NAME);
                 section = resource.metadata().getSection(DataMetadataSection.DESERIALISER).orElse(null);
                 if (section != null || samePack) {
                     break;
                 }
             }
-//            for (Resource res : resources) {
-//                try {
-//                    res.close();
-//                } catch (IOException io) {
-//                    io.printStackTrace();
-//                }
-//            }
             return section;
         } catch (FileNotFoundException fnfe) {
             // That's fine

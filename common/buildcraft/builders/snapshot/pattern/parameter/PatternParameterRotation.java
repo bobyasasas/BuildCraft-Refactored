@@ -65,7 +65,6 @@ public enum PatternParameterRotation implements IStatementParameter {
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("buildcraft.param.rotation." + rotationCount);
         return Component.translatable("buildcraft.param.rotation." + rotationCount);
     }
 

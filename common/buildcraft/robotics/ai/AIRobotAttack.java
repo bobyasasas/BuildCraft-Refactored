@@ -32,7 +32,6 @@ public class AIRobotAttack extends AIRobot {
         if (ai instanceof AIRobotGotoBlock) {
             // target may become null in the event of a load. In that case, just
             // go to the expected location.
-//            if (target != null && robot.getDistanceToEntity(target) <= 2.0)
             if (target != null && robot.distanceTo(target) <= 2.0) {
                 abortDelegateAI();
                 robot.setItemActive(true);
@@ -42,15 +41,12 @@ public class AIRobotAttack extends AIRobot {
 
     @Override
     public void update() {
-//        if (target == null || target.isDead)
         if (target == null || !target.isAlive()) {
             terminate();
             return;
         }
 
         if (robot.distanceTo(target) > 2.0) {
-            // startDelegateAI(new AIRobotGotoBlock(robot, VecUtil.getPos(target)));
-            // Calen Fix 1.18.2: if the target is in a non-soft block, the robot may be stuck beside the position of the target
             startDelegateAI(new AIRobotGotoBlock(robot, VecUtil.getPos(target), true));
             robot.setItemActive(false);
 
@@ -82,9 +78,7 @@ public class AIRobotAttack extends AIRobot {
     }
 
     @Override
-    // public int getEnergyCost()
     public long getPowerCost() {
-        // return BuilderAPI.BREAK_ENERGY * 2 / 20;
         return 16 * MjAPI.MJ * 2 / 20;
     }
 }

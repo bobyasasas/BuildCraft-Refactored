@@ -21,7 +21,6 @@ public class AssemblyRecipeRegistry {
     public static IFacadeAssemblyRecipes FACADE_ASSEMBLY_RECIPE;
 
     @Deprecated
-    // public static final Map<ResourceLocation, AssemblyRecipe> REGISTRY = new HashMap<>();
     private static final List<IAssemblyRecipe> REGISTRY = new LinkedList<>();
 
     public static List<IAssemblyRecipe> getAll(Level world) {
@@ -33,16 +32,12 @@ public class AssemblyRecipeRegistry {
     /** Don't call this, and use datagen instead! */
     @Deprecated
     public static void register(IAssemblyRecipe recipe) {
-//        REGISTRY.put(recipe.getRegistryName(), recipe);
         REGISTRY.add(recipe);
     }
 
-    // Calen: never used in 1.12.2
     @Nonnull
-//    public static List<AssemblyRecipe> getRecipesFor(@Nonnull NonNullList<ItemStack> possibleIn)
     public static List<IAssemblyRecipe> getRecipesFor(Level world, @Nonnull NonNullList<ItemStack> possibleIn) {
         List<IAssemblyRecipe> all = new ArrayList<>();
-//        for (AssemblyRecipe ar : REGISTRY.values())
         for (IAssemblyRecipe ar : getAll(world)) {
             if (!ar.getOutputs(possibleIn).isEmpty()) {
                 all.add(ar);

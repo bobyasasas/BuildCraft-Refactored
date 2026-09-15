@@ -39,60 +39,40 @@ import java.util.List;
 public class ItemList_BC8 extends ItemBC_Neptune implements IList, MenuProvider {
     private static final ResourceLocation ADVANCEMENT = new ResourceLocation("buildcraftcore:list");
 
-    // Calen
     public static final String NBT_KEY = "label";
 
     public ItemList_BC8(String idBC, Item.Properties properties) {
         super(idBC, properties);
-//        setMaxStackSize(1);
     }
 
     @Override
-//    public ActionResult<ItemStack> onItemRightClick(Level world, Player player, EnumHand hand)
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         AdvancementUtil.unlockAdvancement(player, ADVANCEMENT);
-//        BCCoreGuis.LIST.openGUI(player);
         MessageUtil.serverOpenItemGui(player, BCCoreItems.list.get());
-//        return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
     }
 
 //    @Override
-//    @OnlyIn(Dist.CLIENT)
-//    public void addModelVariants(TIntObjectHashMap<ModelResourceLocation> variants) {
-//        addVariant(variants, 0, "clean");
-//        addVariant(variants, 1, "used");
-//    }
 
 //    @Override
-//    public int getMetadata(ItemStack stack) {
-//        return ListHandler.hasItems(StackUtil.asNonNull(stack)) ? 1 : 0;
-//    }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-//    public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag)
     public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag flag) {
         String name = getName_INamedItem(StackUtil.asNonNull(stack));
-//        if (StringUtils.isNullOrEmpty(name)) return;
         if (StringUtil.isNullOrEmpty(name)) return;
-//        tooltip.add(TextFormatting.ITALIC + name);
         tooltip.add(Component.literal(ChatFormatting.ITALIC + name));
     }
 
     // IList
 
     @Override
-//    public Component getName(@Nonnull ItemStack stack)
     public String getName_INamedItem(@Nonnull ItemStack stack) {
-//        return Component.literal(NBTUtilBC.getItemData(stack).getString("label"));
-//        return Component.literal(NBTUtilBC.getItemData(stack).getString(NBT_KEY));
         return NBTUtilBC.getItemData(stack).getString(NBT_KEY);
     }
 
     @Override
     public boolean setName(@Nonnull ItemStack stack, String name) {
-//        NBTUtilBC.getItemData(stack).putString("label", name);
         NBTUtilBC.getItemData(stack).putString(NBT_KEY, name);
         return true;
     }
@@ -102,7 +82,6 @@ public class ItemList_BC8 extends ItemBC_Neptune implements IList, MenuProvider 
         return ListHandler.matches(stackList, item);
     }
 
-    // Calen
     public static boolean isUsed(ItemStack stack) {
         return ListHandler.hasItems(StackUtil.asNonNull(stack));
     }

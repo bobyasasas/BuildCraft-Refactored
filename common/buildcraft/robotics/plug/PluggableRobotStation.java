@@ -134,20 +134,14 @@ public class PluggableRobotStation extends PipePluggable implements IMjReceiver,
         super(definition, holder, side);
     }
 
-    // Calen 1.18.2: PluggableRobotStation::new impl IPluggableCreator
     @Override
-    // public void writeToNBT(CompoundTag nbt)
     public CompoundTag writeToNbt() {
         return new CompoundTag();
     }
 
 //    @Override
-//    public void readFromNBT(CompoundTag nbt) {
-//
-//    }
 
     @Override
-    // public ItemStack[] getDropItems(IPipeHolder pipe)
     public void addDrops(NonNullList<ItemStack> toDrop, int fortune) {
         toDrop.add(new ItemStack(BCRoboticsItems.robotStation.get()));
     }
@@ -170,13 +164,11 @@ public class PluggableRobotStation extends PipePluggable implements IMjReceiver,
     }
 
     @Override
-    // public boolean isBlocking(IPipeHolder pipe, Direction direction)
     public boolean isBlocking() {
         return true;
     }
 
     @Override
-    // public void invalidate()
     public void onRemove() {
         if (station != null && station.getPipe() != null && !station.getPipe().getPipeWorld().isClientSide) {
             RobotManager.registryProvider.getRegistry(station.world).removeStation(station);
@@ -185,7 +177,6 @@ public class PluggableRobotStation extends PipePluggable implements IMjReceiver,
     }
 
     // @Override
-    // public void validate(IPipeHolder pipe, Direction direction)
     public void validate() {
         IPipeHolder pipe = this.holder;
         Direction direction = this.side;
@@ -202,21 +193,10 @@ public class PluggableRobotStation extends PipePluggable implements IMjReceiver,
     }
 
     @Override
-    // public AABB getBoundingBox(Direction side)
     public VoxelShape getBoundingBox() {
-//        float[][] bounds = new float[3][2];
 //        // X START - END
-//        bounds[0][0] = 0.25F;
-//        bounds[0][1] = 0.75F;
 //        // Y START - END
-//        bounds[1][0] = 0.125F;
-//        bounds[1][1] = 0.251F;
 //        // Z START - END
-//        bounds[2][0] = 0.25F;
-//        bounds[2][1] = 0.75F;
-//
-//        MatrixTranformations.transform(bounds, side);
-//        return new AxisAlignedBB(bounds[0][0], bounds[1][0], bounds[2][0], bounds[0][1], bounds[1][1], bounds[2][1]);
         return BOXES[side.ordinal()];
     }
 
@@ -233,9 +213,6 @@ public class PluggableRobotStation extends PipePluggable implements IMjReceiver,
     }
 
     // @Override
-    // public IPipePluggableStaticRenderer getRenderer() {
-    //     return RobotStationRenderer.INSTANCE;
-    // }
     @OnlyIn(Dist.CLIENT)
     @Override
     public PluggableModelKey getModelRenderKey(RenderType layer) {
@@ -274,9 +251,6 @@ public class PluggableRobotStation extends PipePluggable implements IMjReceiver,
     }
 
 //    @Override
-//    public boolean requiresRenderUpdate(PipePluggable o) {
-//        return getRenderState() != ((PluggableRobotStation) o).getRenderState();
-//    }
 
     // @Override
     public void readData(FriendlyByteBuf data) {
@@ -285,9 +259,6 @@ public class PluggableRobotStation extends PipePluggable implements IMjReceiver,
     }
 
     // @Override
-    // public PipePluggable createPipePluggable(IPipe pipe, Direction side, ItemStack stack) {
-    //     return new PluggableRobotStation();
-    // }
 
     @Override
     public long getPowerRequested() {
@@ -298,17 +269,14 @@ public class PluggableRobotStation extends PipePluggable implements IMjReceiver,
     }
 
     @Override
-    // public long receiveEnergy(Direction from, int maxReceive, boolean simulate)
     public long receivePower(long maxReceive, boolean simulate) {
         if (station != null && station.robotTaking() != null && station.robotTaking().getBattery() != null && station.robotTaking().getDockingStation() == station) {
             return ((EntityRobot) station.robotTaking()).receiveEnergy(maxReceive, simulate);
         }
-        // return 0L;
         return maxReceive;
     }
 
     @Override
-    // public int getEnergyStored(Direction from)
     public long getStored() {
         if (station != null && station.robotTaking() != null && station.robotTaking().getBattery() != null && station.robotTaking().getDockingStation() == station) {
             return station.robotTaking().getBattery().getStored();
@@ -317,7 +285,6 @@ public class PluggableRobotStation extends PipePluggable implements IMjReceiver,
     }
 
     @Override
-    // public int getMaxEnergyStored(Direction from)
     public long getCapacity() {
         if (station != null && station.robotTaking() != null && station.robotTaking().getBattery() != null && station.robotTaking().getDockingStation() == station) {
             return station.robotTaking().getBattery().getCapacity();
@@ -326,7 +293,6 @@ public class PluggableRobotStation extends PipePluggable implements IMjReceiver,
     }
 
     @Override
-    // public boolean canConnectEnergy(Direction from)
     public boolean canConnect(@Nonnull IMjConnector other) {
         return true;
     }

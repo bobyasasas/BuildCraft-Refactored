@@ -91,7 +91,6 @@ public class PipeBehaviourDaizuli extends PipeBehaviourDirectional {
         }
         if (EntityUtil.getWrenchHand(player) != null) {
             EntityUtil.activateWrench(player, trace);
-//            int n = colour.getMetadata() + (player.isSneaking() ? 15 : 1);
             int n = colour.getId() + (player.isShiftKeyDown() ? 15 : 1);
             colour = DyeColor.byId(n & 15);
             pipe.getHolder().scheduleNetworkUpdate(PipeMessageReceiver.BEHAVIOUR);
@@ -103,7 +102,6 @@ public class PipeBehaviourDaizuli extends PipeBehaviourDirectional {
     @PipeEventHandler
     public void sideCheck(PipeEventItem.SideCheck sideCheck) {
         if (BCTransportConfig.disableStrictDaizuliItemPipeLogic) {
-            // Calen 1.20.1: daizuli logic from BC7
             if (currentDir != EnumPipePart.CENTER) {
                 if (colour == sideCheck.colour) {
                     sideCheck.increasePriority(currentDir.face, 100);
@@ -114,14 +112,12 @@ public class PipeBehaviourDaizuli extends PipeBehaviourDirectional {
             return;
         }
         if (colour == sideCheck.colour) {
-            // Calen 1.20.1: strict logic of daizuli item pipe
             sideCheck.disallowAllExcept(currentDir.face);
         } else {
             sideCheck.disallow(currentDir.face);
         }
     }
 
-    // Calen 1.20.1 from PipeBehaviourIron
     @PipeEventHandler
     public static void tryBounce(PipeEventItem.TryBounce tryBounce) {
         tryBounce.canBounce = true;

@@ -35,16 +35,13 @@ public class FluidStackRef {
                                         fluid
                                                 .get(nbt)
                                                 .orElseThrow(NullPointerException::new)
-//                                                .getString()
                                                 .getAsString()
                                 )
                         )
                 ),
                 Optional.ofNullable(amount)
                         .flatMap(ref -> ref.get(nbt))
-//                        .map(IntTag::getInt)
                         .map(IntTag::getAsInt)
-//                        .orElse(Fluid.BUCKET_VOLUME)
                         .orElse(FluidType.BUCKET_VOLUME)
         );
     }

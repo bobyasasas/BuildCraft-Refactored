@@ -21,8 +21,6 @@ import net.minecraftforge.common.TierSortingRegistry;
 import javax.annotation.Nonnull;
 
 public class BoardRobotMiner extends BoardRobotGenericBreakBlock {
-    // private static final int MAX_HARVEST_LEVEL = 3;
-    // private int harvestLevel = 0;
     private Tier harvestLevel = Tiers.WOOD;
 
     public BoardRobotMiner(EntityRobotBase iRobot) {
@@ -42,12 +40,9 @@ public class BoardRobotMiner extends BoardRobotGenericBreakBlock {
     }
 
     private void detectHarvestLevel() {
-        // ItemStack stack = robot.getHeldItem();
         ItemStack stack = robot.getMainHandItem();
 
-        // if (stack != null && stack.getItem() != null && stack.getItem().getToolClasses(stack).contains("pickaxe"))
         if (!stack.isEmpty() && stack.getItem() instanceof PickaxeItem) {
-            // harvestLevel = stack.getItem().getHarvestLevel(stack, "pickaxe");
             harvestLevel = ((PickaxeItem) stack.getItem()).getTier();
         }
     }
@@ -59,15 +54,12 @@ public class BoardRobotMiner extends BoardRobotGenericBreakBlock {
 
     @Override
     public boolean isExpectedTool(@Nonnull ItemStack stack) {
-        // return stack != null && stack.getItem().getToolClasses(stack).contains("pickaxe");
         return !stack.isEmpty() && stack.getItem() instanceof PickaxeItem;
     }
 
     @Override
     public boolean isExpectedBlock(Level world, BlockPos pos) {
-        // return BuildCraftAPI.getWorldProperty("ore@hardness=" + Math.min(MAX_HARVEST_LEVEL, harvestLevel)).get(world, pos);
         if (harvestLevel != null) {
-            // return world.getBlockState(pos).is(harvestLevel.getTag());
             BlockState state = world.getBlockState(pos);
             return state.is(Tags.Blocks.ORES) && TierSortingRegistry.isCorrectTierForDrops(harvestLevel, state);
         } else {

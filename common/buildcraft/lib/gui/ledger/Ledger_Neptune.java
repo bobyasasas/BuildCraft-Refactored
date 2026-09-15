@@ -173,7 +173,6 @@ public class Ledger_Neptune implements IInteractionElement, IContainingElement {
         }
 
         double maxDiff = Math.max(maxWidth - CLOSED_WIDTH, maxHeight - CLOSED_HEIGHT);
-//        double ldgDiff = MathHelper.clamp(maxDiff / 5, 1, 15);
         double ldgDiff = Mth.clamp(maxDiff / 5, 1, 15);
 
         // TODO: extract a method
@@ -256,7 +255,6 @@ public class Ledger_Neptune implements IInteractionElement, IContainingElement {
 //
         RenderUtil.setGLColorFromIntPlusAlpha(colour);
         split.draw(guiGraphics, startX, startY, interpWidth, interpHeight);
-//        GlStateManager.color(1, 1, 1, 1);
         RenderUtil.color(1, 1, 1, 1);
 
         IGuiPosition pos2;
@@ -329,17 +327,14 @@ public class Ledger_Neptune implements IInteractionElement, IContainingElement {
     }
 
     @Override
-//    public void onMouseDragged(int button, long ticksSinceClick)
     public void onMouseDragged(int button) {
         for (IGuiElement elem : openElements) {
             if (elem instanceof IInteractionElement) {
-//                ((IInteractionElement) elem).onMouseDragged(button, ticksSinceClick);
                 ((IInteractionElement) elem).onMouseDragged(button);
             }
         }
         for (IGuiElement elem : closedElements) {
             if (elem instanceof IInteractionElement) {
-//                ((IInteractionElement) elem).onMouseDragged(button, ticksSinceClick);
                 ((IInteractionElement) elem).onMouseDragged(button);
             }
         }

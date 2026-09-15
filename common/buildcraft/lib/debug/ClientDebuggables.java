@@ -24,9 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientDebuggables {
-    // public static final List<String> SERVER_LEFT = new ArrayList<>();
     public static final List<Component> SERVER_LEFT = new ArrayList<>();
-    // public static final List<String> SERVER_RIGHT = new ArrayList<>();
     public static final List<Component> SERVER_RIGHT = new ArrayList<>();
 
     @Nullable
@@ -47,7 +45,6 @@ public class ClientDebuggables {
         if (mouseOver == null) {
             return null;
         }
-//        RayTraceResult.Type type = mouseOver.typeOfHit;
         Type type = mouseOver.getType();
         ClientLevel world = mc.level;
         if (world == null) {
@@ -60,7 +57,6 @@ public class ClientDebuggables {
                 return (IDebuggable) tile;
             }
         }
-//        else if (type == RayTraceResult.Type.ENTITY)
         else if (type == Type.ENTITY) {
             Entity entity = ((EntityHitResult) mouseOver).getEntity();
             if (entity instanceof IDebuggable) {

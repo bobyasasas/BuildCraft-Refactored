@@ -41,16 +41,12 @@ public class GuiDiamondWoodPipe extends GuiBC8<ContainerDiamondWoodPipe> impleme
 
     private PipeBehaviourWoodDiamond pipe;
 
-    // public GuiDiamondWoodPipe(Player player, PipeBehaviourWoodDiamond pipe, Inventory inventory, Component component)
     public GuiDiamondWoodPipe(ContainerDiamondWoodPipe container, Inventory inventory, Component component) {
         super(container, inventory, component);
 
-//        this.pipe = pipe;
         this.pipe = ((PipeBehaviourWoodDiamond) container.pipeHolder.getPipe().getBehaviour());
 
-//        xSize = SIZE_X;
         imageWidth = SIZE_X;
-//        ySize = SIZE_Y;
         imageHeight = SIZE_Y;
     }
 
@@ -58,13 +54,11 @@ public class GuiDiamondWoodPipe extends GuiBC8<ContainerDiamondWoodPipe> impleme
     public void initGui() {
         super.initGui();
 
-        // this.whiteListButton = new GuiImageButton(mainGui, WHITE_LIST_BUTTON_ID, this.leftPos + 7, this.topPos + 41, 18, TEXTURE_BUTTON, 19, 19);
         this.whiteListButton = new GuiImageButton(mainGui, WHITE_LIST_BUTTON_ID, () -> this.leftPos + 7, () -> this.topPos + 41, () -> 18, TEXTURE_BUTTON, 19, 19);
         this.whiteListButton.setToolTip(ToolTip.createLocalized("tip.PipeItemsEmerald.whitelist"));
         this.whiteListButton.registerListener(this);
         this.mainGui.shownElements.add(this.whiteListButton);
 
-        // this.blackListButton = new GuiImageButton(mainGui, BLACK_LIST_BUTTON_ID, this.leftPos + 7 + 18, this.topPos + 41, 18, TEXTURE_BUTTON, 37, 19);
         this.blackListButton = new GuiImageButton(mainGui, BLACK_LIST_BUTTON_ID, () -> this.leftPos + 7 + 18, () -> this.topPos + 41, () -> 18, TEXTURE_BUTTON, 37, 19);
         this.blackListButton.setToolTip(ToolTip.createLocalized("tip.PipeItemsEmerald.blacklist"));
         this.blackListButton.registerListener(this);
@@ -72,7 +66,6 @@ public class GuiDiamondWoodPipe extends GuiBC8<ContainerDiamondWoodPipe> impleme
 
         if (pipe.pipe.getFlow() instanceof IFlowItems) {
             // Don't show round robin for the fluid pipe - its not yet implemented
-            // this.roundRobinButton = new GuiImageButton(mainGui, ROUND_ROBIN_BUTTON_ID, this.leftPos + 7 + 36, this.topPos + 41, 18, TEXTURE_BUTTON, 55, 19);
             this.roundRobinButton = new GuiImageButton(mainGui, ROUND_ROBIN_BUTTON_ID, () -> this.leftPos + 7 + 36, () -> this.topPos + 41, () -> 18, TEXTURE_BUTTON, 55, 19);
             this.roundRobinButton.setToolTip(ToolTip.createLocalized("tip.PipeItemsEmerald.roundrobin"));
             this.roundRobinButton.registerListener(this);
@@ -116,14 +109,10 @@ public class GuiDiamondWoodPipe extends GuiBC8<ContainerDiamondWoodPipe> impleme
     @Override
     protected void drawForegroundLayer(GuiGraphics guiGraphics) {
         String title = LocaleUtil.localize("gui.pipes.emerald.title");
-//        double titleX = mainGui.rootElement.getX() + (xSize - fontRenderer.getStringWidth(title)) / 2;
         double titleX = mainGui.rootElement.getX() + (imageWidth - font.width(title)) / 2;
-//        fontRenderer.drawString(title, (int) titleX, (int) mainGui.rootElement.getY() + 6, 0x404040);
         guiGraphics.drawString(font, title, (int) titleX, (int) mainGui.rootElement.getY() + 6, 0x404040, false);
-//        fontRenderer.drawString(LocaleUtil.localize("gui.inventory"), (int) mainGui.rootElement.getX() + 8, (int) mainGui.rootElement.getY() + ySize - 93, 0x404040);
         guiGraphics.drawString(font, LocaleUtil.localize("gui.inventory"), (int) mainGui.rootElement.getX() + 8, (int) mainGui.rootElement.getY() + imageHeight - 93, 0x404040, false);
         if (pipe.filterMode == FilterMode.ROUND_ROBIN) {
-//            GlStateManager.color(1, 1, 1, 1);
             RenderUtil.color(1, 1, 1, 1);
             GuiIcon icon = pipe.filterValid ? ICON_ROUND_ROBIN_INDEX : ICON_ROUND_ROBIN_NONE;
             int x = pipe.filterValid ? 18 * pipe.currentFilter : 0;

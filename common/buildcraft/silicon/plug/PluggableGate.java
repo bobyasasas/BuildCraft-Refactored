@@ -141,7 +141,6 @@ public class PluggableGate extends PipePluggable implements IWireEmitter, IBCTil
         infoIsOn.possibleValues = BooleanPossibilities.FALSE_TRUE;
     }
 
-    // Manual constructor (called by the specific item pluggable gate code)
 
     public PluggableGate(PluggableDefinition def, IPipeHolder holder, Direction side, GateVariant variant) {
         super(def, holder, side);
@@ -221,7 +220,6 @@ public class PluggableGate extends PipePluggable implements IWireEmitter, IBCTil
 
     @Override
     public ItemStack getPickStack() {
-//        return BCSiliconItems.plugGate.get().getStack(logic.variant);
         return ItemPluggableGate.getStack(logic.variant);
     }
 
@@ -257,11 +255,9 @@ public class PluggableGate extends PipePluggable implements IWireEmitter, IBCTil
 
             BlockPos pos = holder.getPipePos();
 
-            // Calen 1.18.2: moved from ContainerGate#<init>
             // to recreate plug object before gui packed received
             // Client call in BCSiliconMenuTypes#GATE
             IMessage msg = this.logic.getPipeHolder().onServerPlayerOpenNoSend(player);
-//            BCSiliconGuis.GATE.openGui(player, pos, side.ordinal());
             MessageUtil.serverOpenGUIWithMsg(player, this, pos, side.ordinal(), msg);
         }
         return true;
@@ -347,7 +343,6 @@ public class PluggableGate extends PipePluggable implements IWireEmitter, IBCTil
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
-        // Calen: from BCSiliconProxy implements IGuiHandler
         ContainerGate container = new ContainerGate(BCSiliconMenuTypes.GATE, id, player, this.logic);
         // to enable statements
         MessageUtil.doDelayedServer(() ->

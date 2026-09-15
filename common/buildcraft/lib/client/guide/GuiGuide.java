@@ -192,25 +192,20 @@ public class GuiGuide extends Screen implements MenuAccess<ContainerGuide> {
     private IFontRenderer currentFont = FontManager.INSTANCE.getOrLoadFont("SansSerif", 9);
     private float lastPartialTicks;
 
-    // public GuiGuide()
     public GuiGuide(ContainerGuide container, Component component) {
         this(container, (GuideBook) null, component);
     }
 
-    // public GuiGuide(String bookName)
     public GuiGuide(ContainerGuide container, String bookName, Component component) {
         this(container, GuideBookRegistry.INSTANCE.getBook(bookName), component);
     }
 
-    // private GuiGuide(@Nullable GuideBook book)
     private GuiGuide(ContainerGuide container, @Nullable GuideBook book, Component component) {
         super(component);
-        // Calen
         this.menu = container;
 
         this.book = book;
         this.bookData = book != null ? book.data : GuideManager.BOOK_ALL_DATA;
-//        mc = Minecraft.getMinecraft(); // Calen: in Screen#init()
         openPage(new GuidePageContents(this));
     }
 
@@ -260,11 +255,8 @@ public class GuiGuide extends Screen implements MenuAccess<ContainerGuide> {
     }
 
     @Override
-//    public void updateScreen()
     public void tick() {
-//        super.updateScreen();
         super.tick();
-        // Calen: from AbstractContainerScreen
         if (!(this.minecraft.player.isAlive()) || this.minecraft.player.isRemoved()) {
             this.minecraft.player.closeContainer();
             return;
@@ -286,12 +278,10 @@ public class GuiGuide extends Screen implements MenuAccess<ContainerGuide> {
     }
 
     public boolean isSmallScreen() {
-//        return new ScaledResolution(minecraft).getScaledWidth() < 590;
         return minecraft.getWindow().getWidth() < 590;
     }
 
     @Override
-//    public void drawScreen(PoseStack poseStack, int mouseX, int mouseY, float partialTicks)
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         lastPartialTicks = partialTicks = minecraft.getFrameTime();
         minX = (this.width - PAGE_LEFT.width * 2) / 2;
@@ -317,7 +307,6 @@ public class GuiGuide extends Screen implements MenuAccess<ContainerGuide> {
     }
 
     public void drawTooltip(GuiGraphics guiGraphics, ItemStack stack, int x, int y) {
-//        renderToolTip(stack, x, y);
         guiGraphics.renderTooltip(font, stack, x, y);
     }
 
@@ -334,7 +323,6 @@ public class GuiGuide extends Screen implements MenuAccess<ContainerGuide> {
         minY = (height - BOOK_COVER.height) / 2;
 
         float openingAngle = openingAngleLast * (1 - partialTicks) + openingAngleNext * partialTicks;
-//        float sin = MathHelper.sin((float) (openingAngle * Math.PI / 180));
         float sin = Mth.sin((float) (openingAngle * Math.PI / 180));
         if (sin < 0) {
             sin *= -1;
@@ -356,7 +344,6 @@ public class GuiGuide extends Screen implements MenuAccess<ContainerGuide> {
 
             minecraft.textureManager.bindForSetup(COVER);
 
-            // BOOK_COVER.drawScaledInside(minX, minY, coverWidth, BOOK_COVER.height);
             // BOOK_COVER.drawCustomQuad(
             // minX, minY + BOOK_COVER.height,
             // minX + coverWidth, minY + BOOK_COVER.height,
@@ -402,13 +389,11 @@ public class GuiGuide extends Screen implements MenuAccess<ContainerGuide> {
             // minX + bindingWidth + pageWidth, minY + PAGE_LEFT.height,
             // minX + bindingWidth + pageWidth, minY,
             // minX + bindingWidth, minY - offset
-            // );
             PAGE_LEFT.drawCustomQuad(
                     guiGraphics,
                     minX + bindingWidth, minY + PAGE_LEFT.height + offset, minX + bindingWidth + pageWidth, minY
                             + PAGE_LEFT.height, minX + bindingWidth + pageWidth, minY, minX + bindingWidth, minY - offset
             );
-            // PAGE_LEFT.drawScaledInside(minX + bindingWidth, minY, pageWidth, PAGE_LEFT.height);
 
             minecraft.textureManager.bindForSetup(COVER);
             BOOK_BINDING.drawScaledInside(
@@ -441,18 +426,15 @@ public class GuiGuide extends Screen implements MenuAccess<ContainerGuide> {
         }
 
         // Now draw the actual contents of the book
-//        String title = currentPage.getTitle();
         Component title = currentPage.getTitle();
         if (title != null) {
             final int x;
-//            int titleWidth = currentFont.getStringWidth(title);
             int titleWidth = currentFont.getStringWidth(title.getString());
             if (isHalfPageShown) {
                 x = (int) (minX + PAGE_LEFT_TEXT.x + (PAGE_LEFT_TEXT.width - titleWidth) / 2);
             } else {
                 x = (width - titleWidth) / 2;
             }
-//            currentFont.drawString(poseStack, title, x, minY + 12, 0x90816a);
             currentFont.drawString(guiGraphics, title.getString(), x, minY + 12, 0x90816a);
         }
 
@@ -476,7 +458,6 @@ public class GuiGuide extends Screen implements MenuAccess<ContainerGuide> {
             );
         }
 
-        // Calen 1.18.2 to avoid items rendered above contents menu
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(0, 0, 400);
 
@@ -518,7 +499,6 @@ public class GuiGuide extends Screen implements MenuAccess<ContainerGuide> {
             }
         }
 
-        // Calen 1.18.2 to avoid items rendered above contents menu
         guiGraphics.pose().popPose();
 
         // Draw the back button if there are any pages on the stack
@@ -532,15 +512,12 @@ public class GuiGuide extends Screen implements MenuAccess<ContainerGuide> {
         }
 
         // Reset the colour
-//        GlStateManager.color(1, 1, 1);
         RenderUtil.color(1, 1, 1);
         if (tooltipStack != null) {
             drawTooltip(guiGraphics, tooltipStack, (int) mouse.getX(), (int) mouse.getY());
         } else if (!tooltips.isEmpty()) {
-            // Calen: tooltipStack == null
             int y = (int) mouse.getY();
             for (List<Component> tooltip : tooltips) {
-//                drawHoveringText(tooltip, (int) mouse.getX(), y);
                 guiGraphics.renderTooltip(font, tooltip, Optional.empty(), (int) mouse.getX(), y);
                 y += tooltip.size() * font.lineHeight + 10;
             }
@@ -574,7 +551,6 @@ public class GuiGuide extends Screen implements MenuAccess<ContainerGuide> {
                         if (showingContentsMenu && clickResult == 1) {
                             showingContentsMenu = false;
                         }
-//                        return;
                         return true;
                     }
                 }
@@ -586,16 +562,13 @@ public class GuiGuide extends Screen implements MenuAccess<ContainerGuide> {
                         IGuiArea menuRect = GuiUtil.moveRectangleToCentre(new GuiRectangle(menuWidth, menuHeight));
                         if (!menuRect.contains(mouse)) {
                             showingContentsMenu = false;
-//                        return;
                             return true;
                         }
-//                        return;
                         return true;
                     } else {
                         int secondPageX = minX + PAGE_LEFT.width + (int) PAGE_RIGHT_TEXT.x;
                         if (new GuiRectangle(secondPageX, minY, 80, 10).contains(mouse)) {
                             showingContentsMenu = true;
-//                        return;
                             return true;
                         }
                     }
@@ -636,14 +609,10 @@ public class GuiGuide extends Screen implements MenuAccess<ContainerGuide> {
     @Override
 //    protected void keyTyped(char typedChar, int keyCode) throws IOException
     public boolean keyPressed(int typedChar, int keyCode, int modifiers) {
-//        super.keyTyped(typedChar, keyCode);
         super.keyPressed(typedChar, keyCode, modifiers);
-//        if (currentPage.keyTyped(typedChar, keyCode))
         if (currentPage.keyTyped(typedChar, keyCode, modifiers)) {
-//            return;
             return true;
         }
-//        if (Keyboard.isKeyDown(Keyboard.KEY_F3) && keyCode == Keyboard.KEY_T)
         if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), InputConstants.KEY_F3) && typedChar == InputConstants.KEY_T) {
             GuideManager.INSTANCE.reload();
             while (true) {
@@ -670,7 +639,6 @@ public class GuiGuide extends Screen implements MenuAccess<ContainerGuide> {
                 GuiStack stackIcon = new GuiStack(new ItemStack(BCLibItems.guide.get()));
                 icon = (poseStack, x, y) -> stackIcon.drawAt(poseStack, x + 8, y + 8);
             }
-//            minecraft.getToastGui().add(new ToastInformation("buildcraft.guide_book.reloaded", icon));
             minecraft.getToasts().addToast(new ToastInformation("buildcraft.guide_book.reloaded", icon));
         }
         if (typedChar == minecraft.options.keyLeft.getKey().getValue()) {
@@ -684,10 +652,8 @@ public class GuiGuide extends Screen implements MenuAccess<ContainerGuide> {
     public boolean charTyped(char typedChar, int keyCode) {
         super.charTyped(typedChar, keyCode);
         if (currentPage.charTyped(typedChar, keyCode)) {
-//            return;
             return true;
         }
-//        if (Keyboard.isKeyDown(Keyboard.KEY_F3) && keyCode == Keyboard.KEY_T)
         if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), InputConstants.KEY_F3) && typedChar == InputConstants.KEY_T) {
             GuideManager.INSTANCE.reload();
             while (true) {
@@ -714,7 +680,6 @@ public class GuiGuide extends Screen implements MenuAccess<ContainerGuide> {
                 GuiStack stackIcon = new GuiStack(new ItemStack(BCLibItems.guide.get()));
                 icon = (poseStack, x, y) -> stackIcon.drawAt(poseStack, x + 8, y + 8);
             }
-//            minecraft.getToastGui().add(new ToastInformation("buildcraft.guide_book.reloaded", icon));
             minecraft.getToasts().addToast(new ToastInformation("buildcraft.guide_book.reloaded", icon));
         }
         if (typedChar == minecraft.options.keyLeft.getKey().getValue()) {
@@ -726,7 +691,6 @@ public class GuiGuide extends Screen implements MenuAccess<ContainerGuide> {
     }
 
     @Override
-//    public boolean doesGuiPauseGame()
     public boolean isPauseScreen() {
         return false;
     }

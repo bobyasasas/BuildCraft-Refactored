@@ -37,13 +37,11 @@ public class ItemGuide extends ItemBC_Neptune implements MenuProvider {
 
     public ItemGuide(String idBC, Item.Properties properties) {
         super(idBC, properties);
-//        setContainerItem(this);
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         AdvancementUtil.unlockAdvancement(player, ADVANCEMENT);
-//        player.openGui(BCLib.INSTANCE, 0, world, hand == EnumHand.MAIN_HAND ? 0 : 1, 0, 0);
         MessageUtil.serverOpenItemGui(player, this);
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
     }

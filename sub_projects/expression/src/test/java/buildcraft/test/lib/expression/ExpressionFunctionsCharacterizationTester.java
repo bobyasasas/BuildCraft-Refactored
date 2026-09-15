@@ -53,7 +53,6 @@ public class ExpressionFunctionsCharacterizationTester {
     @Test
     public void roundingFunctions() throws InvalidExpressionException {
         Assert.assertEquals(3, compileLong("round(2.5)").evaluate());
-        // Math.round(-2.5) = -2 (rounds towards positive infinity on .5)
         Assert.assertEquals(-2, compileLong("round(-2.5)").evaluate());
         Assert.assertEquals(-2, compileLong("floor(-1.5)").evaluate());
         Assert.assertEquals(1, compileLong("ceil(0.4)").evaluate());

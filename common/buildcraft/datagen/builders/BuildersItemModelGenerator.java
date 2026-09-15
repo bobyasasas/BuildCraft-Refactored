@@ -84,7 +84,6 @@ public class BuildersItemModelGenerator extends BCBaseItemModelGenerator {
         // replacer
         withExistingParent(BCBuildersBlocks.replacer.get().getRegistryName().toString(), new ResourceLocation("buildcraftbuilders:block/replacer"));
 
-        // Calen: these were declared in blockstates in 1.12.2, no single file
         // library
         withExistingParent(BCBuildersBlocks.library.get().getRegistryName().toString(), new ResourceLocation("buildcraftbuilders:block/library"));
         // architect

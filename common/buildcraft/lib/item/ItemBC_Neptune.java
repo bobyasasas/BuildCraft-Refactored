@@ -28,20 +28,16 @@ public class ItemBC_Neptune extends Item implements IItemBuildCraft, IForgeItem 
     }
 
     @Override
-//    public final void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items)
     public final void fillItemCategory(NonNullList<ItemStack> items) {
-//        if (isInCreativeTab(tab))
         addSubItems(items);
     }
 
     /** Identical to {@link #fillItemCategory(NonNullList)} in every way, EXCEPT that this is only called if
      * this is actually in the given creative tab. */
-//    protected void addSubItems(CreativeTabs tab, NonNullList<ItemStack> items)
     protected void addSubItems(NonNullList<ItemStack> items) {
         items.add(new ItemStack(this));
     }
 
-    // Calen: from IItemBuildCraft#init
     // in 1.18.2 setUnlocalizedName setRegistryName are unvailable
     @Override
     public String getDescriptionId(ItemStack stack) {

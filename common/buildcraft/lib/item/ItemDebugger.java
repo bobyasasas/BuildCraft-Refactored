@@ -24,7 +24,6 @@ public class ItemDebugger extends ItemBC_Neptune {
     }
 
     @Override
-//    public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext ctx) {
         Level world = ctx.getLevel();
         BlockPos pos = ctx.getClickedPos();

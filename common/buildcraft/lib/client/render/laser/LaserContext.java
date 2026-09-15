@@ -22,14 +22,11 @@ public class LaserContext {
     private final Vector4f normal = new Vector4f();
     private final ILaserRenderer renderer;
     public final double length;
-    // private final boolean useNormalColour, drawBothSides;
     private final boolean drawBothSides;
     private final int minBlockLight;
 
-    // public LaserContext(ILaserRenderer renderer, LaserData_BC8 data, boolean useNormalColour, boolean isCullEnabled)
     public LaserContext(ILaserRenderer renderer, LaserData_BC8 data, boolean isCullEnabled) {
         this.renderer = renderer;
-//        this.useNormalColour = useNormalColour;
         this.drawBothSides = isCullEnabled;
         this.minBlockLight = data.minBlockLight;
         Vec3 delta = data.start.subtract(data.end);
@@ -95,7 +92,6 @@ public class LaserContext {
 
     @OnlyIn(Dist.CLIENT)
     public void setFaceNormal(double nx, double ny, double nz) {
-//        if (useNormalColour) {
         normal.x = (float) nx;
         normal.y = (float) ny;
         normal.z = (float) nz;
@@ -105,7 +101,6 @@ public class LaserContext {
         n[1] = normal.y;
         n[2] = normal.z;
         diffuse = MutableQuad.diffuseLight(n[0], n[1], n[2]);
-//        }
     }
 
     private int index = 0;
@@ -115,7 +110,6 @@ public class LaserContext {
     private final double[] u = { 0, 0, 0, 0 };
     private final double[] v = { 0, 0, 0, 0 };
     private final int[] l = { 0, 0, 0, 0 };
-    // Calen BeaconRenderer.class
     private final int overlay = OverlayTexture.NO_OVERLAY;
     private final float[] n = { 0, 1, 0 };
     private float diffuse;
@@ -161,10 +155,6 @@ public class LaserContext {
     }
 
     private void vertex(int i) {
-//        if (useNormalColour) {
         renderer.vertex(x[i], y[i], z[i], u[i], v[i], l[i], overlay, n[0], n[1], n[2], diffuse);
-//        } else {
-//            renderer.vertex(x[i], y[i], z[i], u[i], v[i], l[i], overlay, 0, 1, 0, 1);
-//        }
     }
 }

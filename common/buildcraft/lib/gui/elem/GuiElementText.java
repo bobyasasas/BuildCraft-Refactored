@@ -96,23 +96,6 @@ public class GuiElementText extends GuiElementSimple {
     private void draw(GuiGraphics guiGraphics) {
         MinecraftFont.INSTANCE.drawString(guiGraphics, text.get(), (int) getX(), (int) getY(), colour.getAsInt(), dropShadow,
                 centered, (float) scale.getAsDouble());
-        // Calen: 原来就是注释
-        // final double s = scale.getAsDouble();
-        // final boolean needsScaling = s != 1;
-        // Font fr = Minecraft.getMinecraft().fontRenderer;
-        // if (needsScaling) {
-        // GuiUtil.drawScaledText(fr, text.get(), getX(), getY(), colour.getAsInt(), dropShadow, centered, s);
-        // return;
-        // }
-        // if (centered) {
-        // String str = text.get();
-        // int width = fr.getStringWidth(str);
-        // double x = getX() - width / 2;
-        // fr.drawString(str, (float) x, (float) getY(), colour.getAsInt(), dropShadow);
-        // } else {
-        // fr.drawString(text.get(), (float) getX(), (float) getY(), colour.getAsInt(), dropShadow);
-        // }
-        // RenderUtil.setGLColorFromInt(-1);
     }
 
     @Override

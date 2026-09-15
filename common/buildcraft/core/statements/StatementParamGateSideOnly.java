@@ -75,7 +75,6 @@ public enum StatementParamGateSideOnly implements IStatementParameter {
 
     @Override
     public Component getDescription() {
-//        return isSpecific ? LocaleUtil.localize("gate.parameter.redstone.gateSideOnly") : "";
         return isSpecific ? Component.translatable("gate.parameter.redstone.gateSideOnly") : Component.literal("");
     }
 

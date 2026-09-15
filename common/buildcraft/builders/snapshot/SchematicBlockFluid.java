@@ -48,9 +48,7 @@ public class SchematicBlockFluid implements ISchematicBlock {
     @Nonnull
     @Override
     public Set<BlockPos> getRequiredBlockOffsets() {
-//        return Stream.concat(Arrays.stream(Direction.HORIZONTALS), Stream.of(Direction.DOWN))
         return Stream.concat(Arrays.stream(Direction.BY_2D_DATA), Stream.of(Direction.DOWN))
-//                .map(Direction::getDirectionVec)
                 .map(Direction::getNormal)
                 .map(BlockPos::new)
                 .collect(Collectors.toSet());
@@ -60,7 +58,6 @@ public class SchematicBlockFluid implements ISchematicBlock {
     @Override
     public List<FluidStack> computeRequiredFluids() {
         return Optional.ofNullable(BlockUtil.getFluidWithoutFlowing(blockState))
-//                .map(fluid -> new FluidStack(fluid, Fluid.BUCKET_VOLUME))
                 .map(fluid -> new FluidStack(fluid, FluidType.BUCKET_VOLUME))
                 .map(Collections::singletonList)
                 .orElseGet(Collections::emptyList);
@@ -89,15 +86,11 @@ public class SchematicBlockFluid implements ISchematicBlock {
         if (world.setBlock(blockPos, blockState, Block.UPDATE_ALL_IMMEDIATE)) {
             Stream.concat(
                             Stream.of(Direction.VALUES)
-//                                    .map(Direction::getDirectionVec)
                                     .map(Direction::getNormal)
                                     .map(BlockPos::new),
-//                            Stream.of(BlockPos.ORIGIN)
                             Stream.of(BlockPos.ZERO)
                     )
-//                    .map(blockPos::add)
                     .map(blockPos::offset)
-//                    .forEach(updatePos -> world.notifyNeighborsOfStateChange(updatePos, blockState.getBlock(), false));
                     .forEach(updatePos -> world.updateNeighborsAt(updatePos, blockState.getBlock()));
             return true;
         }
@@ -105,7 +98,6 @@ public class SchematicBlockFluid implements ISchematicBlock {
     }
 
     @Override
-//    public boolean buildWithoutChecks(Level world, BlockPos blockPos)
     public boolean buildWithoutChecks(IFakeWorld world, BlockPos blockPos) {
         return world.setBlock(blockPos, blockState, 0);
     }
@@ -118,7 +110,6 @@ public class SchematicBlockFluid implements ISchematicBlock {
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-//        nbt.put("blockState", NbtUtils.writeBlockState(new CompoundTag(), blockState));
         nbt.put("blockState", NbtUtils.writeBlockState(blockState));
         nbt.putBoolean("isFlowing", isFlowing);
         return nbt;

@@ -55,7 +55,6 @@ public class TileMarkerConstruction extends TileBC_Neptune implements ITickable,
     @Nonnull
     public Direction direction = Direction.NORTH;
 
-    // public LaserData_BC8 laser;
     public Pair<Vec3, Vec3> laser;
     @Nonnull
     public ItemStack itemBlueprint = StackUtil.EMPTY;
@@ -63,16 +62,12 @@ public class TileMarkerConstruction extends TileBC_Neptune implements ITickable,
     public Box box = new Box();
 
     public BlueprintBuilder bluePrintBuilder;
-    // public BptContext bptContext;
     public Blueprint.BuildingInfo bptContext;
 
-    // private ArrayList<BuildingItem> buildersInAction = new ArrayList<BuildingItem>();
     private CompoundTag initNBT;
 
-    // Calen 1.18.2: to replace LaserData#isVisible
     public boolean isLaserVisible;
 
-    // Calen 1.18.2
     private EntityRobotBase robot = null;
     private static final MjBattery EMPTY_BATTERY = new MjBattery(0);
     private static final IItemTransactor EMPTY_INV = NoSpaceTransactor.INSTANCE;
@@ -81,11 +76,7 @@ public class TileMarkerConstruction extends TileBC_Neptune implements ITickable,
 
     public TileMarkerConstruction(BlockPos pos, BlockState blockState) {
         super(BCBuildersBlocks.markerConstructionTile.get(), pos, blockState);
-        // box.kind = Kind.BLUE_STRIPES;
 
-        // if (level.isClientSide) {
-        //     MessageManager.sendToServer(new PacketCommand(this, NET_UPLOAD_BUILDERS_IN_ACTION, null));
-        // }
         runWhenWorldNotNull(() -> {
                     if (level.isClientSide) {
                         MessageManager.sendToServer(createMessage(NET_UPLOAD_BUILDERS_IN_ACTION, (buffer -> {})));
@@ -95,7 +86,6 @@ public class TileMarkerConstruction extends TileBC_Neptune implements ITickable,
         );
     }
 
-    // private MessageUpdateTile createLaunchItemPacket(final BuildingItem i)
     private MessageUpdateTile createLaunchItemPacket() {
         return createMessage(NET_LAUNCH_ITEM, (data) -> getBuilder().writeToByteBuf(data));
     }
@@ -104,45 +94,26 @@ public class TileMarkerConstruction extends TileBC_Neptune implements ITickable,
     public void update() {
         ITickable.super.update();
 
-//        BuildingItem toRemove = null;
 
-//        for (BuildingItem i : buildersInAction) {
-//            i.update();
-//
-//            if (i.isDone) {
-//                toRemove = i;
-//            }
-//        }
 
-//        if (toRemove != null) {
-//            buildersInAction.remove(toRemove);
-//        }
 
         if (level.isClientSide) {
             return;
         }
 
-        // if (itemBlueprint != null && ItemSnapshot.getId(itemBlueprint) != null && bluePrintBuilder == null)
         Snapshot.Header header = BCBuildersItems.snapshotBLUEPRINT.get().getHeader(itemBlueprint);
-        // if (itemBlueprint != null && header != null && bluePrintBuilder == null)
         if (!itemBlueprint.isEmpty() && header != null && bluePrintBuilder == null) {
-            // BlueprintBase bpt = ItemBlueprint.loadBlueprint(itemBlueprint);
             Snapshot bpt = GlobalSavedDataSnapshots.get(this.level).getSnapshot(header.key);
             if (bpt instanceof Blueprint) {
-                // bpt = bpt.adjustToWorld(level, worldPosition, direction);
                 if (bpt != null) {
-                    // bluePrintBuilder = new BlueprintBuilder((Blueprint) bpt, level, worldPosition);
                     bluePrintBuilder = new BlueprintBuilder(this);
-                    // bptContext = bluePrintBuilder.getContext();
                     Snapshot _bpt = bpt;
                     // Blueprint#facing is the facing of the TileArchitect, opposite to the looking direction of the player used the TileArchitect
                     Rotation rotation = Arrays.stream(Rotation.values()).filter(r -> r.rotate(_bpt.facing.getOpposite()) == direction).findFirst().orElse(null);
                     bptContext = ((Blueprint) bpt).new BuildingInfo(worldPosition.relative(direction), rotation);
-                    // box.initialize(bluePrintBuilder);
                     box.initialize(bptContext.box);
                     bluePrintBuilder.updateSnapshot();
                     bluePrintBuilder.tick(); // to prepare tasks
-                    // sendNetworkUpdate();
                     sendNetworkUpdate(NET_LASER_BOX_UPDATE);
                 }
             } else {
@@ -154,11 +125,8 @@ public class TileMarkerConstruction extends TileBC_Neptune implements ITickable,
             Vec3 point5 = new Vec3(0.5, 0.5, 0.5);
             Vec3 start = VecUtil.convert(worldPosition).add(point5);
             Vec3 end = start.add(VecUtil.convert(direction, 0.5));
-            // laser = new LaserData_BC8(LASER_TYPE, start, end, 1.0 / 16.0);
             laser = Pair.of(start, end);
-//            laser.isVisible = true;
             this.isLaserVisible = true;
-            // sendNetworkUpdate();
             sendNetworkUpdate(NET_LASER_BOX_UPDATE);
         }
 
@@ -178,7 +146,6 @@ public class TileMarkerConstruction extends TileBC_Neptune implements ITickable,
         nbt.putByte("direction", (byte) direction.ordinal());
         nbt.putBoolean("canExcavate", canExcavate);
 
-        // if (itemBlueprint != null)
         if (!itemBlueprint.isEmpty()) {
             CompoundTag bptNBT = new CompoundTag();
             itemBlueprint.save(bptNBT);
@@ -209,25 +176,19 @@ public class TileMarkerConstruction extends TileBC_Neptune implements ITickable,
         initNBT = nbt.getCompound("bptBuilder").copy();
     }
 
-    // public void setBlueprint(ItemStack currentItem)
     public void setBlueprint(@Nonnull ItemStack currentItem) {
         itemBlueprint = currentItem;
-        // sendNetworkUpdate();
         sendNetworkUpdate(NET_LASER_BOX_UPDATE);
         setChanged();
     }
 
     @Override
-    // public ArrayList<BuildingItem> getBuilders()
     public SnapshotBuilder<?> getBuilder() {
-        // return buildersInAction;
         return bluePrintBuilder;
     }
 
     @Override
-    // public void validate()
     public void clearRemoved() {
-        // super.validate();
         super.clearRemoved();
         if (!level.isClientSide) {
             currentMarkers.add(this);
@@ -235,9 +196,7 @@ public class TileMarkerConstruction extends TileBC_Neptune implements ITickable,
     }
 
     @Override
-    // public void invalidate()
     public void setRemoved() {
-        // super.invalidate();
         super.setRemoved();
         if (!level.isClientSide) {
             currentMarkers.remove(this);
@@ -245,7 +204,6 @@ public class TileMarkerConstruction extends TileBC_Neptune implements ITickable,
     }
 
     public boolean needsToBuild() {
-        // return !isRemoved() && bluePrintBuilder != null && !bluePrintBuilder.isDone(this);
         if (isRemoved() || bluePrintBuilder == null) {
             return false;
         }
@@ -257,40 +215,24 @@ public class TileMarkerConstruction extends TileBC_Neptune implements ITickable,
     }
 
     @Override
-    // public BptContext getContext()
     public Blueprint.BuildingInfo getBlueprintBuildingInfo() {
         return bptContext;
     }
 
 //    @Override
-//    public void addAndLaunchBuildingItem(BuildingItem item) {
-//        buildersInAction.add(item);
-//        // BuildCraftCore.instance.sendToPlayersNear(createLaunchItemPacket(item), this);
-//        MessageManager.sendToAllAround(createLaunchItemPacket(item), new PacketDistributor.TargetPoint(this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ(), 64, this.level.dimension()));
-//    }
 
     @Override
-    // public void receiveCommand(String command, Side side, Object sender, ByteBuf stream)
     public void readPayload(int command, PacketBufferBC stream, NetworkDirection side, NetworkEvent.Context ctx) throws IOException {
         super.readPayload(command, stream, side, ctx);
         if (side == NetworkDirection.PLAY_TO_CLIENT && command == NET_RENDER_DATA) {
             readPayload(NET_LASER_BOX_UPDATE, stream, side, ctx);
         }
-        // if (side.isServer() && "uploadBuildersInAction".equals(command))
         else if (side == NetworkDirection.PLAY_TO_SERVER && command == NET_UPLOAD_BUILDERS_IN_ACTION) {
-            // for (BuildingItem i : buildersInAction) {
-            //     MessageManager.sendTo(createLaunchItemPacket(i), ctx.getSender());
-            // }
             if (bluePrintBuilder != null) {
-                // MessageManager.sendTo(createLaunchItemPacket(), ctx.getSender());
                 sendNetworkUpdate(NET_LAUNCH_ITEM, ctx.getSender());
             }
         }
-        // else if (side.isClient() && "launchItem".equals(command))
         else if (side == NetworkDirection.PLAY_TO_CLIENT && command == NET_LAUNCH_ITEM) {
-            // BuildingItem item = new BuildingItem();
-            // item.readData(stream);
-            // buildersInAction.add(item);
             if (bluePrintBuilder == null) {
                 bluePrintBuilder = new BlueprintBuilder(this);
             }
@@ -299,8 +241,6 @@ public class TileMarkerConstruction extends TileBC_Neptune implements ITickable,
             box.readData(stream);
             int flags = stream.readUnsignedByte();
             if ((flags & 1) != 0) {
-//            laser = new LaserData_BC8();
-//            laser.readData(stream);
                 laser = Pair.of(MessageUtil.readVec3d(stream), MessageUtil.readVec3d(stream));
             } else {
                 laser = null;
@@ -308,16 +248,12 @@ public class TileMarkerConstruction extends TileBC_Neptune implements ITickable,
             if ((flags & 2) != 0) {
                 itemBlueprint = stream.readItem();
             } else {
-                // itemBlueprint = null;
                 itemBlueprint = StackUtil.EMPTY;
             }
         }
     }
 
 //    @Override
-//    public Box getBox() {
-//        return box;
-//    }
 
     @Override
     public AABB getRenderBoundingBox() {
@@ -326,30 +262,21 @@ public class TileMarkerConstruction extends TileBC_Neptune implements ITickable,
         return renderBox.expand(50).getBoundingBox();
     }
 
-    // Calen: RenderMarkerConstruction#getViewDistance
 //    @Override
-//    public double getMaxRenderDistanceSquared() {
-//        return Double.MAX_VALUE;
-//    }
 
     @Override
-    // public void writeData(FriendlyByteBuf stream)
     public void writePayload(int id, PacketBufferBC stream, Dist side) {
         super.writePayload(id, stream, side);
         if (side == Dist.DEDICATED_SERVER && id == NET_RENDER_DATA) {
             writePayload(NET_LASER_BOX_UPDATE, stream, side);
         } else if (side == Dist.DEDICATED_SERVER && id == NET_LASER_BOX_UPDATE) {
             box.writeData(stream);
-            // stream.writeByte((laser != null ? 1 : 0) | (itemBlueprint != null ? 2 : 0));
             stream.writeByte((laser != null ? 1 : 0) | (!itemBlueprint.isEmpty() ? 2 : 0));
             if (laser != null) {
-                // laser.writeData(stream);
                 MessageUtil.writeVec3d(stream, laser.getFirst());
                 MessageUtil.writeVec3d(stream, laser.getSecond());
             }
-            // if (itemBlueprint != null)
             if (!itemBlueprint.isEmpty()) {
-                // NetworkUtils.writeStack(stream, itemBlueprint);
                 stream.writeItemStack(itemBlueprint, false);
             }
         } else if (side == Dist.DEDICATED_SERVER && id == NET_LAUNCH_ITEM) {
@@ -358,26 +285,8 @@ public class TileMarkerConstruction extends TileBC_Neptune implements ITickable,
     }
 
 //    @Override
-//    public void readData(ByteBuf stream) {
-//        box.readData(stream);
-//        int flags = stream.readUnsignedByte();
-//        if ((flags & 1) != 0) {
-//            laser = new LaserData();
-//            laser.readData(stream);
-//        } else {
-//            laser = null;
-//        }
-//        if ((flags & 2) != 0) {
-//            itemBlueprint = NetworkUtils.readStack(stream);
-//        } else {
-//            itemBlueprint = null;
-//        }
-//    }
 
 //    @Override
-//    public BlockState getBlockState_MIGRATION_ONLY() {
-//        return BuildCraftBuilders.constructionMarkerBlock.getDefaultState();
-//    }
 
     @Override
     public Level getWorldBC() {
@@ -403,7 +312,6 @@ public class TileMarkerConstruction extends TileBC_Neptune implements ITickable,
         return canExcavate;
     }
 
-    // Calen 1.18.2
     public void preRobotBuild(EntityRobotBase robot) {
         this.robot = robot;
     }

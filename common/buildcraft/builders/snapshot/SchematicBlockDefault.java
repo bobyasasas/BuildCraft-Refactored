@@ -51,22 +51,17 @@ public class SchematicBlockDefault implements ISchematicBlock {
     protected final List<Property<?>> ignoredProperties = new ArrayList<>();
     @SuppressWarnings("WeakerAccess")
     protected CompoundTag tileNbt;
-    // Calen: 1.12.2 tileRotation -> 1.18.2 SkullBlock BlockState ROTATION_16
-//    @SuppressWarnings("WeakerAccess")
-//    protected Rotation tileRotation = Rotation.NONE;
     @SuppressWarnings("WeakerAccess")
     protected Block placeBlock;
     @SuppressWarnings("WeakerAccess")
     protected final Set<BlockPos> updateBlockOffsets = new HashSet<>();
     @SuppressWarnings("WeakerAccess")
     protected final Set<Block> canBeReplacedWithBlocks = new HashSet<>();
-    // Calen
     private ListTag items;
     private ListTag fluids;
 
     @SuppressWarnings("unused")
     public static boolean predicate(SchematicBlockContext context) {
-//        if (context.blockState.getBlock().isAir(context.blockState, null, null))
         if (context.blockState.isAir()) {
             return false;
         }
@@ -125,7 +120,6 @@ public class SchematicBlockDefault implements ISchematicBlock {
             BlockEntity tileEntity = context.world.getBlockEntity(context.pos);
             if (tileEntity != null) {
                 tileNbt = tileEntity.serializeNBT();
-                // Calen
                 // containing items
                 items = new ListTag();
                 tileEntity.getCapability(CapUtil.CAP_ITEMS).ifPresent(c ->
@@ -162,7 +156,6 @@ public class SchematicBlockDefault implements ISchematicBlock {
                 .map(rule -> rule.placeBlock)
                 .filter(Objects::nonNull)
                 .findFirst()
-//                .map(Block::getBlockFromName)
                 .map(BlockUtil::getBlockFromRegistryName)
                 .orElse(context.block);
     }
@@ -178,7 +171,6 @@ public class SchematicBlockDefault implements ISchematicBlock {
                     .forEach(updateBlockOffsets::add);
         } else {
             Stream.of(Direction.VALUES)
-//                    .map(Direction::getDirectionVec)
                     .map(Direction::getNormal)
                     .map(BlockPos::new)
                     .forEach(updateBlockOffsets::add);
@@ -193,7 +185,6 @@ public class SchematicBlockDefault implements ISchematicBlock {
                 .map(rule -> rule.canBeReplacedWithBlocks)
                 .filter(Objects::nonNull)
                 .flatMap(Collection::stream)
-//                .map(Block::getBlockFromName)
                 .map(BlockUtil::getBlockFromRegistryName)
                 .forEach(canBeReplacedWithBlocks::add);
         canBeReplacedWithBlocks.add(context.block);
@@ -232,16 +223,7 @@ public class SchematicBlockDefault implements ISchematicBlock {
                 .map(rule -> rule.requiredExtractors)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-//        return (
-//                collect.isEmpty()
-//                        ? Stream.of(new RequiredExtractorItemFromBlock())
-//                        : collect.stream().flatMap(Collection::stream)
-//        )
-//                .flatMap(requiredExtractor -> requiredExtractor.extractItemsFromBlock(blockState, tileNbt).stream())
-//                .filter(((Predicate<ItemStack>) ItemStack::isEmpty).negate())
-//                .collect(Collectors.toList());
 
-        // Calen: containing items
         List<ItemStack> ret = Lists.newArrayList();
         if (items != null) {
             for (int index = 0; index < items.size(); index++) {
@@ -268,15 +250,7 @@ public class SchematicBlockDefault implements ISchematicBlock {
     @Override
     public List<FluidStack> computeRequiredFluids() {
         Set<JsonRule> rules = RulesLoader.getRules(blockState, tileNbt);
-//        return rules.stream()
-//                .map(rule -> rule.requiredExtractors)
-//                .filter(Objects::nonNull)
-//                .flatMap(Collection::stream)
-//                .flatMap(requiredExtractor -> requiredExtractor.extractFluidsFromBlock(blockState, tileNbt).stream())
-//                .filter(Objects::nonNull)
-//                .collect(Collectors.toList());
 
-        // Calen: containing fluids
         List<FluidStack> ret = Lists.newArrayList();
         if (fluids != null) {
             for (int index = 0; index < fluids.size(); index++) {
@@ -304,16 +278,11 @@ public class SchematicBlockDefault implements ISchematicBlock {
         requiredBlockOffsets.stream()
                 .map(blockPos -> blockPos.rotate(rotation))
                 .forEach(schematicBlock.requiredBlockOffsets::add);
-//        schematicBlock.blockState = blockState.withRotation(rotation);
         schematicBlock.blockState = blockState.rotate(rotation);
         schematicBlock.ignoredProperties.addAll(ignoredProperties);
-//        schematicBlock.tileNbt = tileNbt;
         schematicBlock.tileNbt = tileNbt == null ? null : tileNbt.copy();
         schematicBlock.items = items == null ? null : items.copy();
         schematicBlock.fluids = fluids == null ? null : fluids.copy();
-        // Calen: 1.12.2 tileRotation -> 1.18.2 SkullBlock BlockState ROTATION_16
-////        schematicBlock.tileRotation = tileRotation.add(rotation);
-//        schematicBlock.tileRotation = tileRotation.getRotated(rotation);
         schematicBlock.placeBlock = placeBlock;
         updateBlockOffsets.stream()
                 .map(blockPos -> blockPos.rotate(rotation))
@@ -324,8 +293,6 @@ public class SchematicBlockDefault implements ISchematicBlock {
 
     @Override
     public boolean canBuild(Level world, BlockPos blockPos) {
-//        return world.isEmptyBlock(blockPos);
-        // Calen
         return world.isEmptyBlock(blockPos) || world.getBlockState(blockPos).getBlock() == Blocks.WATER;
     }
 
@@ -364,10 +331,8 @@ public class SchematicBlockDefault implements ISchematicBlock {
             world.getProfiler().push("notify");
             updateBlockOffsets.stream()
                     .map(blockPos::offset)
-//                    .forEach(updatePos -> world.notifyNeighborsOfStateChange(updatePos, placeBlock, false));
                     .forEach(updatePos -> world.updateNeighborsAt(updatePos, placeBlock));
             world.getProfiler().pop();
-//            if (tileNbt != null && blockState.getBlock().hasTileEntity(blockState))
             if (tileNbt != null && blockState.hasBlockEntity()) {
                 world.getProfiler().push("prepare tile");
                 Set<JsonRule> rules = RulesLoader.getRules(blockState, tileNbt);
@@ -395,13 +360,7 @@ public class SchematicBlockDefault implements ISchematicBlock {
                                 : newTileNbt
                 );
                 if (tileEntity != null) {
-                    // Calen: tileEntity#setLevel and tileEntity#clearRemoved will be called in world.setBlockEntity
-//                    tileEntity.setLevel(world);
                     world.setBlockEntity(tileEntity);
-                    // Calen: 1.12.2 tileRotation -> 1.18.2 SkullBlock BlockState ROTATION_16
-//                    if (tileRotation != Rotation.NONE) {
-////                        tileEntity.rotate(tileRotation);
-//                    }
                 }
                 world.getProfiler().pop();
             }
@@ -412,9 +371,7 @@ public class SchematicBlockDefault implements ISchematicBlock {
 
     @Override
     @SuppressWarnings("Duplicates")
-//    public boolean buildWithoutChecks(Level world, BlockPos blockPos)
     public boolean buildWithoutChecks(IFakeWorld world, BlockPos blockPos) {
-        // Calen: if 0 -> FallingBlock will
         if (world.setBlock(blockPos, blockState, 0)) {
             if (tileNbt != null && blockState.hasBlockEntity()) {
                 CompoundTag newTileNbt = new CompoundTag();
@@ -424,18 +381,9 @@ public class SchematicBlockDefault implements ISchematicBlock {
                 newTileNbt.putInt("x", blockPos.getX());
                 newTileNbt.putInt("y", blockPos.getY());
                 newTileNbt.putInt("z", blockPos.getZ());
-//                BlockEntity tileEntity = BlockEntity.create(world, newTileNbt);
                 BlockEntity tileEntity = BlockEntity.loadStatic(blockPos, blockState, newTileNbt);
                 if (tileEntity != null) {
-                    // Calen: tileEntity#setLevel and tileEntity#clearRemoved will be called in world.setBlockEntity
-//                    tileEntity.setLevel(world);
                     world.setBlockEntity(tileEntity);
-                    // Calen: 1.12.2 tileRotation -> 1.18.2 SkullBlock BlockState ROTATION_16
-//                    if (tileRotation != Rotation.NONE)
-////                    if (tileRotation != Rotation.NONE && tileEntity instanceof SkullBlockEntity skull) {
-////                        tileEntity.rotate(tileRotation);
-//                        world.getBlockState(blockPos).rotate(tileRotation);
-//                    }
                 }
                 return true;
             }
@@ -460,7 +408,6 @@ public class SchematicBlockDefault implements ISchematicBlock {
                                 .map(NbtUtils::writeBlockPos)
                 )
         );
-//        nbt.put("blockState", NbtUtils.writeBlockState(new CompoundTag(), blockState));
         nbt.put("blockState", NbtUtils.writeBlockState(blockState));
         nbt.put(
                 "ignoredProperties",
@@ -472,7 +419,6 @@ public class SchematicBlockDefault implements ISchematicBlock {
         if (tileNbt != null) {
             nbt.put("tileNbt", tileNbt);
         }
-        // Calen: containing items & fluids
         if (items != null) {
             nbt.put("items", items);
         }
@@ -480,9 +426,6 @@ public class SchematicBlockDefault implements ISchematicBlock {
             nbt.put("fluids", fluids);
         }
 
-        // Calen: 1.12.2 tileRotation -> 1.18.2 SkullBlock BlockState ROTATION_16
-//        nbt.put("tileRotation", NBTUtilBC.writeEnum(tileRotation));
-//        nbt.putString("placeBlock", Block.REGISTRY.getNameForObject(placeBlock).toString());
         nbt.putString("placeBlock", ForgeRegistries.BLOCKS.getKey(placeBlock).toString());
         nbt.put(
                 "updateBlockOffsets",
@@ -495,7 +438,6 @@ public class SchematicBlockDefault implements ISchematicBlock {
                 "canBeReplacedWithBlocks",
                 NBTUtilBC.writeStringList(
                         canBeReplacedWithBlocks.stream()
-//                                .map(Block.REGISTRY::getNameForObject)
                                 .map(ForgeRegistries.BLOCKS::getKey)
                                 .map(Object::toString)
                 )
@@ -520,7 +462,6 @@ public class SchematicBlockDefault implements ISchematicBlock {
         if (nbt.contains("tileNbt")) {
             tileNbt = nbt.getCompound("tileNbt");
         }
-        // Calen: containing items & fluids
         if (nbt.contains("items")) {
             items = nbt.getList("items", Tag.TAG_COMPOUND);
         }
@@ -528,16 +469,12 @@ public class SchematicBlockDefault implements ISchematicBlock {
             fluids = nbt.getList("fluids", Tag.TAG_COMPOUND);
         }
 
-        // Calen: 1.12.2 tileRotation -> 1.18.2 SkullBlock BlockState ROTATION_16
-//        tileRotation = NBTUtilBC.readEnum(nbt.get("tileRotation"), Rotation.class);
-//        placeBlock = Block.REGISTRY.getObject(new ResourceLocation(nbt.getString("placeBlock")));
         placeBlock = BlockUtil.getBlockFromRegistryName(nbt.getString("placeBlock"));
         NBTUtilBC.readCompoundList(nbt.get("updateBlockOffsets"))
                 .map(NbtUtils::readBlockPos)
                 .forEach(updateBlockOffsets::add);
         NBTUtilBC.readStringList(nbt.get("canBeReplacedWithBlocks"))
                 .map(ResourceLocation::new)
-//                .map(Block.REGISTRY::getObject)
                 .map(BlockUtil::getBlockFromRegistryName)
                 .forEach(canBeReplacedWithBlocks::add);
     }
@@ -557,7 +494,6 @@ public class SchematicBlockDefault implements ISchematicBlock {
                 blockState.equals(that.blockState) &&
                 ignoredProperties.equals(that.ignoredProperties) &&
                 (tileNbt != null ? tileNbt.equals(that.tileNbt) : that.tileNbt == null) &&
-                // Calen: 1.12.2 tileRotation -> 1.18.2 SkullBlock BlockState ROTATION_16
 //                tileRotation == that.tileRotation &&
                 placeBlock.equals(that.placeBlock) &&
                 updateBlockOffsets.equals(that.updateBlockOffsets) &&
@@ -570,8 +506,6 @@ public class SchematicBlockDefault implements ISchematicBlock {
         result = 31 * result + blockState.hashCode();
         result = 31 * result + ignoredProperties.hashCode();
         result = 31 * result + (tileNbt != null ? tileNbt.hashCode() : 0);
-        // Calen: 1.12.2 tileRotation -> 1.18.2 SkullBlock BlockState ROTATION_16
-//        result = 31 * result + tileRotation.hashCode();
         result = 31 * result + placeBlock.hashCode();
         result = 31 * result + updateBlockOffsets.hashCode();
         result = 31 * result + canBeReplacedWithBlocks.hashCode();

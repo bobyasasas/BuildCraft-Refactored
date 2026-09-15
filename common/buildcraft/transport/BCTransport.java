@@ -45,14 +45,12 @@ import java.util.function.Consumer;
 //    name = "BuildCraft Transport",
 //    version = BCLib.VERSION,
 //    dependencies = "required-after:buildcraftcore@[" + BCLib.VERSION + "]"
-//)
 //@formatter:on
 @Mod(BCTransport.MODID)
 @Mod.EventBusSubscriber(modid = BCTransport.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BCTransport {
     public static final String MODID = "buildcrafttransport";
 
-    // @Mod.Instance(MOD_ID)
     public static BCTransport INSTANCE = null;
 
     private static CreativeTabBC tabPipes;
@@ -80,14 +78,10 @@ public class BCTransport {
         BCTransportStatements.preInit();
 
         // Reload after all the pipe defs have been created.
-//        BCTransportConfig.reloadConfig(EnumRestartRequirement.GAME);
         BCTransportConfig.reloadConfig();
 
         tabPipes.setItemPipe(BCTransportItems.pipeItemDiamond.get(null));
         tabPlugs.setItem(BCTransportItems.plugBlocker);
-//
-//        NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, BCTransportProxy.getProxy());
-//
         SchematicBlockFactoryRegistry.registerFactory("pipe", 300, SchematicBlockPipe::predicate,
                 SchematicBlockPipe::new);
 
@@ -130,13 +124,10 @@ public class BCTransport {
     private static int totalTantrumTime;
 
     @SubscribeEvent
-//    public static void onImcEvent(IMCEvent imc)
     public static void onImcEvent(InterModProcessEvent imc) {
-//        for (InterModComms.IMCMessage message : imc.getMessages())
         InterModComms.getMessages(MODID).forEach(message ->
         {
             if (message.messageSupplier().get() instanceof BcImcMessage bcImcMessage) {
-//                if (FacadeAPI.isFacadeMessageId(message.key))
                 if (FacadeAPI.isFacadeMessageId(message.method())) {
                     // As this used to be in transport we will need to
                     // pass messages on to silicon
@@ -164,7 +155,6 @@ public class BCTransport {
                     }
                     // Ok, tantrum over
                     if (BCModules.SILICON.isLoaded()) {
-//                        FacadeStateManager.receiveInterModComms(message);
                         FacadeStateManager.receiveInterModComms(message, bcImcMessage);
                     }
                 } else {
@@ -187,19 +177,14 @@ public class BCTransport {
 
         startBatch();
         // Items
-//        registerTag("item.waterproof").reg("waterproof").locale("pipeWaterproof").oldReg("pipeWaterproof").model("waterproof");
         registerTag("item.waterproof").reg("waterproof").locale("pipeWaterproof");
-//                .model("waterproof");
         registerTag("item.plug.blocker").reg("plug_blocker").locale("PipePlug")
-//                .model("plug_blocker")
                 .tab("buildcraft.plugs")
         ;
         registerTag("item.plug.power_adaptor").reg("plug_power_adaptor").locale("PipePowerAdapter")
-//                .model("plug_power_adaptor")
                 .tab("buildcraft.plugs")
         ;
         registerTag("item.wire").reg("wire").locale("pipeWire")
-//                .model("wire/")
                 .tab("buildcraft.plugs")
         ;
 
@@ -258,33 +243,27 @@ public class BCTransport {
         endBatch(TagManager.setTab("buildcraft.pipes"));
 
         // Item Blocks
-//        registerTag("item.block.filtered_buffer").reg("filtered_buffer").locale("filteredBufferBlock").model("filtered_buffer");
         registerTag("item.block.filtered_buffer").reg("filtered_buffer").locale("filteredBufferBlock");
         // Blocks
-//        registerTag("block.filtered_buffer").reg("filtered_buffer").oldReg("filteredBufferBlock").locale("filteredBufferBlock").model("filtered_buffer");
         registerTag("block.filtered_buffer").reg("filtered_buffer").locale("filteredBufferBlock");
         registerTag("block.pipe_holder").reg("pipe_holder").locale("pipeHolder");
         // Tiles
         registerTag("tile.filtered_buffer").reg("filtered_buffer");
         registerTag("tile.pipe_holder").reg("pipe_holder");
 
-//        endBatch(TagManager.prependTags("buildcrafttransport:", EnumTagType.REGISTRY_NAME, EnumTagType.MODEL_LOCATION).andThen(TagManager.setTab("buildcraft.main")));
         endBatch(TagManager.prependTags("buildcrafttransport:", EnumTagType.REGISTRY_NAME).andThen(TagManager.setTab("buildcraft.main")));
 
     }
 
     private static TagEntry registerTag(String id) {
-//        return TagManager.registerTag(id);
         return tagManager.registerTag(id);
     }
 
     private static void startBatch() {
-//        TagManager.startBatch();
         tagManager.startBatch();
     }
 
     private static void endBatch(Consumer<TagEntry> consumer) {
-//        TagManager.endBatch(consumer);
         tagManager.endBatch(consumer);
     }
 }

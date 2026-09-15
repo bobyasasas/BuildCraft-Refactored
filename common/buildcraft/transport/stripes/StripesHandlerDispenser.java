@@ -43,25 +43,21 @@ public enum StripesHandlerDispenser implements IStripesHandlerItem {
         }
 
         @Override
-//        public double getX()
         public double x() {
             return pos.getX() + 0.5D;
         }
 
         @Override
-//        public double getY()
         public double y() {
             return pos.getY() + 0.5D;
         }
 
         @Override
-//        public double getZ()
         public double z() {
             return pos.getZ() + 0.5D;
         }
 
         @Override
-//        public BlockPos getBlockPos()
         public BlockPos getPos() {
             return pos;
         }
@@ -73,13 +69,11 @@ public enum StripesHandlerDispenser implements IStripesHandlerItem {
 
         @SuppressWarnings("unchecked")
         @Override
-//        public <T extends BlockEntity> T getBlockTileEntity()
         public <T extends BlockEntity> T getEntity() {
             return (T) world.getBlockEntity(pos);
         }
 
         @Override
-//        public Level getWorld()
         public ServerLevel getLevel() {
             return world;
         }
@@ -107,20 +101,14 @@ public enum StripesHandlerDispenser implements IStripesHandlerItem {
                           ItemStack stack,
                           Player player,
                           IStripesActivator activator) {
-//        if (!BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.containsKey(stack.getItem()))
         if (!DispenserBlock.DISPENSER_REGISTRY.containsKey(stack.getItem())) {
             return false;
         }
-//        IBehaviorDispenseItem behaviour = BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.getObject(stack.getItem());
         DispenseItemBehavior behaviour = DispenserBlock.DISPENSER_REGISTRY.get(stack.getItem());
         // Temp: for testing
-        // if (!shouldHandle(stack)) {
-        // return false;
-        // }
 
         BlockSource source = new Source((ServerLevel) world, pos, direction);
         ItemStack output = behaviour.dispense(source, stack.copy());
-//        player.getInventory().setInventorySlotContents(player.inventory.currentItem, output);
         player.getInventory().setItem(player.getInventory().selected, output);
         return true;
     }

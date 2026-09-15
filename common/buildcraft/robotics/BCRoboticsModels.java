@@ -41,7 +41,6 @@ public class BCRoboticsModels {
     public static final IPluggableStaticBaker<KeyPlugRobotStation> BAKER_PLUG_ROBOT_STATION;
 
     static {
-        // Calen: ensure ExpressionCompat ENUM_FACING = new NodeType<>("Facing", Direction.UP); run, or will cause IllegalArgumentException: Unknown NodeType class net.minecraft.core.Direction
         ExpressionCompat.setup();
         RoboticsNodeTypes.setup();
 
@@ -79,10 +78,8 @@ public class BCRoboticsModels {
         BCRoboticsEntities.robotMap.values().forEach(robot -> EntityRenderers.register(robot.get(), RenderRobot::new));
     }
 
-    // Calen 1.20.1
     private static final List<Runnable> spriteTasks = Lists.newLinkedList();
 
-    // Calen 1.20.1
     @SubscribeEvent
     public static void onTextureStitchEvent$Post(TextureStitchEvent.Post event) {
         if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {

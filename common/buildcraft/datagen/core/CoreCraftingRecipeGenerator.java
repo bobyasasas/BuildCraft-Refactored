@@ -26,7 +26,6 @@ public class CoreCraftingRecipeGenerator extends RecipeProvider {
 
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
-        // Calen: unlock the recipe before got the item... some gamerules...
         // Gears
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BCCoreItems.gearWood.get())
                 .pattern(" o ")

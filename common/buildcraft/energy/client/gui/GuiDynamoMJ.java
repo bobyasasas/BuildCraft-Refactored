@@ -45,9 +45,7 @@ public class GuiDynamoMJ extends GuiBC8<ContainerDynamoMJ> {
 
     public GuiDynamoMJ(ContainerDynamoMJ container, Inventory inventory, Component component) {
         super(container, inventory, component);
-//        xSize = SIZE_X;
         imageWidth = SIZE_X;
-//        ySize = SIZE_Y;
         imageHeight = SIZE_Y;
         mainGui.shownElements.add(new LedgerDynamoMJ(mainGui, container.tile, true));
         mainGui.shownElements.add(
@@ -62,17 +60,12 @@ public class GuiDynamoMJ extends GuiBC8<ContainerDynamoMJ> {
             @Override
             public void addToolTips(List<ToolTip> tooltips) {
                 if (contains(mainGui.mouse)) {
-                    // List<String> lines = new ArrayList<>();
                     List<Component> lines = new ArrayList<>();
-                    // lines.add(LocaleUtil.localize("buildcraft.gui.rf_engine.upgrade_types"));
                     lines.add(Component.translatable("buildcraft.gui.rf_engine.upgrade_types"));
-                    // for (Map.Entry<Item, Long> entry : TileEngineRF.RF_UPGRADE.entrySet())
                     for (Map.Entry<RegistryObject<ItemBC_Neptune>, Long> entry : TileEngineRF.RF_UPGRADE.entrySet()) {
-                        // String itemName = entry.getKey().getItemStackDisplayName(new ItemStack(entry.getKey()));
                         Component itemName = entry.getKey().get().getName(new ItemStack(entry.getKey().get()));
                         long mj = entry.getValue();
                         int rf = (int) (mj / BCLibConfig.mjRfConversion.mjPerRf);
-                        // lines.add(itemName + " = +" + LocaleUtil.localizeRfFlow(rf));
                         lines.add(Component.literal("").append(itemName).append(" = +").append(LocaleUtil.localizeRfFlowComponent(rf)));
                     }
                     tooltips.add(new ToolTip(lines));
@@ -99,7 +92,6 @@ public class GuiDynamoMJ extends GuiBC8<ContainerDynamoMJ> {
                     sb.append(LocaleUtil.formatRf(container.tile.getCurrentRF()));
                     sb.append(" / ");
                     sb.append(LocaleUtil.localizeRf(TileEngineRF.MAX_RF));
-                    // tooltips.add(new ToolTip(sb.toString()));
                     tooltips.add(new ToolTip(Component.literal(sb.toString())));
                 }
             }
@@ -110,26 +102,19 @@ public class GuiDynamoMJ extends GuiBC8<ContainerDynamoMJ> {
     protected void drawBackgroundLayer(float partialTicks, GuiGraphics guiGraphics) {
         ICON_GUI.drawAt(mainGui.rootElement, guiGraphics);
         double rfHeight = 60.0 * container.tile.getCurrentRF() / TileEngineRF.MAX_RF;
-        // double scale = new ScaledResolution(mc).getScaleFactor();
         double scale = minecraft.getWindow().getGuiScale();
         rfHeight = (Math.round(rfHeight * scale)) / scale;
         ICON_RF.drawCutInside(new GuiRectangle(139, 18 + 60 - rfHeight, 6, rfHeight).offset(mainGui.rootElement), guiGraphics);
 
         int x = getGuiLeft();
         int y = getGuiTop();
-        // itemRender.renderItemAndEffectIntoGUI(new ItemStack(BCCoreItems.gearIron), x + 60, y + 22);
         guiGraphics.renderItem(new ItemStack(BCCoreItems.gearIron.get()), x + 60, y + 22);
-        // itemRender.renderItemAndEffectIntoGUI(new ItemStack(BCCoreItems.gearGold), x + 83, y + 22);
         guiGraphics.renderItem(new ItemStack(BCCoreItems.gearGold.get()), x + 83, y + 22);
 
-        // GlStateManager.disableDepth();
         RenderUtil.disableDepth();
-        // GlStateManager.color(1, 1, 1, 0.65f);
         RenderUtil.color(1, 1, 1, 0.65f);
         ICON_OVERLAY.drawAt(mainGui.rootElement.offset(39, 18), guiGraphics);
-        // GlStateManager.color(1, 1, 1, 1f);
         RenderUtil.color(1, 1, 1, 1f);
-        // GlStateManager.enableDepth();
         RenderUtil.enableDepth();
     }
 
@@ -139,12 +124,10 @@ public class GuiDynamoMJ extends GuiBC8<ContainerDynamoMJ> {
         int strWidth = font.width(str);
         double titleX = mainGui.rootElement.getCenterX() - strWidth / 2;
         double titleY = mainGui.rootElement.getY() + 6;
-        // fontRenderer.drawString(str, (int) titleX, (int) titleY, 0x404040);
         guiGraphics.drawString(font, str, (int) titleX, (int) titleY, 0x404040, false);
 
         double invX = mainGui.rootElement.getX() + 8;
         double invY = mainGui.rootElement.getY() + SIZE_Y - 96;
-        // fontRenderer.drawString(LocaleUtil.localize("gui.inventory"), (int) invX, (int) invY, 0x404040);
         guiGraphics.drawString(font, LocaleUtil.localize("gui.inventory"), (int) invX, (int) invY, 0x404040, false);
     }
 }

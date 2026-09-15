@@ -70,7 +70,6 @@ public class TileChute extends TileBC_Neptune implements ITickable, IDebuggable,
         caps.addProvider(new MjCapabilityHelper(new MjBatteryReceiver(battery)));
     }
 
-    // public static boolean hasInventoryAtPosition(IBlockAccess world, BlockPos pos, Direction side)
     public static boolean hasInventoryAtPosition(LevelAccessor world, BlockPos pos, Direction side) {
         BlockEntity tile = world.getBlockEntity(pos);
         return ItemTransactorHelper.getTransactor(tile, side.getOpposite()) != NoSpaceTransactor.INSTANCE;
@@ -79,7 +78,6 @@ public class TileChute extends TileBC_Neptune implements ITickable, IDebuggable,
     private void pickupItems(Direction currentSide) {
         AABB aabb = BoundingBoxUtil.extrudeFace(getBlockPos(), currentSide, 0.25);
         int count = PICKUP_MAX;
-//        for (ItemEntity entity : level.getEntitiesOfClass(ItemEntity.class, aabb, EntitySelectors.IS_ALIVE))
         for (ItemEntity entity : level.getEntitiesOfClass(ItemEntity.class, aabb, EntitySelector.ENTITY_STILL_ALIVE)) {
             int moved = ItemTransactorHelper.move(new TransactorEntityItem(entity), inv, count);
             count -= moved;
@@ -149,31 +147,23 @@ public class TileChute extends TileBC_Neptune implements ITickable, IDebuggable,
     }
 
     @Override
-//    public void readFromNBT(CompoundTag nbt)
     public void load(CompoundTag nbt) {
-//        super.readFromNBT(nbt);
         super.load(nbt);
         progress = nbt.getInt("progress");
         battery.deserializeNBT(nbt.getCompound("battery"));
     }
 
     @Override
-//    public CompoundTag writeToNBT(CompoundTag nbt)
     public void saveAdditional(CompoundTag nbt) {
-//        super.writeToNBT(nbt);
         super.saveAdditional(nbt);
         nbt.putInt("progress", progress);
         nbt.put("battery", battery.serializeNBT());
-//        return nbt;
     }
 
     // IDebuggable
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-//        left.add("battery = " + battery.getDebugString());
-//        left.add("progress = " + progress);
         left.add(Component.literal("battery = " + battery.getDebugString()));
         left.add(Component.literal("progress = " + progress));
     }

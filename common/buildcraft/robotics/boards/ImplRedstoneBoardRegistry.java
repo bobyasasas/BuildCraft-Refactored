@@ -53,7 +53,6 @@ public class ImplRedstoneBoardRegistry extends RedstoneBoardRegistry {
 
     @Override
     public RedstoneBoardNBT<?> getRedstoneBoard(CompoundTag nbt) {
-        // return getRedstoneBoard(nbt.getString("id"));
         return getRedstoneBoard(new ResourceLocation(nbt.getString("id")));
     }
 
@@ -69,7 +68,6 @@ public class ImplRedstoneBoardRegistry extends RedstoneBoardRegistry {
     }
 
     @Override
-    // public Collection<RedstoneBoardNBT<?>> getAllBoardNBTs()
     public List<RedstoneBoardNBT<?>> getAllBoardNBTs() {
         ArrayList<RedstoneBoardNBT<?>> result = new ArrayList<RedstoneBoardNBT<?>>();
 
@@ -85,7 +83,6 @@ public class ImplRedstoneBoardRegistry extends RedstoneBoardRegistry {
         return boards.get(board.getID()).energyCost;
     }
 
-    // Calen 1.18.2
     @Override
     public Map<RedstoneBoardNBT<?>, RegistryObject<? extends Item>> getBoardNBTItemMap() {
         return boardNBTItemMap;

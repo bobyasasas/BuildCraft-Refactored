@@ -72,9 +72,7 @@ public enum CoreTriggerProvider implements ITriggerProvider {
         if (!blockFluidHandlerTriggers) {
             IFluidHandler fluidHandler = tile.getCapability(CapUtil.CAP_FLUIDS, side.getOpposite()).orElse(null);
             if (fluidHandler != null) {
-//                IFluidTankProperties[] liquids = fluidHandler.getTankProperties();
                 int liquids = fluidHandler.getTanks();
-//                if (liquids != null && liquids.length > 0)
                 if (liquids > 0) {
                     res.add(BCCoreStatements.TRIGGER_FLUID_EMPTY);
                     res.add(BCCoreStatements.TRIGGER_FLUID_SPACE);
@@ -87,7 +85,6 @@ public enum CoreTriggerProvider implements ITriggerProvider {
             }
         }
 
-//        if (tile.hasCapability(TilesAPI.CAP_HAS_WORK, null))
         if (tile.getCapability(TilesAPI.CAP_HAS_WORK, null).isPresent()) {
             res.add(BCCoreStatements.TRIGGER_MACHINE_ACTIVE);
             res.add(BCCoreStatements.TRIGGER_MACHINE_INACTIVE);

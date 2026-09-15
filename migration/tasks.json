@@ -104,9 +104,9 @@
       "id": "M1.4",
       "phase": "Phase 1 工程化整备",
       "title": "死代码与卫生清理",
-      "status": "pending",
+      "status": "done",
       "acceptance": "注释掉的代码行（基线 3546）与 Calen 移植注释（基线 688）清零或显著下降；test.py、testsuite/、.travis.yml 移除；数字记录在 evidence",
-      "evidence": "",
+      "evidence": "evidence：注释代码行 10895→0（-10895，766 个文件；另删确认的 /* */ 死代码块 4 文件 105 行）；Calen 注释 688→3（-685：整行 647→0、行尾 38→0，3 处 javadoc/块注释文档按保守原则保留）；test.py/.travis.yml/testsuite//setupSubProjects 已移除；build 退出码0、root test 95 + :expression:test 58 全绿；jar class 数不变（2989 个：根 2560 + expression 429）",
       "notes": ""
     },
     {

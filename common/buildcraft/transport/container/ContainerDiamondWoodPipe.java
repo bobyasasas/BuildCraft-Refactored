@@ -28,21 +28,16 @@ public class ContainerDiamondWoodPipe extends ContainerPipe {
         super(menuType, id, player, behaviour.pipe.getHolder());
         this.behaviour = behaviour;
         this.filterInv = behaviour.filters;
-        // Calen: moved to BCTransportGuis#openPipeGui and BCTransportMenuTypes
-//        behaviour.pipe.getHolder().onPlayerOpen(player);
 
         addFullPlayerInventory(79);
 
         for (int i = 0; i < 9; i++) {
-//            addSlotToContainer(new SlotPhantom(filterInv, i, 8 + i * 18, 18));
             addSlot(new SlotPhantom(filterInv, i, 8 + i * 18, 18));
         }
     }
 
     @Override
-//    public void onContainerClosed(Player player)
     public void removed(Player player) {
-//        super.onContainerClosed(player);
         super.removed(player);
         behaviour.pipe.getHolder().onPlayerClose(player);
     }

@@ -81,11 +81,9 @@ public class BlockHeatExchange extends BlockBCTile_Neptune<TileHeatExchange> imp
         if (tile instanceof TileHeatExchange) {
             TileHeatExchange exchange = (TileHeatExchange) tile;
             Direction thisFacing = state.getValue(PROP_FACING);
-//            boolean connectLeft = doesNeighbourConnect(world, pos, thisFacing, thisFacing.rotateY());
             boolean connectLeft = doesNeighbourConnect(world, pos, thisFacing, thisFacing.getClockWise());
             state = state.setValue(PROP_CONNECTED_LEFT, connectLeft);
 
-//            boolean connectRight = doesNeighbourConnect(world, pos, thisFacing, thisFacing.rotateYCCW());
             boolean connectRight = doesNeighbourConnect(world, pos, thisFacing, thisFacing.getCounterClockWise());
             state = state.setValue(PROP_CONNECTED_RIGHT, connectRight);
 
@@ -126,7 +124,6 @@ public class BlockHeatExchange extends BlockBCTile_Neptune<TileHeatExchange> imp
     private static final VoxelShape START_DOWN = Block.box(2, 0, 2, 14, 2, 14);
     private static final VoxelShape END_UP = Block.box(2, 14, 2, 14, 16, 14);
 
-    // Calen: if ret full box, the inner quads will be dark
     @NotNull
     @Override
     public VoxelShape getShape(BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
@@ -169,10 +166,8 @@ public class BlockHeatExchange extends BlockBCTile_Neptune<TileHeatExchange> imp
         BlockEntity tile = world.getBlockEntity(pos);
         if (tile instanceof TileHeatExchange) {
             TileHeatExchange exchange = (TileHeatExchange) tile;
-//            return exchange.rotate();
             exchange.rotate();
         }
-//        return false;
         return state;
     }
 
@@ -187,15 +182,11 @@ public class BlockHeatExchange extends BlockBCTile_Neptune<TileHeatExchange> imp
     }
 
     @Override
-//    public TileBC_Neptune createTileEntity(Level world, BlockState state)
     public TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state) {
         return new TileHeatExchange(pos, state);
     }
 
 //    @Override
-//    public boolean isOpaqueCube(IBlockState state) {
-//        return false;
-//    }
 
     @Override
     public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
@@ -208,16 +199,9 @@ public class BlockHeatExchange extends BlockBCTile_Neptune<TileHeatExchange> imp
     }
 
 //    @Override
-//    public boolean isFullCube(IBlockState state) {
-//        return false;
-//    }
 
     // 1.18.2: moved to BCFactory#clientSetup
 //    @Override
-//    @SideOnly(Side.CLIENT)
-//    public BlockRenderLayer getBlockLayer() {
-//        return BlockRenderLayer.CUTOUT;
-//    }
 
     @Override
     public float getExtension(Level world, BlockPos pos, Direction face, BlockState state) {

@@ -27,13 +27,11 @@ public class BoardRobotShovelman extends BoardRobotGenericBreakBlock {
 
     @Override
     public boolean isExpectedTool(@Nonnull ItemStack stack) {
-        // return stack != null && stack.getItem().getToolClasses(stack).contains("shovel");
         return !stack.isEmpty() && stack.getItem() instanceof ShovelItem;
     }
 
     @Override
     public boolean isExpectedBlock(Level world, BlockPos pos) {
-        // return BuildCraftAPI.getWorldProperty("shoveled").get(world, pos);
         return world.getBlockState(pos).is(BlockTags.MINEABLE_WITH_SHOVEL);
     }
 

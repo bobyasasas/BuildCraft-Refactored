@@ -46,7 +46,6 @@ public class TriggerFluidContainer extends BCStatement implements ITriggerExtern
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("gate.trigger.fluid." + state.name().toLowerCase(Locale.ROOT));
         return Component.translatable("gate.trigger.fluid." + state.name().toLowerCase(Locale.ROOT));
     }
 
@@ -70,9 +69,7 @@ public class TriggerFluidContainer extends BCStatement implements ITriggerExtern
                 searchedFluid.setAmount(1);
             }
 
-//            IFluidTankProperties[] liquids = handler.getTankProperties();
             int liquids = handler.getTanks();
-//            if (liquids == null || liquids.length == 0)
             if (liquids == 0) {
                 return false;
             }
@@ -82,12 +79,8 @@ public class TriggerFluidContainer extends BCStatement implements ITriggerExtern
                     FluidStack drained = handler.drain(1, IFluidHandler.FluidAction.SIMULATE);
                     return drained == null || drained.isEmpty() || drained.getAmount() <= 0;
                 case CONTAINS:
-//                    for (IFluidTankProperties c : liquids)
                     for (int i = 0; i < liquids; i++) {
-//                        if (c == null) continue;
-//                        FluidStack fluid = c.getContents();
                         FluidStack fluid = handler.getFluidInTank(i);
-//                        if (fluid != null && fluid.getAmount() > 0 && (searchedFluid == null || searchedFluid.isFluidEqual(fluid)))
                         if ((!fluid.isEmpty()) && (searchedFluid == null || searchedFluid.isFluidEqual(fluid))) {
                             return true;
                         }
@@ -95,12 +88,8 @@ public class TriggerFluidContainer extends BCStatement implements ITriggerExtern
                     return false;
                 case SPACE:
                     if (searchedFluid == null) {
-//                        for (IFluidTankProperties c : liquids)
                         for (int i = 0; i < liquids; i++) {
-//                            if (c == null) continue;
-//                            FluidStack fluid = c.getContents();
                             FluidStack fluid = handler.getFluidInTank(i);
-//                            if ((fluid == null || fluid.getAmount() < c.getCapacity()))
                             if ((fluid.isEmpty() || fluid.getAmount() < handler.getTankCapacity(i))) {
                                 return true;
                             }
@@ -110,12 +99,8 @@ public class TriggerFluidContainer extends BCStatement implements ITriggerExtern
                     return handler.fill(searchedFluid, IFluidHandler.FluidAction.SIMULATE) > 0;
                 case FULL:
                     if (searchedFluid == null) {
-//                        for (IFluidTankProperties c : liquids)
                         for (int i = 0; i < liquids; i++) {
-//                            if (c == null) continue;
-//                            FluidStack fluid = c.getContents();
                             FluidStack fluid = handler.getFluidInTank(i);
-//                            if ((fluid == null || fluid.getAmount() < c.getCapacity()))
                             if ((fluid.isEmpty() || fluid.getAmount() < handler.getTankCapacity(i))) {
                                 return false;
                             }

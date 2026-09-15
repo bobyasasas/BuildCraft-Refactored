@@ -41,7 +41,6 @@ import java.util.List;
 public class BlockTank extends BlockBCTile_Neptune<TileTank> implements ICustomPipeConnection, ITankBlockConnector, SimpleWaterloggedBlock, IBlockWithTickableTE<TileTank> {
     public static final Property<Boolean> JOINED_BELOW = BuildCraftProperties.JOINED_BELOW;
     private static final Property<Boolean> WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    // private static final AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(2 / 16D, 0 / 16D, 2 / 16D, 14 / 16D, 16 / 16D, 14 / 16D);
     private static final VoxelShape BOUNDING_BOX = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D);
 
     public BlockTank(String idBC, BlockBehaviour.Properties props) {
@@ -65,21 +64,11 @@ public class BlockTank extends BlockBCTile_Neptune<TileTank> implements ICustomP
     }
 
     // 1.18.2: moved to BCFactory#clientSetup
-//    @SideOnly(Side.CLIENT)
 //    @Override
-//    public BlockRenderLayer getBlockLayer() {
-//        return BlockRenderLayer.CUTOUT;
-//    }
 
 //    @Override
-//    public boolean isFullCube(IBlockState state) {
-//        return false;
-//    }
 
 //    @Override
-//    public boolean isOpaqueCube(IBlockState state) {
-//        return false;
-//    }
 
     @Override
     public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
@@ -92,7 +81,6 @@ public class BlockTank extends BlockBCTile_Neptune<TileTank> implements ICustomP
     }
 
     @Override
-//    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos)
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
         return BOUNDING_BOX;
     }
@@ -110,7 +98,7 @@ public class BlockTank extends BlockBCTile_Neptune<TileTank> implements ICustomP
         BlockPos pos = context.getClickedPos();
         BlockState oldState = world.getBlockState(pos);
         BlockState newState = super.getStateForPlacement(context);
-        boolean isInWater = oldState.getBlock() == Blocks.WATER && oldState.getFluidState().isSource(); // Calen: should be called before #getActualState, or the state will be changed from Water block to Tank block
+        boolean isInWater = oldState.getBlock() == Blocks.WATER && oldState.getFluidState().isSource();
         newState = getActualState(newState, world, pos, null);
         return newState.setValue(WATERLOGGED, isInWater);
     }
@@ -124,7 +112,6 @@ public class BlockTank extends BlockBCTile_Neptune<TileTank> implements ICustomP
     @OnlyIn(Dist.CLIENT)
     @Override
     // 1.18.2: ret OPPOSITE value to 1.12.2!
-//    public boolean shouldSideBeRendered(IBlockAccess world, BlockPos pos, EnumFacing side)
     public boolean skipRendering(BlockState thisState, BlockState otherState, Direction side) {
         if (otherState.is(this)) {
             return !(side.getAxis() != Axis.Y || !(otherState.getBlock() instanceof ITankBlockConnector));
@@ -133,13 +120,11 @@ public class BlockTank extends BlockBCTile_Neptune<TileTank> implements ICustomP
     }
 
     @Override
-//    public boolean hasComparatorInputOverride(BlockState state)
     public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-//    public int getComparatorInputOverride(BlockState blockState, Level world, BlockPos pos)
     public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
         BlockEntity tile = level.getBlockEntity(pos);
         if (tile instanceof TileTank) {

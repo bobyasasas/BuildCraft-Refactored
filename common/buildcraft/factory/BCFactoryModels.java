@@ -38,7 +38,6 @@ public class BCFactoryModels {
     public static final ModelHolderVariable HEAT_EXCHANGE_STATIC;
 
     static {
-        // Calen: ensure ExpressionCompat ENUM_FACING = new NodeType<>("Facing", Direction.UP) runned
         // or this will cause IllegalArgumentException: Unknown NodeType class net.minecraft.core.Direction
         ExpressionCompat.setup();
 
@@ -54,47 +53,27 @@ public class BCFactoryModels {
 
     public static void fmlPreInit() {
         // 1.18.2: following events are IModBusEvent
-//        MinecraftForge.EVENT_BUS.register(BCFactoryModels.class);
         IEventBus modEventBus = ((FMLModContainer) ModList.get().getModContainerById(BCFactory.MODID).get()).getEventBus();
         modEventBus.register(BCFactoryModels.class);
     }
 
 //    @SubscribeEvent
-//    @SideOnly(Side.CLIENT)
-//    public static void onModelRegistry(ModelRegistryEvent event) {
-//        if (BCFactoryBlocks.heatExchange != null) {
 //            ModelLoader.setCustomStateMapper(
 //                    BCFactoryBlocks.heatExchange,
-//                    new StateMapperBase() {
 //                        @Nonnull
 //                        @Override
-//                        protected ModelResourceLocation getModelResourceLocation(@Nonnull IBlockState state) {
-//                            return new ModelResourceLocation("buildcraftfactory:heat_exchange#normal");
-//                        }
-//                    }
-//            );
-//        }
-//    }
 
     @SubscribeEvent
-//    public static void fmlInit()
     public static void onTesrReg(RegisterRenderers event) {
-//        ClientRegistry.bindTileEntitySpecialRenderer(TileMiningWell.class, new RenderMiningWell());
         RegistryUtil.regTesrIfTilePresent(BCFactoryBlocks.miningWellTile, RenderMiningWell::new);
-//        ClientRegistry.bindTileEntitySpecialRenderer(TilePump.class, new RenderPump());
         RegistryUtil.regTesrIfTilePresent(BCFactoryBlocks.pumpTile, RenderPump::new);
-//        ClientRegistry.bindTileEntitySpecialRenderer(TileTank.class, new RenderTank());
         RegistryUtil.regTesrIfTilePresent(BCFactoryBlocks.tankTile, RenderTank::new);
-//        ClientRegistry.bindTileEntitySpecialRenderer(TileDistiller_BC8.class, new RenderDistiller());
         RegistryUtil.regTesrIfTilePresent(BCFactoryBlocks.distillerTile, RenderDistiller::new);
-//        ClientRegistry.bindTileEntitySpecialRenderer(TileHeatExchange.class, new RenderHeatExchange());
         RegistryUtil.regTesrIfTilePresent(BCFactoryBlocks.heatExchangeTile, RenderHeatExchange::new);
     }
 
-    // Calen 1.20.1
     private static final List<Runnable> spriteTasks = Lists.newLinkedList();
 
-    // Calen 1.20.1
     @SubscribeEvent
     public static void onTextureStitchEvent$Post(TextureStitchEvent.Post event) {
         if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
@@ -104,9 +83,7 @@ public class BCFactoryModels {
 
     @SubscribeEvent
     public static void onModelBake(ModelEvent.ModifyBakingResult event) {
-        // Calen: to set model for each blockState
         // the model path contains blockstate props
-        // ModelHeatExchange modelHeatExchange = new ModelHeatExchange();
         ModelHeatExchange modelHeatExchange = new ModelHeatExchange(spriteTasks::add);
         event.getModels().replaceAll((rl, m) -> (
                 rl.getNamespace().equals(BCFactory.MODID)

@@ -51,9 +51,7 @@ public class BoardRobotFluidCarrier extends RedstoneBoardRobot {
     }
 
     private boolean robotHasFluid() {
-        // FluidStack tank = robot.getTankInfo(null)[0].fluid;
         FluidStack tank = robot.getCapability(CapUtil.CAP_FLUIDS).orElse(null).getFluidInTank(0);
-        // return tank != null && tank.amount > 0;
         return !tank.isEmpty() && tank.getAmount() > 0;
     }
 }

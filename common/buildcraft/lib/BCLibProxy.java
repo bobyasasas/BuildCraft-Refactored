@@ -47,7 +47,6 @@ import java.util.List;
 
 //public abstract class BCLibProxy implements IGuiHandler
 public abstract class BCLibProxy {
-    // @SidedProxy(modId = BCLib.MODID)
     private static BCLibProxy proxy;
 
     public static BCLibProxy getProxy() {
@@ -114,17 +113,10 @@ public abstract class BCLibProxy {
     }
 
 //    @Override
-//    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-//        return null;
-//    }
 
 //    @Override
-//    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-//        return null;
-//    }
 
     @SuppressWarnings("unused")
-//    @OnlyIn(Dist.DEDICATED_SERVER)
     public static class ServerProxy extends BCLibProxy {
         @Override
         public File getGameDirectory() {
@@ -133,7 +125,6 @@ public abstract class BCLibProxy {
     }
 
     @SuppressWarnings("unused")
-//    @OnlyIn(Dist.CLIENT)
     public static class ClientProxy extends BCLibProxy {
         @Override
         void fmlPreInit() {
@@ -164,22 +155,15 @@ public abstract class BCLibProxy {
             super.fmlPostInit();
             if (BCLibItems.isGuideEnabled()) {
                 ResourceProvider manager = Minecraft.getInstance().getResourceManager();
-//                IReloadableResourceManager reloadable = (IReloadableResourceManager) manager;
                 ReloadableResourceManager reloadable = (ReloadableResourceManager) manager;
-//                reloadable.registerReloadListener(GuideManager.INSTANCE);
                 this.registerReloadListener(reloadable, GuideManager.INSTANCE);
             }
-//            GuiConfigManager.loadFromConfigFile(); // Calen: moved to BCLibEventDist#reload
         }
 
-        // Calen: ReloadableResourceManager#registerReloadListener in 1.18.2 lacks something, here is what there should be in 1.12.2
         private void registerReloadListener(ReloadableResourceManager reloadable, ResourceManagerReloadListener reloadListener) {
             /* Calen: Don't call reloadable.registerReloadListener(reloadListener).
              * Load everything at RecipesUpdatedEvent.
              * When switching language before joining a world, Minecraft.getInstance().level is null, and recipes will not be loaded. */
-//            reloadable.registerReloadListener(reloadListener);
-            // Calen: moved to BCLibEventDistForgeBus#onTextureStitchPost
-//            reloadListener.onResourceManagerReload(reloadable);
             BCLibEventDist.INSTANCE.addReloadListeners(reloadListener);
         }
 
@@ -216,7 +200,6 @@ public abstract class BCLibProxy {
             if (tile != null && tile.hasLevel()) {
                 Level world = tile.getLevel();
                 if (world.isClientSide && Minecraft.getInstance().hasSingleplayerServer()) {
-//                    ServerLevel server = DimensionManager.getWorld(world.provider.getDimension());
                     ServerLevel server = world.getServer().getLevel(world.dimension());
                     if (server == null) return tile;
                     BlockEntity atServer = server.getBlockEntity(tile.getBlockPos());
@@ -237,19 +220,10 @@ public abstract class BCLibProxy {
         @Override
         public Iterable<File> getLoadedResourcePackFiles() {
             List<File> files = new ArrayList<>();
-//            for (ResourcePackRepository.Entry entry : Minecraft.getInstance().getResourcePackRepository().getRepositoryEntries())
             for (Pack pack : Minecraft.getInstance().getResourcePackRepository().getAvailablePacks()) {
-//                IResourcePack pack = entry.getResourcePack();
-//                if (pack instanceof AbstractResourcePack)
                 PackResources opened = pack.open();
                 if (opened instanceof FilePackResources) {
-//                    AbstractResourcePack p = (AbstractResourcePack) pack;
                     FilePackResources p = (FilePackResources) opened;
-//                    Object f = ObfuscationReflectionHelper.getPrivateValue(AbstractResourcePack.class, p, 1);
-//                    if (!(f instanceof File)) {
-//                        throw new Error("We've got the wrong field! (Expected a file but got " + f + ")");
-//                    }
-//                    files.add((File) f);
                     if (p.file.exists()) {
                         files.add(p.file);
                     }
@@ -260,19 +234,6 @@ public abstract class BCLibProxy {
         }
 
 //        @Override
-//        public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
-//            if (id == 0) {
-//                EnumHand hand = x == 0 ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
-//                ItemStack stack = player.getHeldItem(hand);
-//                String name = ItemGuide.getBookName(stack);
-//                if (name == null) {
-//                    return new GuiGuide();
-//                } else {
-//                    return new GuiGuide(name);
-//                }
-//            }
-//            return null;
-//        }
 
         @Override
         public InputStream getStreamForIdentifier(ResourceLocation identifier) throws IOException {

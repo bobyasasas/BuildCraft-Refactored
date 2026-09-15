@@ -33,10 +33,6 @@ public class BCLibRegistries {
         }
         preInitialized = true;
 
-//        BuildcraftRecipeRegistry.integrationRecipes = IntegrationRecipeRegistry.INSTANCE;
-//        BuildcraftRecipeRegistry.refineryRecipes = RefineryRecipeRegistry.INSTANCE;
-//        BuildcraftFuelRegistry.fuel = FuelRegistry.INSTANCE;
-//        BuildcraftFuelRegistry.coolant = CoolantRegistry.INSTANCE;
         BuildCraftAPI.fakePlayerProvider = FakePlayerProvider.INSTANCE;
         PipeApi.pluggableRegistry = PluggableRegistry.INSTANCE;
 

@@ -36,7 +36,6 @@ public class RenderTank implements BlockEntityRenderer<TileTank> {
     }
 
     @Override
-//    public void render(TileTank tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     public void render(TileTank tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         FluidStackInterp forRender = tile.getFluidForRender(partialTicks);
         if (forRender == null) {
@@ -46,18 +45,9 @@ public class RenderTank implements BlockEntityRenderer<TileTank> {
         Minecraft.getInstance().getProfiler().push("tank");
 
 //        // gl state setup
-//        RenderHelper.disableStandardItemLighting();
-//        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-//        GlStateManager.enableBlend();
-//        GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
 //        // buffer setup
-//        try (AutoTessellator tess = RenderUtil.getThreadLocalUnusedTessellator()) {
-//            BufferBuilder bb = tess.tessellator.getBuffer();
-//            bb.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-//            bb.setTranslation(x, y, z);
         VertexConsumer bb = bufferSource.getBuffer(FluidRenderer.COMMON_FLUID_RENDER_TYPE_TRANSLUCENT);
-//        poseStack.translate(x, y, z);
 
         boolean[] sideRender = { true, true, true, true, true, true };
         boolean connectedUp = isFullyConnected(tile, Direction.UP, partialTicks);
@@ -69,7 +59,6 @@ public class RenderTank implements BlockEntityRenderer<TileTank> {
         Vec3 max = connectedUp ? MAX_CONNECTED : MAX;
         FluidStack fluid = forRender.fluid;
         int blocklight = fluid.getRawFluid().getFluidType().getLightLevel(fluid);
-//        int combinedLight = tile.getWorld().getCombinedLight(tile.getPos(), blocklight);
         combinedLight = RenderUtil.combineWithFluidLight(combinedLight, (byte) blocklight);
 
         FluidRenderer.vertex.lighti(combinedLight);
@@ -88,12 +77,8 @@ public class RenderTank implements BlockEntityRenderer<TileTank> {
         );
 
 //        // buffer finish
-//        bb.setTranslation(0, 0, 0);
-//        tess.tessellator.draw();
-//    }
 
 //        // gl state finish
-//        RenderHelper.enableStandardItemLighting();
 
         Minecraft.getInstance().getProfiler().pop();
         Minecraft.getInstance().getProfiler().pop();

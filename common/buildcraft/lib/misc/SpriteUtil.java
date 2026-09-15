@@ -28,12 +28,10 @@ import java.util.Map;
 
 public class SpriteUtil {
 
-    // private static final ResourceLocation LOCATION_SKIN_LOADING = new ResourceLocation("skin:loading");
     private static final ResourceLocation LOCATION_SKIN_LOADING = new ResourceLocation("textures/entity/player/wide/steve.png");
     private static final Map<GameProfile, GameProfile> CACHED = new HashMap<>();
 
     public static void bindBlockTextureMap() {
-//        bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         bindTexture(TextureAtlas.LOCATION_BLOCKS);
     }
 
@@ -46,7 +44,6 @@ public class SpriteUtil {
     }
 
     public static void bindTexture(ResourceLocation identifier) {
-//        Minecraft.getInstance().textureManager.bindForSetup(identifier);
         RenderSystem.setShaderTexture(0, identifier);
     }
 
@@ -75,9 +72,8 @@ public class SpriteUtil {
 
         try {
             if (!CACHED.containsKey(profile)) {
-                CACHED.put(profile, profile); // Calen: to avoid auth check every tick before network access completed
+                CACHED.put(profile, profile);
                 GameProfile _profile = profile;
-//                CACHED.put(profile, TileEntitySkull.updateGameprofile(profile));
                 SkullBlockEntity.updateGameprofile(profile, (gameProfile) ->
                 {
                     CACHED.put(_profile, gameProfile);
@@ -134,7 +130,6 @@ public class SpriteUtil {
         return MISSING_NO;
     }
 
-    // Calen
     private static LazyLoadedValue<TextureAtlasSprite> WHITE = new LazyLoadedValue<>(White::instance);
 
     public static TextureAtlasSprite white() {

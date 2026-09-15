@@ -20,9 +20,7 @@ import net.minecraftforge.fluids.FluidType;
 import java.util.List;
 
 public class TileAutoWorkbenchFluids extends TileAutoWorkbenchBase implements IDebuggable {
-    // private final Tank tank1 = new Tank("tank1", Fluid.BUCKET_VOLUME * 6, this);
     private final Tank tank1 = new Tank("tank1", FluidType.BUCKET_VOLUME * 6, this);
-    // private final Tank tank2 = new Tank("tank2", Fluid.BUCKET_VOLUME * 6, this);
     private final Tank tank2 = new Tank("tank2", FluidType.BUCKET_VOLUME * 6, this);
 
     public TileAutoWorkbenchFluids(BlockPos pos, BlockState blockState) {
@@ -34,11 +32,7 @@ public class TileAutoWorkbenchFluids extends TileAutoWorkbenchBase implements ID
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-//        left.add("Tanks:");
-//        left.add("  " + tank1.getContentsString());
-//        left.add("  " + tank2.getContentsString());
         left.add(Component.literal("Tanks:"));
         left.add(Component.literal("  ").append(tank1.getContentsString()));
         left.add(Component.literal("  ").append(tank2.getContentsString()));

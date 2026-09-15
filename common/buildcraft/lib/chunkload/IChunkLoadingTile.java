@@ -37,9 +37,7 @@ public interface IChunkLoadingTile {
     default Set<ChunkPos> getChunksToLoad() {
         BlockPos pos = ((BlockEntity) this).getBlockPos();
         Set<ChunkPos> chunkPoses = new HashSet<>(4);
-//        for (EnumFacing face : EnumFacing.HORIZONTALS)
         for (Direction face : Direction.BY_2D_DATA) {
-//            chunkPoses.add(new ChunkPos(pos.offset(face)));
             chunkPoses.add(new ChunkPos(pos.relative(face)));
         }
         return chunkPoses;

@@ -45,9 +45,6 @@ public class ActionRobotFilterTool extends BCStatement implements IActionInterna
     }
 
     // @Override
-    // public void registerIcons(TextureAtlasSpriteRegister iconRegister) {
-    // icon = iconRegister.registerIcon("buildcraftrobotics:triggers/action_robot_filter_tool");
-    // }
 
     @Override
     public int minParameters() {

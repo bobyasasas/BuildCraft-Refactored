@@ -28,7 +28,6 @@ public class ElementTypeDrawnStack extends ElementType {
         INodeBoolean visible = getEquationBool(json, "visible", ctx, true);
         boolean foreground = resolveEquationBool(json, "foreground", ctx, false);
 
-//        Item item = JsonUtils.getItem(json.json, "id");
         Item item = GsonHelper.getAsItem(json.json, "id");
 
         // 1.18.2: to ensure no meta appears
@@ -37,7 +36,6 @@ public class ElementTypeDrawnStack extends ElementType {
             throw new RuntimeException("[lib.gui.json] Found stack with meta in " + json + " , but meta is not supported in this MC version!");
         }
 
-//        ItemStack stack = new ItemStack(item, 1, meta);
         ItemStack stack = new ItemStack(item, 1);
 
         ISimpleDrawable icon = new GuiStack(stack);

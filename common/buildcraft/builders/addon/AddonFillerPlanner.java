@@ -79,7 +79,6 @@ public class AddonFillerPlanner extends Addon implements ISingleAddon, IFillerSt
     @Override
     public void onPlayerRightClick(Player player) {
         super.onPlayerRightClick(player);
-//        BCBuildersGuis.FILLER_PLANNER.openGUI(player);
         MessageUtil.serverOpenItemGui(player, BCBuildersItems.addonFillerPlanner.get());
     }
 

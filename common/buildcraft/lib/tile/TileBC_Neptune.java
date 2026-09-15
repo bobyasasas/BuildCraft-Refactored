@@ -105,7 +105,6 @@ public abstract class TileBC_Neptune extends BlockEntity implements IPayloadRece
 
     /** Handles all of the players that are currently using this tile (have a GUI open) */
     private final Set<Player> usingPlayers = Sets.newIdentityHashSet();
-    // private GameProfile owner;
     protected GameProfile owner;
 
     private final IChunkCache chunkCache = new CachedChunk(this);
@@ -264,7 +263,6 @@ public abstract class TileBC_Neptune extends BlockEntity implements IPayloadRece
     }
 
     @Override
-//    public void invalidate()
     public void setRemoved() {
         super.setRemoved();
         chunkCache.invalidate();
@@ -272,7 +270,6 @@ public abstract class TileBC_Neptune extends BlockEntity implements IPayloadRece
     }
 
     @Override
-//    public void validate()
     public void clearRemoved() {
         super.clearRemoved();
         chunkCache.invalidate();
@@ -287,7 +284,6 @@ public abstract class TileBC_Neptune extends BlockEntity implements IPayloadRece
     }
 
     @Override
-//    public void onChunkUnload()
     public void onChunkUnloaded() {
         super.onChunkUnloaded();
         chunkCache.invalidate();
@@ -327,7 +323,6 @@ public abstract class TileBC_Neptune extends BlockEntity implements IPayloadRece
         usingPlayers.add(player);
     }
 
-    // Calen: from TileBC_Neptune
     // only for Server preparing for opening Gate GUI
     public MessageUpdateTile onServerPlayerOpenNoSend(Player player) {
         if (owner == null || owner == FakePlayerProvider.NULL_PROFILE) {
@@ -354,9 +349,6 @@ public abstract class TileBC_Neptune extends BlockEntity implements IPayloadRece
     }
 
 //    @Override
-//    public final boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
-//        return getCapability(capability, facing) != null;
-//    }
 
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, Direction facing) {
@@ -369,11 +361,8 @@ public abstract class TileBC_Neptune extends BlockEntity implements IPayloadRece
 
     // Item caps
     protected void onSlotChange(IItemHandlerModifiable handler, int slot, @Nonnull ItemStack before, @Nonnull ItemStack after) {
-        // if (level.isLoaded(worldPosition))
         if (level.isLoaded(worldPosition) && !StackUtil.isSameItemSameDamageSameTagSameCount(before, after)) {
-//            if (getCurrentState().hasComparatorInputOverride())
             if (getCurrentState().hasAnalogOutputSignal()) {
-//                markDirty();
                 this.setChanged();
             } else {
                 markChunkDirty();
@@ -385,7 +374,6 @@ public abstract class TileBC_Neptune extends BlockEntity implements IPayloadRece
      * the current chunk is saved after the last tick. */
     public void markChunkDirty() {
         if (level != null) {
-//            level.markChunkDirty(this.worldPosition, this);
             level.getChunkAt(this.worldPosition).setUnsaved(true);
         }
     }
@@ -447,7 +435,6 @@ public abstract class TileBC_Neptune extends BlockEntity implements IPayloadRece
             // Client
             if (level.isClientSide) {
                 BlockState state = level.getBlockState(worldPosition);
-//                world.notifyBlockUpdate(pos, state, state, 0);
                 level.sendBlockUpdated(worldPosition, state, state, 0);
 
                 if (DEBUG) {
@@ -554,15 +541,12 @@ public abstract class TileBC_Neptune extends BlockEntity implements IPayloadRece
     }
 
     @Override
-//    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         handleUpdateTag(pkt.getTag());
     }
 
     @Override
-//    public SPacketUpdateTileEntity getUpdatePacket()
     public Packet<ClientGamePacketListener> getUpdatePacket() {
-//        return new SPacketUpdateTileEntity(pos, 0, getUpdateTag());
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
@@ -576,7 +560,6 @@ public abstract class TileBC_Neptune extends BlockEntity implements IPayloadRece
 
         CompoundTag nbt = super.getUpdateTag();
         nbt.putByteArray("d", bytes);
-        // Calen: in 1.18.2 #load is called when create TE
         // in 1.12.2 readFromNBT will not be called
         this.saveAdditional(nbt);
         return nbt;
@@ -730,7 +713,6 @@ public abstract class TileBC_Neptune extends BlockEntity implements IPayloadRece
     }
 
     @Override
-//    public CompoundTag writeToNBT(CompoundTag nbt)
     public void saveAdditional(CompoundTag nbt) {
         super.saveAdditional(nbt);
         nbt.putInt("data-version", BCVersion.CURRENT.dataVersion);
@@ -749,10 +731,7 @@ public abstract class TileBC_Neptune extends BlockEntity implements IPayloadRece
     }
 
 //    @Override
-//    protected void setWorldCreate(World world) {
 //        // The default impl doesn't actually set the world for some reason :/
-//        setWorld(world);
-//    }
 
     // ##################
     //

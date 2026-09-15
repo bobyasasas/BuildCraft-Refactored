@@ -70,7 +70,6 @@ public class RenderHeatExchange implements BlockEntityRenderer<TileHeatExchange>
     }
 
     @Override
-//    public void render(TileHeatExchange tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     public void render(TileHeatExchange tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         if (!tile.isStart()) {
             return;
@@ -89,19 +88,10 @@ public class RenderHeatExchange implements BlockEntityRenderer<TileHeatExchange>
         profiler.push("heat_exchange");
 
         // 1.18.2: provided
-//        int combinedLight = tile.getLevel().getLightEngine().getRawBrightness(tile.getBlockPos(), 0);
 
 //        // gl state setup
-//        RenderHelper.disableStandardItemLighting();
-//        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-//        GlStateManager.enableBlend();
-//        GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
         // buffer setup
-//        try (AutoTessellator tess = RenderUtil.getThreadLocalUnusedTessellator()) {
-//            BufferBuilder bb = tess.tessellator.getBuffer();
-//            bb.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-//            bb.setTranslation(x, y, z);
         VertexConsumer bb = bufferSource.getBuffer(Sheets.translucentCullBlockSheet());
 
         profiler.push("tank");
@@ -117,11 +107,9 @@ public class RenderHeatExchange implements BlockEntityRenderer<TileHeatExchange>
             // TODO: Move this into the other renderer!
             BlockPos diff = sectionEnd.getTile().getBlockPos().subtract(tile.getBlockPos());
             poseStack.pushPose();
-//            bb.setTranslation(x + diff.getX(), y + diff.getY(), z + diff.getZ());
             poseStack.translate(diff.getX(), diff.getY(), diff.getZ());
             renderTank(TANK_TOP, sectionEnd.smoothedTankOutput, combinedLight, combinedOverlay, partialTicks, poseStack.last(), bb);
             renderTank(sideTank.end, sectionEnd.smoothedTankInput, combinedLight, combinedOverlay, partialTicks, poseStack.last(), bb);
-//            bb.setTranslation(x, y, z);
             poseStack.popPose();
         }
 
@@ -161,13 +149,9 @@ public class RenderHeatExchange implements BlockEntityRenderer<TileHeatExchange>
         }
 
         // buffer finish
-//            bb.setTranslation(0, 0, 0);
         profiler.popPush("draw");
-//            tess.tessellator.draw();
-//        }
 
 //        // gl state finish
-//        RenderHelper.enableStandardItemLighting();
 
         profiler.pop();
         profiler.pop();
@@ -208,7 +192,6 @@ public class RenderHeatExchange implements BlockEntityRenderer<TileHeatExchange>
             float partialTicks
     ) {
         VertexConsumer bb = bufferSource.getBuffer(FluidRenderer.FROZEN_FLUID_RENDER_TYPE_TRANSLUCENT);
-//        double tickTime = Minecraft.getMinecraft().world.getTotalWorldTime();
         double tickTime = Minecraft.getInstance().level.getGameTime();
         double offset = (tickTime + partialTicks) % 31 / 31.0;
         if (face.getAxisDirection() == AxisDirection.NEGATIVE) {
@@ -234,7 +217,6 @@ public class RenderHeatExchange implements BlockEntityRenderer<TileHeatExchange>
                 continue;
             }
             poseStack.pushPose();
-//            bb.setTranslation(d.x, d.y, d.z);
             poseStack.translate(d.x, d.y, d.z);
 
             double s1 = s < i ? 0 : (s % 1);
@@ -249,7 +231,6 @@ public class RenderHeatExchange implements BlockEntityRenderer<TileHeatExchange>
             if (e > i + 1) {
                 sides[face.ordinal()] = false;
             }
-            // Calen FIX: without the light, the flow of amount 0 will be dark, the water outside of lava will be light, which appears in 1.12.2, that seems wrong
             int blockLight = fluid.getRawFluid().getFluidType().getLightLevel(fluid) & 0xF;
             combinedLight |= blockLight << 4;
             FluidRenderer.vertex.lighti(combinedLight);

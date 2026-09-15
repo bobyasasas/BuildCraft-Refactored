@@ -44,9 +44,7 @@ public class ItemTransactorHelper {
 
         IItemHandler handler = provider.getCapability(CapUtil.CAP_ITEMS, face).orElse(null);
         if (handler == null) {
-//            if (provider instanceof ISidedInventory)
             if (provider instanceof WorldlyContainer) {
-//                return new SidedInventoryWrapper((ISidedInventory) provider, face);
                 return new SidedInventoryWrapper((WorldlyContainer) provider, face);
             }
             if (provider instanceof Container) {

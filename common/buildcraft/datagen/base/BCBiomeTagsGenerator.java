@@ -23,22 +23,6 @@ public class BCBiomeTagsGenerator extends BiomeTagsProvider {
         tag(OreDictionaryTags.OIL_GEN)
                 .addTag(BiomeTags.IS_OVERWORLD)
         ;
-//        tag(Biomes.IS_HOT)
-//                .add(BCBiomeRegistry.RESOURCE_KEY_BIOME_OIL_DESERT)
-//        ;
-//        tag(Biomes.IS_DRY)
-//                .add(BCBiomeRegistry.RESOURCE_KEY_BIOME_OIL_DESERT)
-//        ;
-//        tag(Biomes.IS_SANDY)
-//                .add(BCBiomeRegistry.RESOURCE_KEY_BIOME_OIL_DESERT)
-//        ;
-//        tag(BiomeTags.IS_OCEAN)
-//                .add(BCBiomeRegistry.RESOURCE_KEY_BIOME_OIL_OCEAN)
-//        ;
-//        tag(BiomeTags.IS_OVERWORLD)
-//                .add(BCBiomeRegistry.RESOURCE_KEY_BIOME_OIL_DESERT)
-//                .add(BCBiomeRegistry.RESOURCE_KEY_BIOME_OIL_OCEAN)
-//        ;
         tag(Biomes.IS_HOT)
                 .addOptional(BCBiomeRegistry.RL_BIOME_OIL_DESERT)
         ;

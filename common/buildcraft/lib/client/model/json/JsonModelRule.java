@@ -38,21 +38,17 @@ public abstract class JsonModelRule {
             throw new JsonSyntaxException("Expected an object, got " + json);
         }
         JsonObject obj = json.getAsJsonObject();
-//        String when = JsonUtils.getString(obj, "when");
         String when = GsonHelper.getAsString(obj, "when");
         INodeBoolean nodeWhen = JsonVariableModelPart.convertStringToBooleanNode(when, fnCtx);
 
-//        String type = JsonUtils.getString(obj, "type");
         String type = GsonHelper.getAsString(obj, "type");
         if (type.startsWith("builtin:")) {
             String builtin = type.substring("builtin:".length());
             if ("rotate_facing".equals(builtin)) {
                 fnCtx = new FunctionContext(fnCtx, ExpressionCompat.ENUM_FACING);
-//                String from = JsonUtils.getString(obj, "from");
                 String from = GsonHelper.getAsString(obj, "from");
                 INodeObject<Direction> nodeFrom = JsonVariableModelPart.convertStringToObjectNode(from, fnCtx, Direction.class);
 
-//                String to = JsonUtils.getString(obj, "to");
                 String to = GsonHelper.getAsString(obj, "to");
                 INodeObject<Direction> nodeTo = JsonVariableModelPart.convertStringToObjectNode(to, fnCtx, Direction.class);
 
@@ -151,18 +147,12 @@ public abstract class JsonModelRule {
                 return;
             }
 
-//            float cx = MathHelper.cos(ax);
             float cx = Mth.cos(ax);
-//            float cy = MathHelper.cos(ay);
             float cy = Mth.cos(ay);
-//            float cz = MathHelper.cos(az);
             float cz = Mth.cos(az);
 
-//            float sx = MathHelper.sin(ax);
             float sx = Mth.sin(ax);
-//            float sy = MathHelper.sin(ay);
             float sy = Mth.sin(ay);
-//            float sz = MathHelper.sin(az);
             float sz = Mth.sin(az);
 
             for (MutableQuad q : quads) {

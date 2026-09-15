@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-// Calen
 public class SchematicBlockBanner extends SchematicBlockDefault {
     private ItemStack requiredItem;
 
@@ -21,7 +20,6 @@ public class SchematicBlockBanner extends SchematicBlockDefault {
             BlockEntity tileEntity = context.world.getBlockEntity(context.pos);
             if (tileEntity instanceof BannerBlockEntity banner) {
                 tileNbt = banner.serializeNBT();
-                // Calen
                 requiredItem = banner.getItem();
             }
         }
@@ -30,8 +28,6 @@ public class SchematicBlockBanner extends SchematicBlockDefault {
     @Nonnull
     @Override
     public List<ItemStack> computeRequiredItems() {
-//        return Collections.singletonList(ItemBanner.makeBanner(
-//                EnumDyeColor.byDyeDamage(tileNbt.getInteger("Base")), tileNbt.getTagList("Patterns", 10)));
         return Collections.singletonList(requiredItem);
     }
 }

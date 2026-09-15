@@ -64,36 +64,23 @@ public class BCCoreModels {
                 "buildcraftcore:models/tile/engine_redstone.jsonbc",
                 fnCtx
         );
-        BlockEngine_BC8.setModel(EnumEngineType.WOOD, ENGINE_REDSTONE); // Calen
+        BlockEngine_BC8.setModel(EnumEngineType.WOOD, ENGINE_REDSTONE);
         ENGINE_CREATIVE = new ModelHolderVariable(
 //                "buildcraftcore:models/block/engine_creative.json",
                 "buildcraftcore:models/tile/engine_creative.jsonbc",
                 fnCtx
         );
-        BlockEngine_BC8.setModel(EnumEngineType.CREATIVE, ENGINE_CREATIVE); // Calen
+        BlockEngine_BC8.setModel(EnumEngineType.CREATIVE, ENGINE_CREATIVE);
     }
 
     public static void fmlPreInit() {
         // 1.18.2: following events are IModBusEvent
-//        MinecraftForge.EVENT_BUS.register(BCCoreModels.class);
         IEventBus modEventBus = ((FMLModContainer) ModList.get().getModContainerById(BCCore.MODID).get()).getEventBus();
         modEventBus.register(BCCoreModels.class);
     }
 
 //    @SubscribeEvent
-//    @SideOnly(Side.CLIENT)
-//    public static void onModelRegistry(ModelRegistryEvent event) {
-//        if (BCCoreBlocks.engine != null) {
-//            ModelLoader.setCustomStateMapper(BCCoreBlocks.engine, b -> Collections.emptyMap());
-//        }
-//    }
 
-    // Calen: use onTesrReg(event)
-//    public static void fmlInit() {
-//        ClientRegistry.bindTileEntitySpecialRenderer(TileMarkerVolume.class, RenderMarkerVolume.INSTANCE);
-//        ClientRegistry.bindTileEntitySpecialRenderer(TileEngineRedstone_BC8.class, RenderEngineWood.INSTANCE);
-//        ClientRegistry.bindTileEntitySpecialRenderer(TileEngineCreative.class, RenderEngineCreative.INSTANCE);
-//    }
 
     @SubscribeEvent
     public static void onTesrReg(RegisterRenderers event) {
@@ -102,10 +89,8 @@ public class BCCoreModels {
         RegistryUtil.regTesrIfTilePresent(BCCoreBlocks.engineCreativeTile, RenderEngineCreative::new);
     }
 
-    // Calen 1.20.1
     private static final List<Runnable> spriteTasks = Lists.newLinkedList();
 
-    // Calen 1.20.1
     @SubscribeEvent
     public static void onTextureStitchEvent$Post(TextureStitchEvent.Post event) {
         if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {

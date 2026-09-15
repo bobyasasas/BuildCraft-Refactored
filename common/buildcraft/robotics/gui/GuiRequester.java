@@ -26,68 +26,28 @@ public class GuiRequester extends GuiBC8<ContainerRequester> {
     private static final int SLOT_ROW_COUNT = 5;
     private static final int SLOT_IN_1_ROW = 4;
 
-    // private TileRequester requester;
 
-//    private static class RequestSlot extends AdvancedSlot {
-//
-//        private int index;
-//
-//        public RequestSlot(GuiAdvancedInterface gui, int iIndex, int x, int y) {
-//            super(gui, x, y);
-//
-//            index = iIndex;
-//        }
-//
-//        public void setItem(ItemStack itemStack) {
-//            TileRequester requester = ((GuiRequester) gui).requester;
-//
-//            requester.setRequest(index, itemStack);
-//            ((GuiRequester) gui).getContainer().getRequestList();
-//        }
-//
 //        @Override
-//        public ItemStack getItemStack() {
-//            ContainerRequester requester = ((GuiRequester) gui).getContainer();
-//
-//            return requester.requests[index];
-//        }
-//    }
 
-    // public GuiRequester(ContainerRequester container, Inventory inventory, Component component, TileRequester iRequester)
     public GuiRequester(ContainerRequester container, Inventory inventory, Component component) {
         super(container, inventory, component);
 
-        // getContainer().gui = this;
         getMenu().getRequestList();
 
         imageWidth = SIZE_X;
         imageHeight = SIZE_Y;
 
-        // requester = iRequester;
 
-//        for (int x = 0; x < 4; ++x) {
-//            for (int y = 0; y < 5; ++y) {
-//                slots.add(new RequestSlot(this, x * 5 + y, 9 + 18 * x, 7 + 18 * y));
-//            }
-//        }
     }
 
     @Override
     protected void drawBackgroundLayer(float partialTicks, GuiGraphics guiGraphics) {
         super.drawBackgroundLayer(partialTicks, guiGraphics);
 
-        // drawBackgroundSlots(x, y);
         ICON_GUI.drawAt(mainGui.rootElement, guiGraphics);
     }
 
 //    @Override
-//    protected void slotClicked(AdvancedSlot slot, int mouseButton) {
-//        super.slotClicked(slot, mouseButton);
-//
-//        if (slot instanceof RequestSlot) {
-//            ((RequestSlot) slot).setItem(mc.thePlayer.inventory.getItemStack());
-//        }
-//    }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {

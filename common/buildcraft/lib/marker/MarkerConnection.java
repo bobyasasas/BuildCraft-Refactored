@@ -34,7 +34,6 @@ public abstract class MarkerConnection<C extends MarkerConnection<C>> {
     @OnlyIn(Dist.CLIENT)
     public abstract void renderInWorld(PoseStack poseStack);
 
-    // public void getDebugInfo(BlockPos caller, List<String> left)
     public void getDebugInfo(BlockPos caller, List<Component> left) {
         Collection<BlockPos> positions = getMarkerPositions();
         List<BlockPos> list = new ArrayList<>(positions);
@@ -56,7 +55,6 @@ public abstract class MarkerConnection<C extends MarkerConnection<C>> {
             }
             s += getTypeInfo(pos, marker);
             s += ChatFormatting.RESET + "]";
-//            left.add(s);
             left.add(Component.literal(s));
         }
     }

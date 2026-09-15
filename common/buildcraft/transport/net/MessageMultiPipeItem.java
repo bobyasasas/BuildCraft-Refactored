@@ -124,7 +124,6 @@ public class MessageMultiPipeItem implements IMessage {
             new IMessageHandler<MessageMultiPipeItem, IMessage>() {
 
                 @Override
-//                public IMessage onMessage(MessageMultiPipeItem message, MessageContext ctx)
                 public IMessage onMessage(MessageMultiPipeItem message, NetworkEvent.Context ctx) {
                     Level world = BCLibProxy.getProxy().getClientWorld();
                     if (world == null) {

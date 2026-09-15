@@ -12,7 +12,6 @@ public class BCFactoryBlocks {
     private static final RegistrationHelper HELPER = new RegistrationHelper(BCFactory.MODID);
 
     public static RegistryObject<BlockAutoWorkbenchItems> autoWorkbenchItems;
-    // public static RegistryObject<BlockAutoWorkbenchFluids> autoWorkbenchFluids;
     public static RegistryObject<BlockMiningWell> miningWell;
     public static RegistryObject<BlockPump> pump;
     public static RegistryObject<BlockTube> tube;
@@ -23,7 +22,6 @@ public class BCFactoryBlocks {
     public static RegistryObject<BlockHeatExchange> heatExchange;
 
     public static RegistryObject<BlockWaterGel> waterGel;
-//    public static RegistryObject<BlockPlastic> plastic;
 
     public static RegistryObject<BlockEntityType<TileAutoWorkbenchItems>> autoWorkbenchItemsTile;
     public static RegistryObject<BlockEntityType<TileAutoWorkbenchFluids>> autoWorkbenchFluidsTile;
@@ -37,7 +35,6 @@ public class BCFactoryBlocks {
 
     static {
         autoWorkbenchItems = HELPER.addBlockAndItem("block.autoworkbench.item", BlockPropertiesCreator.metal(), BlockAutoWorkbenchItems::new);
-//        autoWorkbenchFluids = HELPER.addBlockAndItem("block.autoworkbench.fluid", BlockPropertiesCreater.createDefaultProperties(Material.STONE), BlockAutoWorkbenchFluids::new);
         miningWell = HELPER.addBlockAndItem("block.mining_well", BlockPropertiesCreator.metal(), BlockMiningWell::new);
         pump = HELPER.addBlockAndItem("block.pump", BlockPropertiesCreator.metal(), BlockPump::new);
         tube = HELPER.addBlock(
@@ -96,10 +93,8 @@ public class BCFactoryBlocks {
                 ,
                 BlockWaterGel::new
         );
-//        plastic = HELPER.addBlockAndItem("block.plastic", BlockPropertiesCreator.createDefaultProperties(Material.METAL), BlockPlastic::new, ItemPlastic::new);
 
         autoWorkbenchItemsTile = HELPER.registerTile("tile.autoworkbench.item", TileAutoWorkbenchItems::new, autoWorkbenchItems);
-//        autoWorkbenchFluidsTile = HELPER.registerTile("tile.autoworkbench.fluid", TileAutoWorkbenchFluids::new, autoWorkbenchFluids);
         miningWellTile = HELPER.registerTile("tile.mining_well", TileMiningWell::new, miningWell);
         pumpTile = HELPER.registerTile("tile.pump", TilePump::new, pump);
         floodGateTile = HELPER.registerTile("tile.flood_gate", TileFloodGate::new, floodGate);

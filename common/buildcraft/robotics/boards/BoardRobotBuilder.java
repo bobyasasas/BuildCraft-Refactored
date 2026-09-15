@@ -50,7 +50,6 @@ public class BoardRobotBuilder extends RedstoneBoardRobot {
     private TileMarkerConstruction markerToBuild;
     private int launchingDelay = 0;
 
-    // Calen 1.18.2
     private BlueprintBuilder.BreakTask breakTask = null;
     private int bluePrintBuilderLeftToPlace = 0;
     public Blueprint.BuildingInfo currentBuildingInfo = null;
@@ -300,7 +299,6 @@ public class BoardRobotBuilder extends RedstoneBoardRobot {
     }
 
     private boolean hasEnoughEnergy() {
-        // return robot.getPower() - currentBuildingSlot.getEnergyRequirement() > EntityRobotBase.SAFETY_POWER;
         if (this.needsToBuild()) {
             long bluePrintBuilderRequired =
                     !this.markerToBuild.bluePrintBuilder.getBreakTasks().isEmpty()
@@ -320,7 +318,6 @@ public class BoardRobotBuilder extends RedstoneBoardRobot {
         }
     }
 
-    // Calen 1.18.2
     private void resetAll() {
         this.breakTask = null;
         this.currentBuildingInfo = null;

@@ -117,7 +117,6 @@ public class TileArchitectTable extends TileBC_Neptune implements ITickable, IDe
     }
 
     @Override
-//    public void onPlacedBy(EntityLivingBase placer, ItemStack stack)
     public void onPlacedBy(LivingEntity placer, ItemStack stack) {
         super.onPlacedBy(placer, stack);
         if (placer.level().isClientSide) {
@@ -246,15 +245,10 @@ public class TileArchitectTable extends TileBC_Neptune implements ITickable, IDe
     }
 
     private ISchematicBlock readSchematicBlock(BlockPos worldScanPos) {
-//        return SchematicBlockManager.getSchematicBlock(new SchematicBlockContext(
 //                level,
 //                box.min(),
 //                worldScanPos,
 //                level.getBlockState(worldScanPos),
-//                level.getBlockState(worldScanPos).getBlock()
-//        ));
-        // Calen: for bed
-        // if the other half is out of the box, ignore this bed
         BlockState state = level.getBlockState(worldScanPos);
         Block block = state.getBlock();
         if (block instanceof BedBlock bed) {
@@ -274,7 +268,6 @@ public class TileArchitectTable extends TileBC_Neptune implements ITickable, IDe
     }
 
     private void scanEntities() {
-//        level.getEntitiesWithinAABB(Entity.class, box.getBoundingBox()).stream()
         level.getEntitiesOfClass(Entity.class, box.getBoundingBox()).stream()
                 .map(entity ->
                         SchematicEntityManager.getSchematicEntity(new SchematicEntityContext(
@@ -370,9 +363,7 @@ public class TileArchitectTable extends TileBC_Neptune implements ITickable, IDe
     }
 
     @Override
-//    public CompoundTag writeToNBT(CompoundTag nbt)
     public void saveAdditional(CompoundTag nbt) {
-//        super.writeToNBT(nbt);
         super.saveAdditional(nbt);
         nbt.put("box", box.writeToNBT());
         nbt.putBoolean("markerBox", markerBox);
@@ -383,13 +374,10 @@ public class TileArchitectTable extends TileBC_Neptune implements ITickable, IDe
         nbt.put("snapshotType", NBTUtilBC.writeEnum(snapshotType));
         nbt.putBoolean("isValid", isValid);
         nbt.putString("name", name);
-//        return nbt;
     }
 
     @Override
-//    public void readFromNBT(CompoundTag nbt)
     public void load(CompoundTag nbt) {
-//        super.readFromNBT(nbt);
         super.load(nbt);
         box.initialize(nbt.getCompound("box"));
         markerBox = nbt.getBoolean("markerBox");
@@ -403,13 +391,7 @@ public class TileArchitectTable extends TileBC_Neptune implements ITickable, IDe
     }
 
     @Override
-//    public void getDebugInfo(List<String> left, List<String> right, Direction side)
     public void getDebugInfo(List<Component> left, List<Component> right, Direction side) {
-//        left.add("box:");
-//        left.add(" - min = " + box.min());
-//        left.add(" - max = " + box.max());
-//        left.add("scanning = " + scanning);
-//        left.add("current = " + (boxIterator == null ? null : boxIterator.getCurrent()));
         left.add(Component.literal("box:"));
         left.add(Component.literal(" - min = " + box.min()));
         left.add(Component.literal(" - max = " + box.max()));
@@ -426,23 +408,16 @@ public class TileArchitectTable extends TileBC_Neptune implements ITickable, IDe
         return BoundingBoxUtil.makeFrom(getBlockPos(), box);
     }
 
-    // Calen added from MenuProvider
     @Override
     public Component getDisplayName() {
         return this.getBlockState().getBlock().getName();
     }
 
-    // Calen added from MenuProvider
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
         return new ContainerArchitectTable(BCBuildersMenuTypes.ARCHITECT_TABLE, id, player, this);
     }
 
-    // Calen: moved to RenderArchitectTable#shouldRenderOffScreen+getViewDistance
 //    @Override
-//    @OnlyIn(Dist.CLIENT)
-//    public double getMaxRenderDistanceSquared() {
-//        return Double.MAX_VALUE;
-//    }
 }

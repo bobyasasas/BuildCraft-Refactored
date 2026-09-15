@@ -30,7 +30,6 @@ public class TriggerTrue extends BCStatement implements ITriggerInternal {
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("gate.trigger.true");
         return Component.translatable("gate.trigger.true");
     }
 

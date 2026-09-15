@@ -24,7 +24,6 @@ public class ItemRobotStation extends ItemBC_Neptune implements IItemPluggable {
     private final PluggableDefinition.IPluggableCreator creator;
 
     public ItemRobotStation(String idBC, Properties properties, PluggableDefinition definition, PluggableDefinition.IPluggableCreator creator) {
-        // super(BCCreativeTab.get("boards"));
         super(idBC, properties);
         this.definition = definition;
         this.creator = creator;
@@ -34,9 +33,6 @@ public class ItemRobotStation extends ItemBC_Neptune implements IItemPluggable {
     }
 
 //    @Override
-//    public String getDescriptionId(ItemStack stack) {
-//        return "item.PipeRobotStation";
-//    }
 
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
@@ -45,7 +41,6 @@ public class ItemRobotStation extends ItemBC_Neptune implements IItemPluggable {
 
     @Override
     public PipePluggable onPlace(@Nonnull ItemStack stack, IPipeHolder holder, Direction side, Player player, InteractionHand hand) {
-        // return new PluggableRobotStation();
         SoundUtil.playBlockPlace(holder.getPipeWorld(), holder.getPipePos());
         return creator.createSimplePluggable(definition, holder, side);
     }

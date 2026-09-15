@@ -61,11 +61,8 @@ public class EnergyOilRecipeGenerator extends RecipeProvider {
     }
 
     private void buildCoolantRecipes() {
-//        BuildcraftFuelRegistry.coolant.addCoolant(Fluids.WATER, 0.0023f);
         CoolantRecipeBuilder.fluidCoolant(new FluidStack(Fluids.WATER, 1), 0.0023f).save(consumer, FluidUtilBC.getRegistryName(Fluids.WATER).getPath());
-//        BuildcraftFuelRegistry.coolant.addSolidCoolant(new ItemStack(Blocks.ICE), new FluidStack(Fluids.WATER, 1000), 1.5f);
         CoolantRecipeBuilder.solidCoolant(new ItemStack(Blocks.ICE), new FluidStack(Fluids.WATER, 1000), 1.5f).save(consumer, BlockUtil.getRegistryName(Blocks.ICE).getPath());
-//        BuildcraftFuelRegistry.coolant.addSolidCoolant(new ItemStack(Blocks.PACKED_ICE), new FluidStack(Fluids.WATER, 1000), 2f);
         CoolantRecipeBuilder.solidCoolant(new ItemStack(Blocks.PACKED_ICE), new FluidStack(Fluids.WATER, 1000), 2f).save(consumer, BlockUtil.getRegistryName(Blocks.PACKED_ICE).getPath());
     }
 
@@ -83,11 +80,9 @@ public class EnergyOilRecipeGenerator extends RecipeProvider {
 
         FluidStack EMPTY = StackUtil.EMPTY_FLUID;
         FluidStack water = new FluidStack(Fluids.WATER, 10);
-//        BuildcraftRecipeRegistry.refineryRecipes.addHeatableRecipe(water, EMPTY, 0, 1);
         HeatExchangeRecipeBuilder.heatable(water, EMPTY, 0, 1).save(consumer, FluidUtilBC.getRegistryName(Fluids.WATER).getPath() + "__to__" + FluidUtilBC.getRegistryName(Fluids.EMPTY).getPath());
 
         FluidStack lava = new FluidStack(Fluids.LAVA, 5);
-//        BuildcraftRecipeRegistry.refineryRecipes.addCoolableRecipe(lava, EMPTY, 4, 2);
         HeatExchangeRecipeBuilder.coolable(lava, EMPTY, 4, 2).save(consumer, FluidUtilBC.getRegistryName(Fluids.LAVA).getPath() + "__to__" + FluidUtilBC.getRegistryName(Fluids.EMPTY).getPath());
     }
 
@@ -144,9 +139,7 @@ public class EnergyOilRecipeGenerator extends RecipeProvider {
             FluidStack hot_f = new FluidStack(hot, 10);
             int ch = ((BCFluidAttributes) cool.getFluidType()).getHeat();
             int hh = ((BCFluidAttributes) hot.getFluidType()).getHeat();
-//            BuildcraftRecipeRegistry.refineryRecipes.addHeatableRecipe(cool_f, hot_f, ch, hh);
             HeatExchangeRecipeBuilder.heatable(cool_f, hot_f, ch, hh).save(consumer, FluidUtilBC.getRegistryName(cool).getPath() + "__to__" + FluidUtilBC.getRegistryName(hot).getPath());
-//            BuildcraftRecipeRegistry.refineryRecipes.addCoolableRecipe(hot_f, cool_f, hh, ch);
             HeatExchangeRecipeBuilder.coolable(hot_f, cool_f, hh, ch).save(consumer, FluidUtilBC.getRegistryName(hot).getPath() + "__to__" + FluidUtilBC.getRegistryName(cool).getPath());
         }
     }
@@ -158,18 +151,14 @@ public class EnergyOilRecipeGenerator extends RecipeProvider {
         int hcf = MathUtil.findHighestCommonFactor(_in.getAmount(), _outGas.getAmount());
         hcf = MathUtil.findHighestCommonFactor(hcf, _outLiquid.getAmount());
         if (hcf > 1) {
-//            (_in = _in.copy()).amount /= hcf;
             _in = _in.copy();
             _in.setAmount(_in.getAmount() / hcf);
-//            (_outGas = _outGas.copy()).amount /= hcf;
             _outGas = _outGas.copy();
             _outGas.setAmount(_outGas.getAmount() / hcf);
-//            (_outLiquid = _outLiquid.copy()).amount /= hcf;
             _outLiquid = _outLiquid.copy();
             _outLiquid.setAmount(_outLiquid.getAmount() / hcf);
             mjCost /= hcf;
         }
-//        BuildcraftRecipeRegistry.refineryRecipes.addDistillationRecipe(_in, _outGas, _outLiquid, mjCost);
         DistillationRecipeBuilder.distillation(mjCost, _in, _outGas, _outLiquid).save(consumer, FluidUtilBC.getRegistryName(_in.getFluid()).getPath());
     }
 
@@ -188,7 +177,6 @@ public class EnergyOilRecipeGenerator extends RecipeProvider {
         }
         long powerPerCycle = multiplier * MjAPI.MJ;
         int totalTime = TIME_BASE * boostOver4 / 4 / multiplier / amountDiff;
-//        BuildcraftFuelRegistry.fuel.addFuel(fuel, powerPerCycle, totalTime);
         FuelRecipeBuilder.fuel(new FluidStack(fuel, 1), powerPerCycle, totalTime).save(consumer, FluidUtilBC.getRegistryName(fuel).getPath());
     }
 
@@ -201,10 +189,8 @@ public class EnergyOilRecipeGenerator extends RecipeProvider {
         int totalTime = TIME_BASE * boostOver4 / 4 / multiplier / amountDiff;
         Fluid residue = getFirstOrNull(BCEnergyFluids.oilResidue);
         if (residue == null) {// residue might have been disabled
-//            BuildcraftFuelRegistry.fuel.addFuel(fuel, powerPerCycle, totalTime);
             FuelRecipeBuilder.fuel(new FluidStack(fuel, 1), powerPerCycle, totalTime).save(consumer, FluidUtilBC.getRegistryName(fuel).getPath());
         } else {
-//            BuildcraftFuelRegistry.fuel.addDirtyFuel(fuel, powerPerCycle, totalTime, new FluidStack(residue, 1000 / amountDiff));
             FuelRecipeBuilder.dirtyFuel(new FluidStack(fuel, 1), powerPerCycle, totalTime, new FluidStack(residue, 1000 / amountDiff)).save(consumer, FluidUtilBC.getRegistryName(fuel).getPath());
         }
     }

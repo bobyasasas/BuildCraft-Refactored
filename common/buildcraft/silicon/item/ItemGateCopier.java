@@ -25,29 +25,20 @@ public class ItemGateCopier extends ItemBC_Neptune {
 
     public ItemGateCopier(String idBC, Item.Properties properties) {
         super(idBC, properties);
-//        setMaxStackSize(1);
     }
 
 //    @Override
-//    @OnlyIn(Dist.CLIENT)
-//    public void addModelVariants(TIntObjectHashMap<ModelResourceLocation> variants) {
-//        addVariant(variants, 0, "empty");
-//        addVariant(variants, 1, "full");
-//    }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-//    public void addInformation(ItemStack stack, Level world, List<String> tooltip, ITooltipFlag flag)
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, world, tooltip, flag);
         if (getMetadata(stack) != 0) {
-//            tooltip.add(LocaleUtil.localize("buildcraft.item.nonclean.usage"));
             tooltip.add(Component.translatable("buildcraft.item.nonclean.usage"));
         }
     }
 
     @Override
-//    public InteractionResultHolder<ItemStack> onItemRightClick(Level world, Player player, InteractionHand hand)
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (world.isClientSide) {
@@ -72,7 +63,6 @@ public class ItemGateCopier extends ItemBC_Neptune {
     }
 
     // @Override
-    // public int getMetadata(ItemStack stack)
     public static int getMetadata(ItemStack stack) {
         return getCopiedGateData(stack) != null ? 1 : 0;
     }

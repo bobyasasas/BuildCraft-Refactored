@@ -19,32 +19,23 @@ public abstract class ContainerBCTile<T extends TileBC_Neptune & IBCTileMenuProv
     public ContainerBCTile(MenuType menuType, int id, Player player, T tile) {
         super(menuType, id, player);
         this.tile = tile;
-        // Calen: Moved to MessageUtil#serverOpenTileGui:MessageUpdateTile msg = tile.onServerPlayerOpenNoSend(player);
         // to ensure the message received before GUI opened in client
         // Not called in Client. We just handle the MessageUpdateTile in Client
-//        if (!tile.getLevel().isClientSide) {
-//            tile.onPlayerOpen(player);
-//        }
     }
 
     @Override
-//    public void onContainerClosed(Player player)
     public void removed(Player player) {
-//        super.onContainerClosed(player);
         super.removed(player);
         tile.onPlayerClose(player);
     }
 
     @Override
-//    public final boolean canInteractWith(Player player)
     public final boolean stillValid(Player player) {
         return tile.canInteractWith(player);
     }
 
     @Override
-//    public void detectAndSendChanges()
     public void broadcastChanges() {
-//        super.detectAndSendChanges();
         super.broadcastChanges();
         tile.sendNetworkGuiTick((ServerPlayer) this.player);
     }

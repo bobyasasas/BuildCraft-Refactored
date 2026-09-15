@@ -25,14 +25,11 @@ public class GuiReplacer extends GuiBC8<ContainerReplacer> {
     private static final int SIZE_X = 176, SIZE_Y = 241;
     private static final GuiIcon ICON_GUI = new GuiIcon(TEXTURE_BASE, 0, 0, SIZE_X, SIZE_Y);
 
-    //    private GuiTextField nameField;
     private EditBox nameField;
 
     public GuiReplacer(ContainerReplacer container, Inventory inventory, Component component) {
         super(container, inventory, component);
-//        xSize = SIZE_X;
         imageWidth = SIZE_X;
-//        ySize = SIZE_Y;
         imageHeight = SIZE_Y;
     }
 
@@ -41,7 +38,6 @@ public class GuiReplacer extends GuiBC8<ContainerReplacer> {
         super.initWhenOpenGuiOrResizeWindow();
 
         this.removeWidget(this.nameField);
-//        nameField = new GuiTextField(0, fontRenderer, guiLeft + 30, guiTop + 117, 138, 12);
         nameField = new EditBox(font, leftPos + 30, topPos + 117, 138, 12, Component.literal(""));
         this.addWidget(nameField);
     }
@@ -63,31 +59,23 @@ public class GuiReplacer extends GuiBC8<ContainerReplacer> {
 
     @Override
     protected void drawForegroundLayer(GuiGraphics guiGraphics) {
-//        nameField.drawTextBox();
         nameField.renderWidget(guiGraphics, 0, 0, Minecraft.getInstance().getFrameTime());
     }
 
     @Override
-//    public void updateScreen()
     public void containerTick() {
-        // Calen FIXED: in 1.12.2 without super.tick(), ledgers will not spread
         super.containerTick();
-//        nameField.updateCursorCounter();
         nameField.tick();
     }
 
     @Override
 //    protected void keyTyped(char typedChar, int keyCode) throws IOException
-//    public boolean charTyped(char typedChar, int keyCode)
     public boolean keyPressed(int typedChar, int keyCode, int modifiers) {
         boolean typed = false;
         if (typedChar != InputConstants.KEY_ESCAPE && nameField.isFocused()) {
-//            typed = nameField.textboxKeyTyped(typedChar, keyCode);
             typed = nameField.keyPressed(typedChar, keyCode, modifiers) || this.nameField.canConsumeInput();
-            // container.sendNameToServer(nameField.getText().trim());
         }
         if (!typed) {
-//            super.keyTyped(typedChar, keyCode);
             return super.keyPressed(typedChar, keyCode, modifiers);
         } else {
             return true;
@@ -98,12 +86,9 @@ public class GuiReplacer extends GuiBC8<ContainerReplacer> {
     public boolean charTyped(char typedChar, int keyCode) {
         boolean typed = false;
         if (typedChar != InputConstants.KEY_ESCAPE && nameField.isFocused()) {
-//            typed = nameField.textboxKeyTyped(typedChar, keyCode);
             typed = nameField.charTyped(typedChar, keyCode) || this.nameField.canConsumeInput();
-            // container.sendNameToServer(nameField.getText().trim());
         }
         if (!typed) {
-//            super.keyTyped(typedChar, keyCode);
             return super.charTyped(typedChar, keyCode);
         } else {
             return true;
@@ -114,7 +99,6 @@ public class GuiReplacer extends GuiBC8<ContainerReplacer> {
 //    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         super.mouseClicked(mouseX, mouseY, mouseButton);
-//        nameField.mouseClicked(mouseX, mouseY, mouseButton);
         return nameField.mouseClicked(mouseX - leftPos, mouseY - topPos, mouseButton);
     }
 }

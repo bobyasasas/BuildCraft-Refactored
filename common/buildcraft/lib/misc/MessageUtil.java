@@ -76,30 +76,19 @@ public class MessageUtil {
 
     public static void sendToAllWatching(Level worldObj, BlockPos pos, IMessage message) {
         if (worldObj instanceof ServerLevel server) {
-//            PlayerChunkMapEntry playerChunkMap = server.getPlayerChunkMap().getEntry(pos.getX() >> 4, pos.getZ() >> 4);
-//            if (playerChunkMap == null) {
 //                // No-one was watching this chunk.
-//                return;
-//            }
 //            // Slightly ugly hack to iterate through all players watching the chunk
 //            playerChunkMap.hasPlayerMatchingInRange(0, player ->
-//            {
-//                MessageManager.sendTo(message, player);
 //                // Always return false so that the iteration doesn't stop early
-//                return false;
-//            });
 //            // We could just use this instead, but that requires extra packet size as we are wrapping our
 //            // packet in an FML packet and sending it through the vanilla system, which is not really desired
-//            // playerChunkMap.sendPacket(MessageManager.getPacketFrom(message));
 
-            // Calen: in 1.18.2 use this way
             server.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos),/*pBoundaryOnly*/ false).forEach(p -> MessageManager.sendTo(message, p));
         }
     }
 
     public static void sendToPlayers(Iterable<Player> players, IMessage message) {
         for (Player player : players) {
-//            if (player instanceof EntityPlayerMP)
             if (player instanceof ServerPlayer) {
                 MessageManager.sendTo(message, (ServerPlayer) player);
             }
@@ -194,31 +183,18 @@ public class MessageUtil {
 
     /** Writes a block state using the block ID and its metadata. Not suitable for full states. */
     public static void writeBlockState(FriendlyByteBuf buf, BlockState state) {
-//        buf.writeNbt(NbtUtils.writeBlockState(state));
         Block block = state.getBlock();
         buf.writeResourceLocation(BlockUtil.getRegistryName(block));
-//        int meta = block.getMetaFromState(state);
-//        buf.writeByte(meta);
-//        BlockState readState = block.getStateFromMeta(meta);
-//        if (readState != state) {
-//            buf.writeBoolean(true);
         Map<Property<?>, Comparable<?>> differingProperties = new HashMap<>();
         for (Property<?> property : state.getProperties()) {
             Comparable<?> inputValue = state.getValue(property);
-//            Comparable<?> readValue = readState.getValue(property);
-//            if (!inputValue.equals(readValue)) {
             differingProperties.put(property, inputValue);
-//            }
         }
         buf.writeByte(differingProperties.size());
         for (Entry<Property<?>, Comparable<?>> entry : differingProperties.entrySet()) {
             buf.writeUtf(entry.getKey().getName());
-//            buf.writeUtf(entry.getKey().getName(entry.getValue()));
             buf.writeUtf(getName(entry.getKey(), entry.getValue()));
         }
-//        } else {
-//            buf.writeBoolean(false);
-//        }
     }
 
     /** A copy of {@link NbtUtils#getName(Property, Comparable)} */
@@ -227,22 +203,16 @@ public class MessageUtil {
     }
 
     public static BlockState readBlockState(FriendlyByteBuf buf) {
-//        return NbtUtils.readBlockState(buf.readNbt());
         ResourceLocation id = buf.readResourceLocation();
         Block block = ForgeRegistries.BLOCKS.getValue(id);
-//        int meta = buf.readUnsignedByte();
-//        IBlockState state = block.getStateFromMeta(meta);
         BlockState state = block.defaultBlockState();
-//        if (buf.readBoolean()) {
         int count = buf.readByte();
         for (int p = 0; p < count; p++) {
             String name = buf.readUtf(256);
             String value = buf.readUtf(256);
-//            IProperty<?> prop = state.getBlock().getBlockState().getProperty(name);
             Property<?> prop = block.getStateDefinition().getProperty(name);
             state = propertyReadHelper(state, value, prop);
         }
-//        }
         return state;
     }
 
@@ -301,7 +271,6 @@ public class MessageUtil {
 
     public static void sendReturnMessage(NetworkEvent.Context context, IMessage reply) {
         Player player = context.getSender();
-//        Player player = BCLibProxy.getProxy().getPlayerForContext(context);
         if (player instanceof ServerPlayer playerMP) {
             MessageManager.sendTo(reply, playerMP);
         } else if (player != null) {
@@ -376,12 +345,10 @@ public class MessageUtil {
         }
     }
 
-    // Calen
     public static boolean clientHandleUpdateTileMsgBeforeOpen(TileBC_Neptune tile, FriendlyByteBuf data, Runnable... additional) {
         MessageUpdateTile msg = new MessageUpdateTile();
         msg.fromBytes(data);
         try {
-            // Calen: create a fake Context for tile to read NetworkDirection
             Constructor<NetworkEvent.Context> c = NetworkEvent.Context.class.getDeclaredConstructor(Connection.class, NetworkDirection.class, int.class);
             c.setAccessible(true);
             NetworkEvent.Context ctx = c.newInstance(null, NetworkDirection.PLAY_TO_CLIENT, -1);
@@ -397,7 +364,6 @@ public class MessageUtil {
         }
     }
 
-    // Calen
     public static void serverOpenTileGui(Player player, IBCTileMenuProvider tile, BlockPos pos) {
         if (player instanceof ServerPlayer serverPlayer) {
             IMessage msg = tile.onServerPlayerOpenNoSend(player);
@@ -441,7 +407,6 @@ public class MessageUtil {
         }
     }
 
-    // Calen
     public static <I extends Item & MenuProvider> void serverOpenItemGui(Player player, I item) {
         if (player instanceof ServerPlayer serverPlayer) {
             NetworkHooks.openScreen(serverPlayer, item, serverPlayer.blockPosition());

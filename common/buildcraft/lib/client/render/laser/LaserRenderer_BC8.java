@@ -35,7 +35,6 @@ public class LaserRenderer_BC8 {
     private static final LoadingCache<LaserData_BC8, LaserCompiledList> COMPILED_STATIC_LASERS;
     private static final LoadingCache<LaserData_BC8, LaserCompiledBuffer> COMPILED_DYNAMIC_LASERS;
 
-    // public static final VertexFormat FORMAT_LESS, FORMAT_ALL;
     public static final VertexFormat FORMAT_ALL;
 
     static {
@@ -48,10 +47,6 @@ public class LaserRenderer_BC8 {
                 .expireAfterWrite(5, TimeUnit.SECONDS)//
                 .build(CacheLoader.from(LaserRenderer_BC8::makeDynamicLaser));
 
-////        FORMAT_LESS = new VertexFormat();
-////        FORMAT_LESS.addElement(DefaultVertexFormats.POSITION_3F);
-////        FORMAT_LESS.addElement(DefaultVertexFormats.TEX_2F);
-////        FORMAT_LESS.addElement(DefaultVertexFormats.TEX_2S);
 //        FORMAT_LESS = new VertexFormat(ImmutableMap.of(
 //                "POSITION_3F",
 //                DefaultVertexFormat.ELEMENT_POSITION,
@@ -59,13 +54,7 @@ public class LaserRenderer_BC8 {
 //                DefaultVertexFormat.ELEMENT_UV0,
 //                "TEX_2S",
 //                DefaultVertexFormat.ELEMENT_UV1
-//        ));
 
-//        FORMAT_ALL = new VertexFormat();
-//        FORMAT_ALL.addElement(DefaultVertexFormats.POSITION_3F);
-//        FORMAT_ALL.addElement(DefaultVertexFormats.TEX_2F);
-//        FORMAT_ALL.addElement(DefaultVertexFormats.TEX_2S);
-//        FORMAT_ALL.addElement(DefaultVertexFormats.COLOR_4UB);
         FORMAT_ALL = new VertexFormat(ImmutableMap.of(
                 "POSITION_3F",
                 DefaultVertexFormat.ELEMENT_POSITION,
@@ -90,7 +79,6 @@ public class LaserRenderer_BC8 {
     }
 
     private static LaserCompiledList makeStaticLaser(LaserData_BC8 data) {
-//        try (LaserCompiledList.Builder renderer = new LaserCompiledList.Builder(data.enableDiffuse))
         try (LaserCompiledList.Builder renderer = new LaserCompiledList.Builder()) {
             makeLaser(data, renderer);
             return renderer.build();
@@ -98,14 +86,12 @@ public class LaserRenderer_BC8 {
     }
 
     private static LaserCompiledBuffer makeDynamicLaser(LaserData_BC8 data) {
-//        LaserCompiledBuffer.Builder renderer = new LaserCompiledBuffer.Builder(data.enableDiffuse);
         LaserCompiledBuffer.Builder renderer = new LaserCompiledBuffer.Builder();
         makeLaser(data, renderer);
         return renderer.build();
     }
 
     private static void makeLaser(LaserData_BC8 data, ILaserRenderer renderer) {
-//        LaserContext ctx = new LaserContext(renderer, data, data.enableDiffuse, data.doubleFace);
         LaserContext ctx = new LaserContext(renderer, data, data.doubleFace);
         CompiledLaserType type = compileType(data.laserType);
         type.bakeFor(ctx);

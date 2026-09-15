@@ -108,22 +108,16 @@ public class PipeBehaviourObsidian extends PipeBehaviour implements IMjRedstoneR
         switch (openFace) {
             default:
             case WEST:
-//                return bb.offset(-distance, 0, 0).grow(0.5, distance, distance);
                 return bb.move(-distance, 0, 0).inflate(0.5, distance, distance);
             case EAST:
-//                return bb.offset(distance, 0, 0).grow(0.5, distance, distance);
                 return bb.move(distance, 0, 0).inflate(0.5, distance, distance);
             case DOWN:
-//                return bb.offset(0, -distance, 0).grow(distance, 0.5, distance);
                 return bb.move(0, -distance, 0).inflate(distance, 0.5, distance);
             case UP:
-//                return bb.offset(0, distance, 0).grow(distance, 0.5, distance);
                 return bb.move(0, distance, 0).inflate(distance, 0.5, distance);
             case NORTH:
-//                return bb.offset(0, 0, -distance).grow(distance, distance, 0.5);
                 return bb.move(0, 0, -distance).inflate(distance, distance, 0.5);
             case SOUTH:
-//                return bb.offset(0, 0, distance).grow(distance, distance, 0.5);
                 return bb.move(0, 0, distance).inflate(distance, distance, 0.5);
         }
     }
@@ -137,7 +131,6 @@ public class PipeBehaviourObsidian extends PipeBehaviour implements IMjRedstoneR
         Long tickPickupObj = entityDropTime.get(entity);
         if (tickPickupObj != null) {
             long tickPickup = tickPickupObj;
-//            long tickNow = pipe.getHolder().getPipeWorld().getTotalWorldTime();
             long tickNow = pipe.getHolder().getPipeWorld().getGameTime();
             if (tickNow < tickPickup) {
                 return power;
@@ -160,7 +153,6 @@ public class PipeBehaviourObsidian extends PipeBehaviour implements IMjRedstoneR
                 max = Integer.MAX_VALUE;
                 powerReqPerItem = 0;
             } else {
-//                double distance = Math.sqrt(entity.getDistanceSqToCenter(pipe.getHolder().getPipePos()));
                 double distance = Math.sqrt(entity.distanceToSqr(Vec3.atCenterOf(pipe.getHolder().getPipePos())));
                 powerReqPerItem = (long) (Math.max(1, distance) * POWER_PER_METRE + POWER_PER_ITEM);
                 max = (int) (power / powerReqPerItem);
@@ -181,7 +173,6 @@ public class PipeBehaviourObsidian extends PipeBehaviour implements IMjRedstoneR
 
     @PipeEventHandler
     public void onPipeDrop(PipeEventItem.Drop drop) {
-//        entityDropTime.put(drop.getEntity(), pipe.getHolder().getPipeWorld().getTotalWorldTime() + DROP_GAP);
         entityDropTime.put(drop.getEntity(), pipe.getHolder().getPipeWorld().getGameTime() + DROP_GAP);
     }
 
@@ -210,7 +201,6 @@ public class PipeBehaviourObsidian extends PipeBehaviour implements IMjRedstoneR
 
         for (int d = 1; d < 5; d++) {
             AABB aabb = getSuckingBox(openFace, d);
-//            List<Entity> discoveredEntities = pipe.getHolder().getPipeWorld().getEntitiesWithinAABB(Entity.class, aabb);
             List<Entity> discoveredEntities = pipe.getHolder().getPipeWorld().getEntitiesOfClass(Entity.class, aabb);
 
             for (Entity entity : discoveredEntities) {
@@ -227,7 +217,6 @@ public class PipeBehaviourObsidian extends PipeBehaviour implements IMjRedstoneR
     @Override
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing) {
         LazyOptional<T> cap = mjCaps.getCapability(capability, facing);
-//        if (cap != null)
         if (cap.isPresent()) {
             return cap;
         }

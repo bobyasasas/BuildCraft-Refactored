@@ -26,7 +26,6 @@ public class SnapshotIndexCharacterizationTester {
         // index = ((z * sizeY) + y) * sizeX + x  =>  ((1 * 4) + 2) * 6 + 3 = 39
         Assert.assertEquals(39, Snapshot.posToIndex(SIZE, new BlockPos(3, 2, 1)));
         Assert.assertEquals(0, Snapshot.posToIndex(SIZE, BlockPos.ZERO));
-        // last valid position maps to the last index (product - 1)
         Assert.assertEquals(6 * 4 * 8 - 1, Snapshot.posToIndex(SIZE, new BlockPos(5, 3, 7)));
     }
 
@@ -67,7 +66,6 @@ public class SnapshotIndexCharacterizationTester {
 
     @Test
     public void indexOrderIsXFastestThenYThenZ() {
-        // x varies fastest, then y, then z (z-major "pages" of X*Y layers)
         Assert.assertEquals(1, Snapshot.posToIndex(new BlockPos(2, 1, 2), new BlockPos(1, 0, 0)));
         Assert.assertEquals(2, Snapshot.posToIndex(new BlockPos(2, 1, 2), new BlockPos(0, 0, 1)));
         Assert.assertEquals(3, Snapshot.posToIndex(new BlockPos(2, 1, 2), new BlockPos(1, 0, 1)));

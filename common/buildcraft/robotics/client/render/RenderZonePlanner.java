@@ -33,7 +33,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.concurrent.TimeUnit;
 
-// Calen FIXED 1.20.1: in 1.12.0, GlStateManager.disableCull() will make world light looks wrong
 @OnlyIn(Dist.CLIENT)
 public class RenderZonePlanner implements BlockEntityRenderer<TileZonePlanner> {
     private static final Cache<WorldPos, DynamicTextureBC> TEXTURES = CacheBuilder.newBuilder()
@@ -53,7 +52,6 @@ public class RenderZonePlanner implements BlockEntityRenderer<TileZonePlanner> {
     }
 
     @Override
-//    public final void render(TileZonePlanner tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     public void render(TileZonePlanner tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         Minecraft.getInstance().getProfiler().push("bc");
         Minecraft.getInstance().getProfiler().push("zone");
@@ -76,24 +74,8 @@ public class RenderZonePlanner implements BlockEntityRenderer<TileZonePlanner> {
         if (texture == null) {
             return;
         }
-//        try (RenderUtil.AutoTessellator tessellator = RenderUtil.getThreadLocalUnusedTessellator()) {
-//            BufferBuilder buffer = tessellator.tessellator.getBuffer();
         VertexConsumer buffer = bufferSource.getBuffer(texture.getRenderType());
         texture.updateTexture();
-//            texture.bindGlTexture();
-//            GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-//            GlStateManager.disableTexture2D();
-//            GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-//            GlStateManager.disableBlend();
-//            GlStateManager.disableCull();
-//            if (Minecraft.isAmbientOcclusionEnabled()) {
-//                GlStateManager.shadeModel(GL11.GL_SMOOTH);
-//            } else {
-//                GlStateManager.shadeModel(GL11.GL_FLAT);
-//            }
-//
-//            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-//            buffer.setTranslation(x, y, z);
 
         Vec3 min;
         Vec3 max;
@@ -128,7 +110,6 @@ public class RenderZonePlanner implements BlockEntityRenderer<TileZonePlanner> {
         vertex.colouri(-1);
         vertex.lighti((byte) 0xF, (byte) 0xF);
 
-        // Calen
         PoseStack.Pose pose = poseStack.last();
 
         vertex.positiond(min.x, min.y, min.z).texf(minU, minV).render(pose, buffer);
@@ -136,10 +117,6 @@ public class RenderZonePlanner implements BlockEntityRenderer<TileZonePlanner> {
         vertex.positiond(max.x, max.y, max.z).texf(maxU, maxV).render(pose, buffer);
         vertex.positiond(min.x, max.y, min.z).texf(minU, maxV).render(pose, buffer);
 
-//            buffer.setTranslation(0, 0, 0);
-//            tessellator.tessellator.draw();
-//        }
-//        RenderHelper.enableStandardItemLighting();
 
         Minecraft.getInstance().getProfiler().pop();
         Minecraft.getInstance().getProfiler().pop();
@@ -156,7 +133,6 @@ public class RenderZonePlanner implements BlockEntityRenderer<TileZonePlanner> {
     }
 
     private static DynamicTextureBC createTexture(TileZonePlanner tile, Direction side) {
-//        DynamicTextureBC texture = new DynamicTextureBC(TEXTURE_WIDTH, TEXTURE_HEIGHT);
         DynamicTextureBC texture = new DynamicTextureBC(TEXTURE_WIDTH, TEXTURE_HEIGHT, tile.getBlockPos().getX() + "_" + tile.getBlockPos().getY() + "_" + tile.getBlockPos().getZ());
         for (int textureX = 0; textureX < TEXTURE_WIDTH; textureX++) {
             for (int textureY = 0; textureY < TEXTURE_HEIGHT; textureY++) {
@@ -186,7 +162,6 @@ public class RenderZonePlanner implements BlockEntityRenderer<TileZonePlanner> {
                 }
                 ChunkPos chunkPos = new ChunkPos(posX >> 4, posZ >> 4);
                 texture.setColor(textureX, textureY, -1);
-//                ZonePlannerMapChunkKey key = new ZonePlannerMapChunkKey(chunkPos, tile.getWorld().provider.getDimension(), tile.getLevel());
                 ZonePlannerMapChunkKey key = new ZonePlannerMapChunkKey(chunkPos, tile.getLevel().dimension(), tile.getLevelBC());
                 ZonePlannerMapChunk zonePlannerMapChunk =
                         ZonePlannerMapDataClient.INSTANCE.getChunk(tile.getLevel(), key);

@@ -69,27 +69,20 @@ public class GuiScreenBuildCraft<C extends ContainerBC_Neptune<?>> extends Scree
     }
 
     @Override
-//    public void updateScreen()
     public void tick() {
-//        super.updateScreen();
         super.tick();
         mainGui.tick();
     }
 
     @Override
-//    public void drawScreen(int mouseX, int mouseY, float partialTicks)
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         PoseStack poseStack = guiGraphics.pose();
-//        mainGui.drawBackgroundLayer(poseStack, partialTicks, mouseX, mouseY, this::drawMenuBackground);
         mainGui.drawBackgroundLayer(guiGraphics, partialTicks, mouseX, mouseY, () -> drawMenuBackground(guiGraphics));
         mainGui.drawElementBackgrounds(guiGraphics);
-//        mainGui.drawElementForegrounds(this::drawMenuBackground);
         mainGui.drawElementForegrounds(() -> drawMenuBackground(guiGraphics), guiGraphics);
     }
 
-    // private void drawMenuBackground()
     private void drawMenuBackground(GuiGraphics guiGraphics) {
-//        this.drawBackground(0);
         super.renderBackground(guiGraphics);
     }
 
@@ -103,7 +96,6 @@ public class GuiScreenBuildCraft<C extends ContainerBC_Neptune<?>> extends Scree
     }
 
     @Override
-//    protected void mouseReleased(int mouseX, int mouseY, int state)
     public boolean mouseReleased(double mouseX, double mouseY, int state) {
         super.mouseReleased(mouseX, mouseY, state);
         mainGui.onMouseReleased(mouseX, mouseY, state);
@@ -111,11 +103,8 @@ public class GuiScreenBuildCraft<C extends ContainerBC_Neptune<?>> extends Scree
     }
 
     @Override
-//    protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick)
     public boolean mouseDragged(double mouseX, double mouseY, int clickedMouseButton, double startX, double startY) {
-//        super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
         super.mouseDragged(mouseX, mouseY, clickedMouseButton, startX, startY);
-//        mainGui.onMouseDragged(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
         mainGui.onMouseDragged(mouseX, mouseY, clickedMouseButton);
         return true;
     }
@@ -123,9 +112,7 @@ public class GuiScreenBuildCraft<C extends ContainerBC_Neptune<?>> extends Scree
     @Override
 //    protected void keyTyped(char typedChar, int keyCode) throws IOException
     public boolean keyPressed(int typedChar, int keyCode, int modifiers) {
-//        if (!mainGui.onKeyTyped(typedChar, keyCode))
         if (!mainGui.onKeyTyped(typedChar, keyCode, modifiers)) {
-//            super.keyTyped(typedChar, keyCode);
             return super.keyPressed(typedChar, keyCode, modifiers);
         } else {
             return true;

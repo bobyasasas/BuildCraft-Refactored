@@ -35,7 +35,6 @@ public class TriggerMachine extends BCStatement implements ITriggerExternal {
 
     @Override
     public Component getDescription() {
-//        return LocaleUtil.localize("gate.trigger.machine." + (active ? "scheduled" : "done"));
         return Component.translatable("gate.trigger.machine." + (active ? "scheduled" : "done"));
     }
 

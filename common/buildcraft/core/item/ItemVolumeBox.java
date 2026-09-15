@@ -22,13 +22,11 @@ public class ItemVolumeBox extends ItemBC_Neptune {
     }
 
     @Override
-//    public EnumActionResult onItemUse(Player player, Level world, BlockPos pos, InteractionHand hand, Direction facing, float hitX, float hitY, float hitZ)
     public InteractionResult useOn(UseOnContext ctx) {
         Level world = ctx.getLevel();
         BlockPos pos = ctx.getClickedPos();
         Direction facing = ctx.getClickedFace();
         if (world.isClientSide) {
-//            return EnumActionResult.PASS;
             return InteractionResult.PASS;
         }
 
@@ -40,11 +38,9 @@ public class ItemVolumeBox extends ItemBC_Neptune {
         if (current == null) {
             volumeBoxes.addVolumeBox(offset);
             volumeBoxes.setDirty();
-//            return EnumActionResult.SUCCESS;
             return InteractionResult.SUCCESS;
         }
 
-//        return EnumActionResult.FAIL;
         return InteractionResult.FAIL;
     }
 }

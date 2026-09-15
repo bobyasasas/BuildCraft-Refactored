@@ -37,14 +37,9 @@ public class WorldSavedDataVolumeBoxes extends SavedData {
     public final List<VolumeBox> volumeBoxes = new ArrayList<>();
 
     public WorldSavedDataVolumeBoxes() {
-//        super(DATA_NAME);
         super();
     }
 
-//    @SuppressWarnings("unused")
-//    public WorldSavedDataVolumeBoxes(String name) {
-//        super(name);
-//    }
 
     public VolumeBox getVolumeBoxAt(BlockPos pos) {
         return volumeBoxes.stream().filter(volumeBox -> volumeBox.box.contains(pos)).findFirst().orElse(null);
@@ -100,24 +95,19 @@ public class WorldSavedDataVolumeBoxes extends SavedData {
     }
 
     @Override
-//    public void markDirty()
     public void setDirty() {
-//        super.markDirty();
         super.setDirty();
-//        MessageManager.sendToDimension(new MessageVolumeBoxes(volumeBoxes), world.provider.getDimension());
         MessageManager.sendToDimension(new MessageVolumeBoxes(volumeBoxes), world.dimension());
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
-//    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
     public CompoundTag save(CompoundTag nbt) {
         nbt.put("volumeBoxes", NBTUtilBC.writeCompoundList(volumeBoxes.stream().map(VolumeBox::writeToNBT)));
         return nbt;
     }
 
     @SuppressWarnings("NullableProblems")
-    // Calen: not override, load by ourselves -> #get: ret.load(nbt)
 //    @Override
     public void load(CompoundTag nbt) {
         volumeBoxes.clear();
@@ -141,7 +131,6 @@ public class WorldSavedDataVolumeBoxes extends SavedData {
                 }, DATA_NAME);
         if (instance == null) {
             instance = new WorldSavedDataVolumeBoxes();
-//            storage.setData(DATA_NAME, instance);
             storage.set(DATA_NAME, instance);
         }
         currentWorld = null;

@@ -163,7 +163,6 @@ public class ItemMarkerConnector extends ItemBC_Neptune {
                                 .collect(Collectors.toList())
                 ) {
                     for (BlockPos p : PositionUtil.getCorners(volumeBox.box.min(), volumeBox.box.max())) {
-//                        RayTraceResult ray = new AxisAlignedBB(p).calculateIntercept(start, end);
                         Optional<Vec3> result = new AABB(p).clip(start, end);
                         if (result.isPresent()) {
                             double dist = result.get().distanceTo(start);

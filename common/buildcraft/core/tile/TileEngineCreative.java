@@ -129,7 +129,6 @@ public class TileEngineCreative extends TileEngineBase_BC8 {
 //                player.sendStatusMessage(
 //                        Component.literalTranslation("chat.pipe.power.iron.mode", outputs[currentOutputIndex]),
 //                        true
-//                );
                 player.displayClientMessage(
                         Component.translatable("chat.pipe.power.iron.mode", outputs[currentOutputIndex]),
                         true

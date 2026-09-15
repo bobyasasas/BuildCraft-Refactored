@@ -83,8 +83,7 @@ public enum PlugBakerFacade implements IPluggableStaticBaker<KeyPlugFacade> {
                                                   BakedModel model,
                                                   Direction side,
                                                   Vec3 pos0, Vec3 pos1, Vec3 pos2, Vec3 pos3) {
-        RandomSource random = RandomSource.create(0); // Calen
-//        return model.getQuads(state, side, 0).stream()
+        RandomSource random = RandomSource.create(0);
         return model.getQuads(state, side, random).stream()
                 .map(quad ->
                 {
@@ -205,12 +204,7 @@ public enum PlugBakerFacade implements IPluggableStaticBaker<KeyPlugFacade> {
     }
 
     public List<MutableQuad> bakeForKey(KeyPlugFacade key) {
-//        BakedModel model = Minecraft.getMinecraft().getBlockRendererDispatcher().getModelForState(key.state);
         BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(key.state);
-//        BlockRenderLayer renderLayer = MinecraftForgeClient.getRenderLayer();
-//        RenderType renderLayer = MinecraftForgeClient.getRenderType();
-//        ForgeHooksClient.setRenderLayer(null);
-//        ForgeHooksClient.setRenderType(null);
         List<MutableQuad> quads = new ArrayList<>();
         int pS = PluggableFacade.SIZE;
         int nS = 16 - pS;
@@ -284,8 +278,6 @@ public enum PlugBakerFacade implements IPluggableStaticBaker<KeyPlugFacade> {
                 }
             }
         }
-//        ForgeHooksClient.setRenderLayer(renderLayer);
-//        ForgeHooksClient.setRenderType(renderLayer);
         for (MutableQuad quad : quads) {
             int tint = quad.getTint();
             if (tint != -1) {
@@ -302,7 +294,6 @@ public enum PlugBakerFacade implements IPluggableStaticBaker<KeyPlugFacade> {
         for (MutableQuad quad : mutableQuads) {
             baked.add(quad.toBakedItem());
         }
-//        if (BCModules.TRANSPORT.isLoaded() && key.state.isFullBlock() && !key.isHollow)
         if (BCModules.TRANSPORT.isLoaded() && key.state.getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO) == Shapes.block() && !key.isHollow) {
             baked.addAll(TransportCompat.bakeBlocker(key.side));
         }

@@ -21,21 +21,17 @@ import org.joml.Matrix4f;
 
 @OnlyIn(Dist.CLIENT)
 public class AddonDefaultRenderer<T extends Addon> implements IFastAddonRenderer<T> {
-    // private final TextureAtlasSprite s;
     private final LazyOptional<TextureAtlasSprite> s;
 
     public AddonDefaultRenderer() {
-//        s = ModelLoader.White.INSTANCE;
         s = LazyOptional.of(White::instance);
     }
 
     public AddonDefaultRenderer(TextureAtlasSprite s) {
-//        this.s = s;
         this.s = LazyOptional.of(() -> s);
     }
 
     @Override
-//    public void renderAddonFast(T addon, Player player, float partialTicks, BufferBuilder builder)
     public void renderAddonFast(T addon, Player player, PoseStack.Pose pose, float partialTicks, VertexConsumer builder) {
         AABB bb = addon.getBoundingBox();
 

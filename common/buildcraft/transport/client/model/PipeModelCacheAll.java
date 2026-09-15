@@ -59,7 +59,6 @@ public class PipeModelCacheAll {
 
         public PipeAllCutoutKey(TilePipeHolder tile) {
             cutout = new PipeBaseCutoutKey(tile.getPipe().getModel());
-//            this.pluggable = new PluggableKey(BlockRenderLayer.CUTOUT, tile);
             this.pluggable = new PluggableKey(RenderType.cutout(), tile);
             hash = Objects.hash(cutout, pluggable);
         }

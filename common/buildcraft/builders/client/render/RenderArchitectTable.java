@@ -23,7 +23,6 @@ public class RenderArchitectTable implements BlockEntityRenderer<TileArchitectTa
     }
 
     @Override
-//    public void render(TileArchitectTable tile, double x, double y, double z, float partialTicks, int destroyStage, float partial)
     public void render(TileArchitectTable tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         if (!tile.markerBox) {
             return;
@@ -31,19 +30,13 @@ public class RenderArchitectTable implements BlockEntityRenderer<TileArchitectTa
         Minecraft.getInstance().getProfiler().push("bc");
         Minecraft.getInstance().getProfiler().push("architect_table");
 
-//        GL11.glPushMatrix();
         poseStack.pushPose();
-//        GL11.glTranslated(x - tile.getPos().getX(), y - tile.getPos().getY(), z - tile.getPos().getZ());
         poseStack.translate(-tile.getBlockPos().getX(), -tile.getBlockPos().getY(), -tile.getBlockPos().getZ());
-//        RenderHelper.disableStandardItemLighting();
 
         Minecraft.getInstance().getProfiler().push("box");
-//        LaserBoxRenderer.renderLaserBoxStatic(tile.box, BuildCraftLaserManager.STRIPES_READ, true);
         LaserBoxRenderer.renderLaserBoxStatic(tile.box, BuildCraftLaserManager.STRIPES_READ, poseStack.last(), true);
         Minecraft.getInstance().getProfiler().pop();
 
-//        RenderHelper.enableStandardItemLighting();
-//        GL11.glPopMatrix();
         poseStack.popPose();
 
         Minecraft.getInstance().getProfiler().pop();
@@ -51,7 +44,6 @@ public class RenderArchitectTable implements BlockEntityRenderer<TileArchitectTa
     }
 
     @Override
-//    public boolean isGlobalRenderer(TileArchitectTable te)
     public boolean shouldRenderOffScreen(TileArchitectTable tile) {
         return true;
     }

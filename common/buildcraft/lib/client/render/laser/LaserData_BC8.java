@@ -18,26 +18,21 @@ public class LaserData_BC8 {
     public final LaserType laserType;
     public final Vec3 start, end;
     public final double scale;
-    // public final boolean enableDiffuse, doubleFace;
     public final boolean doubleFace;
     public final int minBlockLight;
     private final int hash;
 
     public LaserData_BC8(LaserType laserType, Vec3 start, Vec3 end, double scale) {
-//        this(laserType, start, end, scale, true, false, 0);
         this(laserType, start, end, scale, false, 0);
     }
 
-    // public LaserData_BC8(LaserType laserType, Vec3 start, Vec3 end, double scale, boolean enableDiffuse, boolean doubleFace, int minBlockLight)
     public LaserData_BC8(LaserType laserType, Vec3 start, Vec3 end, double scale, boolean doubleFace, int minBlockLight) {
         this.laserType = laserType;
         this.start = start;
         this.end = end;
         this.scale = scale;
-//        this.enableDiffuse = enableDiffuse;
         this.doubleFace = doubleFace;
         this.minBlockLight = minBlockLight;
-//        hash = Objects.hash(laserType, start, end, Double.doubleToLongBits(scale), enableDiffuse, doubleFace, minBlockLight);
         hash = Objects.hash(laserType, start, end, Double.doubleToLongBits(scale), doubleFace, minBlockLight);
     }
 
@@ -56,7 +51,6 @@ public class LaserData_BC8 {
         if (!start.equals(other.start)) return false;
         if (!end.equals(other.end)) return false;
         if (Double.compare(scale, other.scale) != 0) return false;
-//        if (enableDiffuse != other.enableDiffuse) return false;
         if (doubleFace != other.doubleFace) return false;
         if (minBlockLight != other.minBlockLight) return false;
         return true;

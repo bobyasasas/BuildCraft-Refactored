@@ -10,17 +10,5 @@ public enum BCFactoryGuis {
     AUTO_WORKBENCH_FLUIDS,
     CHUTE;
 
-//    public void openGUI(Player player) {
-//        player.openGui(BCFactory.INSTANCE, ordinal(), player.getEntityWorld(), 0, 0, 0);
-//    }
 
-//    public void openGUI(Player player, BlockPos pos) {
-////        player.openGui(BCFactory.INSTANCE, ordinal(), player.getEntityWorld(), pos.getX(), pos.getY(), pos.getZ());
-//        if (player instanceof ServerPlayer serverPlayer) {
-////            player.openMenu(state.getMenuProvider(player.level, pos));
-//            if (player.level.getBlockEntity(pos) instanceof MenuProvider tile) {
-//                NetworkHooks.openGui(serverPlayer, tile, pos);
-//            }
-//        }
-//    }
 }

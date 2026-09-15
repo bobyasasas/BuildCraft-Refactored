@@ -44,9 +44,7 @@ public enum MinecraftFont implements IFontRenderer {
 
         boolean _scale = scale != 1;
         if (_scale) {
-//            GlStateManager.pushMatrix();
             poseStack.pushPose();
-//            GL11.glScaled(scale, scale, 1);
             poseStack.scale(scale, scale, 1);
             x = (int) (x / scale);
             y = (int) (y / scale);
@@ -55,13 +53,10 @@ public enum MinecraftFont implements IFontRenderer {
             x -= getStringWidth(text) / 2;
         }
 
-//        int v = getFontRenderer().drawString(text, x, y, colour, shadow);
         int v = guiGraphics.drawString(getFontRenderer(), text, x, y, colour, shadow);
         v -= x;
-//        GlStateManager.color(1f, 1f, 1f);
         RenderUtil.color(1f, 1f, 1f);
         if (_scale) {
-//            GlStateManager.popMatrix();
             poseStack.popPose();
             v = (int) (v * scale);
         }
@@ -70,7 +65,6 @@ public enum MinecraftFont implements IFontRenderer {
 
     @Override
     public List<String> wrapString(String text, int maxWidth, boolean shadow, float scale) {
-//        return getFontRenderer().listFormattedStringToWidth(text, (int) (maxWidth / scale));
         return FontUtil.listFormattedStringToWidth(text, (int) (maxWidth / scale));
     }
 }

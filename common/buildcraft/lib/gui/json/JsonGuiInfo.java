@@ -28,12 +28,10 @@ public class JsonGuiInfo extends JsonVariableObject {
 
     public JsonGuiInfo(JsonObject json, FunctionContext fnCtx, ResourceLoaderContext loadHistory) {
         if (json.has("values")) {
-//            putVariables(JsonUtils.getJsonObject(json, "values"), fnCtx);
             putVariables(GsonHelper.getAsJsonObject(json, "values"), fnCtx);
         }
 
         if (json.has("elements_below")) {
-//            JsonObject jElems = JsonUtils.getJsonObject(json, "elements_below");
             JsonObject jElems = GsonHelper.getAsJsonObject(json, "elements_below");
             for (Entry<String, JsonElement> entry : jElems.entrySet()) {
                 String name = entry.getKey();
@@ -44,7 +42,6 @@ public class JsonGuiInfo extends JsonVariableObject {
         }
 
         if (json.has("parent")) {
-//            String parent = JsonUtils.getString(json, "parent");
             String parent = GsonHelper.getAsString(json, "parent");
             ResourceLocation location = new ResourceLocation(parent + ".json");
             try (InputStreamReader reader = loadHistory.startLoading(location)) {
@@ -61,7 +58,6 @@ public class JsonGuiInfo extends JsonVariableObject {
         }
 
         if (json.has("variables")) {
-//            putVariables(JsonUtils.getJsonObject(json, "variables"), fnCtx);
             putVariables(GsonHelper.getAsJsonObject(json, "variables"), fnCtx);
         }
 
@@ -74,7 +70,6 @@ public class JsonGuiInfo extends JsonVariableObject {
         }
         defaultTexture = JsonUtil.getAsString(json.get("texture"));
         if (json.has("types")) {
-//            JsonObject jTypes = JsonUtils.getJsonObject(json, "types");
             JsonObject jTypes = GsonHelper.getAsJsonObject(json, "types");
             for (Entry<String, JsonElement> entry : jTypes.entrySet()) {
                 String name = entry.getKey();
@@ -83,7 +78,6 @@ public class JsonGuiInfo extends JsonVariableObject {
             }
         }
         if (json.has("elements")) {
-//            JsonObject jElems = JsonUtils.getJsonObject(json, "elements");
             JsonObject jElems = GsonHelper.getAsJsonObject(json, "elements");
             for (Entry<String, JsonElement> entry : jElems.entrySet()) {
                 String name = entry.getKey();

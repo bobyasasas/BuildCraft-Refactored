@@ -122,8 +122,6 @@ public enum GuideManager implements ResourceManagerReloadListener {
     }
 
     private void reload0(ResourceManager resourceManager) {
-//        Profiler prof = new Profiler();
-//        prof.profilingEnabled = DEBUG;
         ProfilerFiller prof = ProfilerUtil.newProfiler(DEBUG);
         prof.push("root");
         prof.push("reload");
@@ -169,14 +167,7 @@ public enum GuideManager implements ResourceManagerReloadListener {
         pages.clear();
 
         prof.popPush("load_lang");
-//        Language currentLanguage = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage();
         String langCode = Minecraft.getInstance().getLanguageManager().getSelected();
-//        if (langCode == null) {
-//            BCLog.logger.warn("Current language was null!");
-//            langCode = DEFAULT_LANG;
-//        } else {
-//            langCode = currentLanguage;
-//        }
 
         // load the default ones
         loadLangInternal(resourceManager, DEFAULT_LANG, prof);
@@ -197,7 +188,6 @@ public enum GuideManager implements ResourceManagerReloadListener {
         int e = p - a;
         prof.pop();
         prof.pop();
-//        if (prof.profilingEnabled)
         if (prof instanceof ActiveProfiler activeProfiler) {
             BCLog.logger.info("[lib.guide] " + pageLinksAdded.size() + " search terms");
             BCLog.logger.info(
@@ -205,7 +195,6 @@ public enum GuideManager implements ResourceManagerReloadListener {
                             + time / 1000 + "ms."
             );
             BCLog.logger.info("[lib.guide] Performance information for guide loading:");
-//            ProfilerUtil.logProfilerResults(prof, "root", time * 1000);
             ProfilerUtil.logProfilerResults(activeProfiler, "root", time * 1000);
             BCLog.logger.info("[lib.guide] End of guide loading performance information. (" + time / 1000 + "ms)");
         }
@@ -236,7 +225,6 @@ public enum GuideManager implements ResourceManagerReloadListener {
                     }
                     continue main_iteration;
                 }
-//                catch (FileNotFoundException f)
                 catch (NoSuchElementException f) {
                     // Ignore it, we'll log this later
                 } catch (IOException io) {
@@ -262,7 +250,6 @@ public enum GuideManager implements ResourceManagerReloadListener {
         }
     }
 
-    // private void generateContentsPage(Profiler prof)
     private void generateContentsPage(ProfilerFiller prof) {
         prof.push("clear");
         objectsAdded.clear();
@@ -282,9 +269,7 @@ public enum GuideManager implements ResourceManagerReloadListener {
             GuidePageFactory entryFactory = GuideManager.INSTANCE.getFactoryFor(partialLocation);
 
             PageEntry<?> entry = mapEntry.getValue();
-//            String translatedTitle = entry.title;
             ISimpleDrawable icon = entry.createDrawable();
-//            PageLine line = new PageLine(icon, icon, 2, translatedTitle, true);
             PageLine line = new PageLine(icon, icon, 2, entry.titleKey, entry.title, true);
 
             if (entryFactory != null) {
@@ -297,7 +282,6 @@ public enum GuideManager implements ResourceManagerReloadListener {
         }
 
         prof.popPush("add_default");
-//        ContentsNode othersRoot = new ContentsNode(LocaleUtil.localize("buildcraft.guide.contents.all_group"), 0);
         ContentsNode othersRoot = new ContentsNode("buildcraft.guide.contents.all_group", Component.translatable("buildcraft.guide.contents.all_group"), 0);
         for (Entry<GuideBook, Map<TypeOrder, ContentsNode>> bookEntry : contents.entrySet()) {
             @Nullable
@@ -317,15 +301,12 @@ public enum GuideManager implements ResourceManagerReloadListener {
             if (pageLinksAdded.add(page)) {
                 quickSearcher.add(page, page.getSearchName());
             }
-//            String title = LocaleUtil.localize(tags.type);
             String titleKey = tags.type;
             Component title = Component.translatable(titleKey);
-//            IContentsNode subNode = othersRoot.getChild(title);
             IContentsNode subNode = othersRoot.getChild(titleKey);
             if (subNode instanceof ContentsNode) {
                 subNode.addChild(page);
             } else if (subNode == null) {
-//                ContentsNode subContents = new ContentsNode(title, 1);
                 ContentsNode subContents = new ContentsNode(titleKey, title, 1);
                 othersRoot.addChild(subContents);
                 subContents.addChild(page);
@@ -356,7 +337,6 @@ public enum GuideManager implements ResourceManagerReloadListener {
         Map<TypeOrder, ContentsNode> map = new HashMap<>();
         contents.put(book, map);
         for (TypeOrder order : GuiGuide.SORTING_TYPES) {
-//            map.put(order, new ContentsNode("root", -1));
             map.put(order, new ContentsNode("root", Component.literal("root"), -1));
         }
     }
@@ -380,11 +360,8 @@ public enum GuideManager implements ResourceManagerReloadListener {
                 ContentsNode[] nodePath = new ContentsNode[ordered.length];
                 ContentsNode node = entry.getValue();
                 for (int i = 0; i < ordered.length; i++) {
-                    // Calen: here lang file has not loaded
-//                    String title = LocaleUtil.localize(ordered[i]);
                     String titleKey = ordered[i];
                     Component title = Component.translatable(ordered[i]);
-//                    IContentsNode subNode = node.getChild(title);
                     IContentsNode subNode = node.getChild(titleKey);
                     if (subNode instanceof ContentsNode) {
                         node = (ContentsNode) subNode;
@@ -438,9 +415,7 @@ public enum GuideManager implements ResourceManagerReloadListener {
     @Nonnull
     public GuidePageFactory getPageFor(@Nonnull ItemStack stack) {
         // TODO: Make this generation much more flexible!
-        // (Basically return a stand-in page that contains groups, recipes, and all known info)
         // Or should that be implicit for *all* pages? Yes?
-        // (Specifically all that extend [GuidePage] as that won't include the contents page)
         // This implies merging GuidePage up into GuidePageEntry and deleting GuidePageStandInRecipes
         // we will also need to ensure we don't generate groups or recipes multiple times.
         // Although we do need to generate the info for it first and cache it?

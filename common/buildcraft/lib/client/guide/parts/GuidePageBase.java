@@ -114,7 +114,6 @@ public abstract class GuidePageBase extends GuidePart {
         return current;
     }
 
-    // public abstract String getTitle();
     public abstract Component getTitle();
 
     public boolean shouldPersistHistory() {

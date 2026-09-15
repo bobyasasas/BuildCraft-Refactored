@@ -19,7 +19,6 @@ public class AIRobotMain extends AIRobot {
     }
 
     @Override
-    // public int getEnergyCost()
     public long getPowerCost() {
         return 0;
     }

@@ -43,10 +43,8 @@ public class BoardRobotBomber extends RedstoneBoardRobot {
     public final void update() {
         boolean containItems = false;
 
-        // for (int i = 0; i < robot.getSizeInventory(); ++i)
         IItemHandler itemHandler = robot.getCapability(CapUtil.CAP_ITEMS).orElse(null);
         for (int i = 0; i < itemHandler.getSlots(); ++i) {
-            // if (robot.getStackInSlot(i) != null)
             if (!itemHandler.getStackInSlot(i).isEmpty()) {
                 containItems = true;
             }
@@ -58,7 +56,6 @@ public class BoardRobotBomber extends RedstoneBoardRobot {
             startDelegateAI(new AIRobotSearchRandomGroundBlock(robot, 100, new IBlockFilter() {
                 @Override
                 public boolean matches(Level world, BlockPos pos) {
-                    // return pos.getY() < world.getActualHeight() - flyingHeight && !world.isEmptyBlock(pos);
                     return pos.getY() < world.getMaxBuildHeight() - flyingHeight && !world.isEmptyBlock(pos);
                 }
             }, robot.getZoneToWork()));
@@ -81,20 +78,15 @@ public class BoardRobotBomber extends RedstoneBoardRobot {
             }
         } else if (ai instanceof AIRobotGotoBlock) {
             if (ai.success()) {
-                // ITransactor t = Transactor.getTransactorFor(robot);
                 IItemHandler t = robot.getCapability(CapUtil.CAP_ITEMS).orElse(null);
-                // ItemStack stack = t.remove(TNT_FILTER, null, true);
                 ItemStack stack = TNT_FILTER.matches(t.getStackInSlot(0)) ? t.extractItem(0, 1, false) : StackUtil.EMPTY;
 
-                // if (stack != null && stack.getCount() > 0)
                 if (!stack.isEmpty() && stack.getCount() > 0) {
                     PrimedTnt tnt = new PrimedTnt(robot.level(), robot.getX() + 0.25, robot.getY() - 1, robot.getZ() + 0.25, robot);
-                    // tnt.fuse = 37;
                     tnt.setFuse(37);
                     robot.level().addFreshEntity(tnt);
-                    // robot.level.playSoundAtEntity(tnt, "game.tnt.primed", 1.0F, 1.0F);
                     robot.level().playSound(null, tnt, SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    robot.level().gameEvent(null, GameEvent.ENTITY_PLACE, robot.blockPosition()); // Calen 1.18.2 from DispenseItemBehavior
+                    robot.level().gameEvent(null, GameEvent.ENTITY_PLACE, robot.blockPosition());
                 }
             } else {
                 startDelegateAI(new AIRobotGotoSleep(robot));

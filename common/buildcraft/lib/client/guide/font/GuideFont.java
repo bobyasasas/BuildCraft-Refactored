@@ -60,8 +60,6 @@ public class GuideFont implements IFontRenderer {
         PoseStack poseStack = guiGraphics.pose();
         text = ColourUtil.stripAllFormatCodes(text);
         Minecraft mc = Minecraft.getInstance();
-//        ScaledResolution res = new ScaledResolution(mc);
-//        double scaleFactor = mc.getWindow().getWidth() / res.getScaledWidth_double();
         double scaleFactor = mc.getWindow().getGuiScale();
 
         g2d.setColor(new Color(0, 0, 0, 255));
@@ -75,7 +73,6 @@ public class GuideFont implements IFontRenderer {
         g2d.setFont(f2);
         Rectangle2D rect = metrics.getStringBounds(text, g2d);
         // g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF); //BC原来就是注释掉的
-        // int font_height = (int) (getFontHeight() * scaleFactor);
         int font_height = metrics.getMaxAscent() + metrics.getMaxDescent();
         g2d.drawString(text, 0, metrics.getMaxAscent());
 
@@ -86,17 +83,11 @@ public class GuideFont implements IFontRenderer {
                 tex.setColor(_x, _y, rgb);
             }
         }
-//        GlStateManager.enableAlpha();
         RenderUtil.enableAlpha();
-//        GlStateManager.disableDepth();
         RenderUtil.disableDepth();
-//        GlStateManager.enableBlend();
         RenderUtil.enableBlend();
-//        GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-//        GlStateManager.pushMatrix();
         poseStack.pushPose();
-//        GlStateManager.scale(1 / scaleFactor, 1 / scaleFactor, 1);
         poseStack.scale((float) (1 / scaleFactor), (float) (1 / scaleFactor), 1);
         if ((shade & 0xFF_00_00_00) == 0) {
             shade |= 0xFF_00_00_00;
@@ -107,12 +98,8 @@ public class GuideFont implements IFontRenderer {
         }
         tex.draw((int) (x * scaleFactor), (int) (y * scaleFactor - metrics.getMaxDescent()), 0, 0, 0,
                 (int) (rect.getWidth()), (int) (rect.getHeight() + 1));
-        // tex.draw(x, y, 0);
-//        GlStateManager.popMatrix();
         poseStack.popPose();
-//        GlStateManager.color(1, 1, 1);
         RenderUtil.color(1, 1, 1);
-//        GlStateManager.enableDepth();
         RenderSystem.enableDepthTest();
 
         return (int) rect.getWidth();
@@ -124,7 +111,6 @@ public class GuideFont implements IFontRenderer {
 
         return Collections.singletonList(text);
         // TODO Auto-generated method stub
-        // throw new AbstractMethodError("// TODO: Implement this!");
     }
 
     private static class FontState {
@@ -142,8 +128,6 @@ public class GuideFont implements IFontRenderer {
         FontState(GuideFont font, float scale, boolean shadow) {
             this.defaultShadow = shadow;
             Minecraft mc = Minecraft.getInstance();
-//            ScaledResolution res = new ScaledResolution(mc);
-//            double scaleFactor = mc.getWindow().getGuiScaledWidth() / res.getScaledWidth_double();
             double scaleFactor = mc.getWindow().getGuiScale();
 
             Font f2 = font.font.deriveFont(font.font.getSize2D() * scale * (float) scaleFactor);

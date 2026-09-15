@@ -16,7 +16,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class RenderEngineStone extends RenderEngine_BC8<TileEngineStone_BC8> {
-//    public static final RenderEngineStone INSTANCE = new RenderEngineStone();
 
     public RenderEngineStone(BlockEntityRendererProvider.Context context) {
         super(context);

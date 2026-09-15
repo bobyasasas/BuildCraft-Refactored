@@ -16,11 +16,8 @@ public class ContainerReplacer extends ContainerBCTile<TileReplacer> {
     public ContainerReplacer(MenuType menuType, int id, Player player, TileReplacer tile) {
         super(menuType, id, player, tile);
 
-//        addSlotToContainer(new SlotBase(tile.invSnapshot, 0, 8, 115));
         addSlot(new SlotBase(tile.invSnapshot, 0, 8, 115));
-//        addSlotToContainer(new SlotBase(tile.invSchematicFrom, 0, 8, 137));
         addSlot(new SlotBase(tile.invSchematicFrom, 0, 8, 137));
-//        addSlotToContainer(new SlotBase(tile.invSchematicTo, 0, 56, 137));
         addSlot(new SlotBase(tile.invSchematicTo, 0, 56, 137));
 
         addFullPlayerInventory(159);

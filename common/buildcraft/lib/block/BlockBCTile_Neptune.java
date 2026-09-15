@@ -47,16 +47,11 @@ public abstract class BlockBCTile_Neptune<T extends BlockEntity> extends BlockBC
 
     @Override
     @Nullable
-//    public abstract TileBC_Neptune createTileEntity(World world, IBlockState state);
     public abstract TileBC_Neptune newBlockEntity(BlockPos pos, BlockState state);
 
 //    @Override
-//    public boolean hasTileEntity(IBlockState state) {
-//        return true;
-//    }
 
     @Override
-//    public void onBlockExploded(World world, BlockPos pos, Explosion explosion)
     public void onBlockExploded(BlockState state, Level world, BlockPos pos, Explosion explosion) {
         BlockEntity tile = world.getBlockEntity(pos);
         if (tile instanceof TileBC_Neptune) {
@@ -68,9 +63,7 @@ public abstract class BlockBCTile_Neptune<T extends BlockEntity> extends BlockBC
 
     /** This will be called when BlockState changes. */
     @Override
-//    public void breakBlock(World world, BlockPos pos, IBlockState state)
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-        // Calen
         if (!TileBC_Neptune.shouldRefresh(world, pos, state, newState)) {
             return;
         }
@@ -90,9 +83,7 @@ public abstract class BlockBCTile_Neptune<T extends BlockEntity> extends BlockBC
         return blockEntity != null ? blockEntity.triggerEvent(eventID, eventParam) : false;
     }
 
-    // Calen: here the block has been set to the new one and the tileEntity has been created
     @Override
-//    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         BlockEntity tile = world.getBlockEntity(pos);
         if (tile instanceof TileBC_Neptune) {
@@ -103,7 +94,6 @@ public abstract class BlockBCTile_Neptune<T extends BlockEntity> extends BlockBC
     }
 
     @Override
-//    public boolean onBlockActivated(World world, BlockPos pos, BlockState state, EntityPlayer player, EnumHand hand, Direction facing, float hitX, float hitY, float hitZ)
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         BlockEntity tile = world.getBlockEntity(pos);
         if (tile instanceof TileBC_Neptune) {
@@ -122,7 +112,6 @@ public abstract class BlockBCTile_Neptune<T extends BlockEntity> extends BlockBC
         }
     }
 
-    // Calen
     @Override
     public final <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> pBlockEntityType) {
         if (this instanceof IBlockWithTickableTE) {

@@ -66,7 +66,6 @@ public class GuideAssembly extends GuidePartItem {
     }
 
     @Override
-//    public PagePosition renderIntoArea(int x, int y, int width, int height, PagePosition current, int index)
     public PagePosition renderIntoArea(GuiGraphics guiGraphics, int x, int y, int width, int height, PagePosition current, int index) {
         if (current.pixel + PIXEL_HEIGHT > height) {
             current = current.newPage();
@@ -74,11 +73,8 @@ public class GuideAssembly extends GuidePartItem {
         x += OFFSET.x;
         y += OFFSET.y + current.pixel;
         if (current.page == index) {
-//            INPUT_LIST.drawAt(x, y);
             INPUT_LIST.drawAt(guiGraphics, x, y);
             // Render the item
-//            GlStateManager.enableRescaleNormal();
-//            RenderHelper.enableGUIStandardItemLighting();
             RenderUtil.enableGUIStandardItemLighting();
             for (int i = 0; i < input.length; i++) {
                 GuiRectangle rect = ITEM_POSITION[i];
@@ -88,20 +84,16 @@ public class GuideAssembly extends GuidePartItem {
             drawItemStack(guiGraphics, output.get(), x + (int) OUT_POSITION.x, y + (int) OUT_POSITION.y);
 
             if (MJ_POSITION.offset(x, y).contains(gui.mouse)) {
-//                gui.tooltips.add(Collections.singletonList(LocaleUtil.localizeMj(mjCost.get())));
                 gui.tooltips.add(Collections.singletonList(LocaleUtil.localizeMjComponent(mjCost.get())));
             }
 
-//            RenderHelper.disableStandardItemLighting();
             RenderUtil.disableStandardItemLighting();
-//            GlStateManager.disableRescaleNormal();
         }
         current = current.nextLine(PIXEL_HEIGHT, height);
         return current;
     }
 
     @Override
-//    public PagePosition handleMouseClick(int x, int y, int width, int height, PagePosition current, int index, int mouseX, int mouseY)
     public PagePosition handleMouseClick(GuiGraphics guiGraphics, int x, int y, int width, int height, PagePosition current, int index, double mouseX, double mouseY) {
         if (current.pixel + PIXEL_HEIGHT > height) {
             current = current.newPage();
