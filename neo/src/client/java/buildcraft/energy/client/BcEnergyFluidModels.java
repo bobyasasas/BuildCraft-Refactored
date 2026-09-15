@@ -17,8 +17,12 @@ import buildcraft.energy.BcEnergyFluids;
  * reusing the vanilla water still/flow textures as the placeholder textures (no own texture files yet). The real
  * per-fluid rendering (legacy {@code BCFluidAttributes} textures/tints) migrates in M2.5+.
  *
- * <p>Client-only classes ({@link FluidModel}, {@link Material}) are referenced here, so the listener must only be
- * registered on the client dist (see the guard in {@code BuildCraftEnergy}).
+ * <p><b>Source set boundary (M2.7a):</b> this class lives in the {@code client} source set
+ * ({@code neo/src/client/java}), so the compiler itself guarantees it is never needed on the dedicated server — the
+ * class is not even on the server runs' classpath. No hand-written {@code Dist} guard is necessary: the client entry
+ * point {@link BuildCraftEnergyClient} (annotated {@code @Mod(dist = Dist.CLIENT)}) registers the
+ * {@link RegisterFluidModelsEvent} listener on the mod event bus, and FML filters that entry point out during its
+ * bytecode scan on server dists.
  */
 public final class BcEnergyFluidModels {
 

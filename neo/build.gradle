@@ -24,6 +24,36 @@ def buildcraft_mod_ids = ['buildcraftlib', 'buildcraftcore', 'buildcraftbuilders
 // Mojang ships Java 25 to end users in 26.1, so mods should target Java 25.
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
+// M2.7a: client source set split (also closes the M1.2 deferral on the new tree).
+// src/client/java + src/client/resources hold client-only classes (rendering, fluid
+// models, screens). The boundary is enforced structurally, not by dist guards:
+// - client -> main is allowed (clientCompileClasspath includes main.output below);
+// - main -> client is impossible: main's classpath never sees src/client output
+//   (verified by `grep -rn "buildcraft.lib.client" src/main/java` = 0).
+// The client source set joins the run classpath via neoForge.runs below (only the
+// client run) and is packaged into the shipped jar by the tasks.jar tweak.
+sourceSets {
+    client {
+    }
+}
+
+// Give the client source set the same main classes/deps the main source set sees:
+// - main's output comes from the explicit classpath additions below;
+// - Gradle does NOT auto-wire custom source sets to the shared configurations (only
+//   testImplementation gets that treatment), so the three extendsFrom here are what
+//   put main's `implementation` dependencies (e.g. :expression) and any compile-only/
+//   runtime-only deps on the client classpaths. Without them the client run boots
+//   without the expression jar and mod construction dies in NoClassDefFoundError.
+// - the neoforge/minecraft artifacts are wired after the neoForge { } block below
+//   via `addModdingDependenciesTo` (it must run after the workflow exists).
+configurations {
+    clientImplementation.extendsFrom implementation
+    clientCompileOnly.extendsFrom compileOnly
+    clientRuntimeOnly.extendsFrom runtimeOnly
+}
+sourceSets.client.compileClasspath += sourceSets.main.output
+sourceSets.client.runtimeClasspath += sourceSets.main.output
+
 dependencies {
     // M2.3: wire the pure-logic expression library (Java 17 toolchain, no MC deps)
     // into the mod classpath. Staying on 17 is deliberate: the legacy 1.20.1 fat
@@ -49,13 +79,25 @@ neoForge {
     version = project.neo_version
 
     runs {
+        // M2.7a: the client run uses the client source set as its runtime classpath
+        // (which transitively contains main.output, see the wiring above), so client
+        // classes are loadable in dev-run clients.
         client {
             client()
+            sourceSet = sourceSets.client
         }
 
+        // M2.7a: server-side runs stay on the main source set's runtime classpath —
+        // src/client output is NOT on their game classpath. (MDG's mods { } block is
+        // project-global, so fml.modFolders still lists the client output folder on
+        // server runs — upstream MDG issue #309. That is harmless: FML only bytecode
+        // scans those folders, nothing on the server ever loads a client class, and
+        // the client entry point is dist-filtered at scan level, see
+        // BuildCraftEnergyClient. The classpath boundary itself is enforced here.)
         server {
             server()
             programArgument '--nogui'
+            sourceSet = sourceSets.main
         }
 
         // M2.2a: headless NeoForge gametest server (run type from the NeoForge moddev-config:
@@ -65,6 +107,7 @@ neoForge {
             type = 'gameTestServer'
             programArgument '--tests'
             programArgument 'buildcraftcore:*'
+            sourceSet = sourceSets.main
         }
 
         // applies to all the run configs above
@@ -87,9 +130,12 @@ neoForge {
         // M2.4a: one entry per shipped mod, all bound to the same source set so dev
         // runs expose the mod code/resources under every modid (MDG builds the
         // MOD_CLASSES argument from these).
+        // M2.7a: each entry now binds main + client so the client run sees the client
+        // source set's classes/resources under its own modids.
         buildcraft_mod_ids.each { id ->
             "$id" {
                 sourceSet(sourceSets.main)
+                sourceSet(sourceSets.client)
             }
         }
     }
@@ -103,6 +149,12 @@ neoForge {
         testedMod = mods.buildcraftlib
     }
 }
+
+// M2.7a: wire the neoforge/minecraft artifacts onto the client source set's compile
+// and runtime classpath configurations. This must run AFTER the `neoForge { }`
+// block: it resolves MDG's internal artifacts workflow, which is created when the
+// version is set. (Mirrors what MDG does for the source sets enabled by default.)
+neoForge.addModdingDependenciesTo sourceSets.client
 
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
@@ -129,4 +181,12 @@ neoForge.ideSyncTask generateModMetadata
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
+
+// M2.7a: ship the client source set's classes/resources inside the mod jar (the
+// default `jar` only packages sourceSets.main.output). Split-source-set mods that
+// forget this ship without their client code — the dev runs would still work
+// (they read the output folders), but production installs would lose it.
+tasks.jar {
+    from sourceSets.client.output
 }
