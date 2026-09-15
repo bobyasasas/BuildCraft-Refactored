@@ -22,12 +22,15 @@ public final class BcCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister
             .create(Registries.CREATIVE_MODE_TAB, BuildCraftCore.MOD_ID);
 
-    /** Main BuildCraft tab. Displays the marker placeholder until real machines arrive in M2.2b/c. */
+    /** Main BuildCraft tab. Displays the marker placeholder and the M2.2b stone engine slice. */
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN = TABS.register("main",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.buildcraftcore"))
                     .icon(() -> new ItemStack(BcItems.MARKER.value()))
-                    .displayItems((parameters, output) -> output.accept(BcItems.MARKER.value()))
+                    .displayItems((parameters, output) -> {
+                        output.accept(BcItems.MARKER.value());
+                        output.accept(BcItems.ENGINE_STONE.value());
+                    })
                     .build());
 
     private BcCreativeTabs() {

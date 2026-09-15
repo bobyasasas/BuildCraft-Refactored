@@ -22,6 +22,9 @@ public final class BcItems {
     /** Item form of the {@link BcBlocks#MARKER} placeholder block. */
     public static final DeferredItem<BlockItem> MARKER = ITEMS.registerSimpleBlockItem(BcBlocks.MARKER);
 
+    /** Item form of the {@link BcBlocks#ENGINE_STONE} slice block (M2.2b). */
+    public static final DeferredItem<BlockItem> ENGINE_STONE = ITEMS.registerSimpleBlockItem(BcBlocks.ENGINE_STONE);
+
     private BcItems() {
     }
 }

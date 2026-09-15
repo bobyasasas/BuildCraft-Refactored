@@ -43,12 +43,16 @@ public class BuildCraftCore {
     }
 
     /**
-     * M2.2a: runtime proof that the marker placeholder block/item really bound to the frozen registries. Runs in every
-     * dist, so the same log line doubles as evidence for runClient and the headless gametest server.
+     * M2.2a: runtime proof that the marker placeholder block/item really bound to the frozen registries. Since M2.2b
+     * it also covers the stone engine slice. Runs in every dist, so the same log line doubles as evidence for
+     * runClient and the headless gametest server.
      */
     private static void onCommonSetup(FMLCommonSetupEvent event) {
         LOGGER.info("BuildCraft core registration smoke: block {} ({}) with item {} registered",
                 BcBlocks.MARKER.getId(), BcBlocks.MARKER.value().getClass().getSimpleName(), BcItems.MARKER.getId());
+        LOGGER.info("BuildCraft core registration smoke: block {} ({}) with item {} and block entity type {} registered",
+                BcBlocks.ENGINE_STONE.getId(), BcBlocks.ENGINE_STONE.value().getClass().getSimpleName(),
+                BcItems.ENGINE_STONE.getId(), BcBlockEntities.ENGINE_STONE.getId());
     }
 
     /**

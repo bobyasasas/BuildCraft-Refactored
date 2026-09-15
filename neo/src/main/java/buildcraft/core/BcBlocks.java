@@ -6,8 +6,10 @@
 package buildcraft.core;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import buildcraft.core.block.StoneEngineBlock;
 
 /**
  * Central block registration for buildcraftcore (task M2.2a). Every block this mod registers gets a constant
@@ -24,10 +26,17 @@ public final class BcBlocks {
 
     /**
      * M2.2a placeholder block: a plain {@link Block} with no behaviour, existing purely as compile- and runtime proof
-     * that the registration pipeline works. M2.2b/c will replace it with the real engine and pipe blocks.
+     * that the registration pipeline works. M2.2c will add the pipe blocks next to it.
      */
     public static final DeferredBlock<Block> MARKER = BLOCKS.registerSimpleBlock("marker",
             properties -> properties.strength(0.5F));
+
+    /**
+     * M2.2b stone engine slice block (see {@link StoneEngineBlock}). Placeholder placement for the M2.2 slice only:
+     * the real engine registry migration (legacy {@code BlockRegistry} + engine module) is M2.4/M2.9.
+     */
+    public static final DeferredBlock<StoneEngineBlock> ENGINE_STONE = BLOCKS.registerBlock("engine_stone",
+            StoneEngineBlock::new, () -> BlockBehaviour.Properties.of().strength(3.5F));
 
     private BcBlocks() {
     }
