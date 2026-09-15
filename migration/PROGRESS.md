@@ -2,7 +2,7 @@
 
 > **本文件由 migration/scripts/progress.py 自动生成，禁止手改；更新任务请编辑 migration/tasks.json 或用 `--set` 命令。**
 >
-> 生成时间：2026-09-15 01:44:01 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-15）
+> 生成时间：2026-09-15 01:56:07 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-15）
 
 ## 总览
 
@@ -29,7 +29,7 @@
 | M0.6 | 静态分析基线 | done（已完成） | SpotBugs/Checkstyle 基线报告入库，违规总数记录在 evidence | evidence：./gradlew check 生成两工具报告且 build 退出码0；Checkstyle 违规 1228 条、SpotBugs 违规 2525 条（High 274 / Medium 1507 / Low 744），摘要已入库 migration/snapshots/static-analysis-baseline.md |
 | M1.1 | Gradle 多项目拆分 | done（已完成） | settings.gradle 正式 include BuildCraftAPI/expression/主体模块，各模块可独立构建，srcDir 拼装方式移除 | evidence：settings.gradle include :buildcraftapi/:expression/:主体(根)，srcDir 拼装（api 262 文件+expression 166 文件）全部移除；:buildcraftapi:build 与 :expression:build 独立成功；根 build 退出码0、test 95 全绿；jar 条目 9210 与 api class 数拆分前后一致（360 个）；子模块工作树 clean |
 | M1.2 | client 边界基线（源集分离推迟至 M2.7） | done（已完成） | client 边界清单入库：client 路径文件 234 个、混编文件 132 个（含 262 处 @OnlyIn 分布）、引用锚定分析（222 锚定/12 可独立移动），作为 M2.7 依赖倒置工作清单 | 引用闭包分析：common 262 处 @OnlyIn（成员级 179/类级 83）、混编文件 132 个；234 个 client 路径文件中 222 个被 common 锚定，解缠需 M2.7 级依赖倒置；主 agent 裁决固化边界清单 migration/snapshots/client-boundary-baseline.json<br>notes: 原 acceptance（client 源集+@OnlyIn 显著下降）经引用闭包分析证实 1.20.1 上不可达，2026-09-15 主 agent 裁决改道 |
-| M1.3 | 完整 CI 流水线 | done（已完成） | GitHub Actions 含 build+test+JaCoCo 覆盖率报告并上传 artifact | evidence：./gradlew test jacocoTestReport 成功，根工程(common)行覆盖率 4.54%（INSTRUCTION 4.44%）；CI baseline-build 追加 jacocoTestReport + upload-artifact（jacoco-report），run <id> 双 job 绿 |
+| M1.3 | 完整 CI 流水线 | done（已完成） | GitHub Actions 含 build+test+JaCoCo 覆盖率报告并上传 artifact | evidence：./gradlew test jacocoTestReport 成功，根工程(common)行覆盖率 4.54%（INSTRUCTION 4.44%）；CI baseline-build 追加 jacocoTestReport + upload-artifact（jacoco-report），run 34934135627 双 job 绿（baseline-build+progress-check，artifact jacoco-report 6.5MB） |
 | M1.4 | 死代码与卫生清理 | pending（未完成） | 注释掉的代码行（基线 3546）与 Calen 移植注释（基线 688）清零或显著下降；test.py、testsuite/、.travis.yml 移除；数字记录在 evidence | — |
 | M1.5 | 许可证决策落地 | pending（未完成） | MMPL 1.0.1 与 MPL 2.0 二选一，mods.toml 与 LICENSE 一致，license_checker 脚本通过 | — |
 | M2.1 | 构建系统迁移 | pending（未完成） | ModDevGradle + Java 25 + Gradle 9.1，空 mod 骨架在 26.1.2 下 runClient 可启动 | — |
@@ -52,7 +52,7 @@
 
 ## 代码实时指标
 
-采集时间：2026-09-15 01:44:01；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
+采集时间：2026-09-15 01:56:07；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
 
 | 指标 | 当前值 | 调研基线(2026-09) | 目标 |
 |---|---:|---:|---|

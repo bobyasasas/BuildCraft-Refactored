@@ -97,7 +97,7 @@
       "title": "完整 CI 流水线",
       "status": "done",
       "acceptance": "GitHub Actions 含 build+test+JaCoCo 覆盖率报告并上传 artifact",
-      "evidence": "evidence：./gradlew test jacocoTestReport 成功，根工程(common)行覆盖率 4.54%（INSTRUCTION 4.44%）；CI baseline-build 追加 jacocoTestReport + upload-artifact（jacoco-report），run <id> 双 job 绿",
+      "evidence": "evidence：./gradlew test jacocoTestReport 成功，根工程(common)行覆盖率 4.54%（INSTRUCTION 4.44%）；CI baseline-build 追加 jacocoTestReport + upload-artifact（jacoco-report），run 34934135627 双 job 绿（baseline-build+progress-check，artifact jacoco-report 6.5MB）",
       "notes": ""
     },
     {
