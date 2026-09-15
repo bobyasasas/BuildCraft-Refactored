@@ -19,7 +19,7 @@
 - 已知坑：
   - client 代码与主源集混编：362 个文件靠 267 处 `@OnlyIn(Dist.CLIENT)` 区分，没有独立 client 源集。
   - 60 条 AccessTransformer；mixins 配置存在但为空。
-  - 双许可证并存（LICENSE = MMPL 1.0.1 与 LICENSE-NEW = MPL 2.0），切换未决。
+  - 许可证已定：MPL 2.0（M1.5 落地，LICENSE 为全文，mods.toml/gradle.properties 均为 MPL-2.0）；127 个历史源码文件的旧许可证头按裁决保留、不批量回改；校验脚本 `python3 migration/scripts/license_check.py`。
 - 分支约定：`neoforge-26.1.2` 是迁移工作分支；`8.0.x-1.20.1` 是基线分支，只读参照，禁止改动。
 
 ## 2. 迁移目标（钉死，不得自行变更）
@@ -84,7 +84,7 @@
 1. `buildcraft_resources_generated/` 是 datagen 产物，禁止手改，只能通过 datagen 任务重新生成。
 2. 禁止改动 `.gitmodules` 与子模块 pointer；禁止改动 `8.0.x-1.20.1` 基线分支。
 3. `migration/snapshots/` 基线文件一旦入库不得修改（保证对拍基准的唯一性）。
-4. 许可证未决（M1.5）前，新增源码文件不加许可证头；不得批量改动现有文件头。
+4. 许可证为 MPL 2.0（M1.5 已落地）：新增源码文件加 MPL 2.0 文件头；禁止批量改动现有 127 个文件的历史许可证头；改动许可证相关文件后跑 `python3 migration/scripts/license_check.py`。
 5. 大面积注释代码/Calen 移植注释的清理只在 M1.4 任务内进行，日常改动不顺手删除。
 6. 机械化替换（如 RegistryObject→DeferredHolder）前后必须用 grep 计数对比并写入 evidence（防止被 3546 行注释代码污染匹配）。
 7. 不引入新第三方依赖，除非任务 acceptance 明确要求。
