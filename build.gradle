@@ -1,8 +1,14 @@
+import com.github.spotbugs.snom.Confidence
+import com.github.spotbugs.snom.Effort
+
 plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    // M0.6 静态分析基线：Checkstyle + SpotBugs，只记录现状不上门禁
+    id 'checkstyle'
+    id 'com.github.spotbugs' version '6.0.28'
 }
 
 ext.configFile = file "build.properties"
@@ -167,19 +173,59 @@ sourceSets {
     }
 }
 
-if (gradle.startParameter.taskNames.contains("checkstyle")) {
-    checkstyle {
-        configFile = file("guidelines/buildcraft.checkstyle")
-        toolVersion = "7.2"
+// ---------------------------------------------------------------------------
+// 静态分析基线（M0.6）
+// 定位：迁移前的质量基线快照，只记录现状、不上门禁（门禁是 Phase 3 的事）。
+// 因此两工具都 ignoreFailures = true，build/check 永远不会因违规而失败。
+// 分析范围 = main 源集 Java 代码（含 srcDir 拼装进来的 common/、BuildCraftAPI/api、
+// sub_projects/expression 各源目录）；api 源集与 BuildCraftAPI/api 重复、test 源集
+// 非本次范围，对应 checkstyle/spotbugs 任务关闭。
+// 报告输出在 build/reports/checkstyle/ 与 build/reports/spotbugs/（不入库）。
+// ---------------------------------------------------------------------------
+checkstyle {
+    toolVersion = '10.12.5'
+    configFile = file('config/checkstyle/checkstyle.xml')
+    ignoreFailures = true
+    showViolations = false
+}
+tasks.withType(Checkstyle).configureEach {
+    reports {
+        xml.required = true
+        html.required = true
     }
+}
+// api/test 源集不纳入静态分析。注意：checkstyle/spotbugs 插件会给所有源集生成
+// checkstyleXxx/spotbugsXxx 任务并把 check 挂到它们上面（依赖是活的 withType 集合，
+// 无法按条目摘除），即便任务 enabled=false，其输入依赖 compileApiJava 仍会被拉进
+// 任务图。api 源集没有 MC classpath、历史上从未参与编译（一编即失败），这里保持其
+// "从不编译"的现状；test 源集非基线范围，一并关闭。
+tasks.named('compileApiJava') { enabled = false }
+tasks.named('checkstyleApi') { enabled = false }
+tasks.named('checkstyleTest') { enabled = false }
+tasks.named('spotbugsApi') { enabled = false }
+tasks.named('spotbugsTest') { enabled = false }
 
-    task checkstyle {}
-    tasks["checkstyle"].dependsOn checkstyleApi
-    tasks["checkstyle"].dependsOn checkstyleMain
-
-    tasks["checkstyleApi"].enabled = true
-    tasks["checkstyleMain"].enabled = true
-    tasks["checkstyleTest"].enabled = false
+spotbugs {
+    toolVersion = '4.8.6'
+    ignoreFailures = true
+    // 记录所有等级（low 及以上）的告警，基线信息尽量完整
+    // 注：Groovy 对 Kotlin 枚举常量 Confidence.LOW 会优先解析成同名嵌套类而非枚举实例，
+    // 因此这里用 valueOf 显式取枚举值。
+    reportLevel.set(Confidence.valueOf('LOW'))
+    effort.set(Effort.valueOf('MAX'))
+    maxHeapSize = '2g'
+}
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
+    reports {
+        html.required = true
+        xml.required = true
+    }
+}
+spotbugsMain {
+    reports {
+        html.outputLocation = layout.buildDirectory.file('reports/spotbugs/main.html')
+        xml.outputLocation = layout.buildDirectory.file('reports/spotbugs/main.xml')
+    }
 }
 
 task setupSubProjects(dependsOn: "sub_projects:expression:generateSources") {

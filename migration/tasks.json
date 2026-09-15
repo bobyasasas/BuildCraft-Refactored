@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-09-14",
+  "updated": "2026-09-15",
   "target": {
     "minecraft": "26.1.2",
     "neoforge": "26.1.2.109",
@@ -68,9 +68,9 @@
       "id": "M0.6",
       "phase": "Phase 0 基线固化",
       "title": "静态分析基线",
-      "status": "pending",
+      "status": "done",
       "acceptance": "SpotBugs/Checkstyle 基线报告入库，违规总数记录在 evidence",
-      "evidence": "",
+      "evidence": "evidence：./gradlew check 生成两工具报告且 build 退出码0；Checkstyle 违规 1228 条、SpotBugs 违规 2525 条（High 274 / Medium 1507 / Low 744），摘要已入库 migration/snapshots/static-analysis-baseline.md",
       "notes": ""
     },
     {
