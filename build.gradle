@@ -9,6 +9,8 @@ plugins {
     // M0.6 静态分析基线：Checkstyle + SpotBugs，只记录现状不上门禁
     id 'checkstyle'
     id 'com.github.spotbugs' version '6.0.28'
+    // M1.3 覆盖率基线：JaCoCo，只产出报告不上门禁（门禁是 M3.6 的事）
+    id 'jacoco'
 }
 
 ext.configFile = file "build.properties"
@@ -217,6 +219,23 @@ spotbugsMain {
     reports {
         html.outputLocation = layout.buildDirectory.file('reports/spotbugs/main.html')
         xml.outputLocation = layout.buildDirectory.file('reports/spotbugs/main.xml')
+    }
+}
+
+// ---------------------------------------------------------------------------
+// 覆盖率基线（M1.3）
+// 定位与静态分析基线一致：只产出报告、不上门禁（行覆盖率门禁是 M3.6 的事）。
+// 统计范围限定为根工程 main 源集（common/）的类：JaCoCo 默认会把 test 源集类
+// 一起算进 classDirectories，且 minecraft 依赖已解包进 FG6 的 classpath，
+// 不限定会让报告混入大量第三方/测试类的统计噪音。无阈值、不挂 check。
+// 报告输出在 build/reports/jacoco/test/（XML+HTML，CI 上传为 artifact，不入库）。
+// ---------------------------------------------------------------------------
+jacocoTestReport {
+    // M1.3: 只统计 common/ 编译输出，避免对巨大的 minecraft 依赖做统计噪音
+    classDirectories.setFrom(files(sourceSets.main.output))
+    reports {
+        xml.required = true
+        html.required = true
     }
 }
 

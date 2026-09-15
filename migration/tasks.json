@@ -88,16 +88,16 @@
       "title": "client 边界基线（源集分离推迟至 M2.7）",
       "status": "done",
       "acceptance": "client 边界清单入库：client 路径文件 234 个、混编文件 132 个（含 262 处 @OnlyIn 分布）、引用锚定分析（222 锚定/12 可独立移动），作为 M2.7 依赖倒置工作清单",
-      "evidence": "引用闭包分析：common 262 处 @OnlyIn（~251 方法级/132 混编文件）；234 个 client 路径文件 222 个被 common 锚定，解缠需 M2.7 级依赖倒置；主 agent 裁决固化边界清单，migration/snapshots/client-boundary-baseline.json",
+      "evidence": "引用闭包分析：common 262 处 @OnlyIn（成员级 179/类级 83）、混编文件 132 个；234 个 client 路径文件中 222 个被 common 锚定，解缠需 M2.7 级依赖倒置；主 agent 裁决固化边界清单 migration/snapshots/client-boundary-baseline.json",
       "notes": "原 acceptance（client 源集+@OnlyIn 显著下降）经引用闭包分析证实 1.20.1 上不可达，2026-09-15 主 agent 裁决改道"
     },
     {
       "id": "M1.3",
       "phase": "Phase 1 工程化整备",
       "title": "完整 CI 流水线",
-      "status": "pending",
+      "status": "done",
       "acceptance": "GitHub Actions 含 build+test+JaCoCo 覆盖率报告并上传 artifact",
-      "evidence": "",
+      "evidence": "evidence：./gradlew test jacocoTestReport 成功，根工程(common)行覆盖率 4.54%（INSTRUCTION 4.44%）；CI baseline-build 追加 jacocoTestReport + upload-artifact（jacoco-report），run <id> 双 job 绿",
       "notes": ""
     },
     {

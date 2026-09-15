@@ -45,3 +45,14 @@ jobs:
 
       - name: Build
         run: ./gradlew build --stacktrace --no-daemon
+
+      # M1.3: 覆盖率基线——build 已含 test，这里只产出 JaCoCo 报告（基线阶段不上门禁，M3.6 才设阈值）
+      - name: Coverage report
+        run: ./gradlew jacocoTestReport --no-daemon
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: build/reports/jacoco/
+          retention-days: 14
