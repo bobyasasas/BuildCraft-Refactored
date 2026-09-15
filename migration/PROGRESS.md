@@ -2,11 +2,11 @@
 
 > **本文件由 migration/scripts/progress.py 自动生成，禁止手改；更新任务请编辑 migration/tasks.json 或用 `--set` 命令。**
 >
-> 生成时间：2026-09-15 05:13:02 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-15）
+> 生成时间：2026-09-15 05:45:20 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-15）
 
 ## 总览
 
-**总任务数 28** ｜ pending(未完成)=14、in_progress(进行中)=0、partial(部分完成)=1、unverified(未验证)=0、done(已完成)=13 ｜ **完成率 48%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
+**总任务数 28** ｜ pending(未完成)=14、in_progress(进行中)=0、partial(部分完成)=0、unverified(未验证)=0、done(已完成)=14 ｜ **完成率 50%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
 
 ## 阶段汇总
 
@@ -14,7 +14,7 @@
 |---|---:|---:|---:|
 | Phase 0 基线固化 | 6 | 6 | 100% |
 | Phase 1 工程化整备 | 5 | 5 | 100% |
-| Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109 | 9 | 2 | 28% |
+| Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109 | 9 | 3 | 33% |
 | Phase 3 功能验证金字塔 | 8 | 0 | 0% |
 
 ## 任务明细
@@ -33,7 +33,7 @@
 | M1.4 | 死代码与卫生清理 | done（已完成） | 注释掉的代码行（基线 3546）与 Calen 移植注释（基线 688）清零或显著下降；test.py、testsuite/、.travis.yml 移除；数字记录在 evidence | evidence：注释代码行 10895→0（-10895，766 个文件；另删确认的 /* */ 死代码块 4 文件 105 行）；Calen 注释 688→3（-685：整行 647→0、行尾 38→0，3 处 javadoc/块注释文档按保守原则保留）；test.py/.travis.yml/testsuite//setupSubProjects 已移除；build 退出码0、root test 95 + :expression:test 58 全绿；jar class 数不变（2989 个：根 2560 + expression 429） |
 | M1.5 | 许可证决策落地 | done（已完成） | MMPL 1.0.1 与 MPL 2.0 二选一，mods.toml 与 LICENSE 一致，license_checker 脚本通过 | evidence：用户拍板 MPL 2.0；LICENSE=MPL 2.0 全文、LICENSE-NEW 移除；mods.toml 8 mod license=MPL-2.0；license_check.py exit 0（校验 LICENSE 哈希/元数据/无 MMPL 残留/源码头豁免 127 个文件保留历史头：主仓 108+子模块 19）；./gradlew build 退出码 0 |
 | M2.1 | 构建系统迁移 | done（已完成） | ModDevGradle + Java 25 + Gradle 9.1，空 mod 骨架在 26.1.2 下 runClient 可启动 | evidence：neo/ 独立构建（Gradle 9.1.0、ModDevGradle 2.0.147、NeoForge 26.1.2.109、foojay 自动下载 Java 25 工具链 adoptium 25.0.4.1），不接入根 settings.gradle、根构建零改动；cd neo && ./gradlew build 退出码0（BUILD SUCCESSFUL in 2m 36s），产出 buildcraftcore-26.1.2-0.1.0.jar：含 buildcraft/core/BuildCraftCore.class（class 版本 69=Java 25）与 META-INF/neoforge.mods.toml（modId=buildcraftcore/version=26.1.2-0.1.0/license=MPL-2.0/依赖 [26.1.2.109,) 展开正确）；xvfb-run 下 runClient 启动到主菜单：latest.log 第42行 "BuildCraft core (neo skeleton) loaded"、第46行 "Backend library: LWJGL version 3.4.1+2"、第81行 "Reloading ResourceManager: vanilla, mod_resources, mod/buildcraftcore, mod/neoforge"，Xvfb :100 截图见 MINECRAFT Java Edition 标题屏+首次启动对话框（llvmpipe 软渲染）；取证后手动 kill 游戏进程故 gradle 退出码1属预期非崩溃；踩坑修正一处：MDK 模板的 minecraft_version_range=[26.1] 硬钉被 26.1.2 实际版本拒绝（FML Missing or unsupported mandatory dependencies），改为 [26.1,26.2)；顺带 git rm sub_projects/expression/.travis.yml（M1.4 漏网）；CI neo-build job 绿（run 34941646814，commit e52764883，首跑 60s；同 run progress-check/baseline-build 亦绿，legacy 根构建不受影响） |
-| M2.2 | 垂直切片：buildcraftcore | partial（部分完成） | 核心方块（发动机/基础管道）在 26.1.2 全链路（注册/逻辑/渲染/GameTest）可用 | evidence（子步 b 发动机切片，承接子步 a 注册+GameTest 基建）：新增 StoneEngineBlock（BaseEntityBlock+FACING=BlockStateProperties.HORIZONTAL_FACING，摆放朝向即能量输出面）+ StoneEngineBlockEntity（状态 burnRemain/burnTotal/energyStored(long,µMJ)+pendingFuel 待烧队列；server tick 燃烧每刻恒定产出 100 µMJ 进缓冲，容量 100,000 µMJ 溢出截断；未燃烧且缓冲未满时点燃队列一份燃料；公共 extractEnergy(long max, boolean simulate) 供子步 c 管道直接调用，insertFuel(ItemStack,FuelValues) 供 GameTest 直接调用；右键手持燃料物品同路径点燃 stack.shrink(1)；本期不接 NeoForge capability，无热量/爆炸/动画）；API 实际签名（26.1.2 源码取证，MC 反编译源 mergeWithSources jar + neoforge-26.1.2.109-sources.jar）：持久化 protected void saveAdditional(ValueOutput)/loadAdditional(ValueInput)（BlockEntity.java L115/L101，ValueOutput.putInt/putLong，ValueInput.getIntOr/getLongOr，ValueInput/ValueOutput 风格确认）；交互 protected InteractionResult useItemOn(ItemStack,BlockState,Level,BlockPos,Player,InteractionHand,BlockHitResult)（BlockBehaviour.java L200）；tick 注册 default <T> BlockEntityTicker<T> getTicker(Level,BlockState,BlockEntityType<T>)（EntityBlock.java L16）+ BaseEntityBlock.createTickerHelper 静态泛型判型（模式复刻 AbstractFurnaceBlock.createFurnaceTicker，serverTick 为 static (ServerLevel,BlockPos,BlockState,TE)）；燃料表 net.minecraft.world.level.block.entity.FuelValues 可编程访问：level.fuelValues()（Level.java L1104），刻值经 NeoForge 扩展 default int ItemStack.getBurnTime(RecipeType<?>,FuelValues)（IItemStackExtension.java L62，javap 证实 patched jar 中 ItemStack implements IItemStackExtension），coal=1600 刻（FuelValues.vanillaBurnTimes: Items.COAL=baseUnit 200*8），未硬编码；BE 类型构造 new BlockEntityType<>(factory, Block...)（BlockEntityType.java L304 Neo 便捷 varargs）；资产占位级全补齐（blockstates/models/items JSON+en_us.lang，engine_stone 复用 vanilla furnace 贴图 orientable 模型+4 朝向 y 旋转，marker 补 light_blue_concrete cube_all，item 用 26.1.2 items/<id>.json definition 格式）；gametest 新增 buildcraftcore:engine_stone_produces_power（insertFuel 注真实 FuelValues 一份煤→succeedWhen 断言 energyStored>0 且 extractEnergy(POWER_PER_TICK,simulate=true)>0，结构模板 engine_test.nbt）；验证链：cd neo && ./gradlew build --no-daemon 退出码 0；runGameTestServer 退出码 0 服务端自然退出，统计行原文 "========= 2 GAME TESTS COMPLETE IN 323.2 ms ======================"+"All 2 required tests passed :)"（marker_smoke+engine_stone_produces_power）；xvfb runClient 回归 latest.log L83 "BuildCraft core registration smoke: block buildcraftcore:engine_stone (StoneEngineBlock) with item buildcraftcore:engine_stone and block entity type buildcraftcore:engine_stone registered"、L84 Reloading ResourceManager，0 Missing model 告警，仅 2 条环境 ERROR（narrator flite 库缺失+OpenAL 无声卡，xvfb headless 环境固有与 mod 无关）；legacy 根构建零改动回归绿（./gradlew build 退出码 0）；progress.py --check 通过（28 任务）；待子步 c 管道+渲染+全链路 |
+| M2.2 | 垂直切片：buildcraftcore | done（已完成） | 核心方块（发动机/基础管道）在 26.1.2 全链路（注册/逻辑/渲染/GameTest）可用 | 垂直切片全链路收官。子步 a 注册基建（DeferredRegister 四注册中心+marker）、b 发动机（engine_stone：Block+BE 燃料→MJ 100µMJ/t、vanilla FuelValues coal=1600t、ValueInput/ValueOutput 持久化）、c 管道链（pipe_kinesis_wood 扩散模型 + energy_meter 仪表）：KinesisPipeBlock+BE（BaseEntityBlock 直用，类名避让 vanilla PipeBlock 茎方块基类；内部缓冲 10,000µMJ，server tick 六邻位局部扩散——源=StoneEngineBlockEntity 且 getOutputFacing() 指向本管道、或邻管缓冲更高拉平差额一半，汇=EnergyMeterBlockEntity；extractEnergy(long,boolean)/receiveEnergy(long,boolean) 公共方法互操作，不接 capability、无图遍历，最终 transport 模块归位 M2.4/M2.9）；EnergyMeterBlock+BE（receiveEnergy 全收累加 totalReceived，getTotalReceived() 供断言，无消耗逻辑，切片专用非最终内容）；资产占位级（管道=elements 细柱 6..10 oak_planks 模型+Block.box 细碰撞体，meter=target_top cube_all，items definition+lang 全补，真实管道模型系统归 M2.7）；gametest 新增 buildcraftcore:kinesis_chain_transfers_power（代码内搭建：engine FACING=EAST@x1-pipeA@x2-pipeB@x3-meter@x4 直线，insertFuel 一份煤，succeedWhen 逐刻轮询断言 meter.getTotalReceived()>0，结构模板 kinesis_test.nbt 6x2x2 空气盒 DataVersion 4790；传输实测 tick=9 meter 收到 50µMJ，≈100µMJ/t 稳态流两跳）；验证链：cd neo && ./gradlew build 退出码 0；runGameTestServer 退出码 0 服务端自然退出，统计行原文 "========= 3 GAME TESTS COMPLETE IN 248.7 ms ======================"+"All 3 required tests passed :)"；xvfb runClient：注册行 4 条（marker/engine_stone/pipe_kinesis_wood/energy_meter），模型 bake 完成 0 Missing model，仅 narrator+OpenAL 2 条环境固有 ERROR；legacy 侧零改动；progress.py --check 通过（28 任务）；CI 三 job 绿（run 34953745433：baseline-build/progress-check/neo-build 全 success）<br>notes: 子步 a 完成：注册+GameTest 基建（marker_smoke 1 test passed，commit 543ddd5df） 子步 b 完成：发动机切片（StoneEngineBlock+BE+燃料→MJ+engine_stone_produces_power gametest，2 tests passed，evidence 见 M2.2） 子步 c 完成：管道+全链路（kinesis_chain_transfers_power，3 tests passed，commit 94123860c） |
 | M2.3 | 纯逻辑模块迁移 | done（已完成） | expression 等纯逻辑模块 0 个 Forge import 且特征测试全绿 | evidence：expression（单一源码树）被 neo 构建复用（include :expression，projectDir=../sub_projects/expression），Gradle 9.1 下 :expression:test 58/58 全绿（JUnit XML 汇总 tests=58 failures=0 errors=0 skipped=0）；neo build 退出码0 且 buildcraftcore implementation project(':expression') 接线，runClient 日志出现 expression 冒烟求值 1+2*3=7；forge/minecraft import 计数=0（grep 计数 0）；toolchain 保持 17（javap major=61，legacy 胖 jar 兼容性不受影响），根 ./gradlew build 回归绿；CI 三 job 绿（run 34943461451） |
 | M2.4 | 注册层迁移 | pending（未完成） | RegistrationHelper/BC*Blocks 等 3 处注册基类重写为 NeoForge DeferredRegister，RegistryObject 引用（基线 42 文件 362 处）全部改为 DeferredHolder 并清零 | — |
 | M2.5 | 网络层迁移 | pending（未完成） | MessageManager 基于 CustomPacketPayload/StreamCodec 重写，16 个消息类全部适配，客户端-服务端握手可用 | — |
@@ -52,12 +52,12 @@
 
 ## 代码实时指标
 
-采集时间：2026-09-15 05:13:02；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
+采集时间：2026-09-15 05:45:20；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
 
 | 指标 | 当前值 | 调研基线(2026-09) | 目标 |
 |---|---:|---:|---|
-| .java 文件总数 | 1,791 | 1772（main 1510 + API 子模块 262） | 无目标(参考) |
-| .java 总行数 | 184,852 | — | 无目标(参考) |
+| .java 文件总数 | 1,795 | 1772（main 1510 + API 子模块 262） | 无目标(参考) |
+| .java 总行数 | 185,271 | — | 无目标(参考) |
 | Forge import 文件数 | 549 | 549 | 0 |
 | Forge import 出现次数 | 1,408 | — | 0 |
 | TODO 出现次数 | 173 | 222 | 随 M1.4 下降 |
