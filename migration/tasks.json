@@ -176,9 +176,9 @@
       "id": "M2.7",
       "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
       "title": "渲染迁移",
-      "status": "pending",
+      "status": "partial",
       "acceptance": "19 个 BlockEntityRenderer 与自研模型系统在 26.1.2 渲染管线（extractRenderState 模式）下正常工作",
-      "evidence": "",
+      "evidence": "【M2.7a 子步】client/main 源集分离（MDG 多源集，client 单向依赖 main：grep main→client=0；main.runtimeClasspath 不含 client 输出、client.runtimeClasspath 含 main+client 输出经 gradle init 脚本实证；BcEnergyFluidModels 迁入 client 源集，dist 守卫由 @Mod(dist=CLIENT) 入口 BuildCraftEnergyClient 取代）并在 runClient 实证生效：8 mod 加载、BcQuad smoke PASS、Missing FluidModel=0、无新 ERROR（xvfb 420s）；server/gametest run 不含 client 源集，runGameTestServer 5/5、build EXIT=0、test 42/42；渲染基建最小移植（BcQuad/BcVertex record+颜色/UV/光照/位姿助手，取舍 javadoc，legacy 模型缓存系统明确不移植）；26.1.2 渲染链路查证文档 neo/docs/render-pipeline-26.1.2.md（extract→submit 两阶段、BlockEntityRenderer<T,S> 全签名、RegisterRenderers 注册入口、SubmitNodeCollector/submitCustomGeometry、1.20.1→26.1.2 对照表）；M1.2 notes 已追加 neo/ 落地行；CI run 34995195544（caced7760）三 job 绿；待 M2.7b 迁移 19 个真实 BlockEntityRenderer",
       "notes": "含 M1.2 推迟的 client 源集分离与依赖倒置，工作清单=migration/snapshots/client-boundary-baseline.json\nM2.7a（2026-09-15）：client/main 源集分离（MDG 多源集）+ 渲染基建最小移植（BcQuad/BcVertex）+ 26.1.2 渲染链路查证文档（neo/docs/render-pipeline-26.1.2.md）已落地；待 M2.7b 起迁移真实渲染器。"
     },
     {
