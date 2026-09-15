@@ -1,0 +1,11 @@
+# gradle
+.gradle/
+build/
+
+# runtime
+run/
+runs/
+
+# ide
+.idea/
+.vscode/

@@ -2,11 +2,11 @@
 
 > **本文件由 migration/scripts/progress.py 自动生成，禁止手改；更新任务请编辑 migration/tasks.json 或用 `--set` 命令。**
 >
-> 生成时间：2026-09-15 02:44:59 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-15）
+> 生成时间：2026-09-15 03:25:13 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-15）
 
 ## 总览
 
-**总任务数 28** ｜ pending(未完成)=17、in_progress(进行中)=0、partial(部分完成)=0、unverified(未验证)=0、done(已完成)=11 ｜ **完成率 39%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
+**总任务数 28** ｜ pending(未完成)=16、in_progress(进行中)=0、partial(部分完成)=0、unverified(未验证)=0、done(已完成)=12 ｜ **完成率 43%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
 
 ## 阶段汇总
 
@@ -14,7 +14,7 @@
 |---|---:|---:|---:|
 | Phase 0 基线固化 | 6 | 6 | 100% |
 | Phase 1 工程化整备 | 5 | 5 | 100% |
-| Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109 | 9 | 0 | 0% |
+| Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109 | 9 | 1 | 11% |
 | Phase 3 功能验证金字塔 | 8 | 0 | 0% |
 
 ## 任务明细
@@ -32,7 +32,7 @@
 | M1.3 | 完整 CI 流水线 | done（已完成） | GitHub Actions 含 build+test+JaCoCo 覆盖率报告并上传 artifact | evidence：./gradlew test jacocoTestReport 成功，根工程(common)行覆盖率 4.54%（INSTRUCTION 4.44%）；CI baseline-build 追加 jacocoTestReport + upload-artifact（jacoco-report），run 34934135627 双 job 绿（baseline-build+progress-check，artifact jacoco-report 6.5MB） |
 | M1.4 | 死代码与卫生清理 | done（已完成） | 注释掉的代码行（基线 3546）与 Calen 移植注释（基线 688）清零或显著下降；test.py、testsuite/、.travis.yml 移除；数字记录在 evidence | evidence：注释代码行 10895→0（-10895，766 个文件；另删确认的 /* */ 死代码块 4 文件 105 行）；Calen 注释 688→3（-685：整行 647→0、行尾 38→0，3 处 javadoc/块注释文档按保守原则保留）；test.py/.travis.yml/testsuite//setupSubProjects 已移除；build 退出码0、root test 95 + :expression:test 58 全绿；jar class 数不变（2989 个：根 2560 + expression 429） |
 | M1.5 | 许可证决策落地 | done（已完成） | MMPL 1.0.1 与 MPL 2.0 二选一，mods.toml 与 LICENSE 一致，license_checker 脚本通过 | evidence：用户拍板 MPL 2.0；LICENSE=MPL 2.0 全文、LICENSE-NEW 移除；mods.toml 8 mod license=MPL-2.0；license_check.py exit 0（校验 LICENSE 哈希/元数据/无 MMPL 残留/源码头豁免 127 个文件保留历史头：主仓 108+子模块 19）；./gradlew build 退出码 0 |
-| M2.1 | 构建系统迁移 | pending（未完成） | ModDevGradle + Java 25 + Gradle 9.1，空 mod 骨架在 26.1.2 下 runClient 可启动 | — |
+| M2.1 | 构建系统迁移 | done（已完成） | ModDevGradle + Java 25 + Gradle 9.1，空 mod 骨架在 26.1.2 下 runClient 可启动 | evidence：neo/ 独立构建（Gradle 9.1.0、ModDevGradle 2.0.147、NeoForge 26.1.2.109、foojay 自动下载 Java 25 工具链 adoptium 25.0.4.1），不接入根 settings.gradle、根构建零改动；cd neo && ./gradlew build 退出码0（BUILD SUCCESSFUL in 2m 36s），产出 buildcraftcore-26.1.2-0.1.0.jar：含 buildcraft/core/BuildCraftCore.class（class 版本 69=Java 25）与 META-INF/neoforge.mods.toml（modId=buildcraftcore/version=26.1.2-0.1.0/license=MPL-2.0/依赖 [26.1.2.109,) 展开正确）；xvfb-run 下 runClient 启动到主菜单：latest.log 第42行 "BuildCraft core (neo skeleton) loaded"、第46行 "Backend library: LWJGL version 3.4.1+2"、第81行 "Reloading ResourceManager: vanilla, mod_resources, mod/buildcraftcore, mod/neoforge"，Xvfb :100 截图见 MINECRAFT Java Edition 标题屏+首次启动对话框（llvmpipe 软渲染）；取证后手动 kill 游戏进程故 gradle 退出码1属预期非崩溃；踩坑修正一处：MDK 模板的 minecraft_version_range=[26.1] 硬钉被 26.1.2 实际版本拒绝（FML Missing or unsupported mandatory dependencies），改为 [26.1,26.2)；顺带 git rm sub_projects/expression/.travis.yml（M1.4 漏网）；CI 追加 neo-build job 随本提交首跑 |
 | M2.2 | 垂直切片：buildcraftcore | pending（未完成） | 核心方块（发动机/基础管道）在 26.1.2 全链路（注册/逻辑/渲染/GameTest）可用 | — |
 | M2.3 | 纯逻辑模块迁移 | pending（未完成） | expression 等纯逻辑模块 0 个 Forge import 且特征测试全绿 | — |
 | M2.4 | 注册层迁移 | pending（未完成） | RegistrationHelper/BC*Blocks 等 3 处注册基类重写为 NeoForge DeferredRegister，RegistryObject 引用（基线 42 文件 362 处）全部改为 DeferredHolder 并清零 | — |
@@ -52,12 +52,12 @@
 
 ## 代码实时指标
 
-采集时间：2026-09-15 02:44:59；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
+采集时间：2026-09-15 03:25:13；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
 
 | 指标 | 当前值 | 调研基线(2026-09) | 目标 |
 |---|---:|---:|---|
-| .java 文件总数 | 1,782 | 1772（main 1510 + API 子模块 262） | 无目标(参考) |
-| .java 总行数 | 184,220 | — | 无目标(参考) |
+| .java 文件总数 | 1,783 | 1772（main 1510 + API 子模块 262） | 无目标(参考) |
+| .java 总行数 | 184,247 | — | 无目标(参考) |
 | Forge import 文件数 | 549 | 549 | 0 |
 | Forge import 出现次数 | 1,408 | — | 0 |
 | TODO 出现次数 | 173 | 222 | 随 M1.4 下降 |

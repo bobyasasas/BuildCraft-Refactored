@@ -1,0 +1,27 @@
+license="${mod_license}"
+
+[[mods]]
+# The modid of the mod
+modId="${mod_id}"
+# The version number of the mod
+version="${mod_version}"
+# A display name for the mod
+displayName="${mod_name}"
+# The description text for the mod (multi line!)
+description='''
+BuildCraft core module (NeoForge 26.1.2 port skeleton).
+'''
+
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"

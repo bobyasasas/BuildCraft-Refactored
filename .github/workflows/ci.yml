@@ -56,3 +56,22 @@ jobs:
           name: jacoco-report
           path: build/reports/jacoco/
           retention-days: 14
+
+  # M2.1: 并行的 NeoForge 26.1.2 独立构建（neo/，ModDevGradle），不依赖子模块
+  neo-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 守护进程跑在 21 上；构建用的 Java 25 工具链由 foojay-resolver 自动下载
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+
+      - name: Build
+        run: cd neo && ./gradlew build --stacktrace --no-daemon

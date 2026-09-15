@@ -44,3 +44,7 @@ logs
 
 # datagen cache
 buildcraft_resources_generated/.cache
+
+# neo/ parallel moddevgradle build (M2.1) — separate gradle home & build dir
+neo/.gradle/
+neo/build/
