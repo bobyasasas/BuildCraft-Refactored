@@ -133,7 +133,9 @@ public class BCItemTagsGenerator extends ItemTagsProvider {
     }
 
     private static void addAllOptional(TagAppender<Item> tag, Stream<RegistryObject<?>> allToAdd) {
-        allToAdd.forEach(reg -> tag.addOptional(reg.getId()));
+        // Sort by id so the generated tag json is deterministic (sources are HashMaps)
+        allToAdd.sorted((a, b) -> a.getId().toString().compareTo(b.getId().toString()))
+            .forEach(reg -> tag.addOptional(reg.getId()));
     }
 
     @Override

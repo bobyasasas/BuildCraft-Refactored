@@ -28,7 +28,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -52,7 +52,9 @@ public class SiliconAssemblyRecipeGenerator extends RecipeProvider {
             redstoneEngine = new ItemStack(Blocks.REDSTONE_BLOCK);
         }
 
-        Set<IngredientStack> input = new HashSet<>();
+        // LinkedHashSet (not HashSet): IngredientStack has identity hashCode, so HashSet iteration order
+        // shuffles between JVM runs and makes datagen output non-reproducible
+        Set<IngredientStack> input = new LinkedHashSet<>();
 //        input.add(new IngredientStack(Ingredient.fromStacks(redstoneEngine)));
         input.add(new IngredientStack(Ingredient.of(redstoneEngine)));
 //        input.add(new IngredientStack(CraftingHelper.getIngredient("ingotIron"), 2));

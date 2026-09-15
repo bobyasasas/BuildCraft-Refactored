@@ -49,7 +49,10 @@ public class ModelHolderRegistry {
             holder.onDatagenTextureRegister(toStitch, fileHelper);
         }
 
-        for (ResourceLocation res : toStitch) {
+        // Sort by location so datagen atlas output is deterministic
+        List<ResourceLocation> sorted = new ArrayList<>(toStitch);
+        sorted.sort(Comparator.naturalOrder());
+        for (ResourceLocation res : sorted) {
             consumer.accept(res);
         }
     }

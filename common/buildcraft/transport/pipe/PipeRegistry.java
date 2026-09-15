@@ -108,6 +108,9 @@ public enum PipeRegistry implements IPipeRegistry {
 
     @Override
     public Iterable<PipeDefinition> getAllRegisteredPipes() {
-        return ImmutableList.copyOf(definitions.values());
+        // Sort by identifier so datagen output (tags, atlases) is deterministic across JVM runs
+        return definitions.values().stream()
+            .sorted((a, b) -> a.identifier.toString().compareTo(b.identifier.toString()))
+            .collect(ImmutableList.toImmutableList());
     }
 }

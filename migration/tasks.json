@@ -50,9 +50,9 @@
       "id": "M0.4",
       "phase": "Phase 0 基线固化",
       "title": "datagen 快照入库",
-      "status": "partial",
+      "status": "done",
       "acceptance": "datagen 任务产物与 buildcraft_resources_generated/ 现有 4404 个 json diff=0 且纳入版本管理",
-      "evidence": "evidence：datagen 任务 runData（build.gradle runs.data，--output=buildcraft_resources_generated/）全量重新生成后 diff≠0：改48/删1/增0，json 计数 4403 vs 基线4404；48处改动经逐文件多重集比对全部为同一id集合的顺序排列差异（0处语义差异）；删除1处为旧代码遗留文件 data/buildcraft/tags/blocks/tags/blocks/soft.json.json（现 OreDictionaryTags.SOFT=blockTag(buildcraft:soft)，不再生成该路径，由 datagen 缓存清理删除）；根因：datagen provider 输出 JSON 数组用 identity-hash 集合迭代，顺序逐 JVM 洗牌（同代码两轮重跑同文件顺序不同已复现），与本次新增快照工具无关；已满足部分：runData 可完整重新生成全部产物、工具链可复跑、生成文件已还原 HEAD 未做任何手改；待主 agent 决策：是否接受顺序不敏感基线或先做 provider 排序修复后重新固化",
+      "evidence": "evidence：datagen 确定性修复5处：BCItemTagsGenerator.addAllOptional 按RegistryObject id排序（paintbrush+pipe系列tags）；PipeRegistry.getAllRegisteredPipes 按identifier排序（pipe颜色tags+atlas贴图+item model遍历）；SpriteHolderRegistry/ModelHolderRegistry 的 onDatagenTextureRegister 按location排序（atlas sources）；SiliconAssemblyRecipeGenerator input 集合 HashSet→LinkedHashSet（plug_pulsar requiredStacks）；复跑命令 rm -rf buildcraft_resources_generated/.cache && ./gradlew runData 连续两轮全量重跑，4643个产物文件 sha256 两轮完全一致（字节级）；最终 vs HEAD：改65/删1/增0，65处全部为 values/requiredStacks 数组顺序差异（python 多重集比对语义相等0差异，loot/models/recipes/advancements 无一涉改），修复后文件内容稳定按 id 字典序；json 总数 4403（stale data/buildcraft/tags/blocks/tags/blocks/soft.json.json 由 datagen 清理 4404→4403）；migration/snapshots/registry-baseline.json 复跑后字节级不变未触碰；本机 ./gradlew build BUILD SUCCESSFUL",
       "notes": ""
     },
     {

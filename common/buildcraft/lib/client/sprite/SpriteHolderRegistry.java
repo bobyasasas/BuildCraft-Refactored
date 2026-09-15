@@ -76,7 +76,10 @@ public class SpriteHolderRegistry {
         // Calen: for the ForgeModelBakery.White.instance() texture missing in 1.18.2
         consumer.accept(new ResourceLocation("minecraft", "white"));
 
-        for (SpriteHolder holder : HOLDER_MAP.values()) {
+        // Sort by sprite location so datagen atlas output is deterministic (ConcurrentHashMap iteration)
+        List<SpriteHolder> holders = new ArrayList<>(HOLDER_MAP.values());
+        holders.sort((a, b) -> a.spriteLocation.toString().compareTo(b.spriteLocation.toString()));
+        for (SpriteHolder holder : holders) {
 //            holder.onTextureStitchPre(map);
             holder.onDatagenTextureRegister(consumer);
         }
