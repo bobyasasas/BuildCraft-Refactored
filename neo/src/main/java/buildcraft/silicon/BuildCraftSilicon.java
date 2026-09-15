@@ -11,9 +11,9 @@ import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
 
 /**
- * BuildCraft silicon mod entry point for the NeoForge 26.1.2 port (task M2.4a eight-mod skeleton). Legacy
- * counterpart: {@code buildcraft.silicon.BCSilicon}. Placeholder registrations (see the {@code BcSilicon*}
- * centres) arrive in M2.4b.
+ * BuildCraft silicon mod entry point for the NeoForge 26.1.2 port (task M2.4a eight-mod skeleton, full registry
+ * parity since M2.4b). Legacy counterpart: {@code buildcraft.silicon.BCSilicon}. The registrations are
+ * placeholders (see the {@code BcSilicon*} centres); real behaviour classes migrate in M2.5+.
  */
 // The value here should match the modId in META-INF/neoforge.mods.toml
 @Mod(BuildCraftSilicon.MOD_ID)

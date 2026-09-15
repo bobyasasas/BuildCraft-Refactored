@@ -11,9 +11,9 @@ import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
 
 /**
- * BuildCraft factory mod entry point for the NeoForge 26.1.2 port (task M2.4a eight-mod skeleton). Legacy
- * counterpart: {@code buildcraft.factory.BCFactory}. Placeholder registrations (see the {@code BcFactory*}
- * centres) arrive in M2.4b.
+ * BuildCraft factory mod entry point for the NeoForge 26.1.2 port (task M2.4a eight-mod skeleton, full registry
+ * parity since M2.4b). Legacy counterpart: {@code buildcraft.factory.BCFactory}. The registrations are
+ * placeholders (see the {@code BcFactory*} centres); real behaviour classes migrate in M2.5+.
  */
 // The value here should match the modId in META-INF/neoforge.mods.toml
 @Mod(BuildCraftFactory.MOD_ID)
