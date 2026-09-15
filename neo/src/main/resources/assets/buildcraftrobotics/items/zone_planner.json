@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "buildcraftrobotics:block/zone_planner"
+  }
+}

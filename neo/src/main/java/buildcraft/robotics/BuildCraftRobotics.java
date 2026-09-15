@@ -11,9 +11,8 @@ import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
 
 /**
- * BuildCraft robotics mod entry point for the NeoForge 26.1.2 port (task M2.4a eight-mod skeleton). Legacy
- * counterpart: {@code buildcraft.robotics.BCRobotics}. Placeholder registrations (see the {@code BcRobotics*}
- * centres) arrive in M2.4c.
+ * BuildCraft robotics mod entry point for the NeoForge 26.1.2 port (task M2.4a eight-mod skeleton, M2.4c registry
+ * parity). Legacy counterpart: {@code buildcraft.robotics.BCRobotics}.
  */
 // The value here should match the modId in META-INF/neoforge.mods.toml
 @Mod(BuildCraftRobotics.MOD_ID)
@@ -28,5 +27,6 @@ public class BuildCraftRobotics {
         BcRoboticsBlocks.BLOCKS.register(modEventBus);
         BcRoboticsItems.ITEMS.register(modEventBus);
         BcRoboticsBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+        BcRoboticsEntities.ENTITIES.register(modEventBus);
     }
 }

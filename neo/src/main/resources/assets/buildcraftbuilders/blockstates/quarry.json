@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "buildcraftbuilders:block/quarry"
+    }
+  }
+}

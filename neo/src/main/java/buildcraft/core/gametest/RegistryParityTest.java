@@ -22,17 +22,17 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.Identifier;
 
 /**
- * Registry parity gate for tasks M2.4a (lib+core) and M2.4b (energy+factory+silicon incl. fluids; test id
- * {@code buildcraftcore:registry_parity}): asserts that the frozen runtime registries contain exactly the ids the
- * 1.20.1 registry baseline attributes to {@code buildcraftlib}, {@code buildcraftcore}, {@code buildcraftenergy},
- * {@code buildcraftfactory} and {@code buildcraftsilicon}.
+ * Registry parity gate for the full 1.20.1 registry baseline (tasks M2.4a lib+core, M2.4b energy+factory+silicon
+ * incl. fluids, M2.4c transport+builders+robotics incl. entities; test id {@code buildcraftcore:registry_parity}):
+ * asserts that the frozen runtime registries contain exactly the ids the baseline attributes to the eight
+ * {@code buildcraft*} namespaces.
  *
- * <p>The expected id list is a frozen copy of the baseline (blocks/items/block_entities/fluids across the five
- * namespaces) stored at {@code data/buildcraftcore/registry_parity.json}; the snapshot itself is read-only. For every
- * registry:
+ * <p>The expected id list is a frozen copy of the baseline (blocks/items/block_entities/entities/fluids across the
+ * eight namespaces) stored at {@code data/buildcraftcore/registry_parity.json}; the snapshot itself is read-only. For
+ * every registry:
  * <ul>
  * <li>every baseline id must exist ({@code missing} must be empty), and</li>
- * <li>every actually registered id in the five namespaces beyond the baseline must be in
+ * <li>every actually registered id in the eight namespaces beyond the baseline must be in
  * {@link #EXTRA_WHITELIST} &mdash; the M2.2 slice blocks that carry the existing game tests and are not
  * part of the 1.20.1 baseline.</li>
  * </ul>
@@ -42,9 +42,10 @@ public final class RegistryParityTest {
 
     private static final String RESOURCE_PATH = "/data/buildcraftcore/registry_parity.json";
 
-    /** The five namespaces with baseline content since M2.4b (lib/core since M2.4a). */
+    /** The eight namespaces, all with full baseline content since M2.4c. */
     private static final Set<String> NAMESPACES = Set.of("buildcraftlib", "buildcraftcore", "buildcraftenergy",
-            "buildcraftfactory", "buildcraftsilicon");
+            "buildcraftfactory", "buildcraftsilicon", "buildcrafttransport", "buildcraftbuilders",
+            "buildcraftrobotics");
 
     /**
      * Registered ids beyond the baseline that must stay: the M2.2 vertical slice (engine_stone also exists in the
@@ -62,6 +63,7 @@ public final class RegistryParityTest {
         checkRegistry(baseline.getAsJsonArray("items"), BuiltInRegistries.ITEM, "items", problems);
         checkRegistry(baseline.getAsJsonArray("block_entities"), BuiltInRegistries.BLOCK_ENTITY_TYPE, "block_entities",
                 problems);
+        checkRegistry(baseline.getAsJsonArray("entities"), BuiltInRegistries.ENTITY_TYPE, "entities", problems);
         checkRegistry(baseline.getAsJsonArray("fluids"), BuiltInRegistries.FLUID, "fluids", problems);
         if (!problems.isEmpty()) {
             helper.fail("registry parity violated: " + String.join("; ", problems));

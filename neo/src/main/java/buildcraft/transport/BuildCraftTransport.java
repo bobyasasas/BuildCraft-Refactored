@@ -11,9 +11,8 @@ import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
 
 /**
- * BuildCraft transport mod entry point for the NeoForge 26.1.2 port (task M2.4a eight-mod skeleton). Legacy
- * counterpart: {@code buildcraft.transport.BCTransport}. Placeholder registrations (see the {@code BcTransport*}
- * centres) arrive in M2.4c.
+ * BuildCraft transport mod entry point for the NeoForge 26.1.2 port (task M2.4a eight-mod skeleton, M2.4c registry
+ * parity). Legacy counterpart: {@code buildcraft.transport.BCTransport}.
  */
 // The value here should match the modId in META-INF/neoforge.mods.toml
 @Mod(BuildCraftTransport.MOD_ID)

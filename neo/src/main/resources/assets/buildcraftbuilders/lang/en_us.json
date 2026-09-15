@@ -1,0 +1,14 @@
+{
+  "block.buildcraftbuilders.architect": "Architect (Placeholder)",
+  "block.buildcraftbuilders.builder": "Builder (Placeholder)",
+  "block.buildcraftbuilders.filler": "Filler (Placeholder)",
+  "block.buildcraftbuilders.frame": "Frame (Placeholder)",
+  "block.buildcraftbuilders.library": "Library (Placeholder)",
+  "block.buildcraftbuilders.marker_construction": "Marker Construction (Placeholder)",
+  "block.buildcraftbuilders.quarry": "Quarry (Placeholder)",
+  "block.buildcraftbuilders.replacer": "Replacer (Placeholder)",
+  "item.buildcraftbuilders.filler_planner": "Filler Planner (Placeholder)",
+  "item.buildcraftbuilders.schematic_single": "Schematic Single (Placeholder)",
+  "item.buildcraftbuilders.snapshot_blueprint": "Snapshot Blueprint (Placeholder)",
+  "item.buildcraftbuilders.snapshot_template": "Snapshot Template (Placeholder)"
+}
