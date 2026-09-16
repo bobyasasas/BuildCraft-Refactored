@@ -51,7 +51,12 @@ ID_RE = re.compile(r"^M\d+\.\d+$")
 TOP_KEYS = ("schema", "updated", "target", "baseline_2026_09", "tasks")
 TASK_KEYS = ("id", "phase", "title", "status", "acceptance", "evidence", "notes")
 
-EXCLUDE_DIRS = (".git", ".gradle", "build", "buildcraft_resources_generated")
+# 三个子模块是外部钉定代码（pointer 冻结、零写入），不是迁移主体；M2.9 起排除出指标扫描，
+# 使 forge_import/java_files 等指标只反映本仓库第一方代码（M2.9 迁移清零后应归零）。
+EXCLUDE_DIRS = (
+    ".git", ".gradle", "build", "buildcraft_resources_generated",
+    "BuildCraftAPI", "BuildCraftGuide", "BuildCraft-Localization",
+)
 CMD_TIMEOUT = 120  # 单条子进程超时（秒）
 
 USAGE = (
