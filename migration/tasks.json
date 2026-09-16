@@ -212,9 +212,9 @@
       "id": "M2.12",
       "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
       "title": "填充器与采石场最小移植",
-      "status": "in_progress",
+      "status": "done",
       "acceptance": "filler 与 quarry 在供电下各完成一次最小作业（填充成型/采掘入输出），各至少 1 个 GameTest 通过",
-      "evidence": "code+tests complete: filler/quarry minimal port, gametests 8/8, evidence commit pending",
+      "evidence": "build EXIT=0 + 45 unit tests green; runGameTestServer 'All 8 required tests passed :)' (filler_cycle, quarry_cycle incl.); registry dump byte-identical to pre-M2.12 + registry_diff --strict PASS (0 new ids); runClient smoke: BER registration line (filler->FillerBlockRenderer, quarry->QuarryBlockRenderer), BE sync lines, 0 unexpected ERROR; evidence shots neo/docs/img/m2-12-filler-evidence.png + m2-12-quarry-evidence.png; CI run 35105246612 3/3 green (baseline-build, progress-check, neo-build)",
       "notes": "最小子集: filler=legacy PatternFill(fill) 单图案+程序化 setWorkArea/资源缓冲(MJ 逐块放置, 48t/块), quarry=findNextMineable 扫描+TaskBreakBlock 节奏采掘+内部输出缓冲(8组上限), 两者经 kinesis 管按 legacy IMjReceiver 语义接收(容量/请求/溢出退还), 能耗=3,200uMJ*(hardness+1) 即 legacy 16MJ*(h+1)*2 的 1e-4 刻度; BER x2 (BcBoxes 线框: 采掘区/作业区框 + 活动单元琥珀标记/笼), Beacon-pattern update-tag 同步。延后: GUI/图案选择 UI、frame 系统(TaskAddFrame)、激光、markers/volume boxes、其余 19+ filler patterns、engine 直连供电、random scan order(现 x asc/z asc/y desc)。"
     },
     {
