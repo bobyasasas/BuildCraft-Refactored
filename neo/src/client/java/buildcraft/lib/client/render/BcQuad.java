@@ -7,6 +7,7 @@ package buildcraft.lib.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.util.ARGB;
@@ -155,7 +156,11 @@ public record BcQuad(Direction face, boolean shade, int tintIndex, BcVertex v0, 
 
     /** Emits the quad into the given vertex consumer — the 26.1.2 counterpart of legacy
      * {@code MutableQuad#render(PoseStack.Pose, VertexConsumer)}. Positions are transformed by the pose on the fly;
-     * the normal by the pose's normal matrix. UVs must already be mapped (see {@link #mapUv}). */
+     * the normal by the pose's normal matrix. UVs must already be mapped (see {@link #mapUv}). The overlay element is
+     * pinned to {@link OverlayTexture#NO_OVERLAY} because the 26.1.2 entity vertex formats the custom-geometry
+     * render types use (e.g. {@code Sheets.cutoutBlockSheet()}) carry a UV1/overlay element — omitting it crashes
+     * with {@code Missing elements in vertex: UV1} (M2.7b finding, vertex order mirrors vanilla
+     * {@code BeaconRenderer#addVertex}). */
     public void emit(PoseStack.Pose pose, VertexConsumer consumer) {
         Vector3fc outNormal = pose.transformNormal(this.normal(), new org.joml.Vector3f());
         for (int i = 0; i < 4; i++) {
@@ -163,6 +168,7 @@ public record BcQuad(Direction face, boolean shade, int tintIndex, BcVertex v0, 
             consumer.addVertex(vertex.position().x(), vertex.position().y(), vertex.position().z())
                     .setColor(vertex.color())
                     .setUv(vertex.u(), vertex.v())
+                    .setOverlay(OverlayTexture.NO_OVERLAY)
                     .setLight(vertex.light())
                     .setNormal(outNormal.x(), outNormal.y(), outNormal.z());
         }

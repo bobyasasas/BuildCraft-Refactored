@@ -199,3 +199,44 @@ NeoForge 侧相关事件（`neoforge-src.jar: net/neoforged/neoforge/client/even
   出四边形；state 字段直接持有 `List<BcQuad>`（extract 时构建）。
 - 烟烟类：`BcQuadSmoke.check()`（client 入口 `BuildCraftEnergyClient` 启动时 log PASS/FAIL）。
 - client 源集边界：`neo/build.gradle` sourceSets/runs/mods 配置 + `neo/src/client/java`；main→client 引用为 0（grep 取证）。
+
+## 7. M2.7b 实证补充（StoneEngine / KinesisPipe 两个 BER 落地后新增结论）
+
+### 7.1 BE 客户端数据同步（update tag API，26.1.2 原生路径）
+- 服务端 BE 覆写两个方法（vanilla `BeaconBlockEntity` 同款）：
+  `getUpdateTag(HolderLookup.Provider)` → `saveCustomOnly(registries)`；
+  `getUpdatePacket()` → `ClientboundBlockEntityDataPacket.create(this)`。
+- 客户端收包后走 `loadWithComponents` → `loadAdditional(ValueInput)`，键与 `saveAdditional` 一致，无需单独的
+  网络 DTO。
+- 服务端推送时机：改完 BE 后 `level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS)`（vanilla
+  `ConduitBlockEntity` 同款；`Block.UPDATE_CLIENTS == 2`）。周期性数据再配一个节流间隔即可。
+- `/data merge block` 对 BE 等效于 loadWithComponents + setChanged + sendBlockUpdated(…,3)，因此内置数据包
+  函数可直接点燃引擎做视觉取证。
+
+### 7.2 submit 阶段的位姿语义
+- `submit(state, poseStack, …)` 收到的 poseStack **已平移到方块原点**（LevelRenderer 先
+  `translate(pos − cameraPos)` 再分发），custom geometry 顶点直接写方块内 0..1 坐标即可，勿再按 camera 偏移。
+- 朝向旋转与 blockstate y-variant 表一致：几何按朝北创作后
+  `poseStack.rotateAround(Axis.YP.rotationDegrees(facing.toYRot() − 180), 0.5, 0, 0.5)`
+  （toYRot：south=0/west=90/north=180/east=270）。
+
+### 7.3 实体 RenderType 的顶点格式含 overlay（UV1）——必踩坑
+- `Sheets.cutoutBlockSheet()` 等实体侧 RenderType 的顶点格式带 overlay 元素；逐顶点漏调
+  `setOverlay(OverlayTexture.NO_OVERLAY)` 会在绘制期抛
+  `IllegalStateException: Missing elements in vertex: UV1`（编译期无感，世界渲染一帧即崩）。
+- 安全发射顺序（`BcQuad.emit` 已固化）：`addVertex → setColor → setUv → setOverlay(NO_OVERLAY) → setLight → setNormal`。
+
+### 7.4 图集 sprite 与 RenderType 取用
+- `BlockEntityRendererProvider.Context#sprites()` 拿 `SpriteGetter`；`get(new SpriteId(TextureAtlas.LOCATION_BLOCKS,
+  Identifier.withDefaultNamespace("block/iron_block")))` 取方块图集 sprite（注意 `SpriteId` 与 1.20.1 的
+  Material 不同名）。
+- `TextureAtlasSprite.getU(offset)/getV(offset)` 入参是 **0..1 归一化**（源码 `u0 + (u1−u0)·offset`），
+  BcQuad 的 0..1 UV 直接喂即可。
+- RenderType 用 `net.minecraft.client.renderer.rendertype.RenderType`（已迁包）+ `Sheets.cutoutBlockSheet()`。
+
+### 7.5 BER 自绘方块的“箱子式”空模型模式
+- 方块本体交给 BER 画时，block model 只留 `{"textures":{"particle":…}}`（无 elements，vanilla chest 同款），
+  烘焙零面、无 Missing-model/告警；物品形态另配 `*_inventory` 模型并在
+  `assets/<ns>/items/<item>.json` 指向它。
+- `BlockEntityRenderState` 在 `net.minecraft.client.renderer.blockentity.state` **子包**（不是
+  `...blockentity` 本包）。

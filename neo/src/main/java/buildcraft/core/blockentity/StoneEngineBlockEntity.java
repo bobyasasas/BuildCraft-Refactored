@@ -7,9 +7,14 @@ package buildcraft.core.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.FuelValues;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,6 +46,16 @@ import buildcraft.core.block.StoneEngineBlock;
  *
  * <p>Only the energy state is replicated here; the block's {@code FACING} state (the energy output face) is block
  * state, not block entity data.
+ *
+ * <p><b>Client sync (M2.7b, for {@code StoneEngineBlockRenderer}):</b> the burn state is replicated through the
+ * vanilla block entity update channel, exactly the way {@code BeaconBlockEntity} does it: {@link #getUpdatePacket()}
+ * returns {@code ClientboundBlockEntityDataPacket.create(this)} (which packs {@link #getUpdateTag}), and
+ * {@link #getUpdateTag} returns {@link #saveCustomOnly} &mdash; i.e. the update tag carries exactly the
+ * {@link #saveAdditional} keys, and the client applies it through {@code loadAdditional(ValueInput)} (vanilla's
+ * {@code ClientPacketListener#handleBlockEntityData} calls {@code loadWithComponents}). {@link #serverTick} calls
+ * {@code ServerLevel#sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS)} on ignition, on burn-out and every
+ * {@link #SYNC_INTERVAL} ticks while burning (the {@code ConduitBlockEntity} pattern) so the client can drive the
+ * piston animation from {@code burnRemain}/{@code burnTotal}.
  */
 public class StoneEngineBlockEntity extends BlockEntity {
 
@@ -48,6 +63,8 @@ public class StoneEngineBlockEntity extends BlockEntity {
     public static final long POWER_PER_TICK = 100;
     /** Internal energy buffer size in &micro;MJ (slice value, see class javadoc). */
     public static final long CAPACITY = 100_000;
+    /** While burning, the burn state is re-synced to clients every this many ticks (M2.7b render sync). */
+    public static final int SYNC_INTERVAL = 40;
 
     /** Remaining burn ticks of the currently burning fuel item. */
     private int burnRemain;
@@ -108,32 +125,56 @@ public class StoneEngineBlockEntity extends BlockEntity {
         return this.burnRemain;
     }
 
+    /** Total burn ticks of the current fuel item (0 when idle); used by the M2.7b renderer's burn progress. */
+    public int getBurnTotal() {
+        return this.burnTotal;
+    }
+
+    /** True while a fuel item is burning (the client-visible "engine is running" flag for the renderer). */
+    public boolean isBurning() {
+        return this.burnRemain > 0;
+    }
+
     /** Facing of the block this engine sits in = the energy output face (slice contract for M2.2c pipes). */
     public Direction getOutputFacing() {
         return this.getBlockState().getValue(StoneEngineBlock.FACING);
     }
 
     /**
-     * Per-tick production logic, wired through {@code StoneEngineBlock#getTicker}. Kept in a static method mirroring the
-     * vanilla furnace pattern ({@code AbstractFurnaceBlockEntity.serverTick}).
+     * Per-tick production logic, wired through {@code StoneEngineBlock#getTicker}. Kept in a static method mirroring
+     * the vanilla furnace pattern ({@code AbstractFurnaceBlockEntity.serverTick}). Burn state changes are pushed to
+     * clients through {@code sendBlockUpdated} (see the client sync note in the class javadoc).
      */
     public static void serverTick(ServerLevel level, BlockPos pos, BlockState state, StoneEngineBlockEntity engine) {
         boolean changed = false;
+        boolean syncToClients = false;
         if (engine.burnRemain > 0) {
             engine.burnRemain--;
             if (engine.energyStored < CAPACITY) {
                 engine.energyStored = Math.min(CAPACITY, engine.energyStored + POWER_PER_TICK);
             }
             changed = true;
+            // Re-sync periodically while burning so clients keep animating the piston even after a
+            // missed/out-of-order update; the remainder is what the renderer's progress is derived from.
+            syncToClients = engine.burnRemain % SYNC_INTERVAL == 0;
+            if (engine.burnRemain == 0) {
+                // burn-out: the client must see burning = false
+                syncToClients = true;
+            }
         } else if (engine.pendingFuel > 0 && engine.energyStored < CAPACITY) {
             // ignite one queued fuel item
             engine.pendingFuel--;
             engine.burnTotal = engine.pendingBurnTicks;
             engine.burnRemain = engine.pendingBurnTicks;
             changed = true;
+            // ignition: the client must see burning = true
+            syncToClients = true;
         }
         if (changed) {
             engine.setChanged();
+        }
+        if (syncToClients) {
+            level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
         }
     }
 
@@ -155,5 +196,20 @@ public class StoneEngineBlockEntity extends BlockEntity {
         this.energyStored = input.getLongOr("bc_energy_stored", 0L);
         this.pendingFuel = input.getIntOr("bc_pending_fuel", 0);
         this.pendingBurnTicks = input.getIntOr("bc_pending_burn_ticks", 0);
+    }
+
+    /**
+     * M2.7b client sync, vanilla {@code BeaconBlockEntity} pattern: the update tag is {@link #saveCustomOnly}, i.e.
+     * exactly the {@link #saveAdditional} keys (burn state included). The client applies the packet through
+     * {@code loadWithComponents} → {@link #loadAdditional}, so no separate wire format is needed.
+     */
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return this.saveCustomOnly(registries);
+    }
+
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 }
