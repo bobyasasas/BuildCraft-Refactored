@@ -36,6 +36,9 @@ import buildcraft.lib.datacomponent.gate.EnumGateLogic;
 import buildcraft.lib.datacomponent.gate.EnumGateMaterial;
 import buildcraft.lib.datacomponent.gate.EnumGateModifier;
 import buildcraft.lib.datacomponent.gate.GateVariantData;
+import buildcraft.robotics.BcRoboticsEntities;
+import buildcraft.robotics.entity.EntityRobot;
+import buildcraft.robotics.zone.BoxZone;
 
 /**
  * Registers buildcraftcore's game tests into the vanilla test instance registry (task M2.2a).
@@ -153,6 +156,18 @@ public final class BcGameTests {
                                 0, // setupTicks
                                 true),
                         BcGameTests::quarryCycleTest));
+        // M2.13 robot slice: one summoned robot_miner mines the two iron ores of its work zone and parks done.
+        event.registerTest(
+                Identifier.fromNamespaceAndPath(BuildCraftCore.MOD_ID, "robot_task"),
+                new BcGameTestInstance(
+                        new TestData<>(
+                                environment,
+                                Identifier.fromNamespaceAndPath(BuildCraftCore.MOD_ID, "robot_test"),
+                                // ~80 ticks of flight + two 12-tick breaks at the slice pace; 400 = ample margin
+                                400, // maxTicks
+                                0, // setupTicks
+                                true),
+                        BcGameTests::robotTaskTest));
     }
 
     /**
@@ -422,6 +437,69 @@ public final class BcGameTests {
             for (BlockPos pos : BlockPos.betweenClosed(areaMin, areaMax)) {
                 if (!helper.getBlockState(pos).isAir()) {
                     helper.fail("mined area cell " + pos + " is not air");
+                }
+            }
+        });
+    }
+
+    /**
+     * M2.13 robot task test: one summoned {@code buildcraftrobotics:robot_miner} completes a full mining task inside
+     * its work zone. Legacy ({@code buildcraft.robotics}) alignment points:
+     * <ul>
+     * <li>the robot is the M2.13 slice {@code EntityRobot} under the unchanged placeholder id
+     * {@code buildcraftrobotics:robot_miner} (legacy registers one type per board; the miner board
+     * {@code BoardRobotMiner} is the slice board);</li>
+     * <li>the work zone is the slice {@link BoxZone} stand-in for the legacy zone-planner bitmap
+     * ({@code IZone#getZoneToWork}); the robot only mines inside it, in the slice's deterministic scan order
+     * (legacy: random {@code BlockScannerZoneRandom});</li>
+     * <li>targets are legacy-miner semantics: ore blocks ({@code BoardRobotMiner#isExpectedBlock} = ores; slice:
+     * the vanilla {@code #minecraft:iron_ores} tag, see {@link EntityRobot});</li>
+     * <li>the task walks the collapsed legacy AI tree search &rarr; straight-line flight &rarr; break (per-tick
+     * damage + per-tick AI power costs, legacy {@code AIRobotSearchBlock}/{@code AIRobotStraightMoveTo}/
+     * {@code AIRobotBreak} on the &times;10&#8315;&#8304; slice scale) and latches
+     * {@code DONE} once the zone is exhausted (legacy: {@code AIRobotGotoSleep} at the dock &mdash; no dock in the
+     * slice);</li>
+     * <li>power enters entity-directly through the legacy {@code IMjReceiver} request/accept/excess semantics
+     * (the slice's station-less closed loop; legacy recharges at docking stations, which have no placeholder id to
+     * activate).</li>
+     * </ul>
+     * Layout: robot summoned at (1,1,1), work zone (4,1,1)..(5,1,2) with iron ore at (4,1,1) and (5,1,2). The test
+     * succeeds once the robot reports DONE, has drained its battery doing the work, both ore cells are air again
+     * and the robot carries the two raw iron drops.
+     */
+    static void robotTaskTest(GameTestHelper helper) {
+        BlockPos robotPos = new BlockPos(1, 1, 1);
+        BlockPos oreAPos = new BlockPos(4, 1, 1);
+        BlockPos oreBPos = new BlockPos(5, 1, 2);
+        helper.setBlock(oreAPos, Blocks.IRON_ORE);
+        helper.setBlock(oreBPos, Blocks.IRON_ORE);
+        EntityRobot robot = helper.spawn(BcRoboticsEntities.ROBOT_MINER.value(), robotPos);
+        robot.setWorkZone(new BoxZone(helper.absolutePos(oreAPos), helper.absolutePos(oreBPos)));
+        // legacy IMjReceiver semantics: full charge through the entity-direct-power entry point
+        robot.receivePower(EntityRobot.BATTERY_CAPACITY, false);
+        if (robot.getPowerRequested() != 0) {
+            helper.fail("robot refused a full battery charge");
+            return;
+        }
+        helper.succeedWhen(() -> {
+            if (robot.getTaskState() != EntityRobot.RobotTaskState.DONE) {
+                helper.fail("robot has not finished mining its work zone yet (state " + robot.getTaskState() + ")");
+            }
+            if (robot.getEnergyStored() >= EntityRobot.BATTERY_CAPACITY) {
+                helper.fail("robot battery was never drained by the task");
+            }
+            int rawIron = 0;
+            for (ItemStack stack : robot.getCarried()) {
+                if (stack.is(Items.RAW_IRON)) {
+                    rawIron += stack.getCount();
+                }
+            }
+            if (rawIron != 2) {
+                helper.fail("robot carries " + rawIron + " raw iron instead of the 2 mined ores");
+            }
+            for (BlockPos pos : BlockPos.betweenClosed(oreAPos, oreBPos)) {
+                if (!helper.getBlockState(pos).isAir()) {
+                    helper.fail("work zone cell " + pos + " was not mined");
                 }
             }
         });

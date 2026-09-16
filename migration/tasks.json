@@ -221,10 +221,10 @@
       "id": "M2.13",
       "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
       "title": "机器人最小移植",
-      "status": "pending",
+      "status": "in_progress",
       "acceptance": "robot 实体 + 区域 + 至少 1 个可完成任务在 26.1.2 可运行，至少 1 个 GameTest 通过",
-      "evidence": "",
-      "notes": ""
+      "evidence": "code+tests complete: robot minimal port (entity+zone+task), gametests 9/9, renderer+evidence shot, evidence commit pending",
+      "notes": "最小子集: robot_miner 占位换真实 EntityRobot(同 id 零新注册; plain Entity noPhysics+noGravity MISC 0.5^3 fireImmune 无敌), 任务=BoxZone 内 x asc/z asc/y asc 扫描 #minecraft:iron_ores(26.1.2 无通用 ores tag, 收窄为铁矿系)+直线飞行 0.1/t(legacy normalized(dir)/10)+legacy AIRobotBreak 破坏公式 toolSpeed/hardness/30 与 destroyBlockProgress 裂纹, drops 直入 carried(legacy 落地+收集); AI 树(AIRobotMain/SearchAndGotoBlock/StraightMoveTo/Break/GotoSleep)折叠为 IDLE/SEARCH/MOVE/BREAK/DONE 状态机, 逐态收 legacy AI 电耗 1e-4 刻度(20/30/107 uMJ/t), 电池 500,000 uMJ=5,000 MJ, 耗尽停机=legacy SHUTDOWN_POWER 0; zone=BoxZone 直挂实体(legacy ZonePlan 位图经 zone planner+gate 语句)。station 二选一裁决: 占位 id 池无 station id(legacy DockingStation=管道插件+IRobotRegistry+AIRobotRecharge)→选实体直供闭环 getPowerRequested/receivePower(镜像 MjReceiver 语义, engine insertFuel 程序化入口先例), 真充电锚点随 transport 迁移。SharedConstants.CHECK_DATA_FIXER_SCHEMA 在 mod 构造器置 false(存档实体触发 26.1.2 硬编码 fetchChoiceType 探针→每 id 一条 ERROR 破坏 M3.7 门禁; 无处注册 data fixer 且 build() 丢弃探针结果; M2.12 前用 noSave() 绕开, robot 须可持久化故全局关探针)——待主 agent 决策点。延后: AIRobot 树/boards(其余 16 板 id 仍占位)、dock/IRobotRegistry、A* 寻路(直线腿 only)、随机扫描(现固定序)、health/hurt、分层模型/gear 渲染(现盒体组装)、robot item 组件接线、tool 装备腿(常量钻石镐代替)。"
     },
     {
       "id": "M2.9",
