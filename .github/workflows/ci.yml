@@ -164,3 +164,24 @@ jobs:
             } >> "$GITHUB_STEP_SUMMARY"
           fi
           exit $diff_rc
+
+      # M3.5: 语言键对拍——BuildCraft-Localization 基线 en_us.json（子模块，只读）的键集合 vs
+      # neo 侧 8 个 modid assets/<modid>/lang/en_us.json 的键集合并集。
+      # missing（基线有、neo 无）与 extra（neo 有、基线无）白名单外都必须为 0 才绿；只对拍键集合，
+      # 不比文案。子模块只取 BuildCraft-Localization 一个（本 job 其余步骤不依赖子模块，避免全量 init）。
+      # fail-closed：基线/资产缺失、JSON 非法、重复键都按 lang_diff.py exit 2 非零退出，步骤变红。
+      - name: Language key parity vs BuildCraft-Localization baseline (M3.5)
+        timeout-minutes: 5
+        run: |
+          git submodule update --init BuildCraft-Localization
+          python3 migration/scripts/lang_diff.py | tee /tmp/langdiff.txt
+          diff_rc=${PIPESTATUS[0]}
+          if [ -n "$GITHUB_STEP_SUMMARY" ]; then
+            {
+              echo "### M3.5 language key parity (neo assets vs BuildCraft-Localization baseline)"
+              echo '```'
+              cat /tmp/langdiff.txt
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit $diff_rc

@@ -25,7 +25,9 @@ public final class BcCreativeTabs {
     /** Main BuildCraft tab. Displays every registered buildcraftcore item (registration order). */
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN = TABS.register("main",
             () -> CreativeModeTab.builder()
-                    .title(Component.translatable("itemGroup.buildcraftcore"))
+                    // M3.5: keyed to the BuildCraft-Localization baseline ("itemGroup.buildcraft.main" = "BuildCraft"),
+                    // replacing the M2.x placeholder key so the lang key set stays at baseline parity (diff=0).
+                    .title(Component.translatable("itemGroup.buildcraft.main"))
                     .icon(() -> new ItemStack(BcItems.MARKER.value()))
                     .displayItems((parameters, output) -> {
                         // M2.4a: the item set grew to the full baseline parity set; stream the register instead of

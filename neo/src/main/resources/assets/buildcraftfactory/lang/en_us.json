@@ -1,15 +1,1 @@
-{
-  "block.buildcraftfactory.autoworkbench_item": "Autoworkbench Item (Placeholder)",
-  "block.buildcraftfactory.chute": "Chute (Placeholder)",
-  "block.buildcraftfactory.distiller": "Distiller (Placeholder)",
-  "block.buildcraftfactory.flood_gate": "Flood Gate (Placeholder)",
-  "block.buildcraftfactory.heat_exchange": "Heat Exchange (Placeholder)",
-  "block.buildcraftfactory.mining_well": "Mining Well (Placeholder)",
-  "block.buildcraftfactory.pump": "Pump (Placeholder)",
-  "block.buildcraftfactory.tank": "Tank (Placeholder)",
-  "block.buildcraftfactory.tube": "Tube (Placeholder)",
-  "block.buildcraftfactory.water_gel": "Water Gel (Placeholder)",
-  "item.buildcraftfactory.gel": "Gel (Placeholder)",
-  "item.buildcraftfactory.plastic_sheet": "Plastic Sheet (Placeholder)",
-  "item.buildcraftfactory.water_gel_spawn": "Water Gel Spawn (Placeholder)"
-}
+{}
