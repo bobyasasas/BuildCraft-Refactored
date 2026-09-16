@@ -11,6 +11,10 @@
       全部通过 exit 0；任何失败打印原因并 exit 1。
   python3 progress.py --set <ID> <STATUS> [EVIDENCE...]
       更新指定任务的 status / evidence（若给出）与 updated 日期，然后重新生成 PROGRESS.md。
+  python3 progress.py --trend
+      采集一条趋势记录（时间戳、git commit、任务完成度、Forge import 等代码指标），
+      追加到 migration/trends/metrics-history.jsonl 并刷新 metrics-latest.json，打印记录内容。
+      不修改 tasks.json 与 PROGRESS.md。供 CI 定期执行形成趋势（M3.8）。
 """
 
 import json
@@ -24,6 +28,9 @@ MIGRATION_DIR = Path(__file__).resolve().parents[1]
 REPO_ROOT = MIGRATION_DIR.parent
 TASKS_FILE = MIGRATION_DIR / "tasks.json"
 PROGRESS_FILE = MIGRATION_DIR / "PROGRESS.md"
+TREND_DIR = MIGRATION_DIR / "trends"
+TREND_HISTORY_FILE = TREND_DIR / "metrics-history.jsonl"
+TREND_LATEST_FILE = TREND_DIR / "metrics-latest.json"
 
 VALID_STATUS = ("pending", "in_progress", "partial", "unverified", "done")
 STATUS_LABEL = {
@@ -52,6 +59,7 @@ USAGE = (
     "  python3 progress.py                          # 生成 PROGRESS.md 并打印摘要\n"
     "  python3 progress.py --check                  # 校验 tasks.json（不写文件）\n"
     "  python3 progress.py --set <ID> <STATUS> [EVIDENCE...]  # 更新任务并重新生成\n"
+    "  python3 progress.py --trend                  # 追加一条趋势记录（M3.8）\n"
     f"  STATUS 枚举: {', '.join(VALID_STATUS)}"
 )
 
@@ -412,6 +420,45 @@ def cmd_set(tid, status, evidence):
     return regenerate(data)
 
 
+def cmd_trend():
+    """M3.8 趋势记录：采集一条指标快照追加进 JSONL 历史，并刷新 latest 快照。"""
+    data, err = load_tasks()
+    if err:
+        print(f"[错误] {err}", file=sys.stderr)
+        return 1
+    counts, total, rate = summarize(data["tasks"])
+    record = {
+        "timestamp": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+        "commit": None,
+        "total": total,
+        "done": counts["done"],
+        "in_progress": counts["in_progress"],
+        "partial": counts["partial"],
+        "unverified": counts["unverified"],
+        "pending": counts["pending"],
+        "rate_pct": rate,
+    }
+    try:
+        commit = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"],
+            cwd=REPO_ROOT, capture_output=True, text=True, timeout=CMD_TIMEOUT,
+        )
+        if commit.returncode == 0:
+            record["commit"] = commit.stdout.strip() or None
+    except Exception:
+        pass
+    record.update(collect_metrics())
+    TREND_DIR.mkdir(parents=True, exist_ok=True)
+    with TREND_HISTORY_FILE.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n")
+    TREND_LATEST_FILE.write_text(
+        json.dumps(record, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    print("趋势记录已追加: " + json.dumps(record, ensure_ascii=False, sort_keys=True))
+    print(f"历史文件: {TREND_HISTORY_FILE}（latest 快照: {TREND_LATEST_FILE}）")
+    return 0
+
+
 def main(argv):
     if not argv:
         data, err = load_tasks()
@@ -430,6 +477,11 @@ def main(argv):
             return 2
         evidence = " ".join(argv[3:]) if len(argv) > 3 else None
         return cmd_set(argv[1], argv[2], evidence)
+    if argv[0] == "--trend":
+        if len(argv) != 1:
+            print("用法: progress.py --trend", file=sys.stderr)
+            return 2
+        return cmd_trend()
     print(f"未知参数: {' '.join(argv)}\n{USAGE}", file=sys.stderr)
     return 2
 

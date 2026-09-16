@@ -61,6 +61,10 @@ jobs:
   neo-build:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    # M3.8: 仅本 job 提升 token 权限用于趋势记录回写仓库（push migration/trends/），
+    # progress-check / baseline-build 两 job 不受影响，仍按顶层 permissions 保持 contents: read。
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -401,3 +405,69 @@ jobs:
               sys.exit(1)
           PYEOF
           exit $?
+
+      # M3.8: 迁移仪表盘——趋势记录随 CI 自动更新。progress.py --trend 采集一条指标快照
+      # （时间戳/commit/任务完成度/forge imports/java 规模/todo/fixme/onlyin_client/registryobject_files），
+      # 追加进 migration/trends/metrics-history.jsonl 并刷新 metrics-latest.json，把关键指标打进
+      # $GITHUB_STEP_SUMMARY，最后把趋势记录回写仓库。
+      # fail-closed 只限指标采集本身：--trend 非 0、latest 快照读不出/非法 JSON，任一即红。
+      # 回写是尽力而为（趋势记录不因竞态弄红构建）：
+      #   - 只在 push 事件回写（PR 触发的 run 处于 merge ref，不能推回分支）；
+      #   - commit 消息带 [skip ci] 防递归触发（GITHUB_TOKEN 的 push 本身也不会再触发 workflow，双保险）；
+      #   - push 失败 → git pull --rebase 后重试一次 → 仍失败打印 "trend push skipped (race)" 以 0 退出
+      #     （权限不足被拒也走此 skip 分支，如实打印不红）。
+      - name: Migration trend record (M3.8)
+        timeout-minutes: 5
+        run: |
+          python3 migration/scripts/progress.py --trend || exit 1
+          python3 - <<'PYEOF'
+          import json, os, sys
+
+          try:
+              with open('migration/trends/metrics-latest.json', encoding='utf-8') as f:
+                  m = json.load(f)
+          except (OSError, ValueError) as e:
+              print('M3.8 trend summary: cannot read metrics-latest.json: %s' % e, file=sys.stderr)
+              sys.exit(1)
+
+          rows = ['timestamp: %s' % m.get('timestamp'),
+                  'commit: %s' % m.get('commit'),
+                  'tasks done: %s/%s (rate %s%%)' % (m.get('done'), m.get('total'), m.get('rate_pct')),
+                  'forge imports: %s occurrences in %s files' % (m.get('forge_import_occurrences'), m.get('forge_import_files')),
+                  'registry object files: %s' % m.get('registryobject_files'),
+                  'java: %s lines in %s files' % (m.get('java_lines'), m.get('java_files')),
+                  'todo/fixme: %s/%s' % (m.get('todo'), m.get('fixme')),
+                  'only-in-client files: %s' % m.get('onlyin_client')]
+
+          out = ['### M3.8 migration trend snapshot', '```'] + rows + ['```']
+          summary_path = os.environ.get('GITHUB_STEP_SUMMARY')
+          if summary_path:
+              with open(summary_path, 'a', encoding='utf-8') as f:
+                  f.write('\n'.join(out) + '\n')
+          print('\n'.join(out))
+          PYEOF
+          # ---- 以下为趋势回写（尽力而为，不红） ----
+          if [ "${GITHUB_EVENT_NAME}" != "push" ]; then
+            echo "trend push skipped (event: ${GITHUB_EVENT_NAME}; write-back only runs on push events)"
+            exit 0
+          fi
+          git checkout -B neoforge-26.1.2
+          git add migration/trends/
+          if git diff --cached --quiet; then
+            echo "trend record: nothing to commit"
+            exit 0
+          fi
+          git -c user.name=bobyasasas -c user.email=bobyasasas@users.noreply.github.com \
+            commit -m "chore: migration trend record [skip ci]"
+          if git push origin neoforge-26.1.2; then
+            echo "trend record pushed to origin/neoforge-26.1.2"
+          else
+            echo "trend push failed once, retrying after rebase" >&2
+            if git pull --rebase origin neoforge-26.1.2 && git push origin neoforge-26.1.2; then
+              echo "trend record pushed to origin/neoforge-26.1.2 (after rebase)"
+            else
+              git rebase --abort 2>/dev/null || true
+              echo "trend push skipped (race)" >&2
+            fi
+          fi
+          exit 0
