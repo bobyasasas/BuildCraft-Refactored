@@ -1,5 +1,5 @@
 {
-  "commit": "9cdfe35",
+  "commit": "c9953da",
   "done": 23,
   "fixme": 23,
   "forge_import_files": 491,
@@ -9,11 +9,11 @@
   "java_lines": 184051,
   "onlyin_client": 233,
   "partial": 2,
-  "pending": 3,
-  "rate_pct": 86,
+  "pending": 7,
+  "rate_pct": 75,
   "registryobject_files": 35,
-  "timestamp": "2026-09-16T07:55:36",
+  "timestamp": "2026-09-16T08:04:48",
   "todo": 192,
-  "total": 28,
+  "total": 32,
   "unverified": 0
 }
