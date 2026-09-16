@@ -1,6 +1,7 @@
 {
   "values": [
     "buildcraftcore:m27b/load_setup",
-    "buildcraftcore:m211/load_setup"
+    "buildcraftcore:m211/load_setup",
+    "buildcraftcore:m212/load_setup"
   ]
 }

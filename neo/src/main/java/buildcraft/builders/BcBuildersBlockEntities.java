@@ -5,6 +5,8 @@
 
 package buildcraft.builders;
 
+import buildcraft.builders.blockentity.FillerBlockEntity;
+import buildcraft.builders.blockentity.QuarryBlockEntity;
 import buildcraft.core.blockentity.PlaceholderBlockEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -13,10 +15,11 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
  * Central block entity type registration for buildcraftbuilders (task M2.4c registry parity). Every block entity id
- * the 1.20.1 registry baseline attributes to {@code buildcraftbuilders} registers here, bound to its (placeholder)
- * block through the shared {@link PlaceholderBlockEntity}. All placeholder, behaviour classes (legacy
+ * the 1.20.1 registry baseline attributes to {@code buildcraftbuilders} registers here, bound to its block through the
+ * shared {@link PlaceholderBlockEntity}. All placeholder, behaviour classes (legacy
  * {@code TileArchitect}, {@code TileBuilder}, {@code TileFiller}, {@code TileLibrary}, {@code TileMarker},
- * {@code TileQuarry}, {@code TileReplacer}) migrate in M2.5+.
+ * {@code TileQuarry}, {@code TileReplacer}) migrate in M2.5+ &mdash; M2.12 swapped the first two (filler, quarry) from
+ * the placeholder to their real behaviour classes under the unchanged ids.
  */
 public final class BcBuildersBlockEntities {
 
@@ -35,10 +38,10 @@ public final class BcBuildersBlockEntities {
                     (pos, state) -> new PlaceholderBlockEntity(BcBuildersBlockEntities.BUILDER.value(), pos, state),
                     BcBuildersBlocks.BUILDER.value()));
 
-    /** Placeholder for {@code buildcraftbuilders:filler}; behaviour class migrates in M2.5+. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlaceholderBlockEntity>> FILLER = BLOCK_ENTITIES
+    /** {@code buildcraftbuilders:filler}; M2.12 replaced the placeholder behaviour with the real {@link FillerBlockEntity} (same id). */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FillerBlockEntity>> FILLER = BLOCK_ENTITIES
             .register("filler", () -> new BlockEntityType<>(
-                    (pos, state) -> new PlaceholderBlockEntity(BcBuildersBlockEntities.FILLER.value(), pos, state),
+                    FillerBlockEntity::new,
                     BcBuildersBlocks.FILLER.value()));
 
     /** Placeholder for {@code buildcraftbuilders:library}; behaviour class migrates in M2.5+. */
@@ -53,10 +56,10 @@ public final class BcBuildersBlockEntities {
                     (pos, state) -> new PlaceholderBlockEntity(BcBuildersBlockEntities.MARKER_CONSTRUCTION.value(), pos, state),
                     BcBuildersBlocks.MARKER_CONSTRUCTION.value()));
 
-    /** Placeholder for {@code buildcraftbuilders:quarry}; behaviour class migrates in M2.5+. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlaceholderBlockEntity>> QUARRY = BLOCK_ENTITIES
+    /** {@code buildcraftbuilders:quarry}; M2.12 replaced the placeholder behaviour with the real {@link QuarryBlockEntity} (same id). */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<QuarryBlockEntity>> QUARRY = BLOCK_ENTITIES
             .register("quarry", () -> new BlockEntityType<>(
-                    (pos, state) -> new PlaceholderBlockEntity(BcBuildersBlockEntities.QUARRY.value(), pos, state),
+                    QuarryBlockEntity::new,
                     BcBuildersBlocks.QUARRY.value()));
 
     /** Placeholder for {@code buildcraftbuilders:replacer}; behaviour class migrates in M2.5+. */

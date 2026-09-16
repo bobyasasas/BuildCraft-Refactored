@@ -20,6 +20,9 @@ import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.event.RegisterGameTestsEvent;
+import buildcraft.builders.BcBuildersBlocks;
+import buildcraft.builders.blockentity.FillerBlockEntity;
+import buildcraft.builders.blockentity.QuarryBlockEntity;
 import buildcraft.core.BcBlocks;
 import buildcraft.core.BuildCraftCore;
 import buildcraft.core.block.StoneEngineBlock;
@@ -123,6 +126,33 @@ public final class BcGameTests {
                                 0, // setupTicks
                                 true),
                         BcGameTests::gateLogicTest));
+        // M2.12 filler slice: full powered chain engine -> kinesis pipe -> filler, one buildcraft:fill cycle over a
+        // 2x2x2 area. Lives in the core suite (like gate_logic, which is silicon content) because the slice's energy
+        // chain and test infrastructure are core content; the exercised machines are builders content.
+        event.registerTest(
+                Identifier.fromNamespaceAndPath(BuildCraftCore.MOD_ID, "filler_cycle"),
+                new BcGameTestInstance(
+                        new TestData<>(
+                                environment,
+                                Identifier.fromNamespaceAndPath(BuildCraftCore.MOD_ID, "filler_test"),
+                                // 8 dirt x 4800 uMJ = 38400 uMJ at the slice engine's 100 uMJ/t production
+                                600, // maxTicks
+                                0, // setupTicks
+                                true),
+                        BcGameTests::fillerCycleTest));
+        // M2.12 quarry slice: the same powered chain feeding a quarry that mines a 2x2x1 stone area into its output
+        // buffer (frame blocks, lasers and markers are not part of the slice).
+        event.registerTest(
+                Identifier.fromNamespaceAndPath(BuildCraftCore.MOD_ID, "quarry_cycle"),
+                new BcGameTestInstance(
+                        new TestData<>(
+                                environment,
+                                Identifier.fromNamespaceAndPath(BuildCraftCore.MOD_ID, "quarry_test"),
+                                // 4 stone x 8000 uMJ = 32000 uMJ at the slice engine's 100 uMJ/t production
+                                600, // maxTicks
+                                0, // setupTicks
+                                true),
+                        BcGameTests::quarryCycleTest));
     }
 
     /**
@@ -262,6 +292,136 @@ public final class BcGameTests {
                 }
                 if (!tickingGate.isOn()) {
                     helper.fail("gate isOn flag is false while both actions are active");
+                }
+            }
+        });
+    }
+
+    /**
+     * M2.12 filler cycle test: the full powered build chain of the slice &mdash; stone engine &rarr; kinesis pipe
+     * &rarr; filler &mdash; completing one {@code buildcraft:fill} cycle over a 2&times;2&times;2 area. Legacy
+     * ({@code buildcraft.builders.tile.TileFiller}) alignment points:
+     * <ul>
+     * <li>power enters through the legacy {@code IMjReceiver} semantics ({@code MjBatteryReceiver}: request
+     * {@code capacity - stored}, receive, return the excess) &mdash; here via the pipe's {@code MjReceiver} push into
+     * the filler battery (legacy battery: 16,000 MJ; slice: 1,600,000 &micro;MJ on the M2.2 &times;10&#8315;&#8308;
+     * scale);</li>
+     * <li>the pattern is legacy {@code PatternFill} (unique tag {@code buildcraft:fill} = "every cell solid"), the
+     * simplest of the frozen tree's 20+ filler patterns and the only one migrated;</li>
+     * <li>the work area replaces the legacy marker/volume box discovery (not migrated) as programmatic BE fields;</li>
+     * <li>the resources ride the single-stack slice stand-in for the legacy 27-slot {@code invResources} (block items
+     * only, and the build stalls without them exactly like the legacy "missing resources" stall);</li>
+     * <li>each placement is powered ({@code 3,200 &micro;MJ &times; (hardness + 1)} per block, the slice form of the
+     * legacy {@code computeBlockBreakPower} formula &mdash; the 8.x tree dropped per-block drain, the slice restores it
+     * so "powered building" stays testable).</li>
+     * </ul>
+     * Layout: engine at x=1 (FACING EAST into the pipe), pipe at x=2, filler at x=3, work area (4,1,1)..(5,2,2). The
+     * test succeeds once the filler reports finished, has drawn power through the pipe, and every area cell is dirt.
+     */
+    static void fillerCycleTest(GameTestHelper helper) {
+        BlockPos enginePos = new BlockPos(1, 1, 1);
+        BlockPos pipePos = new BlockPos(2, 1, 1);
+        BlockPos fillerPos = new BlockPos(3, 1, 1);
+        BlockPos areaMin = new BlockPos(4, 1, 1);
+        BlockPos areaMax = new BlockPos(5, 2, 2);
+        helper.setBlock(enginePos,
+                BcBlocks.ENGINE_STONE.value().defaultBlockState().setValue(StoneEngineBlock.FACING, Direction.EAST));
+        helper.setBlock(pipePos, BcBlocks.PIPE_KINESIS_WOOD.value());
+        helper.setBlock(fillerPos, BcBuildersBlocks.FILLER.value());
+        FillerBlockEntity filler = helper.getBlockEntity(fillerPos, FillerBlockEntity.class);
+        // legacy PatternFill unique tag
+        if (!filler.setPattern("buildcraft:fill")) {
+            helper.fail("filler rejected the buildcraft:fill pattern");
+            return;
+        }
+        filler.setWorkArea(helper.absolutePos(areaMin), helper.absolutePos(areaMax));
+        if (!filler.insertResource(new ItemStack(Items.DIRT, 8)).isEmpty()) {
+            helper.fail("filler rejected a dirt stack for its resource buffer");
+            return;
+        }
+        StoneEngineBlockEntity engine = helper.getBlockEntity(enginePos, StoneEngineBlockEntity.class);
+        if (!engine.insertFuel(new ItemStack(Items.COAL), helper.getLevel().fuelValues())) {
+            helper.fail("engine rejected a coal item");
+            return;
+        }
+        helper.succeedWhen(() -> {
+            FillerBlockEntity tickingFiller = helper.getBlockEntity(fillerPos, FillerBlockEntity.class);
+            if (tickingFiller.getTotalReceived() <= 0) {
+                helper.fail("filler has not received any power through the kinesis pipe");
+            }
+            if (!tickingFiller.isFinished()) {
+                helper.fail("filler has not finished the buildcraft:fill cycle yet");
+            }
+            for (BlockPos pos : BlockPos.betweenClosed(areaMin, areaMax)) {
+                if (helper.getBlockState(pos).getBlock() != Blocks.DIRT) {
+                    helper.fail("fill area cell " + pos + " was not filled with dirt");
+                }
+            }
+        });
+    }
+
+    /**
+     * M2.12 quarry cycle test: the same powered chain &mdash; stone engine &rarr; kinesis pipe &rarr; quarry &mdash;
+     * mining a 2&times;2&times;1 stone area "into the output". Legacy
+     * ({@code buildcraft.builders.tile.TileQuarry}) alignment points:
+     * <ul>
+     * <li>power enters through the legacy {@code IMjReceiver} semantics into the quarry battery (legacy 24,000 MJ /
+     * slice 2,400,000 &micro;MJ on the M2.2 &times;10&#8315;&#8308; scale) and is spent per tick like
+     * {@code TaskBreakBlock}: the active target accumulates {@code battery.extractPower} until it reaches its target
+     * cost, with the overshoot refunded (all three behaviours live in {@code QuarryBlockEntity#tickWork});</li>
+     * <li>the per-block cost is legacy {@code BlockUtil.computeBlockBreakPower = 16 MJ * (hardness + 1) * 2} on the
+     * slice scale ({@code 3,200 &micro;MJ * (hardness + 1)} &mdash; stone: 8,000 &micro;MJ);</li>
+     * <li>breaking uses the legacy tool parity ({@code breakBlockAndGetDrops(DIAMOND_PICKAXE)}) and the legacy
+     * {@code canMine} guards (no air, no fluids, breakable only);</li>
+     * <li>the drops land in the internal output buffer &mdash; the slice stand-in for the legacy push-to-acceptor
+     * ({@code InventoryUtil.addToBestAcceptor}); the legacy quarry itself has no inventory;</li>
+     * <li>the mining area replaces the legacy volume-marker discovery, and the legacy frame-block system
+     * ({@code TaskAddFrame}), lasers and drill entities are not part of the slice.</li>
+     * </ul>
+     * Layout: engine at x=1 (FACING EAST into the pipe), pipe at x=2, quarry at x=3, mining area (4,1,1)..(5,1,2)
+     * pre-filled with stone. The test succeeds once the quarry reports finished, has drawn power through the pipe,
+     * every area cell is air again and the output buffer holds the four cobblestone drops.
+     */
+    static void quarryCycleTest(GameTestHelper helper) {
+        BlockPos enginePos = new BlockPos(1, 1, 1);
+        BlockPos pipePos = new BlockPos(2, 1, 1);
+        BlockPos quarryPos = new BlockPos(3, 1, 1);
+        BlockPos areaMin = new BlockPos(4, 1, 1);
+        BlockPos areaMax = new BlockPos(5, 1, 2);
+        helper.setBlock(enginePos,
+                BcBlocks.ENGINE_STONE.value().defaultBlockState().setValue(StoneEngineBlock.FACING, Direction.EAST));
+        helper.setBlock(pipePos, BcBlocks.PIPE_KINESIS_WOOD.value());
+        helper.setBlock(quarryPos, BcBuildersBlocks.QUARRY.value());
+        for (BlockPos pos : BlockPos.betweenClosed(areaMin, areaMax)) {
+            helper.setBlock(pos, Blocks.STONE);
+        }
+        QuarryBlockEntity quarry = helper.getBlockEntity(quarryPos, QuarryBlockEntity.class);
+        quarry.setMiningArea(helper.absolutePos(areaMin), helper.absolutePos(areaMax));
+        StoneEngineBlockEntity engine = helper.getBlockEntity(enginePos, StoneEngineBlockEntity.class);
+        if (!engine.insertFuel(new ItemStack(Items.COAL), helper.getLevel().fuelValues())) {
+            helper.fail("engine rejected a coal item");
+            return;
+        }
+        helper.succeedWhen(() -> {
+            QuarryBlockEntity tickingQuarry = helper.getBlockEntity(quarryPos, QuarryBlockEntity.class);
+            if (tickingQuarry.getTotalReceived() <= 0) {
+                helper.fail("quarry has not received any power through the kinesis pipe");
+            }
+            if (!tickingQuarry.isFinished()) {
+                helper.fail("quarry has not finished mining the area yet");
+            }
+            int cobbleCount = 0;
+            for (ItemStack drop : tickingQuarry.getOutput()) {
+                if (drop.is(Items.COBBLESTONE)) {
+                    cobbleCount += drop.getCount();
+                }
+            }
+            if (cobbleCount != 4) {
+                helper.fail("quarry output buffer holds " + cobbleCount + " cobblestone instead of 4");
+            }
+            for (BlockPos pos : BlockPos.betweenClosed(areaMin, areaMax)) {
+                if (!helper.getBlockState(pos).isAir()) {
+                    helper.fail("mined area cell " + pos + " is not air");
                 }
             }
         });

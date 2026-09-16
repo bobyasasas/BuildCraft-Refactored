@@ -37,8 +37,9 @@ import buildcraft.lib.datacomponent.gate.GateVariantData;
  * {@code KinesisPipeBlockEntity} whose buffer is higher (pulled amount is half the difference, clamped to
  * {@link #RATE}). Pipes never push into other pipes &mdash; pipe-to-pipe equalisation is purely pull driven, so energy
  * can never loop back and forth on its own.</li>
- * <li>It then <em>pushes</em> energy out of its buffer into accepting neighbours. The only accepting block of this
- * slice is the {@link EnergyMeterBlockEntity} measurement block.</li>
+ * <li>It then <em>pushes</em> energy out of its buffer into accepting neighbours: the {@link EnergyMeterBlockEntity}
+ * measurement block (M2.2c) and, since M2.12, any neighbouring {@link MjReceiver} machine (the legacy
+ * {@code PipeTransportPower} &rarr; {@code IMjReceiver} push, consumed by the filler/quarry slice).</li>
  * <li>All transfers run through the plain public methods {@link #extractEnergy(long, boolean)} /
  * {@link #receiveEnergy(long, boolean)} (same shape as {@link StoneEngineBlockEntity#extractEnergy(long, boolean)}).
  * The NeoForge capability integration is deferred to M2.4/M2.5 on purpose.</li>
@@ -214,7 +215,13 @@ public class KinesisPipeBlockEntity extends BlockEntity {
         }
     }
 
-    /** Push phase: only blocks that actively accept energy. This slice accepts through {@link EnergyMeterBlockEntity}. */
+    /**
+     * Push phase: only blocks that actively accept energy. The {@link EnergyMeterBlockEntity} measurement block keeps
+     * its direct {@code receiveEnergy} call from M2.2c; M2.12 adds the generic {@link MjReceiver} branch (legacy
+     * {@code PipeTransportPower} pushing into {@code IMjReceiver} machines: request
+     * {@code getPowerRequested()}, clamp to the pipe rate, deduct the accepted part from the returned excess) &mdash;
+     * the M2.12 filler/quarry machines receive their power through it.
+     */
     private void pushToNeighbours(ServerLevel level, BlockPos pos) {
         for (Direction direction : Direction.values()) {
             if (this.energyStored <= 0) {
@@ -223,6 +230,18 @@ public class KinesisPipeBlockEntity extends BlockEntity {
             BlockEntity neighbour = level.getBlockEntity(pos.relative(direction));
             if (neighbour instanceof EnergyMeterBlockEntity meter) {
                 long accepted = meter.receiveEnergy(Math.min(RATE, this.energyStored), false);
+                if (accepted > 0) {
+                    this.energyStored -= accepted;
+                    setChanged();
+                }
+            } else if (neighbour instanceof MjReceiver receiver) {
+                long wanted = receiver.getPowerRequested();
+                if (wanted <= 0) {
+                    continue;
+                }
+                long offer = Math.min(RATE, Math.min(wanted, this.energyStored));
+                long excess = receiver.receivePower(offer, false);
+                long accepted = offer - excess;
                 if (accepted > 0) {
                     this.energyStored -= accepted;
                     setChanged();

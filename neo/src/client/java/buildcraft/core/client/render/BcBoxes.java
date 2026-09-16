@@ -41,6 +41,31 @@ public final class BcBoxes {
         return quads;
     }
 
+    /** Builds the twelve 1-pixel-thick edges of the box {@code [x0,y0,z0] .. [x1,y1,z1]} as slim solid boxes
+     * (M2.12 filler/quarry work-area outlines): each edge is a full {@link #box} of cross-section {@code t} running
+     * along one axis, so the whole frame survives backface culling and light baking like any other {@link BcQuad}
+     * geometry. Coordinates are block-relative; callers usually inflate the box a hair outward to avoid z-fighting
+     * with the neighbour block faces the frame sits on. */
+    public static List<BcQuad> frame(float x0, float y0, float z0, float x1, float y1, float z1, float t) {
+        List<BcQuad> out = new ArrayList<>(72); // 12 edges x 6 faces
+        // four edges along X (bottom/front, bottom/back, top/front, top/back)
+        out.addAll(box(x0, y0, z0, x1, y0 + t, z0 + t));
+        out.addAll(box(x0, y0, z1 - t, x1, y0 + t, z1));
+        out.addAll(box(x0, y1 - t, z0, x1, y1, z0 + t));
+        out.addAll(box(x0, y1 - t, z1 - t, x1, y1, z1));
+        // four edges along Y (the vertical corners)
+        out.addAll(box(x0, y0, z0, x0 + t, y1, z0 + t));
+        out.addAll(box(x1 - t, y0, z0, x1, y1, z0 + t));
+        out.addAll(box(x0, y0, z1 - t, x0 + t, y1, z1));
+        out.addAll(box(x1 - t, y0, z1 - t, x1, y1, z1));
+        // four edges along Z (bottom/left, bottom/right, top/left, top/right)
+        out.addAll(box(x0, y0, z0, x0 + t, y0 + t, z1));
+        out.addAll(box(x1 - t, y0, z0, x1, y0 + t, z1));
+        out.addAll(box(x0, y1 - t, z0, x0 + t, y1, z1));
+        out.addAll(box(x1 - t, y1 - t, z0, x1, y1, z1));
+        return out;
+    }
+
     /** Copies the given box (fresh vertex positions, shared UV/colour/light) &mdash; used to translate animated boxes
      * without rebuilding them. */
     public static List<BcQuad> translate(List<BcQuad> quads, float dx, float dy, float dz) {
