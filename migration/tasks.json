@@ -191,13 +191,49 @@
       "notes": "M2.8（2026-09-15）：关键取舍——1) STRUCTURE/STRUCTURE_SET 在 26.1.2 无法代码注册（无 RegisterDataPackValuesEvent），按 vanilla 路径以 legacy datagen 同内容 JSON 作为资源发布，STRUCTURE_TYPE/STRUCTURE_PIECE 走 DeferredRegister 代码注册；2) 生成参数以常量冻结 legacy 默认值（BCConfig 系统未迁，不引入配置面），excessiveBiomes 默认指向的 oil_desert/oil_ocean 与 legacy 一样实际不生成（死 biome）；3) Spring 只落 buildcraftcore:spring_oil 方块，TileSpringOil 的 totalSources/无限油行为随 energy 内容任务后移；4) Spout 的流体截停判定保持 legacy 块身份语义（water/lava/LiquidBlock），未放宽到 fluid state；5) lib misc 仅最小移植（VecUtil/NBTUtilBC/Box）供 worldgen 使用，全量移植归后续任务。"
     },
     {
+      "id": "M2.10",
+      "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
+      "title": "内容资产迁移：recipes 与 tags",
+      "status": "pending",
+      "acceptance": "26.1.2 运行时 8-mod recipe id 集合与基线 diff=0（1561/1561），item/block/fluid tags 全量 diff=0，datapack 加载 0 解析错误，CI 注册表对拍切换 --strict 后三 job 全绿（M3.3 随之收口 done）",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M2.11",
+      "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
+      "title": "门系统最小移植",
+      "status": "pending",
+      "acceptance": "gate 方块/BE/条件-动作核心在 26.1.2 可运行（对齐 legacy 语义的最小子集），至少 1 个门逻辑 GameTest 通过，gate BER 渲染实证",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M2.12",
+      "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
+      "title": "填充器与采石场最小移植",
+      "status": "pending",
+      "acceptance": "filler 与 quarry 在供电下各完成一次最小作业（填充成型/采掘入输出），各至少 1 个 GameTest 通过",
+      "evidence": "",
+      "notes": ""
+    },
+    {
+      "id": "M2.13",
+      "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
+      "title": "机器人最小移植",
+      "status": "pending",
+      "acceptance": "robot 实体 + 区域 + 至少 1 个可完成任务在 26.1.2 可运行，至少 1 个 GameTest 通过",
+      "evidence": "",
+      "notes": ""
+    },
+    {
       "id": "M2.9",
       "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
       "title": "迁移清零",
       "status": "pending",
       "acceptance": "grep -r \"net.minecraftforge\" 全部 .java 结果为 0，8 个 mod 在 26.1.2 全部加载",
       "evidence": "",
-      "notes": ""
+      "notes": "用户裁决（2026-09-16，方案 1）：M2.9 在 M2.10–M2.13 内容移植完成后执行；legacy 树删除为破坏性动作，此前保持冻结。\n"
     },
     {
       "id": "M3.1",
@@ -215,7 +251,7 @@
       "status": "pending",
       "acceptance": "管道传输/引擎功率/采石场/填充器/门逻辑/机器人各有至少 1 个用例且全部通过",
       "evidence": "",
-      "notes": ""
+      "notes": "用户裁决（2026-09-16，方案 1）：采石场/填充器/门/机器人行为随 M2.11–M2.13 移植并各自落地 GameTest；M3.2 负责六领域全覆盖的最终验收。\n"
     },
     {
       "id": "M3.3",
