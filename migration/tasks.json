@@ -203,10 +203,10 @@
       "id": "M3.1",
       "phase": "Phase 3 功能验证金字塔",
       "title": "GameTest 基建",
-      "status": "pending",
+      "status": "done",
       "acceptance": "headless GameTest 可在 CI 中运行并输出 x/y passing 统计",
-      "evidence": "",
-      "notes": ""
+      "evidence": "evidence：CI run 35058634433（commit ec1870760 'M3.1: run headless GameTests in CI with x/y passing stats'）三 job progress-check/baseline-build/neo-build 全 success；neo-build 新增第 4 步 GameTests (headless)（05:13:40Z→05:14:02Z，22s）conclusion=success，该步 gradle 日志原文 '========= 5 GAME TESTS COMPLETE IN 575.4 ms ======================' + 'All 5 required tests passed :)'，解析输出 'GameTests: 5/5 passing'（写入 $GITHUB_STEP_SUMMARY 并打印步骤日志）；解析器自测 4 态：成功态 5/5 exit0；失败态（按 26.1 反编译 GameTestServer 汇总格式合成：'1 required tests failed :(' + ERROR 'id failed at ...' + '   - id: error'）输出 0/5 且列出失败用例名 exit1；崩溃无汇总态 0/0 exit1；gradle rc 非零但日志含通过行 exit1（fail-closed）；本地预验证：cd neo && ./gradlew runGameTestServer --no-daemon EXIT=0，同日志格式 '5 GAME TESTS COMPLETE IN 553.1 ms' + 'All 5 required tests passed :)'；注意 gradle 退出码不能作失败信号——FML net.neoforged.fml.startup.GameTestServer（loader 11.0.15）仅启动异常 System.exit(1)，测试失败 JVM 正常返回（javap 核对），故以日志解析为权威",
+      "notes": "M3.1（2026-09-15）：关键取舍——1) 失败信号以 GameTestServer 日志为权威，不用 gradle 退出码：FML net.neoforged.fml.startup.GameTestServer（loader 11.0.15，javap 核对）只有启动异常才 System.exit(1)，required 测试失败时 JVM 正常返回、gradle 仍 exit 0；2) 成功判定 = gradle rc==0 且日志含 'All N required tests passed'（N==总数），解析不到即 0/N 并非零退出（fail-closed，兜底从 'N GAME TESTS COMPLETE' 取总数）；3) 26.1 通过用例不逐条打日志（LogTestReporter.onTestSuccess 为空），逐测试名清单只在失败态可得（ERROR 'xxx failed at ...' 与汇总 '   - id: error' 行），故成功态 summary 只出 x/y 统计行 + 汇总原文；4) 超时：步骤级 timeout-minutes: 15（CI 实测 22s、本地约 1-2 min，冷缓存余量充足，job 级 60min 未动）；5) 缓存：沿用 neo-build 既有 setup-java cache: gradle（覆盖 ~/.gradle/caches 含 neoformruntime 解译产物），gametest 步骤零新增缓存配置、零新依赖；6) 解析器内联在 ci.yml neo-build 单一 新步骤内（对其它 job 与既有步骤零改动），不新增脚本文件。"
     },
     {
       "id": "M3.2",
