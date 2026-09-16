@@ -285,6 +285,10 @@ jobs:
           cd neo
           # 幂等：全新 checkout 本无 world/crash-reports，跑前清一次保证全新世界 + 空崩溃报告目录
           rm -rf run/world run/crash-reports
+          # 全新 checkout 首启没有 server.properties，vanilla 会打一条良性 ERROR（Failed to load properties，
+          # FileNotFoundException 后走默认值）。预置空文件让首启干净（缺省键走 vanilla 默认值），
+          # 从而保住下方 ERROR==0 门禁对真实异常的判别力（首次 CI 实跑验证过该 ERROR 必现）。
+          mkdir -p run && touch run/server.properties
           pkill -9 -f devlaunch 2>/dev/null || true
           START=$(date +%s)
           setsid ./gradlew runServer --no-daemon > /tmp/m37-runserver.log 2>&1 &
