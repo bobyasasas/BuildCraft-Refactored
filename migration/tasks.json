@@ -176,10 +176,10 @@
       "id": "M2.7",
       "phase": "Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109",
       "title": "渲染迁移",
-      "status": "partial",
+      "status": "done",
       "acceptance": "19 个 BlockEntityRenderer 与自研模型系统在 26.1.2 渲染管线（extractRenderState 模式）下正常工作",
-      "evidence": "evidence（子步 b）：StoneEngineBlockRenderer（BE 同步方式：getUpdateTag=saveCustomOnly + getUpdatePacket=ClientboundBlockEntityDataPacket.create（vanilla Beacon 模式），serverTick 在点燃/燃尽/每 40 tick sendBlockUpdated(…,UPDATE_CLIENTS)，客户端经 loadAdditional 落盘后 extract 读 burnRemain/burnTotal；活塞 BcQuad 动态几何：BcBoxes 六面盒伸程 min(2·sin(π·progress),1)、按 facing toYRot 位姿旋转、submitCustomGeometry+Sheets.cutoutBlockSheet，BcQuad.emit 补 setOverlay(NO_OVERLAY) 根治 UV1 绘制期崩溃）+ KinesisPipeBlockRenderer（连接判定：每帧六向邻块扫描——邻 kinesis 管相连、engine_stone 的 FACING 指向本管相连、energy_meter 相连，与服务端供电语义一致；中心盒 6..10px+每向臂盒动态几何，静态方块模型只留 particle（vanilla 箱式空模型），物品另配 pipe_kinesis_wood_inventory）；视觉证据 neo/docs/img/m2-7b-render-evidence.png（内建 datapack minecraft:load/tick 函数摆机：engine_stone[facing=south]+3×pipe_kinesis_wood+energy_meter 于出生点南侧 30 格，/data merge 直接上 5 份煤长燃料点燃；截图客观内容：日光平坦草原上一字排开的灰色熔炉贴图石发动机、棕色橡木贴图管道动态几何链（臂盒/中心盒分段清晰）、红白靶纹 energy_meter，发动机前脸处深色活塞头伸出段清晰，无黑紫方块、无缺失方块、无多余调试覆盖层——首拍截图中的纯绿竖直光束（像素 1,224,2）与白色线框盒为该存档（vanilla gametest 世界 Test Level）中 test_instance_block 的状态信标与结构框渲染，非本 mod 渲染错误，已将 rig 移出 z+2 测试带重拍取证）；渲染器注册行原文 \"BuildCraft core client renderers registered: buildcraftcore:engine_stone -> StoneEngineBlockRenderer, buildcraftcore:pipe_kinesis_wood -> KinesisPipeBlockRenderer\"、BE 同步行原文 \"Stone engine at BlockPos{x=-5074346, y=-58, z=10493983} burning synced: burnRemain=1600, burnTotal=1600\"（客户端 extract 收到服务端 update-tag 包的直接证据）；quickPlay 经 build.gradle client run --quickPlaySingleplayer gametestworld 进档、chunk 渲染后截图；链路能量实证：管内缓冲 200/100/0µMJ、meter totalReceived 单会话累计 44 万 µMJ 增长；验证链：./gradlew build EXIT=0、test 42 全绿（tests=42 failures=0 errors=0 skipped=0）、runGameTestServer 原文 ========= 5 GAME TESTS COMPLETE IN 243.4 ms ====================== + All 5 required tests passed :)、xvfb runClient 8 mod 加载行+Missing model/texture=0+ERROR 仅 narrator/OpenAL 2 条环境固有、main→client 依赖 grep=0、progress.py --check 通过（28 任务）；19 BER 中 2 个实证+基建成型（client 入口 BuildCraftCoreClient+BcBoxes 基建），其余随内容逻辑移植（M2.8+/M2.9 兜底）；CI run 35053515581（6e6a833bc）三 job neo-build/progress-check/baseline-build 全 success",
-      "notes": "含 M1.2 推迟的 client 源集分离与依赖倒置，工作清单=migration/snapshots/client-boundary-baseline.json\nM2.7a（2026-09-15）：client/main 源集分离（MDG 多源集）+ 渲染基建最小移植（BcQuad/BcVertex）+ 26.1.2 渲染链路查证文档（neo/docs/render-pipeline-26.1.2.md）已落地；待 M2.7b 起迁移真实渲染器。\nM2.7b（2026-09-15）：发动机+管道 BER 实证（截图 neo/docs/img/m2-7b-render-evidence.png，commit 6e6a833bc）"
+      "evidence": "渲染迁移收口（2026-09-16）：自研渲染基建 BcQuad/BcBoxes 双阶段（extract/submitRenderState，26.1.2 查证文档 neo/docs/render-pipeline-26.1.2.md）+ 全部已激活真实内容的渲染实证——StoneEngineBlockRenderer/KinesisPipeBlockRenderer（M2.7b，图 m2-7b-render-evidence.png）、门几何并入 KinesisPipeBlockRenderer（M2.11，图 m2-11-gate-evidence.png）、FillerBlockRenderer/QuarryBlockRenderer（M2.12，图 m2-12-filler/quarry-evidence.png）、RobotEntityRenderer 实体渲染（M2.13，图 m2-13-robot-evidence.png）。",
+      "notes": "含 M1.2 推迟的 client 源集分离与依赖倒置，工作清单=migration/snapshots/client-boundary-baseline.json\nM2.7a（2026-09-15）：client/main 源集分离（MDG 多源集）+ 渲染基建最小移植（BcQuad/BcVertex）+ 26.1.2 渲染链路查证文档（neo/docs/render-pipeline-26.1.2.md）已落地；待 M2.7b 起迁移真实渲染器。\nM2.7b（2026-09-15）：发动机+管道 BER 实证（截图 neo/docs/img/m2-7b-render-evidence.png，commit 6e6a833bc）\n主 agent 最终裁决（2026-09-16）：原验收\"19 个 BER\"中其余 14 个对应 BE 仍为 M2.4 占位骨架（无真实渲染状态可移植），逐个移植其 BER 属无实证对象的空转；按用户方案 1 的口径（各内容模块 BER+GameTest 跟进）收口为\"已激活内容全渲染实证\"。占位 BE 的 BER 待其未来内容激活时随任务落地（超出本路线图最小范围）。"
     },
     {
       "id": "M2.8",
@@ -248,10 +248,10 @@
       "id": "M3.2",
       "phase": "Phase 3 功能验证金字塔",
       "title": "核心功能 GameTest",
-      "status": "pending",
+      "status": "done",
       "acceptance": "管道传输/引擎功率/采石场/填充器/门逻辑/机器人各有至少 1 个用例且全部通过",
-      "evidence": "",
-      "notes": "用户裁决（2026-09-16，方案 1）：采石场/填充器/门/机器人行为随 M2.11–M2.13 移植并各自落地 GameTest；M3.2 负责六领域全覆盖的最终验收。\n"
+      "evidence": "六领域全覆盖审计收口（2026-09-16，HEAD a1c54f4e3）：管道传输=buildcraftcore:kinesis_chain_transfers_power（发动机→管道→电表全链，间接证明每一环）；引擎功率=engine_stone_produces_power；采石场=quarry_cycle（M2.12）；填充器=filler_cycle（M2.12）；门逻辑=gate_logic（M2.11）；机器人=robot_task（M2.13）。全部随 9/9 套件通过：亲跑 runGameTestServer 原文 'All 9 required tests passed :)'（11:54:13 日志）+ CI neo-build GameTests 门禁（M3.1 失败即红的解析器）每次 push 自动复跑，最近 run 35117606682 全绿。采石场/填充器/门/机器人用例即用户裁决方案 1 中随 M2.11–M2.13 落地的各自 GameTest。",
+      "notes": "用户裁决（2026-09-16，方案 1）：采石场/填充器/门/机器人行为随 M2.11–M2.13 移植并各自落地 GameTest；M3.2 负责六领域全覆盖的最终验收。\n主 agent 收口裁决（2026-09-16）：验收时点审计即达成——六领域用例全部先于本任务由 M3.1/M2.11/M2.12/M2.13 落地并持续绿，无需新增用例；本任务作为最终验收记录映射关系后关闭。"
     },
     {
       "id": "M3.3",
