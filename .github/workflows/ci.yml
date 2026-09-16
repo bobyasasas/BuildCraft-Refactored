@@ -268,3 +268,132 @@ jobs:
               sys.exit(1)
           PYEOF
           exit $?
+
+      # M3.7: headless runServer 冒烟 + 启动耗时（vanilla 口径 "Done (N.NNNs)!" 行 + wall-clock）。
+      # runServer 不会自行退出，故后台启动（setsid 独立进程组）→ 轮询日志拿证据（300s 超时即失败）
+      # → 解析后 kill 进程树（TERM → 最多 15s → KILL，再兜底 pkill devlaunch/GradleDaemon，保证 runner
+      #   上不残留 java/gradle 进程）。成败判定不依赖被 kill 的 gradle 退出码（同 M3.1：先捕获 rc 再按
+      #   日志证据裁决），以日志为权威、fail-closed：
+      #   - 无 "Done (N.NNNs)!" 行（含轮询超时 / gradle 提前退出）→ 红
+      #   - 8 个 mod 构造器 "(neo skeleton) loaded" 行任一缺失 → 红
+      #   - crash 标记（"Failed to start" / "A fatal" / "Crash report" 行、生成 crash-report 文件、
+      #     ERROR 级日志行非 0）→ 红
+      # M2.8 OilWorldgenProbe 的 scan 行只作冒烟副证记录（最长等 60s），不参与判定。
+      - name: Headless runServer smoke + startup time (M3.7)
+        timeout-minutes: 10
+        run: |
+          cd neo
+          # 幂等：全新 checkout 本无 world/crash-reports，跑前清一次保证全新世界 + 空崩溃报告目录
+          rm -rf run/world run/crash-reports
+          pkill -9 -f devlaunch 2>/dev/null || true
+          START=$(date +%s)
+          setsid ./gradlew runServer --no-daemon > /tmp/m37-runserver.log 2>&1 &
+          GPID=$!
+          DEAD=0
+          for i in $(seq 1 600); do
+            grep -q 'Done (' /tmp/m37-runserver.log 2>/dev/null && break
+            kill -0 "$GPID" 2>/dev/null || { DEAD=1; break; }
+            sleep 0.5
+          done
+          END=$(date +%s)
+          WALL=$((END - START))
+          # M2.8 oil 扫描副证：只记录不判定
+          for i in $(seq 1 120); do
+            grep -q 'Oil worldgen scan' /tmp/m37-runserver.log 2>/dev/null && break
+            sleep 0.5
+          done
+          # kill 进程树：TERM → 最多 15s → KILL → 兜底清扫
+          kill -- -"$GPID" 2>/dev/null || true
+          for i in $(seq 1 30); do
+            kill -0 "$GPID" 2>/dev/null || break
+            sleep 0.5
+          done
+          kill -9 -- -"$GPID" 2>/dev/null || true
+          pkill -9 -f devlaunch 2>/dev/null || true
+          pkill -9 -f org.gradle.launcher.daemon.bootstrap.GradleDaemon 2>/dev/null || true
+          GRADLE_RC=0
+          wait "$GPID" 2>/dev/null || GRADLE_RC=$?
+          sleep 2
+          LEFTOVER=$(pgrep -fc 'devlaunch|GradleDaemon' 2>/dev/null || true)
+          M37_GRADLE_RC="$GRADLE_RC" M37_WALL="$WALL" M37_DEAD="$DEAD" M37_LEFTOVER="${LEFTOVER:-0}" \
+          python3 - <<'PYEOF'
+          import os, re, sys
+
+          with open('/tmp/m37-runserver.log', encoding='utf-8', errors='replace') as f:
+              log = f.read()
+          lines = log.splitlines()
+
+          wall = os.environ.get('M37_WALL', '?')
+          gradle_rc = os.environ.get('M37_GRADLE_RC', '?')
+          dead = os.environ.get('M37_DEAD', '0')
+          leftover = int(os.environ.get('M37_LEFTOVER', '0') or 0)
+
+          mods = [
+              ('bu.li.BCLib', 'BuildCraft lib'),
+              ('bu.co.BuildCraftCore', 'BuildCraft core'),
+              ('bu.bu.BuildCraftBuilders', 'BuildCraft builders'),
+              ('bu.en.BuildCraftEnergy', 'BuildCraft energy'),
+              ('bu.fa.BuildCraftFactory', 'BuildCraft factory'),
+              ('bu.si.BuildCraftSilicon', 'BuildCraft silicon'),
+              ('bu.tr.BuildCraftTransport', 'BuildCraft transport'),
+              ('bu.ro.BuildCraftRobotics', 'BuildCraft robotics'),
+          ]
+
+          problems = []
+          m_done = re.search(r'Done \((\d+\.\d+)s\)', log)
+          if not m_done:
+              problems.append('no "Done (N.NNNs)!" line in log (gradle_died=%s, gradle_rc=%s)' % (dead, gradle_rc))
+
+          mod_lines = []
+          for logger, name in mods:
+              needle = '[%s/]: %s (neo skeleton) loaded' % (logger, name)
+              line = next((l for l in lines if needle in l), None)
+              if line is None:
+                  problems.append('missing mod load line: %s' % needle)
+              else:
+                  mod_lines.append(line.split(']: ', 1)[-1].strip())
+
+          error_lines = [l for l in lines if '/ERROR]' in l]
+          if error_lines:
+              problems.append('%d ERROR-level log line(s), first: %s' % (len(error_lines), error_lines[0].strip()))
+
+          crash_lines = [l for l in lines
+                         if 'Failed to start' in l or 'A fatal' in l or 'Crash report' in l]
+          if crash_lines:
+              problems.append('crash marker line(s): %s' % crash_lines[0].strip())
+
+          crash_dir = 'run/crash-reports'
+          crash_reports = sorted(os.listdir(crash_dir)) if os.path.isdir(crash_dir) else []
+          if crash_reports:
+              problems.append('crash report file(s) generated: %s' % ', '.join(crash_reports))
+
+          if leftover:
+              problems.append('%d leftover devlaunch/GradleDaemon process(es) after kill' % leftover)
+
+          oil = next((l for l in lines if 'Oil worldgen scan' in l), '(not seen within 60s, informational only)')
+          oil_text = oil.split(']: ', 1)[-1].strip()
+
+          rows = ['Done line (vanilla startup): %s' % (m_done.group(0) + '! For help, type "help"' if m_done else '<missing>'),
+                  'wall-clock gradle start -> Done (CI 口径): %ss' % wall,
+                  'mods loaded: %d/8' % len(mod_lines)]
+          rows += ['  - ' + l for l in mod_lines]
+          rows += ['ERROR-level log lines: %d' % len(error_lines),
+                   'crash markers: %s' % ('none' if not crash_lines else crash_lines[0].strip()),
+                   'M2.8 oil probe (informational): %s' % oil_text,
+                   'gradle rc after kill: %s (expected nonzero, kill-induced; not a gate)' % gradle_rc]
+
+          out = ['### M3.7 headless runServer smoke', '```'] + rows + ['```']
+          summary_path = os.environ.get('GITHUB_STEP_SUMMARY')
+          if summary_path:
+              with open(summary_path, 'a', encoding='utf-8') as f:
+                  f.write('\n'.join(out) + '\n')
+          print('\n'.join(out))
+          if problems:
+              print('M3.7 smoke FAILED:', file=sys.stderr)
+              for p in problems:
+                  print(' - ' + p, file=sys.stderr)
+              print('--- last 40 log lines ---', file=sys.stderr)
+              print('\n'.join(lines[-40:]), file=sys.stderr)
+              sys.exit(1)
+          PYEOF
+          exit $?
