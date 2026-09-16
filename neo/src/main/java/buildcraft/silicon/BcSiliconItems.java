@@ -9,6 +9,11 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import buildcraft.lib.datacomponent.gate.EnumGateLogic;
+import buildcraft.lib.datacomponent.gate.EnumGateMaterial;
+import buildcraft.lib.datacomponent.gate.EnumGateModifier;
+import buildcraft.lib.datacomponent.gate.GateVariantData;
+import buildcraft.silicon.item.ItemPluggableGate;
 
 /**
  * Central item registration for buildcraftsilicon (task M2.4a skeleton, registry parity since M2.4b). Every item id
@@ -88,8 +93,17 @@ public final class BcSiliconItems {
     /** Placeholder for {@code buildcraftsilicon:plug_gate_iron_and_lapis} (legacy {@code ItemPlugGate}); behaviour class migrates in M2.5+. */
     public static final DeferredItem<Item> PLUG_GATE_IRON_AND_LAPIS = ITEMS.registerSimpleItem("plug_gate_iron_and_lapis");
 
-    /** Placeholder for {@code buildcraftsilicon:plug_gate_iron_and_no_modifier} (legacy {@code ItemPlugGate}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PLUG_GATE_IRON_AND_NO_MODIFIER = ITEMS.registerSimpleItem("plug_gate_iron_and_no_modifier");
+    /** The M2.11 gate slice variant (legacy {@code GateVariant}: AND x IRON x no_modifier, 2 slots). */
+    public static final GateVariantData IRON_GATE_VARIANT = new GateVariantData(EnumGateLogic.AND,
+            EnumGateMaterial.IRON, EnumGateModifier.NO_MODIFIER);
+
+    /** Item form of the {@code buildcraftsilicon:iron_and_no_modifier} gate variant (legacy {@code ItemPluggableGate});
+     * the M2.11 gate slice: attaches a real 2-slot gate to a slice pipe face (see {@link ItemPluggableGate}).
+     * registerItem (not the raw supplier register) so the 26.1.2 {@code Item.Properties} item id gets injected. */
+    public static final DeferredItem<ItemPluggableGate> PLUG_GATE_IRON_AND_NO_MODIFIER = ITEMS.registerItem(
+            "plug_gate_iron_and_no_modifier",
+            properties -> new ItemPluggableGate(properties, IRON_GATE_VARIANT),
+            () -> new Item.Properties());
 
     /** Placeholder for {@code buildcraftsilicon:plug_gate_iron_and_quartz} (legacy {@code ItemPlugGate}); behaviour class migrates in M2.5+. */
     public static final DeferredItem<Item> PLUG_GATE_IRON_AND_QUARTZ = ITEMS.registerSimpleItem("plug_gate_iron_and_quartz");

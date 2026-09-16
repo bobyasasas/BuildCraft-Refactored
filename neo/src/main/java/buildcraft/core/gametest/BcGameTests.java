@@ -12,8 +12,11 @@ import net.minecraft.gametest.framework.TestData;
 import net.minecraft.gametest.framework.TestEnvironmentDefinition;
 import net.minecraft.resources.Identifier;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.event.RegisterGameTestsEvent;
@@ -21,7 +24,15 @@ import buildcraft.core.BcBlocks;
 import buildcraft.core.BuildCraftCore;
 import buildcraft.core.block.StoneEngineBlock;
 import buildcraft.core.blockentity.EnergyMeterBlockEntity;
+import buildcraft.core.blockentity.KinesisPipeBlockEntity;
 import buildcraft.core.blockentity.StoneEngineBlockEntity;
+import buildcraft.core.gate.BcGateLogic;
+import buildcraft.core.gate.BcGateStatements;
+import buildcraft.lib.datacomponent.gate.BcGateStatement;
+import buildcraft.lib.datacomponent.gate.EnumGateLogic;
+import buildcraft.lib.datacomponent.gate.EnumGateMaterial;
+import buildcraft.lib.datacomponent.gate.EnumGateModifier;
+import buildcraft.lib.datacomponent.gate.GateVariantData;
 
 /**
  * Registers buildcraftcore's game tests into the vanilla test instance registry (task M2.2a).
@@ -100,6 +111,18 @@ public final class BcGameTests {
                                 0, // setupTicks
                                 true),
                         DataComponentsParityTest::run));
+        // M2.11 gate slice: trigger/action evaluation on the kinesis pipe's gate slot, with the physical redstone
+        // loop (engine trigger -> redstone output -> vanilla lamp) and the BE-field assertion (wire broadcast).
+        event.registerTest(
+                Identifier.fromNamespaceAndPath(BuildCraftCore.MOD_ID, "gate_logic"),
+                new BcGameTestInstance(
+                        new TestData<>(
+                                environment,
+                                Identifier.fromNamespaceAndPath(BuildCraftCore.MOD_ID, "gate_test"),
+                                200, // maxTicks (coal burns 1600 ticks; the trigger fires long before)
+                                0, // setupTicks
+                                true),
+                        BcGameTests::gateLogicTest));
     }
 
     /**
@@ -165,6 +188,81 @@ public final class BcGameTests {
             EnergyMeterBlockEntity meter = helper.getBlockEntity(meterPos, EnergyMeterBlockEntity.class);
             if (meter.getTotalReceived() <= 0) {
                 helper.fail("energy meter is still empty while the kinesis chain should be transferring power");
+            }
+        });
+    }
+
+    /**
+     * M2.11 gate slice test: one rig exercising both minimal triggers and both actions of the gate on the kinesis
+     * pipe's gate slot. Legacy ({@code buildcraft.silicon.gate.GateLogic#resolveActions}) alignment points:
+     * <ul>
+     * <li>trigger {@code buildcraft:engine.stage.blue} (legacy {@code TriggerEnginePowerStage(BLUE)}, external on a
+     * neighbouring engine) &mdash; fed by the coal-fired stone engine east of the pipe;</li>
+     * <li>action {@code buildcraft:redstone.output} (legacy {@code ActionRedstoneOutput}) &mdash; latches the pipe's
+     * redstone output on the gate face (legacy never resets it, {@code IAction#actionDeactivated} is a no-op there);
+     * the physical closed loop is the vanilla redstone lamp on the gate face lighting up through the pipe block's
+     * signal overrides (legacy {@code BlockPipeHolder#getSignal});</li>
+     * <li>trigger {@code buildcraft:redstone.input.active} (legacy {@code TriggerRedstoneInput(true)}) &mdash; fed by
+     * the redstone block above the pipe (legacy: {@code getRedstoneInput(null) = getBestNeighborSignal > 0});</li>
+     * <li>action {@code buildcraft:pipe.wire.output.red} (legacy {@code ActionPipeSignal(RED)}) &mdash; asserted on
+     * the pipe BE's broadcast set; the wire-network flood is transport content that has not migrated.</li>
+     * </ul>
+     * Layout: engine at x=1 (FACING EAST into the pipe), pipe at x=2 (gate on its EAST face), lamp at x=3, redstone
+     * block on top of the pipe (y=2). The test succeeds once every link above reports active.
+     */
+    static void gateLogicTest(GameTestHelper helper) {
+        BlockPos enginePos = new BlockPos(1, 1, 1);
+        BlockPos pipePos = new BlockPos(2, 1, 1);
+        BlockPos lampPos = new BlockPos(3, 1, 1);
+        BlockPos powerPos = new BlockPos(2, 2, 1);
+        helper.setBlock(enginePos,
+                BcBlocks.ENGINE_STONE.value().defaultBlockState().setValue(StoneEngineBlock.FACING, Direction.EAST));
+        helper.setBlock(pipePos, BcBlocks.PIPE_KINESIS_WOOD.value());
+        helper.setBlock(lampPos, Blocks.REDSTONE_LAMP);
+        helper.setBlock(powerPos, Blocks.REDSTONE_BLOCK);
+        KinesisPipeBlockEntity pipe = helper.getBlockEntity(pipePos, KinesisPipeBlockEntity.class);
+        // the registered gate item variant: plug_gate_iron_and_no_modifier = 2 AND slots
+        pipe.attachGate(Direction.EAST,
+                new GateVariantData(EnumGateLogic.AND, EnumGateMaterial.IRON, EnumGateModifier.NO_MODIFIER));
+        BcGateLogic gate = pipe.getGate();
+        if (gate == null) {
+            helper.fail("gate did not attach to the pipe");
+            return;
+        }
+        byte center = BcGateStatement.SIDE_CENTER;
+        gate.configureSlot(0,
+                new BcGateStatement(BcGateStatements.TRIGGER_ENGINE_BLUE, center),
+                new BcGateStatement(BcGateStatements.ACTION_REDSTONE_OUTPUT, center));
+        gate.configureSlot(1,
+                new BcGateStatement(BcGateStatements.TRIGGER_REDSTONE_ACTIVE, center),
+                new BcGateStatement(BcGateStatements.ACTION_PIPE_WIRE_RED, center));
+        StoneEngineBlockEntity engine = helper.getBlockEntity(enginePos, StoneEngineBlockEntity.class);
+        if (!engine.insertFuel(new ItemStack(Items.COAL), helper.getLevel().fuelValues())) {
+            helper.fail("engine rejected a coal item");
+        }
+        helper.succeedWhen(() -> {
+            BcGateLogic tickingGate = helper.getBlockEntity(pipePos, KinesisPipeBlockEntity.class).getGate();
+            if (tickingGate == null) {
+                helper.fail("gate vanished from the pipe");
+            } else {
+                if (!tickingGate.isTriggerOn(0)) {
+                    helper.fail("engine.stage.blue trigger has not fired while the engine should be burning");
+                }
+                if (tickingGate.getRedstoneOutput() != 15) {
+                    helper.fail("redstone.output action did not latch the gate face output at 15");
+                }
+                if (!helper.getBlockState(lampPos).getValue(RedstoneLampBlock.LIT)) {
+                    helper.fail("the lamp on the gate face is not lit by the gate's redstone output");
+                }
+                if (!tickingGate.isTriggerOn(1)) {
+                    helper.fail("redstone.input.active trigger has not fired while the redstone block is adjacent");
+                }
+                if (!tickingGate.getWireBroadcasts().contains(DyeColor.RED)) {
+                    helper.fail("pipe.wire.output.red action did not broadcast the red wire");
+                }
+                if (!tickingGate.isOn()) {
+                    helper.fail("gate isOn flag is false while both actions are active");
+                }
             }
         });
     }
