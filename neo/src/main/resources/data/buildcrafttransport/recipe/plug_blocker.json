@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "buildcrafttransport",
+  "ingredients": [
+    "#buildcraft:pipe/structure_cobblestone"
+  ],
+  "result": {
+    "id": "buildcrafttransport:plug_blocker",
+    "count": 4
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcraftfactory",
+  "key": {
+    "g": "#c:gears/iron",
+    "i": "#c:ingots/iron",
+    "p": "minecraft:iron_pickaxe",
+    "r": "#c:dusts/redstone"
+  },
+  "pattern": [
+    "iri",
+    "igi",
+    "ipi"
+  ],
+  "result": {
+    "id": "buildcraftfactory:mining_well"
+  },
+  "show_notification": true
+}

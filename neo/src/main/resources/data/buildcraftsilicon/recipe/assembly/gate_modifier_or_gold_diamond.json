@@ -1,0 +1,12 @@
+{
+  "type": "buildcraftsilicon:assembly",
+  "output": {
+    "id": "buildcraftsilicon:plug_gate_gold_or_diamond"
+  },
+  "requiredMicroJoules": 180000000000,
+  "requiredStacks": [
+    "buildcraftsilicon:plug_gate_gold_or_no_modifier",
+    "buildcraftsilicon:chipset_diamond"
+  ],
+  "subType": "BASIC"
+}

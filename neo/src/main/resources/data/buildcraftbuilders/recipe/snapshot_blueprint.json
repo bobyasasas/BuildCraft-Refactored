@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcraftbuilders",
+  "key": {
+    "b": "#c:gems/lapis",
+    "p": "minecraft:paper"
+  },
+  "pattern": [
+    "ppp",
+    "pbp",
+    "ppp"
+  ],
+  "result": {
+    "id": "buildcraftbuilders:snapshot_blueprint"
+  },
+  "show_notification": true
+}

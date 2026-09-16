@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcraftfactory",
+  "key": {
+    "c": "#c:chests/wooden",
+    "g": "#c:gears/stone",
+    "i": "#c:ingots/iron"
+  },
+  "pattern": [
+    "ici",
+    "igi",
+    " i "
+  ],
+  "result": {
+    "id": "buildcraftfactory:chute"
+  },
+  "show_notification": true
+}

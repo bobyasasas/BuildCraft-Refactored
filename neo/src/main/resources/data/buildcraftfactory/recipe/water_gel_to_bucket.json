@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcraftfactory",
+  "key": {
+    "b": "minecraft:bucket",
+    "g": "buildcraftfactory:gel"
+  },
+  "pattern": [
+    "g",
+    "b"
+  ],
+  "result": {
+    "id": "minecraft:water_bucket"
+  },
+  "show_notification": true
+}

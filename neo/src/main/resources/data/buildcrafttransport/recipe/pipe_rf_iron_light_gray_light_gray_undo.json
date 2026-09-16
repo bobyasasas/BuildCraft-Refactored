@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "buildcrafttransport",
+  "ingredients": [
+    "buildcrafttransport:pipe_rf_iron_light_gray"
+  ],
+  "result": {
+    "id": "buildcrafttransport:pipe_power_iron_light_gray"
+  }
+}

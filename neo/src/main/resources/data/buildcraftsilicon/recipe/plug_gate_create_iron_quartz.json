@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcraftsilicon",
+  "key": {
+    "g": "buildcraftsilicon:plug_gate_iron_and_no_modifier",
+    "m": "#c:gems/quartz"
+  },
+  "pattern": [
+    " m ",
+    "mgm",
+    " m "
+  ],
+  "result": {
+    "id": "buildcraftsilicon:plug_gate_iron_and_quartz"
+  },
+  "show_notification": true
+}

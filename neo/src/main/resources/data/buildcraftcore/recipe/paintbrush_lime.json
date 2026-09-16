@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "buildcraftcore",
+  "ingredients": [
+    "#buildcraft:paintbrush",
+    "#c:dyes/lime"
+  ],
+  "result": {
+    "id": "buildcraftcore:paintbrush_lime"
+  }
+}

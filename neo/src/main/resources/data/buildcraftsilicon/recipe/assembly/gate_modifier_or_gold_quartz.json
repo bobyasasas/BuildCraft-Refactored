@@ -1,0 +1,12 @@
+{
+  "type": "buildcraftsilicon:assembly",
+  "output": {
+    "id": "buildcraftsilicon:plug_gate_gold_or_quartz"
+  },
+  "requiredMicroJoules": 140000000000,
+  "requiredStacks": [
+    "buildcraftsilicon:plug_gate_gold_or_no_modifier",
+    "buildcraftsilicon:chipset_quartz"
+  ],
+  "subType": "BASIC"
+}

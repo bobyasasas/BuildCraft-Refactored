@@ -1,0 +1,13 @@
+{
+  "type": "buildcraftsilicon:assembly",
+  "output": {
+    "id": "buildcrafttransport:wire",
+    "count": 8
+  },
+  "requiredMicroJoules": 10000000000,
+  "requiredStacks": [
+    "#c:dusts/redstone",
+    "#c:dyes/orange"
+  ],
+  "subType": "BASIC"
+}

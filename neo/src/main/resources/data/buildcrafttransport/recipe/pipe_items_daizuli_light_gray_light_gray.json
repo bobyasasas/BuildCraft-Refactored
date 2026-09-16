@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcrafttransport",
+  "key": {
+    "g": "#c:glass/light_gray",
+    "l": "#c:storage_blocks/lapis",
+    "r": "#c:gems/diamond"
+  },
+  "pattern": [
+    "lgr"
+  ],
+  "result": {
+    "id": "buildcrafttransport:pipe_items_daizuli_light_gray",
+    "count": 8
+  },
+  "show_notification": true
+}

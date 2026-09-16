@@ -138,8 +138,8 @@ jobs:
       #   五类注册表 + recipes + tags），再跑 migration/scripts/registry_diff.py 判定：
       #   - 五类注册表：missing=0 且 extra=0（按 RegistryParityTest.EXTRA_WHITELIST 的 4 个 M2.2 垂直切片
       #     id 扣除后）才绿，与 buildcraftcore:registry_parity gametest 语义逐字一致；
-      #   - recipes/tags：quantify-only——缺口不算红，但精确计数随完整 diff 输出打进 $GITHUB_STEP_SUMMARY
-      #     （内容移植任务收口时给 diff 加 --strict 收紧为全量判定）。
+      #   - recipes/tags：M2.10（内容资产迁移）收口起带 --strict——recipes/tags 与五类同口径
+      #     fail-closed（missing/白名单外 extra 必须为 0），完整 diff 输出仍打进 $GITHUB_STEP_SUMMARY。
       # fail-closed：gradle 失败、dump 证据行缺失、diff 退出码非零，任一都让本步骤变红。
       - name: Registry parity diff vs 1.20.1 baseline (M3.3)
         timeout-minutes: 15
@@ -157,11 +157,11 @@ jobs:
             exit 1
           }
           cd ..
-          python3 migration/scripts/registry_diff.py neo/build/registry-dump-26.1.2.json migration/snapshots/registry-baseline.json | tee /tmp/registrydiff.txt
+          python3 migration/scripts/registry_diff.py neo/build/registry-dump-26.1.2.json migration/snapshots/registry-baseline.json --strict | tee /tmp/registrydiff.txt
           diff_rc=${PIPESTATUS[0]}
           if [ -n "$GITHUB_STEP_SUMMARY" ]; then
             {
-              echo "### M3.3 registry parity (26.1.2 runtime vs frozen 1.20.1 baseline)"
+              echo "### M3.3 registry parity (26.1.2 runtime vs frozen 1.20.1 baseline, --strict since M2.10)"
               echo '```'
               cat /tmp/registrydiff.txt
               echo '```'

@@ -8,6 +8,7 @@ package buildcraft.energy;
 import com.mojang.logging.LogUtils;
 import buildcraft.energy.generation.OilWorldgenProbe;
 import buildcraft.energy.generation.structure.OilStructureRegistry;
+import buildcraft.energy.recipe.BcEnergyRecipes;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
@@ -41,6 +42,9 @@ public class BuildCraftEnergy {
         BcEnergyBlocks.BLOCKS.register(modEventBus);
         BcEnergyItems.ITEMS.register(modEventBus);
         BcEnergyBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+        // M2.10: combustion fuel + coolant recipe serializers.
+        BcEnergyRecipes.TYPES.register(modEventBus);
+        BcEnergyRecipes.SERIALIZERS.register(modEventBus);
 
         // M2.8 oil field world generation: the structure/piece *types* are code-registered; the Structure instance
         // itself and its structure_set are datapack JSON resources (data/buildcraftenergy/worldgen/). The probe on

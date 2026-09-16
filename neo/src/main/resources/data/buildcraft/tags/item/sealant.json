@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "#c:dyes/green",
+      "required": false
+    },
+    {
+      "id": "#c:slime_balls",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "type": "buildcraftsilicon:assembly",
+  "output": {
+    "id": "buildcraftsilicon:plug_pulsar"
+  },
+  "requiredMicroJoules": 1000000000,
+  "requiredStacks": [
+    "buildcraftcore:engine_wood",
+    {
+      "ingredient": "#c:ingots/iron",
+      "count": 2
+    }
+  ],
+  "subType": "BASIC"
+}

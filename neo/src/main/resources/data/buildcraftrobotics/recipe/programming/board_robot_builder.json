@@ -1,0 +1,8 @@
+{
+  "type": "buildcraftsilicon:programming",
+  "energyCost": 51200000000,
+  "input": "buildcraftrobotics:board_robot_empty",
+  "output": {
+    "id": "buildcraftrobotics:board_robot_builder"
+  }
+}

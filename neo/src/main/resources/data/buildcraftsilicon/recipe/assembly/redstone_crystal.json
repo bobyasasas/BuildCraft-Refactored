@@ -1,0 +1,11 @@
+{
+  "type": "buildcraftsilicon:assembly",
+  "output": {
+    "id": "buildcraftsilicon:redstone_crystal"
+  },
+  "requiredMicroJoules": 1000000000000,
+  "requiredStacks": [
+    "#c:storage_blocks/redstone"
+  ],
+  "subType": "BASIC"
+}

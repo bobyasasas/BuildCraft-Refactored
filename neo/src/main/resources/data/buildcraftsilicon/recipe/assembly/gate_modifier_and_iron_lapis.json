@@ -1,0 +1,12 @@
+{
+  "type": "buildcraftsilicon:assembly",
+  "output": {
+    "id": "buildcraftsilicon:plug_gate_iron_and_lapis"
+  },
+  "requiredMicroJoules": 40000000000,
+  "requiredStacks": [
+    "buildcraftsilicon:plug_gate_iron_and_no_modifier",
+    "#c:gems/lapis"
+  ],
+  "subType": "BASIC"
+}

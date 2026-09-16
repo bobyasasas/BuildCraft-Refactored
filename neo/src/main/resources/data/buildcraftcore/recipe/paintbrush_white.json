@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "buildcraftcore",
+  "ingredients": [
+    "#buildcraft:paintbrush",
+    "#c:dyes/white"
+  ],
+  "result": {
+    "id": "buildcraftcore:paintbrush_white"
+  }
+}

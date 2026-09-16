@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "buildcrafttransport",
+  "ingredients": [
+    "buildcrafttransport:pipe_fluids_stone_black"
+  ],
+  "result": {
+    "id": "buildcrafttransport:pipe_items_stone_black"
+  }
+}

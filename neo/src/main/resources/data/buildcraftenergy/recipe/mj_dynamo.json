@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcraftenergy",
+  "key": {
+    "G": "#c:gears/iron",
+    "g": "#c:glass_blocks/colorless",
+    "p": "minecraft:piston",
+    "w": "#c:dusts/redstone"
+  },
+  "pattern": [
+    "wgw",
+    " p ",
+    "GwG"
+  ],
+  "result": {
+    "id": "buildcraftenergy:mj_dynamo"
+  },
+  "show_notification": true
+}

@@ -1,0 +1,11 @@
+{
+  "type": "buildcraftsilicon:integration",
+  "centerStack": "buildcraftrobotics:robot_base",
+  "output": {
+    "id": "buildcraftrobotics:robot_bomber"
+  },
+  "requiredMicroJoules": 5000000000,
+  "requirements": [
+    "buildcraftrobotics:board_robot_bomber"
+  ]
+}

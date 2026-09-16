@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcrafttransport",
+  "key": {
+    "g": "#c:glass/pink",
+    "l": "#c:sandstone/blocks",
+    "r": "#c:sandstone/blocks"
+  },
+  "pattern": [
+    "lgr"
+  ],
+  "result": {
+    "id": "buildcrafttransport:pipe_items_sandstone_pink",
+    "count": 8
+  },
+  "show_notification": true
+}

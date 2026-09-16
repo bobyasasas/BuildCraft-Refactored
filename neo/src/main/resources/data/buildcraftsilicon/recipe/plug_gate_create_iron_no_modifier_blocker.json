@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcraftsilicon",
+  "key": {
+    "b": "buildcrafttransport:plug_blocker",
+    "m": "#c:ingots/iron",
+    "r": "#c:dusts/redstone"
+  },
+  "pattern": [
+    " m ",
+    "mrm",
+    " b "
+  ],
+  "result": {
+    "id": "buildcraftsilicon:plug_gate_iron_and_no_modifier"
+  },
+  "show_notification": true
+}

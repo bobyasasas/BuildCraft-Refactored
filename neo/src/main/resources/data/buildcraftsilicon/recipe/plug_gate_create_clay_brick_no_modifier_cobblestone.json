@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcraftsilicon",
+  "key": {
+    "b": "#c:cobblestones",
+    "m": "#c:ingots/brick",
+    "r": "#c:dusts/redstone"
+  },
+  "pattern": [
+    " m ",
+    "mrm",
+    " b "
+  ],
+  "result": {
+    "id": "buildcraftsilicon:plug_gate"
+  },
+  "show_notification": true
+}

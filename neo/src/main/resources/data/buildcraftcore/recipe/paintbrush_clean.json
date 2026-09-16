@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcraftcore",
+  "key": {
+    "g": "#c:gears/wood",
+    "i": "#c:strings",
+    "s": "#c:rods/wooden",
+    "w": "#minecraft:wool"
+  },
+  "pattern": [
+    " iw",
+    " gi",
+    "s  "
+  ],
+  "result": {
+    "id": "buildcraftcore:paintbrush_clean"
+  },
+  "show_notification": true
+}

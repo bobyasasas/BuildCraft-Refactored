@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcraftfactory",
+  "key": {
+    "c": "minecraft:chest",
+    "d": "buildcrafttransport:pipe_items_diamond_colorless",
+    "p": "minecraft:piston",
+    "w": "#minecraft:planks"
+  },
+  "pattern": [
+    "wdw",
+    "wcw",
+    "wpw"
+  ],
+  "result": {
+    "id": "buildcraftrobotics:zone_planner"
+  },
+  "show_notification": true
+}

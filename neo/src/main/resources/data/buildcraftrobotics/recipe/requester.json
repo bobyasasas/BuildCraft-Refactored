@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcraftfactory",
+  "key": {
+    "C": "#c:chests/wooden",
+    "G": "#c:gears/iron",
+    "I": "#c:ingots/iron",
+    "P": "minecraft:piston",
+    "R": "#c:dusts/redstone"
+  },
+  "pattern": [
+    "IPI",
+    "GCG",
+    "IRI"
+  ],
+  "result": {
+    "id": "buildcraftrobotics:requester"
+  },
+  "show_notification": true
+}

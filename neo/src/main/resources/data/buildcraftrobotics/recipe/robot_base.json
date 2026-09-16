@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcraftfactory",
+  "key": {
+    "C": "buildcraftsilicon:chipset_diamond",
+    "P": "#c:ingots/iron",
+    "R": "buildcraftsilicon:redstone_crystal"
+  },
+  "pattern": [
+    "PPP",
+    "PRP",
+    "C C"
+  ],
+  "result": {
+    "id": "buildcraftrobotics:robot_base"
+  },
+  "show_notification": true
+}

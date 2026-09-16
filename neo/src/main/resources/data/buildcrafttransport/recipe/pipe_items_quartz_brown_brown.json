@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcrafttransport",
+  "key": {
+    "g": "#c:glass/brown",
+    "l": "#c:storage_blocks/quartz",
+    "r": "#c:storage_blocks/quartz"
+  },
+  "pattern": [
+    "lgr"
+  ],
+  "result": {
+    "id": "buildcrafttransport:pipe_items_quartz_brown",
+    "count": 8
+  },
+  "show_notification": true
+}

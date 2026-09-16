@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "buildcraftcore",
+  "ingredients": [
+    "#buildcraft:paintbrush",
+    "#c:dyes/magenta"
+  ],
+  "result": {
+    "id": "buildcraftcore:paintbrush_magenta"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcraftbuilders",
+  "key": {
+    "b": "#c:dyes/black",
+    "p": "minecraft:paper"
+  },
+  "pattern": [
+    "ppp",
+    "pbp",
+    "ppp"
+  ],
+  "result": {
+    "id": "buildcraftbuilders:snapshot_template"
+  },
+  "show_notification": true
+}

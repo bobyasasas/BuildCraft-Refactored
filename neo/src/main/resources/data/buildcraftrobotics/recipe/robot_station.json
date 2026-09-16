@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcraftfactory",
+  "key": {
+    "C": "buildcraftsilicon:chipset_gold",
+    "I": "#c:ingots/iron"
+  },
+  "pattern": [
+    " I ",
+    "ICI"
+  ],
+  "result": {
+    "id": "buildcraftrobotics:robot_station"
+  },
+  "show_notification": true
+}

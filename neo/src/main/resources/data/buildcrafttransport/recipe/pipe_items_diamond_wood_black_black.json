@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcrafttransport",
+  "key": {
+    "g": "#c:glass/black",
+    "l": "#minecraft:planks",
+    "r": "#c:gems/diamond"
+  },
+  "pattern": [
+    "lgr"
+  ],
+  "result": {
+    "id": "buildcrafttransport:pipe_items_diamond_wood_black",
+    "count": 8
+  },
+  "show_notification": true
+}

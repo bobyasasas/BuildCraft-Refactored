@@ -1,0 +1,11 @@
+{
+  "type": "buildcraftsilicon:assembly",
+  "output": {
+    "id": "buildcraftsilicon:plug_lens"
+  },
+  "requiredMicroJoules": 500000000,
+  "requiredStacks": [
+    "#c:glass/pink"
+  ],
+  "subType": "BASIC"
+}

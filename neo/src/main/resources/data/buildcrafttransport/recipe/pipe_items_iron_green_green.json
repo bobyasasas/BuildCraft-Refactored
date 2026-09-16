@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcrafttransport",
+  "key": {
+    "g": "#c:glass/green",
+    "l": "#c:ingots/iron",
+    "r": "#c:ingots/iron"
+  },
+  "pattern": [
+    "lgr"
+  ],
+  "result": {
+    "id": "buildcrafttransport:pipe_items_iron_green",
+    "count": 8
+  },
+  "show_notification": true
+}

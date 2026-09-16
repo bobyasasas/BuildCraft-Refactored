@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcraftenergy",
+  "key": {
+    "G": "#c:gears/iron",
+    "g": "#c:glass_blocks/colorless",
+    "p": "minecraft:piston",
+    "w": "#c:ingots/iron"
+  },
+  "pattern": [
+    "www",
+    " g ",
+    "GpG"
+  ],
+  "result": {
+    "id": "buildcraftcore:engine_iron"
+  },
+  "show_notification": true
+}

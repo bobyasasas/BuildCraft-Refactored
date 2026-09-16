@@ -1,0 +1,12 @@
+{
+  "type": "buildcraftsilicon:assembly",
+  "output": {
+    "id": "buildcraftsilicon:chipset_iron"
+  },
+  "requiredMicroJoules": 20000000000,
+  "requiredStacks": [
+    "#c:dusts/redstone",
+    "#c:ingots/iron"
+  ],
+  "subType": "BASIC"
+}

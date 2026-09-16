@@ -6,6 +6,7 @@
 package buildcraft.factory;
 
 import com.mojang.logging.LogUtils;
+import buildcraft.factory.recipe.BcFactoryRecipes;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
@@ -28,5 +29,8 @@ public class BuildCraftFactory {
         BcFactoryBlocks.BLOCKS.register(modEventBus);
         BcFactoryItems.ITEMS.register(modEventBus);
         BcFactoryBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+        // M2.10: heat exchange (heatable/coolable) + distillation recipe serializers.
+        BcFactoryRecipes.TYPES.register(modEventBus);
+        BcFactoryRecipes.SERIALIZERS.register(modEventBus);
     }
 }

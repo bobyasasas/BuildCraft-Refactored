@@ -1,0 +1,12 @@
+{
+  "type": "buildcraftsilicon:assembly",
+  "output": {
+    "id": "buildcraftsilicon:chipset_gold"
+  },
+  "requiredMicroJoules": 40000000000,
+  "requiredStacks": [
+    "#c:dusts/redstone",
+    "#c:ingots/gold"
+  ],
+  "subType": "BASIC"
+}

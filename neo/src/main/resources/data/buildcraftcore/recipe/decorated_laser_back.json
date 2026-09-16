@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "buildcraftcore",
+  "key": {
+    "c": "#c:storage_blocks/redstone",
+    "s": "#c:obsidians"
+  },
+  "pattern": [
+    "sss",
+    "scs",
+    "sss"
+  ],
+  "result": {
+    "id": "buildcraftcore:decorated_laser_back"
+  },
+  "show_notification": true
+}

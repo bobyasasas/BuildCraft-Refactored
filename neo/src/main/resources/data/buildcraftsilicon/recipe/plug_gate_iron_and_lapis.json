@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "buildcraftsilicon",
+  "ingredients": [
+    "buildcraftsilicon:plug_gate_iron_or_lapis"
+  ],
+  "result": {
+    "id": "buildcraftsilicon:plug_gate_iron_and_lapis"
+  }
+}
