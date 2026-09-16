@@ -28,7 +28,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 EXPECTED_MPL2_SHA256 = "1f256ecad192880510e84ad60474eab7589218784b9a50bc7ceee34c2b91f1d5"
 
 MODS_TOML = REPO_ROOT / "mod_info" / "META-INF" / "mods.toml"
-GRADLE_PROPERTIES = REPO_ROOT / "gradle.properties"
+# M2.9 删除 legacy 根构建后，license 元数据的权威位置是 neo/gradle.properties（mod_license=MPL-2.0）
+GRADLE_PROPERTIES = REPO_ROOT / "neo" / "gradle.properties"
 LICENSE_NEW = REPO_ROOT / "LICENSE-NEW"
 
 # MMPL 残留扫描的目录豁免（git 子模块、构建产物、数据生成产物、迁移历史记录）
