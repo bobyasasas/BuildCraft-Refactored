@@ -221,10 +221,10 @@
       "id": "M3.3",
       "phase": "Phase 3 功能验证金字塔",
       "title": "注册表对拍",
-      "status": "pending",
+      "status": "partial",
       "acceptance": "26.1.2 registry dump 与 migration/snapshots/registry-baseline.json diff=0（白名单外）",
-      "evidence": "",
-      "notes": ""
+      "evidence": "evidence：五类注册表白名单外 diff=0（26.1.2 运行时 dump vs 冻结基线，migration/scripts/registry_diff.py 输出原文：blocks baseline 75, current 78, missing 0, extra(白名单外) 0, extra(白名单放行) 3 -> OK；items 974/977/0/0/3 -> OK；block_entities 35/37/0/0/2 -> OK；entities 17/17/0/0/0 -> OK；fluids 60/60/0/0/0 -> OK；RESULT: PASS — 五类注册表白名单外 diff=0，exit=0）；recipes/tags 缺口（quantify-only 不算 fail）：recipes baseline 1561, current 0, missing 1561；tags.block missing 1、tags.fluid missing 1、tags.item missing 66、tags.biome 缺口 0（buildcraftenergy:oil_gen 两侧一致）；dump 机制：RegistryDumpProbe（neo/src/main/java/buildcraft/core/gametest/RegistryDumpProbe.java，ServerStartedEvent 钩子，系统属性 buildcraft.registrydump.path 门控默认关、build.gradle gameTestServer 由 -Pregistrydump.path 注入，M2.8 oilscan 同模式）在 headless runGameTestServer 内把五类注册表+recipes+tags（tags.biome/block/fluid/item）落盘成与基线同 schema 的排序 JSON（neo/build/registry-dump-26.1.2.json，metadata.generator=buildcraft.core.gametest.RegistryDumpProbe, minecraft_version=26.1.2）；就绪时机 sanity：server 总 recipes 1515（RecipeManager 已加载）、tags block/fluid/item/biome=378/18/475/162（标签已绑定）；触发命令 cd neo && ./gradlew runGameTestServer --no-daemon -Pregistrydump.path=<file>；diff 脚本白名单与 RegistryParityTest.EXTRA_WHITELIST 逐字一致（marker/engine_stone/pipe_kinesis_wood/energy_meter，path 匹配五类共用），--strict 开关把 recipes/tags 从 quantify-only 收紧为 fail（结构错误 exit 2 fail-closed，合成四态自测通过）；CI run 35060911074（commit 1e41cb38f）三 job neo-build/progress-check/baseline-build 全 success，neo-build 第 5 步 'Registry parity diff vs 1.20.1 baseline (M3.3)' success，dump 证据行+diff 全文打进 GITHUB_STEP_SUMMARY；验证链：cd neo && ./gradlew build EXIT=0、test 42/42 全绿、runGameTestServer 5/5（dump 门控开/关两态均 'All 5 required tests passed :)'）；grep -rn buildcraft.lib.client|buildcraft.core.client neo/src/main/java = 0；progress.py --check 通过（28 任务）",
+      "notes": "M3.3（2026-09-15）：五类对拍已闭合（白名单外 diff=0，CI run 35060911074 步骤 'Registry parity diff vs 1.20.1 baseline (M3.3)' 绿）；recipes/tags 缺口量化待内容移植任务处理——recipes missing 1561（26.1.2 运行时 0 条 buildcraft 配方）、tags.item missing 66 / tags.block missing 1 / tags.fluid missing 1（buildcraft: 命名空间 legacy 共享标签未迁）、tags.biome 缺口 0（buildcraftenergy:oil_gen 已随 M2.8 落地两侧一致）；recipes/tags 内容补齐后给 registry_diff.py 加 --strict 收紧为全量对拍。"
     },
     {
       "id": "M3.4",

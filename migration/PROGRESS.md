@@ -2,11 +2,11 @@
 
 > **本文件由 migration/scripts/progress.py 自动生成，禁止手改；更新任务请编辑 migration/tasks.json 或用 `--set` 命令。**
 >
-> 生成时间：2026-09-16 01:18:18 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-16）
+> 生成时间：2026-09-16 01:53:28 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-16）
 
 ## 总览
 
-**总任务数 28** ｜ pending(未完成)=8、in_progress(进行中)=0、partial(部分完成)=1、unverified(未验证)=0、done(已完成)=19 ｜ **完成率 70%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
+**总任务数 28** ｜ pending(未完成)=7、in_progress(进行中)=0、partial(部分完成)=2、unverified(未验证)=0、done(已完成)=19 ｜ **完成率 71%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
 
 ## 阶段汇总
 
@@ -15,7 +15,7 @@
 | Phase 0 基线固化 | 6 | 6 | 100% |
 | Phase 1 工程化整备 | 5 | 5 | 100% |
 | Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109 | 9 | 7 | 83% |
-| Phase 3 功能验证金字塔 | 8 | 1 | 12% |
+| Phase 3 功能验证金字塔 | 8 | 1 | 19% |
 
 ## 任务明细
 
@@ -43,7 +43,7 @@
 | M2.9 | 迁移清零 | pending（未完成） | grep -r "net.minecraftforge" 全部 .java 结果为 0，8 个 mod 在 26.1.2 全部加载 | — |
 | M3.1 | GameTest 基建 | done（已完成） | headless GameTest 可在 CI 中运行并输出 x/y passing 统计 | evidence：CI run 35058634433（commit ec1870760 'M3.1: run headless GameTests in CI with x/y passing stats'）三 job progress-check/baseline-build/neo-build 全 success；neo-build 新增第 4 步 GameTests (headless)（05:13:40Z→05:14:02Z，22s）conclusion=success，该步 gradle 日志原文 '========= 5 GAME TESTS COMPLETE IN 575.4 ms ======================' + 'All 5 required tests passed :)'，解析输出 'GameTests: 5/5 passing'（写入 $GITHUB_STEP_SUMMARY 并打印步骤日志）；解析器自测 4 态：成功态 5/5 exit0；失败态（按 26.1 反编译 GameTestServer 汇总格式合成：'1 required tests failed :(' + ERROR 'id failed at ...' + '   - id: error'）输出 0/5 且列出失败用例名 exit1；崩溃无汇总态 0/0 exit1；gradle rc 非零但日志含通过行 exit1（fail-closed）；本地预验证：cd neo && ./gradlew runGameTestServer --no-daemon EXIT=0，同日志格式 '5 GAME TESTS COMPLETE IN 553.1 ms' + 'All 5 required tests passed :)'；注意 gradle 退出码不能作失败信号——FML net.neoforged.fml.startup.GameTestServer（loader 11.0.15）仅启动异常 System.exit(1)，测试失败 JVM 正常返回（javap 核对），故以日志解析为权威<br>notes: M3.1（2026-09-15）：关键取舍——1) 失败信号以 GameTestServer 日志为权威，不用 gradle 退出码：FML net.neoforged.fml.startup.GameTestServer（loader 11.0.15，javap 核对）只有启动异常才 System.exit(1)，required 测试失败时 JVM 正常返回、gradle 仍 exit 0；2) 成功判定 = gradle rc==0 且日志含 'All N required tests passed'（N==总数），解析不到即 0/N 并非零退出（fail-closed，兜底从 'N GAME TESTS COMPLETE' 取总数）；3) 26.1 通过用例不逐条打日志（LogTestReporter.onTestSuccess 为空），逐测试名清单只在失败态可得（ERROR 'xxx failed at ...' 与汇总 '   - id: error' 行），故成功态 summary 只出 x/y 统计行 + 汇总原文；4) 超时：步骤级 timeout-minutes: 15（CI 实测 22s、本地约 1-2 min，冷缓存余量充足，job 级 60min 未动）；5) 缓存：沿用 neo-build 既有 setup-java cache: gradle（覆盖 ~/.gradle/caches 含 neoformruntime 解译产物），gametest 步骤零新增缓存配置、零新依赖；6) 解析器内联在 ci.yml neo-build 单一 新步骤内（对其它 job 与既有步骤零改动），不新增脚本文件。 |
 | M3.2 | 核心功能 GameTest | pending（未完成） | 管道传输/引擎功率/采石场/填充器/门逻辑/机器人各有至少 1 个用例且全部通过 | — |
-| M3.3 | 注册表对拍 | pending（未完成） | 26.1.2 registry dump 与 migration/snapshots/registry-baseline.json diff=0（白名单外） | — |
+| M3.3 | 注册表对拍 | partial（部分完成） | 26.1.2 registry dump 与 migration/snapshots/registry-baseline.json diff=0（白名单外） | evidence：五类注册表白名单外 diff=0（26.1.2 运行时 dump vs 冻结基线，migration/scripts/registry_diff.py 输出原文：blocks baseline 75, current 78, missing 0, extra(白名单外) 0, extra(白名单放行) 3 -> OK；items 974/977/0/0/3 -> OK；block_entities 35/37/0/0/2 -> OK；entities 17/17/0/0/0 -> OK；fluids 60/60/0/0/0 -> OK；RESULT: PASS — 五类注册表白名单外 diff=0，exit=0）；recipes/tags 缺口（quantify-only 不算 fail）：recipes baseline 1561, current 0, missing 1561；tags.block missing 1、tags.fluid missing 1、tags.item missing 66、tags.biome 缺口 0（buildcraftenergy:oil_gen 两侧一致）；dump 机制：RegistryDumpProbe（neo/src/main/java/buildcraft/core/gametest/RegistryDumpProbe.java，ServerStartedEvent 钩子，系统属性 buildcraft.registrydump.path 门控默认关、build.gradle gameTestServer 由 -Pregistrydump.path 注入，M2.8 oilscan 同模式）在 headless runGameTestServer 内把五类注册表+recipes+tags（tags.biome/block/fluid/item）落盘成与基线同 schema 的排序 JSON（neo/build/registry-dump-26.1.2.json，metadata.generator=buildcraft.core.gametest.RegistryDumpProbe, minecraft_version=26.1.2）；就绪时机 sanity：server 总 recipes 1515（RecipeManager 已加载）、tags block/fluid/item/biome=378/18/475/162（标签已绑定）；触发命令 cd neo && ./gradlew runGameTestServer --no-daemon -Pregistrydump.path=<file>；diff 脚本白名单与 RegistryParityTest.EXTRA_WHITELIST 逐字一致（marker/engine_stone/pipe_kinesis_wood/energy_meter，path 匹配五类共用），--strict 开关把 recipes/tags 从 quantify-only 收紧为 fail（结构错误 exit 2 fail-closed，合成四态自测通过）；CI run 35060911074（commit 1e41cb38f）三 job neo-build/progress-check/baseline-build 全 success，neo-build 第 5 步 'Registry parity diff vs 1.20.1 baseline (M3.3)' success，dump 证据行+diff 全文打进 GITHUB_STEP_SUMMARY；验证链：cd neo && ./gradlew build EXIT=0、test 42/42 全绿、runGameTestServer 5/5（dump 门控开/关两态均 'All 5 required tests passed :)'）；grep -rn buildcraft.lib.client\|buildcraft.core.client neo/src/main/java = 0；progress.py --check 通过（28 任务） |
 | M3.4 | datagen 对拍 | pending（未完成） | 26.1.2 datagen 产物与基线 diff=0（白名单外） | — |
 | M3.5 | 语言键对拍 | pending（未完成） | BuildCraft-Localization 语言键集合与基线 diff=0 | — |
 | M3.6 | 覆盖率门禁 | pending（未完成） | JaCoCo 对核心包设行覆盖率阈值并在 CI 强制失败 | — |
@@ -52,12 +52,12 @@
 
 ## 代码实时指标
 
-采集时间：2026-09-16 01:18:18；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
+采集时间：2026-09-16 01:53:28；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
 
 | 指标 | 当前值 | 调研基线(2026-09) | 目标 |
 |---|---:|---:|---|
-| .java 文件总数 | 1,906 | 1772（main 1510 + API 子模块 262） | 无目标(参考) |
-| .java 总行数 | 194,979 | — | 无目标(参考) |
+| .java 文件总数 | 1,907 | 1772（main 1510 + API 子模块 262） | 无目标(参考) |
+| .java 总行数 | 195,204 | — | 无目标(参考) |
 | Forge import 文件数 | 549 | 549 | 0 |
 | Forge import 出现次数 | 1,408 | — | 0 |
 | TODO 出现次数 | 194 | 222 | 随 M1.4 下降 |
