@@ -101,6 +101,9 @@ neoForge {
             server()
             programArgument '--nogui'
             sourceSet = sourceSets.main
+            // M2.8 oil worldgen verification probe (OilWorldgenProbe): default scan radius for dedicated server
+            // runs; override with -Poilscan.radius=<n> (0 disables the probe).
+            systemProperty 'buildcraft.oilscan.radius', (project.findProperty('oilscan.radius') ?: '32')
         }
 
         // M2.2a: headless NeoForge gametest server (run type from the NeoForge moddev-config:
@@ -111,6 +114,9 @@ neoForge {
             programArgument '--tests'
             programArgument 'buildcraftcore:*'
             sourceSet = sourceSets.main
+            // M2.8: keep the worldgen probe off here (the gametest world must not spend its short lifetime
+            // force-loading a scan area).
+            systemProperty 'buildcraft.oilscan.radius', '0'
         }
 
         // applies to all the run configs above
