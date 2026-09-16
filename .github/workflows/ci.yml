@@ -75,3 +75,56 @@ jobs:
 
       - name: Build
         run: cd neo && ./gradlew build --stacktrace --no-daemon
+
+      # M3.1: headless GameTests（gameTestServer run，选择器 buildcraftcore:*）。
+      # 注意成败判定不能依赖 gradle 退出码：FML 的 net.neoforged.fml.startup.GameTestServer
+      # 入口只有启动异常才 System.exit(1)，测试失败时 JVM 正常返回（已核对 loader 11.0.15 字节码）。
+      # 因此以 GameTestServer 日志为权威信号（26.1 实际格式）：
+      #   总数 = "Each test that matches ... will be run N times (total: M)"（兜底 "M GAME TESTS COMPLETE"）
+      #   通过 = "All M required tests passed :)"（26.1 中通过用例不逐条打日志，失败用例才有 ERROR 行）
+      #   解析不到通过行（含中途崩溃/环境故障）一律按 0/N 处理并以非零码退出，步骤变红。
+      - name: GameTests (headless)
+        timeout-minutes: 15
+        run: |
+          cd neo
+          set -o pipefail
+          rc=0
+          ./gradlew runGameTestServer --no-daemon 2>&1 | tee /tmp/gametest.log || rc=$?
+          GT_GRADLE_RC="$rc" python3 - <<'PYEOF'
+          import os, re, sys
+
+          with open('/tmp/gametest.log', encoding='utf-8', errors='replace') as f:
+              log = f.read()
+
+          m_total = re.search(r'will be run \d+ times \(total: (\d+)\)', log)
+          m_complete = re.search(r'=+ (\d+) GAME TESTS COMPLETE IN ', log)
+          m_pass = re.search(r'All (\d+) required tests passed', log)
+
+          total = int(m_total.group(1)) if m_total else (int(m_complete.group(1)) if m_complete else 0)
+          passing = int(m_pass.group(1)) if m_pass else 0
+          gradle_rc = int(os.environ.get('GT_GRADLE_RC', '1'))
+
+          # 成功需同时满足：gradle 退出码 0 且日志出现 "All N required tests passed"（N == 总数）
+          ok = gradle_rc == 0 and m_pass is not None and total > 0 and passing == total
+
+          # 统计行 + 日志原文证据（汇总行；失败用例的 "xxx failed at ..." ERROR 行与 "- id: error" 清单行）
+          out = ['GameTests: %d/%d passing' % (passing, total)]
+          for raw in log.splitlines():
+              text = raw.split(']: ', 1)[-1].rstrip()
+              keep = ('GAME TESTS COMPLETE IN' in text
+                      or 'required tests' in text
+                      or 'optional tests failed' in text
+                      or re.search(r'\S+ failed at ', text)
+                      or re.match(r'\s*- \S+: ', text))
+              if keep and text and text not in out:
+                  out.append('> ' + text)
+          out.append('')
+
+          summary_path = os.environ.get('GITHUB_STEP_SUMMARY')
+          if summary_path:
+              with open(summary_path, 'a', encoding='utf-8') as f:
+                  f.write('\n'.join(out) + '\n')
+          print('\n'.join(out))
+          sys.exit(0 if ok else 1)
+          PYEOF
+          exit $?
