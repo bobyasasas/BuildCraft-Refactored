@@ -5,6 +5,7 @@
 
 package buildcraft.core;
 
+import buildcraft.datagen.BcDatagen;
 import buildcraft.core.gametest.BcGameTests;
 import buildcraft.core.gametest.RegistryDumpProbe;
 import com.mojang.logging.LogUtils;
@@ -39,6 +40,9 @@ public class BuildCraftCore {
         BcItems.ITEMS.register(modEventBus);
         BcBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         BcCreativeTabs.TABS.register(modEventBus);
+
+        // M3.4: datagen providers for this mod's namespace (item models, blockstates, frozen lang).
+        BcDatagen.register(modEventBus);
 
         modEventBus.addListener(BcGameTests::onRegisterGameTests);
         modEventBus.addListener(BuildCraftCore::onCommonSetup);

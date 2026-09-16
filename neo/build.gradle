@@ -124,6 +124,21 @@ neoForge {
             systemProperty 'buildcraft.registrydump.path', (project.findProperty('registrydump.path') ?: '')
         }
 
+        // M3.4: data generation (runData). The 26.1.2.109 userdev config has no plain "data" run type; the
+        // headless generator is "serverData" (main net.neoforged.fml.startup.DataServer -> vanilla
+        // net.minecraft.data.Main). Output goes to a standalone directory (build/datagen) so the result can be
+        // diffed against src/main/resources WITHOUT ever touching it (M3.4 no-drift gate); --flat keeps every
+        // mod namespace under one tree. The data run never reads or writes the shipped resources.
+        data {
+            type = 'serverData'
+            sourceSet = sourceSets.main
+            programArgument '--flat'
+            programArgument '--mod'
+            programArgument 'buildcraftlib,buildcraftcore,buildcraftbuilders,buildcraftenergy,buildcraftfactory,buildcraftsilicon,buildcrafttransport,buildcraftrobotics'
+            programArgument '--output'
+            programArgument 'datagen'
+        }
+
         // applies to all the run configs above
         configureEach {
             // Recommended logging data for a userdev environment

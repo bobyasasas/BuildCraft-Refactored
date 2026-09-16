@@ -441,3 +441,45 @@ jobs:
             fi
           fi
           exit 0
+
+      # M3.4: datagen 对拍——真 datagen（runData，GatherDataEvent.Server/Client + 8 mod provider）再生
+      # 随包 assets 到独立目录 run/datagen（绝不写 src/main/resources），再由
+      # migration/scripts/datagen_diff.py --strict 三方对拍：
+      #   S1 无漂移: runData 产物 vs src/main/resources/assets 逐字节 diff=0（白名单 1 项手工模型）；
+      #   S2/S3: 物品/blockstate id 与冻结 1.20.1 基线 buildcraft_resources_generated 对拍，
+      #     白名单外 diff=0（1.20.1<->26.1.2 格式归一化规则显式登记在脚本头注，白名单逐项枚举 40 项）。
+      # fail-closed：gradle 失败、datagen 启动证据行缺失、产物目录为空、diff 退出码非零，任一即红。
+      - name: Datagen regeneration + no-drift baseline diff (M3.4)
+        timeout-minutes: 15
+        run: |
+          cd neo
+          set -o pipefail
+          rm -rf run/datagen
+          ./gradlew runData --no-daemon 2>&1 | tee /tmp/datagen.log
+          data_rc=${PIPESTATUS[0]}
+          if [ "$data_rc" -ne 0 ]; then
+            echo "runData failed rc=$data_rc" >&2
+            exit 1
+          fi
+          grep -q "Initializing Data Gatherer" /tmp/datagen.log || {
+            echo "datagen evidence line missing (Data Gatherer did not start)" >&2
+            exit 1
+          }
+          if [ ! -d run/datagen/assets ] || [ -z "$(ls -A run/datagen/assets)" ]; then
+            echo "runData produced no assets under run/datagen/assets" >&2
+            exit 1
+          fi
+          cd ..
+          python3 migration/scripts/datagen_diff.py \
+            neo/run/datagen/assets neo/src/main/resources/assets buildcraft_resources_generated/assets --strict \
+            | tee /tmp/datagendiff.txt
+          diff_rc=${PIPESTATUS[0]}
+          if [ -n "$GITHUB_STEP_SUMMARY" ]; then
+            {
+              echo "### M3.4 datagen parity (runData regeneration vs shipped assets vs 1.20.1 baseline, --strict)"
+              echo '```'
+              cat /tmp/datagendiff.txt
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit $diff_rc

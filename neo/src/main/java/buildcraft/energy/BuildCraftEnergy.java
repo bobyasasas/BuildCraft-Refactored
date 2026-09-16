@@ -6,6 +6,7 @@
 package buildcraft.energy;
 
 import com.mojang.logging.LogUtils;
+import buildcraft.datagen.BcDatagen;
 import buildcraft.energy.generation.OilWorldgenProbe;
 import buildcraft.energy.generation.structure.OilStructureRegistry;
 import buildcraft.energy.recipe.BcEnergyRecipes;
@@ -42,6 +43,8 @@ public class BuildCraftEnergy {
         BcEnergyBlocks.BLOCKS.register(modEventBus);
         BcEnergyItems.ITEMS.register(modEventBus);
         BcEnergyBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+        // M3.4: datagen providers for this mod's namespace (item models, blockstates, lang placeholder).
+        BcDatagen.register(modEventBus);
         // M2.10: combustion fuel + coolant recipe serializers.
         BcEnergyRecipes.TYPES.register(modEventBus);
         BcEnergyRecipes.SERIALIZERS.register(modEventBus);

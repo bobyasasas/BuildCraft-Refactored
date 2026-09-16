@@ -6,6 +6,7 @@
 package buildcraft.silicon;
 
 import com.mojang.logging.LogUtils;
+import buildcraft.datagen.BcDatagen;
 import buildcraft.silicon.recipe.BcSiliconRecipes;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -29,6 +30,8 @@ public class BuildCraftSilicon {
         BcSiliconBlocks.BLOCKS.register(modEventBus);
         BcSiliconItems.ITEMS.register(modEventBus);
         BcSiliconBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+        // M3.4: datagen providers for this mod's namespace (item models, blockstates, lang placeholder).
+        BcDatagen.register(modEventBus);
         // M2.10: assembly/programming/integration/facade-swap machine recipe serializers (the programming JSONs also
         // live in the buildcraftrobotics namespace, exactly like 1.20.1).
         BcSiliconRecipes.TYPES.register(modEventBus);

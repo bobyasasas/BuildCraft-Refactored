@@ -5,6 +5,7 @@
 
 package buildcraft.builders;
 
+import buildcraft.datagen.BcDatagen;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -27,5 +28,7 @@ public class BuildCraftBuilders {
         BcBuildersBlocks.BLOCKS.register(modEventBus);
         BcBuildersItems.ITEMS.register(modEventBus);
         BcBuildersBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+        // M3.4: datagen providers for this mod's namespace (item models, blockstates, lang placeholder).
+        BcDatagen.register(modEventBus);
     }
 }

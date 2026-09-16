@@ -6,6 +6,7 @@
 package buildcraft.lib;
 
 import buildcraft.lib.datacomponent.BcDataComponents;
+import buildcraft.datagen.BcDatagen;
 import buildcraft.lib.net.MessageManager;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
@@ -34,5 +35,8 @@ public class BCLib {
         // M2.5: the whole BuildCraft message set registers under this mod's network namespace (legacy registered the
         // same set through the lib-owned MessageManager).
         modEventBus.addListener(MessageManager::onRegisterPayloadHandlers);
+
+        // M3.4: datagen providers for this mod's namespace (items only — lib has no blocks).
+        BcDatagen.register(modEventBus);
     }
 }

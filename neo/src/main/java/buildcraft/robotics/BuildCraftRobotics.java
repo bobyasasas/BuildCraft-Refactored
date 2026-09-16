@@ -11,6 +11,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
 
+import buildcraft.datagen.BcDatagen;
 import buildcraft.lib.datacomponent.BcDataComponents;
 
 /**
@@ -42,6 +43,8 @@ public class BuildCraftRobotics {
         BcRoboticsBlocks.BLOCKS.register(modEventBus);
         BcRoboticsItems.ITEMS.register(modEventBus);
         BcRoboticsBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+        // M3.4: datagen providers for this mod's namespace (item models, blockstates, lang placeholder).
+        BcDatagen.register(modEventBus);
         BcRoboticsEntities.ENTITIES.register(modEventBus);
 
         // M2.6: robot params NBT schema as a data component (buildcraftrobotics:robot_params).
