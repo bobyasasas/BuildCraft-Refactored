@@ -128,3 +128,39 @@ jobs:
           sys.exit(0 if ok else 1)
           PYEOF
           exit $?
+
+      # M3.3: registry dump + 与冻结 1.20.1 基线对拍。流程：带 -Pregistrydump.path 重跑 runGameTestServer
+      # （RegistryDumpProbe 在 ServerStartedEvent 把 26.1.2 运行时注册表落盘成与基线同 schema 的 JSON：
+      #   五类注册表 + recipes + tags），再跑 migration/scripts/registry_diff.py 判定：
+      #   - 五类注册表：missing=0 且 extra=0（按 RegistryParityTest.EXTRA_WHITELIST 的 4 个 M2.2 垂直切片
+      #     id 扣除后）才绿，与 buildcraftcore:registry_parity gametest 语义逐字一致；
+      #   - recipes/tags：quantify-only——缺口不算红，但精确计数随完整 diff 输出打进 $GITHUB_STEP_SUMMARY
+      #     （内容移植任务收口时给 diff 加 --strict 收紧为全量判定）。
+      # fail-closed：gradle 失败、dump 证据行缺失、diff 退出码非零，任一都让本步骤变红。
+      - name: Registry parity diff vs 1.20.1 baseline (M3.3)
+        timeout-minutes: 15
+        run: |
+          cd neo
+          set -o pipefail
+          ./gradlew runGameTestServer --no-daemon -Pregistrydump.path="$PWD/build/registry-dump-26.1.2.json" 2>&1 | tee /tmp/registrydump.log
+          dump_rc=$?
+          if [ "$dump_rc" -ne 0 ]; then
+            echo "runGameTestServer (registry dump) failed rc=$dump_rc" >&2
+            exit 1
+          fi
+          grep -q "Registry dump written:" /tmp/registrydump.log || {
+            echo "registry dump evidence line missing (probe did not write the dump)" >&2
+            exit 1
+          }
+          cd ..
+          python3 migration/scripts/registry_diff.py neo/build/registry-dump-26.1.2.json migration/snapshots/registry-baseline.json | tee /tmp/registrydiff.txt
+          diff_rc=${PIPESTATUS[0]}
+          if [ -n "$GITHUB_STEP_SUMMARY" ]; then
+            {
+              echo "### M3.3 registry parity (26.1.2 runtime vs frozen 1.20.1 baseline)"
+              echo '```'
+              cat /tmp/registrydiff.txt
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit $diff_rc

@@ -117,6 +117,10 @@ neoForge {
             // M2.8: keep the worldgen probe off here (the gametest world must not spend its short lifetime
             // force-loading a scan area).
             systemProperty 'buildcraft.oilscan.radius', '0'
+            // M3.3: runtime registry dump probe (RegistryDumpProbe): writes the 26.1.2 registry dump to the given
+            // file when -Pregistrydump.path=<file> is passed; default (empty) keeps the probe off so plain runs
+            // and the M3.1 GameTests CI step are unaffected.
+            systemProperty 'buildcraft.registrydump.path', (project.findProperty('registrydump.path') ?: '')
         }
 
         // applies to all the run configs above

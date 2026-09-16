@@ -6,6 +6,7 @@
 package buildcraft.core;
 
 import buildcraft.core.gametest.BcGameTests;
+import buildcraft.core.gametest.RegistryDumpProbe;
 import com.mojang.logging.LogUtils;
 import buildcraft.lib.expression.DefaultContexts;
 import buildcraft.lib.expression.GenericExpressionCompiler;
@@ -14,6 +15,7 @@ import buildcraft.lib.expression.api.IExpressionNode.INodeLong;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 
 /**
@@ -40,6 +42,10 @@ public class BuildCraftCore {
 
         modEventBus.addListener(BcGameTests::onRegisterGameTests);
         modEventBus.addListener(BuildCraftCore::onCommonSetup);
+
+        // M3.3: gated runtime registry dump (see RegistryDumpProbe) — writes the 26.1.2 registry dump only when
+        // buildcraft.registrydump.path is set to a non-empty path; off (empty) in every normal run.
+        NeoForge.EVENT_BUS.addListener(RegistryDumpProbe::onServerStarted);
     }
 
     /**
