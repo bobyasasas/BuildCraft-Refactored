@@ -25,44 +25,14 @@ jobs:
       - name: Run progress check
         run: python3 migration/scripts/progress.py --check
 
-  # M0.2 完成前本 job 允许失败属预期（让基线构建变绿就是任务 M0.2），M0.2 完成后必须绿
-  baseline-build:
-    runs-on: ubuntu-latest
-    timeout-minutes: 90
-    steps:
-      # 本项目 BuildCraftAPI 等三个子模块是编译必需
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-          cache: gradle
-
-      - name: Build
-        run: ./gradlew build --stacktrace --no-daemon
-
-      # M1.3: 覆盖率基线——build 已含 test，这里只产出 JaCoCo 报告（基线阶段不上门禁，M3.6 才设阈值）
-      - name: Coverage report
-        run: ./gradlew jacocoTestReport --no-daemon
-
-      - name: Upload coverage artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: jacoco-report
-          path: build/reports/jacoco/
-          retention-days: 14
-
   # M2.1: 并行的 NeoForge 26.1.2 独立构建（neo/，ModDevGradle），不依赖子模块
   neo-build:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     # M3.8: 仅本 job 提升 token 权限用于趋势记录回写仓库（push migration/trends/），
-    # progress-check / baseline-build 两 job 不受影响，仍按顶层 permissions 保持 contents: read。
+    # progress-check job 不受影响，仍按顶层 permissions 保持 contents: read。
+    # M2.9: baseline-build job 随 legacy 树删除而退役——其守护对象（冻结 1.20.1 基线构建）由
+    # 基线分支 8.0.x-1.20.1 永久承载，本分支不再构建 legacy 代码。
     permissions:
       contents: write
     steps:
