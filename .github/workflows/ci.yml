@@ -185,3 +185,86 @@ jobs:
             } >> "$GITHUB_STEP_SUMMARY"
           fi
           exit $diff_rc
+
+      # M3.6: JaCoCo 核心包行覆盖率门禁。neo 侧单测（payload codec / datacomponent / net 消息）
+      # 挂 0.8.13 agent（官方 Java 23/24 + 实验性 Java 25 class 文件支持）产报告，再由
+      # jacocoCoreCoverageVerification（build.gradle 里的等价校验 task，已挂 check）按 family 聚合
+      # 判定行覆盖率下限：buildcraft.core.* >= 2%（基线 3.37% 向下取整留 1.37pp 缓冲）、
+      # buildcraft.lib.* >= 73%（基线 74.61% 向下取整留 1.61pp 缓冲）。低于阈值 gradle 非零退出，
+      # 本步骤随之变红（门禁有效性已在 M3.6 验证：人为抬高阈值 50pp 必失败）。
+      # fail-closed：gradle 失败、XML 报告缺失、LINE counter 解析不出，任一都非零退出。
+      - name: Core package line coverage gate (M3.6)
+        timeout-minutes: 15
+        run: |
+          cd neo
+          set -o pipefail
+          ./gradlew test jacocoTestReport jacocoCoreCoverageVerification --no-daemon 2>&1 | tee /tmp/coverage.log
+          gradle_rc=${PIPESTATUS[0]}
+          if [ "$gradle_rc" -ne 0 ]; then
+            echo "M3.6 coverage gate failed in gradle, rc=$gradle_rc" >&2
+            exit 1
+          fi
+          python3 - <<'PYEOF'
+          import xml.etree.ElementTree as ET
+          import os, sys
+
+          xml_path = 'build/reports/jacoco/test/jacocoTestReport.xml'
+          floors = {'buildcraft.core': 2.0, 'buildcraft.lib': 73.0}  # 与 build.gradle 的门禁下限一致
+
+          try:
+              root = ET.parse(xml_path).getroot()
+          except OSError as e:
+              print(f'M3.6 coverage summary: cannot read jacoco XML: {e}', file=sys.stderr)
+              sys.exit(1)
+
+          def line_counter(el):
+              for c in el.findall('counter'):
+                  if c.get('type') == 'LINE':
+                      return int(c.get('missed')), int(c.get('covered'))
+              return None
+
+          overall = line_counter(root)
+          if overall is None:
+              print('M3.6 coverage summary: report-level LINE counter missing', file=sys.stderr)
+              sys.exit(1)
+
+          fams = {k: [0, 0] for k in floors}
+          for pkg in root.findall('package'):
+              name = pkg.get('name') or ''
+              lc = line_counter(pkg)
+              if lc is None:
+                  continue
+              for f in fams:
+                  slash = f.replace('.', '/')
+                  if name == slash or name.startswith(slash + '/'):
+                      fams[f][0] += lc[0]
+                      fams[f][1] += lc[1]
+                      break
+
+          rows = []
+          ok = True
+          for f, (missed, covered) in fams.items():
+              total = missed + covered
+              pct = covered * 100.0 / total if total else 0.0
+              gate = pct >= floors[f] - 1e-9
+              ok = ok and gate
+              rows.append('%-18s lines %5d/%-5d line coverage %5.2f%% (floor %4.1f%%) %s'
+                          % (f, covered, total, pct, floors[f], 'OK' if gate else 'BELOW FLOOR'))
+          om, oc = overall
+          ot = om + oc
+          rows.append('%-18s lines %5d/%-5d line coverage %5.2f%% (informational)'
+                      % ('overall', oc, ot, oc * 100.0 / ot if ot else 0.0))
+          rows.append('')
+          rows.append('reports: neo/build/reports/jacoco/test/jacocoTestReport.xml (+ html/index.html)')
+
+          out = ['### M3.6 core package line coverage (floors: core>=2%, lib>=73%)', '```'] + rows + ['```']
+          summary_path = os.environ.get('GITHUB_STEP_SUMMARY')
+          if summary_path:
+              with open(summary_path, 'a', encoding='utf-8') as f:
+                  f.write('\n'.join(out) + '\n')
+          print('\n'.join(out))
+          if not ok:
+              print('M3.6 coverage summary: family below floor despite green gradle gate', file=sys.stderr)
+              sys.exit(1)
+          PYEOF
+          exit $?

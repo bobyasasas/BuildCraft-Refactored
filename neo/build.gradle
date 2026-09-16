@@ -4,6 +4,7 @@
 
 plugins {
     id 'java-library'
+    id 'jacoco'
     id 'net.neoforged.moddev' version '2.0.147'
 }
 
@@ -202,4 +203,127 @@ tasks.withType(JavaCompile).configureEach {
 // (they read the output folders), but production installs would lose it.
 tasks.jar {
     from sourceSets.client.output
+}
+
+// M3.6: JaCoCo line coverage gate for the core packages (buildcraft.core.* and
+// buildcraft.lib.*). The stock JavaPlugin `test` task is the unit-test task here
+// (MDG's unitTest.enable() only puts the minecraft/neoforge jars on the test
+// classpath, see the M2.5 comment above), so the jacoco plugin's automatic agent
+// wiring onto `test` is exactly right — no extra attach needed. Reports go to
+// build/reports/jacoco/ as XML (consumed by the gate + CI step) and HTML.
+jacoco {
+    // Gradle 9.1's bundled default, pinned for visibility. Per the upstream
+    // changelog (0.8.13, 2025/04/02) this release "officially supports Java 23
+    // and Java 24" and adds "Experimental support for Java 25 class files" —
+    // required here because the toolchain compiles to Java 25 (major 69). It is
+    // also the newest org.jacoco release on Maven Central, so there was nothing
+    // to upgrade to.
+    toolVersion = '0.8.13'
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true   // consumed by the gate below + the CI M3.6 step
+        html.required = true  // human-readable, build/reports/jacoco/test/html
+    }
+}
+
+// M3.6 thresholds. The gate is defined on the two core package FAMILIES as an
+// aggregate (per the M3.6 mandate "core packages = buildcraft.core.* +
+// buildcraft.lib.*"). JaCoCo's stock jacocoTestCoverageVerification cannot
+// express that: its PACKAGE-element rules apply the minimum to EVERY matching
+// package individually, and several packages inside both families are at 0% by
+// design (unit tests never load them — they cover the payload codec /
+// datacomponent / net-message slice). So the equivalent mechanism here is a
+// custom verifier over the jacocoTestReport XML that sums missed/covered lines
+// per family. Floors are the measured M3.6 baseline (see git history of this
+// file / tasks.json M3.6 evidence) rounded DOWN with a 1-2 percentage point
+// buffer against jitter:
+//   buildcraft.core.* : 3.37%  (20/594 lines)  -> floor 2%
+//   buildcraft.lib.*  : 74.61% (620/831 lines) -> floor 73%
+// Not symbolic: dipping below a floor means covered core lines were lost or
+// large untested code landed in a family, and `check` (CI Build step) and the
+// dedicated CI M3.6 step both go red.
+def corePackageFamilyFloors = [
+        // family prefix (dot form) : minimum aggregate LINE covered ratio
+        'buildcraft.core': 0.02,
+        'buildcraft.lib' : 0.73,
+]
+
+tasks.register('jacocoCoreCoverageVerification') {
+    group = 'verification'
+    description = 'M3.6: fails when a core package family (buildcraft.core.*/buildcraft.lib.*) ' +
+            'drops below its aggregate line coverage floor.'
+    dependsOn tasks.jacocoTestReport
+    doLast {
+        def xmlFile = layout.buildDirectory.file('reports/jacoco/test/jacocoTestReport.xml').get().asFile
+        if (!xmlFile.isFile()) {
+            throw new GradleException('M3.6 gate: jacoco XML report missing at ' + xmlFile)
+        }
+        // JAXP DOM instead of Groovy XmlParser: the jacoco XML carries a DOCTYPE
+        // declaration which the script classloader's hardened parser rejects.
+        // External entity resolution stays off — only the internal DTD is ignored.
+        def factory = javax.xml.parsers.DocumentBuilderFactory.newInstance()
+        factory.setFeature('http://xml.org/sax/features/external-general-entities', false)
+        factory.setFeature('http://xml.org/sax/features/external-parameter-entities', false)
+        factory.setFeature('http://apache.org/xml/features/nonvalidating/load-external-dtd', false)
+        def doc = factory.newDocumentBuilder().parse(xmlFile).documentElement
+
+        def collectCounters = { org.w3c.dom.Node parent ->
+            def out = [:]
+            def nl = parent.getElementsByTagName('counter')
+            for (int i = 0; i < nl.getLength(); i++) {
+                def n = nl.item(i)
+                out[n.getAttribute('type')] = [missed: n.getAttribute('missed') as long,
+                                               covered: n.getAttribute('covered') as long]
+            }
+            out
+        }
+
+        def overall = [missed: 0L, covered: 0L]
+        def families = corePackageFamilyFloors.collectEntries { key, _ -> [key, [missed: 0L, covered: 0L]] }
+        def pkgList = doc.getElementsByTagName('package')
+        for (int i = 0; i < pkgList.getLength(); i++) {
+            def pkg = pkgList.item(i)
+            def name = pkg.getAttribute('name')
+            def lineCounter = collectCounters(pkg)['LINE']
+            if (lineCounter == null) continue
+            overall.missed += lineCounter.missed
+            overall.covered += lineCounter.covered
+            def family = corePackageFamilyFloors.keySet().find {
+                def slashForm = it.replace('.', '/')
+                name == slashForm || name.startsWith(slashForm + '/')
+            }
+            if (family != null) {
+                families[family].missed += lineCounter.missed
+                families[family].covered += lineCounter.covered
+            }
+        }
+        def summary = []
+        def failed = false
+        families.each { family, cnt ->
+            long total = cnt.missed + cnt.covered
+            double pct = total == 0L ? 0.0d : (cnt.covered * 100.0d / total)
+            double floorPct = corePackageFamilyFloors[family] * 100.0d
+            def ok = pct >= floorPct - 1e-9
+            failed |= !ok
+            summary << String.format('  %-18s lines %5d/%-5d line coverage %5.2f%% (floor %4.1f%%) %s',
+                    family, cnt.covered, total, pct, floorPct, ok ? 'OK' : 'BELOW FLOOR')
+        }
+        long totalAll = overall.missed + overall.covered
+        double pctAll = totalAll == 0L ? 0.0d : (overall.covered * 100.0d / totalAll)
+        summary << String.format('  %-18s lines %5d/%-5d line coverage %5.2f%% (informational)',
+                'overall', overall.covered, totalAll, pctAll)
+        logger.lifecycle('M3.6 core package line coverage gate:')
+        summary.each { logger.lifecycle(it) }
+        if (failed) {
+            throw new GradleException('M3.6 core package coverage gate FAILED:\n' + summary.join('\n'))
+        }
+    }
+}
+
+// Keep the gate live for every `check`/`build` invocation (CI Build step and
+// local builds), not only for the dedicated CI M3.6 step.
+tasks.named('check') {
+    dependsOn tasks.jacocoCoreCoverageVerification
 }
