@@ -2,7 +2,7 @@
 
 > **本文件由 migration/scripts/progress.py 自动生成，禁止手改；更新任务请编辑 migration/tasks.json 或用 `--set` 命令。**
 >
-> 生成时间：2026-09-16 07:20:42 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-16）
+> 生成时间：2026-09-16 07:32:56 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-16）
 
 ## 总览
 
@@ -56,7 +56,7 @@
 
 ## 代码实时指标
 
-采集时间：2026-09-16 07:20:42；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
+采集时间：2026-09-16 07:32:56；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
 
 | 指标 | 当前值 | 调研基线(2026-09) | 目标 |
 |---|---:|---:|---|
