@@ -2,11 +2,11 @@
 
 > **本文件由 migration/scripts/progress.py 自动生成，禁止手改；更新任务请编辑 migration/tasks.json 或用 `--set` 命令。**
 >
-> 生成时间：2026-09-16 02:19:18 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-16）
+> 生成时间：2026-09-16 02:45:44 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-16）
 
 ## 总览
 
-**总任务数 28** ｜ pending(未完成)=6、in_progress(进行中)=0、partial(部分完成)=2、unverified(未验证)=0、done(已完成)=20 ｜ **完成率 75%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
+**总任务数 28** ｜ pending(未完成)=5、in_progress(进行中)=0、partial(部分完成)=2、unverified(未验证)=0、done(已完成)=21 ｜ **完成率 79%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
 
 ## 阶段汇总
 
@@ -15,7 +15,7 @@
 | Phase 0 基线固化 | 6 | 6 | 100% |
 | Phase 1 工程化整备 | 5 | 5 | 100% |
 | Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109 | 9 | 7 | 83% |
-| Phase 3 功能验证金字塔 | 8 | 2 | 31% |
+| Phase 3 功能验证金字塔 | 8 | 3 | 44% |
 
 ## 任务明细
 
@@ -46,13 +46,13 @@
 | M3.3 | 注册表对拍 | partial（部分完成） | 26.1.2 registry dump 与 migration/snapshots/registry-baseline.json diff=0（白名单外） | evidence：五类注册表白名单外 diff=0（26.1.2 运行时 dump vs 冻结基线，migration/scripts/registry_diff.py 输出原文：blocks baseline 75, current 78, missing 0, extra(白名单外) 0, extra(白名单放行) 3 -> OK；items 974/977/0/0/3 -> OK；block_entities 35/37/0/0/2 -> OK；entities 17/17/0/0/0 -> OK；fluids 60/60/0/0/0 -> OK；RESULT: PASS — 五类注册表白名单外 diff=0，exit=0）；recipes/tags 缺口（quantify-only 不算 fail）：recipes baseline 1561, current 0, missing 1561；tags.block missing 1、tags.fluid missing 1、tags.item missing 66、tags.biome 缺口 0（buildcraftenergy:oil_gen 两侧一致）；dump 机制：RegistryDumpProbe（neo/src/main/java/buildcraft/core/gametest/RegistryDumpProbe.java，ServerStartedEvent 钩子，系统属性 buildcraft.registrydump.path 门控默认关、build.gradle gameTestServer 由 -Pregistrydump.path 注入，M2.8 oilscan 同模式）在 headless runGameTestServer 内把五类注册表+recipes+tags（tags.biome/block/fluid/item）落盘成与基线同 schema 的排序 JSON（neo/build/registry-dump-26.1.2.json，metadata.generator=buildcraft.core.gametest.RegistryDumpProbe, minecraft_version=26.1.2）；就绪时机 sanity：server 总 recipes 1515（RecipeManager 已加载）、tags block/fluid/item/biome=378/18/475/162（标签已绑定）；触发命令 cd neo && ./gradlew runGameTestServer --no-daemon -Pregistrydump.path=<file>；diff 脚本白名单与 RegistryParityTest.EXTRA_WHITELIST 逐字一致（marker/engine_stone/pipe_kinesis_wood/energy_meter，path 匹配五类共用），--strict 开关把 recipes/tags 从 quantify-only 收紧为 fail（结构错误 exit 2 fail-closed，合成四态自测通过）；CI run 35060911074（commit 1e41cb38f）三 job neo-build/progress-check/baseline-build 全 success，neo-build 第 5 步 'Registry parity diff vs 1.20.1 baseline (M3.3)' success，dump 证据行+diff 全文打进 GITHUB_STEP_SUMMARY；验证链：cd neo && ./gradlew build EXIT=0、test 42/42 全绿、runGameTestServer 5/5（dump 门控开/关两态均 'All 5 required tests passed :)'）；grep -rn buildcraft.lib.client\|buildcraft.core.client neo/src/main/java = 0；progress.py --check 通过（28 任务）<br>notes: M3.3（2026-09-15）：五类对拍已闭合（白名单外 diff=0，CI run 35060911074 步骤 'Registry parity diff vs 1.20.1 baseline (M3.3)' 绿）；recipes/tags 缺口量化待内容移植任务处理——recipes missing 1561（26.1.2 运行时 0 条 buildcraft 配方）、tags.item missing 66 / tags.block missing 1 / tags.fluid missing 1（buildcraft: 命名空间 legacy 共享标签未迁）、tags.biome 缺口 0（buildcraftenergy:oil_gen 已随 M2.8 落地两侧一致）；recipes/tags 内容补齐后给 registry_diff.py 加 --strict 收紧为全量对拍。 |
 | M3.4 | datagen 对拍 | pending（未完成） | 26.1.2 datagen 产物与基线 diff=0（白名单外） | — |
 | M3.5 | 语言键对拍 | done（已完成） | BuildCraft-Localization 语言键集合与基线 diff=0 | evidence：BuildCraft-Localization 子模块审计（@486348b，8.0.x-1.18.2）：assets/buildcraft/lang/ 共 31 locale 的 JSONC JSON lang 文件（允许 // 注释，en_us.json 文件头自称 Master language file；README 称 en_US 属主代码但仓库实带 en_us.json 作英文基线），单一扁平 'buildcraft' 命名空间未按 mod 预分；英文基线 en_us.json 857 键（无重复键/无尾逗号，严格 JSON 可提取），键前缀老式为主 tile 59/item 130/gui 34/gate 95/chat 26/config 57/tip 60/advancements 92/achievement 42/fillerpattern 24/direction 16/buildcraft.boardRobot* 约 40 等，含 1 个彩蛋键 null=>'=w='；4 个非英文 locale（fr_ca/lt_lt/ru_ru/sv_se）上游即非法 JSON（未转义内嵌引号）。落地：857 键 1:1 机械复制（文案逐字节复用子模块英文原文，json.dumps 后回归校验键序+值零漂移）到 neo assets/buildcraftcore/lang/en_us.json，其余 7 个 modid（builders/energy/factory/lib/robotics/silicon/transport）en_us.json 为空 {} 占位（运行时 lang 全局平面 KV 跨命名空间查找，功能等价）；M2.x 现代格式占位键 962 个移除（grep 证实用零引用）；唯一代码改动 BcCreativeTabs 标签键 itemGroup.buildcraftcore->itemGroup.buildcraft.main（基线自带）。lang_diff.py 输出原文（exit 0）：'基线键集合: 857 ｜ neo 并集: 857 ｜ missing(白名单外) 0 ｜ extra(白名单外) 0 ｜ 白名单放行 missing 0 / extra 0'，'RESULT: PASS — 语言键集合白名单外 diff=0（只对拍键集合，不比文案）'；各 modid 键数 buildcraftcore 857、其余 7 个均 0；白名单 MISSING_WHITELIST/EXTRA_WHITELIST 均为空集（理想 0 达成）。验证链：cd neo && ./gradlew build --no-daemon EXIT=0；test 42/42（19 个 suite，failures=0 errors=0 skipped=0）；runGameTestServer 5/5（日志原文 '5 GAME TESTS COMPLETE IN 386.5 ms' + 'All 5 required tests passed :)'，全程 0 error/exception 行，无 lang/locale 加载错误）；runClient 未跑（无显示环境），lang 文件为严格合法 JSON 且 vanilla 加载用 Gson lenient（严格 JSON 超集）兜底；lang_diff.py 自测通过（字符串内 //、/* */、转义引号、重复键 exit 2、尾逗号 exit 2、31 locale 全量解析）。CI run 35062706607（commit 1ce3551f0 'M3.5: language key parity with BuildCraft-Localization baseline'）三 job progress-check/baseline-build/neo-build 全 success，neo-build 第 6 步 'Language key parity vs BuildCraft-Localization baseline (M3.5)' success（步骤内 git submodule update --init BuildCraft-Localization 后跑 migration/scripts/lang_diff.py，diff 全文打进 $GITHUB_STEP_SUMMARY，白名单外非零即红、无 continue-on-error）<br>notes: M3.5（2026-09-15）：关键取舍——1) 子模块是单一扁平 'buildcraft' 命名空间（31 locale 各一个 JSONC 文件，未按 mod 预分），故 857 键整表 1:1 落在 neo assets/buildcraftcore/lang/en_us.json、其余 7 个 modid 为空 JSON 占位（运行时 lang 是全局平面 KV、跨命名空间查找，功能等价；老式键 tile.xxx/item.xxx/gui.xxx 原样保留可照常引用）；2) 英文文案直接机械复用子模块原文（键序+值 json 回归校验零漂移）；非英文 locale 可选未做：31 locale 对 en 键覆盖仅 15%-85%，且 fr_ca/lt_lt/ru_ru/sv_se 上游本身就是非法 JSON（未转义内嵌引号），需先上游修复再落地；3) M2.x 脚本生成的现代格式占位键 962 个（block.<ns>.<path>/item.<ns>.<path>，值带 '(Placeholder)'）按 diff=0 目标移除（grep 证实除 lang 文件自身外零引用），注册内容游戏内显示名暂时回退为原始键，待内容移植任务以真实名称恢复；4) 唯一代码改动：BcCreativeTabs 创造标签键 itemGroup.buildcraftcore -> itemGroup.buildcraft.main（基线自带，='BuildCraft'）。 |
-| M3.6 | 覆盖率门禁 | pending（未完成） | JaCoCo 对核心包设行覆盖率阈值并在 CI 强制失败 | — |
+| M3.6 | 覆盖率门禁 | done（已完成） | JaCoCo 对核心包设行覆盖率阈值并在 CI 强制失败 | JaCoCo 0.8.13（Gradle 9.1 内置默认=Maven Central 最新，官方 Java 23/24 + 实验性 Java 25 class 文件支持）挂 neo 标准 test task；现状基线（jacocoTestReport.xml 原文数字）：buildcraft.lib.* missed=211 covered=620 => 74.61% (620/831)、buildcraft.core.* missed=574 covered=20 => 3.37% (20/594，覆盖行来自 core/marker/volume 被 net 消息测试加载)、overall missed=2151 covered=835 => 27.96%；阈值=基线向下取整留 1-2pp 缓冲：lib>=73%（缓冲 1.61pp）、core>=2%（缓冲 1.37pp，核心包基线 3.37% 高于 <1% 停止线故按公式设阈）；门禁机制：stock jacocoTestCoverageVerification 的 PACKAGE 规则逐包判定（family 内多个包 0% 会即刻全红）不可用，改为等价机制 jacocoCoreCoverageVerification 自定义 task 解析报告 XML 按 family 聚合判定并挂 check；人为失效验证：阈值临时 +50pp（core 52% / lib 123%）=> EXIT=1 'BELOW FLOOR' 两 family 全爆，还原后 EXIT=0；本地验证链全绿（test jacocoTestReport jacocoCoreCoverageVerification EXIT=0 / runGameTestServer 5/5 'All 5 required tests passed' / build EXIT=0） |
 | M3.7 | 冒烟与性能 | pending（未完成） | headless runServer 启动无 crash，8 个 mod 全部加载，启动时间记录在 evidence | — |
 | M3.8 | 迁移仪表盘 | pending（未完成） | progress.py 输出含 Forge import 等指标的趋势记录，随 CI 自动更新 | — |
 
 ## 代码实时指标
 
-采集时间：2026-09-16 02:19:18；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
+采集时间：2026-09-16 02:45:44；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
 
 | 指标 | 当前值 | 调研基线(2026-09) | 目标 |
 |---|---:|---:|---|

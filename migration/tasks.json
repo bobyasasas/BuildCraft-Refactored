@@ -248,10 +248,10 @@
       "id": "M3.6",
       "phase": "Phase 3 功能验证金字塔",
       "title": "覆盖率门禁",
-      "status": "pending",
+      "status": "done",
       "acceptance": "JaCoCo 对核心包设行覆盖率阈值并在 CI 强制失败",
-      "evidence": "",
-      "notes": ""
+      "evidence": "JaCoCo 0.8.13（Gradle 9.1 内置默认=Maven Central 最新，官方 Java 23/24 + 实验性 Java 25 class 文件支持）挂 neo 标准 test task；现状基线（jacocoTestReport.xml 原文数字）：buildcraft.lib.* missed=211 covered=620 => 74.61% (620/831)、buildcraft.core.* missed=574 covered=20 => 3.37% (20/594，覆盖行来自 core/marker/volume 被 net 消息测试加载)、overall missed=2151 covered=835 => 27.96%；阈值=基线向下取整留 1-2pp 缓冲：lib>=73%（缓冲 1.61pp）、core>=2%（缓冲 1.37pp，核心包基线 3.37% 高于 <1% 停止线故按公式设阈）；门禁机制：stock jacocoTestCoverageVerification 的 PACKAGE 规则逐包判定（family 内多个包 0% 会即刻全红）不可用，改为等价机制 jacocoCoreCoverageVerification 自定义 task 解析报告 XML 按 family 聚合判定并挂 check；人为失效验证：阈值临时 +50pp（core 52% / lib 123%）=> EXIT=1 'BELOW FLOOR' 两 family 全爆，还原后 EXIT=0；本地验证链全绿（test jacocoTestReport jacocoCoreCoverageVerification EXIT=0 / runGameTestServer 5/5 'All 5 required tests passed' / build EXIT=0）",
+      "notes": "task 挂接：jacoco 插件 agent 自动挂到 MDG unitTest.enable() 下的标准 JavaPlugin test task；jacoco toolVersion=0.8.13（Gradle 9.1 内置默认即最新版，实验性支持 Java 25 class 文件）；阈值策略：family 聚合行覆盖率（buildcraft.lib.*>=73%、buildcraft.core.*>=2%，为 74.61%/3.37% 基线向下取整留 1-2pp 缓冲），stock PACKAGE 级 verification 因逐包判定不可用，用自定义 jacocoCoreCoverageVerification task 解析报告 XML 聚合判定并挂 check，CI neo-build 末尾 M3.6 步骤跑 test+jacocoTestReport+门禁并写 $GITHUB_STEP_SUMMARY"
     },
     {
       "id": "M3.7",
