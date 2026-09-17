@@ -530,7 +530,7 @@ jobs:
           curl -fLo installer.jar "https://maven.neoforged.net/releases/net/neoforged/neoforge/$NEO_VERSION/neoforge-$NEO_VERSION-installer.jar"
           "$JDK25/bin/java" -jar installer.jar --installServer server
           mkdir -p server/mods
-          cp "$GITHUB_WORKSPACE/$JAR" "server/mods/$(basename "$JAR")" || { echo "failed to stage jar into mods/" >&2; exit 1; }
+          cp "$JAR" "server/mods/$(basename "$JAR")" || { echo "failed to stage jar into mods/" >&2; exit 1; }
           cd server
           echo "eula=true" > eula.txt
           # 空 server.properties：避免 vanilla 首启无配置文件的良性 ERROR 干扰判定（同 M3.7 理由）
