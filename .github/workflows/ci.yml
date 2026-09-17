@@ -483,3 +483,13 @@ jobs:
             } >> "$GITHUB_STEP_SUMMARY"
           fi
           exit $diff_rc
+
+      # 编译产物上传：每次 CI 构建出的 8-mod 一 jar（buildcraftcore-<mc>-<ver>.jar）挂到 run 页面供下载。
+      # 若 build 成功但 libs 下没有 jar（打包配置回归），本步骤按 upload-artifact 的 if-no-files-found: error 变红。
+      - name: Upload built mod jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: buildcraft-neoforge-jar
+          path: neo/build/libs/*.jar
+          if-no-files-found: error
+          retention-days: 14
