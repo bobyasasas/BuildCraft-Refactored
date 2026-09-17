@@ -2,11 +2,11 @@
 
 > **本文件由 migration/scripts/progress.py 自动生成，禁止手改；更新任务请编辑 migration/tasks.json 或用 `--set` 命令。**
 >
-> 生成时间：2026-09-17 11:53:17 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-17）
+> 生成时间：2026-09-17 12:51:35 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-17）
 
 ## 总览
 
-**总任务数 46** ｜ pending(未完成)=9、in_progress(进行中)=0、partial(部分完成)=0、unverified(未验证)=0、done(已完成)=37 ｜ **完成率 80%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
+**总任务数 47** ｜ pending(未完成)=9、in_progress(进行中)=1、partial(部分完成)=0、unverified(未验证)=0、done(已完成)=37 ｜ **完成率 80%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
 
 ## 阶段汇总
 
@@ -16,7 +16,7 @@
 | Phase 1 工程化整备 | 5 | 5 | 100% |
 | Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109 | 13 | 13 | 100% |
 | Phase 3 功能验证金字塔 | 9 | 9 | 100% |
-| Phase 4 视觉与实机可玩性 | 13 | 4 | 31% |
+| Phase 4 视觉与实机可玩性 | 14 | 4 | 32% |
 
 ## 任务明细
 
@@ -68,10 +68,11 @@
 | M4.10 | JEI 兼容（待用户裁决） | pending（未完成） | （若获批）JEI 插件展示 BuildCraft 配方/机器类别；不获批则维持基线忠实（配方已随包，JEI 装机即自动索引原版类别） | notes: 红线冲突：1.20.1 基线无 JEI 代码，实施需引入 JEI API 依赖，违反'不引入新第三方依赖'——必须用户明示批准方可开工 |
 | M4.11 | P0：取证脚手架数据包污染生产 jar（旁观模式+怪机器根因） | done（已完成） | 随包 jar 不再携带任何 minecraft:load/tick 函数钩子与 m2xx 取证脚本；实机回归证明进世界不再被强制旁观/锁相机/自动搭 rig；CI 增设 jar 卫生门禁防复发 | 用户实测（2026-09-17）'进世界即旁观模式，面前有几个奇怪的机器，根本无法游玩' → 实机复现（worker，Xvfb 真客户端 + /data 硬证据 playerGameType=3 + HUD 三无 + 相机锁定 + 机器人挖掘出生点）→ 根因（主 agent 定位）：M2.7b~M2.13 截图取证脚手架随 jar 发布——data/minecraft/tags/function/tick.json 每刻执行 buildcraftcore:m27b/camera_lock（gamemode spectator @a + tp @a 固定机位 = 旁观+锁相机+不能动），load.json 每次世界加载执行 4 个 load_setup（出生点南侧 30/40/50/56/62 格自动搭建引擎-管道-门-填充器-采石场 rig + 召唤满电采矿机器人 = '奇怪的机器'）；mcfunction 注释自称'只在 dev 世界运行'系错误假设——jar 内置数据包在所有世界（含用户正式世界）自动加载。存档反证：level.dat GameType=1 且（复现会话前）无 Player 标签，旁观为运行时强制而非存档带入 → 修复（worker 实施）：git rm 14 个 mcfunction（m211/m212/m213/m27b 四目录）+ minecraft/tags/function/{load,tick}.json（data/minecraft 空壳一并移除），删除前 grep 证明零 Java 功能引用（6 处命中全为注释）→ 验证：build 绿（55 tests 全过）；jar 断言 data/minecraft/tags/function=0、buildcraftcore/function/=0、textures 1015+24 mcmeta 不受影响、class 620 不变；实机回归四判据——(1) tick 钩子死亡决定性证据：/gamemode creative 后 280 tick 仍保持 1（污染时代每刻强制拉回 spectator）(2) 移动 PASS：按 W 北移 6 格无回拉 (3) 背包 E 可开 (4) HUD 快捷栏+准星恢复；load 钩子死亡：会话内 game time 连续累计无重置（782078→789922 与 20tps 严丝合缝）、日志 'Set the time'=0、反推加载时刻 day≈4822≠1000；8 模块加载正常。会话初读 playerGameType=3 系上次污染会话写入存档的玩家 NBT 遗留（登录坐标=旧机位佐证），已手动切回 creative，新 jar 不再写入 → CI 收紧门禁（主 agent 实施）：neo-build 追加 'Jar hygiene - no evidence scaffolding (M4.11)' 步骤（Upload 之前）：unzip 断言 jar 内 data/minecraft/tags/function/ 与 buildcraftcore/function/m2 命中数=0，任何命中即红；本地对重建 jar 干跑通过（hits=0），YAML 校验通过<br>notes: 裁决 1（事故定性）：这是'验证工具变成产品行为'的打包卫生事故——取证脚手架写进 src/main/resources/data 即随 jar 发布并在用户世界执行；dev-only 工具今后只允许存在于 run/ 侧或 dev-only 源集/配置，CI 卫生门禁（任何 vanilla function 标签钩子=红）制度化该红线。裁决 2（用户侧遗留说明）：用户已加载过的世界会保留历史 rig 方块/机器人（数据包删除只阻止'每次加载重搭+锁人'，不追溯清方块），玩家 NBT 若已被写为 spectator 需手动 /gamemode 切回——已在发布说明层面记录。裁决 3（经验）：'8 模块加载+Done' 的服务端冒烟无法暴露数据包行为面；实机客户端四判据（HUD/游戏类型/移动/背包）才是可玩性最小验证集，与用户'一个一个功能实机测试'的要求一致，固化为 M4.9 矩阵的基线判据 |
 | M4.12 | M4.12 datagen 门禁适配手工贴图资产（S1 单向规则放行 + 卫生校验收紧） | done（已完成） | M4.1 入库的 1015 PNG + 24 .png.mcmeta 在 S1（datagen 产物 vs 随包逐字节门禁）按'手工美术资产'类别规则放行且仅单向放行；放行附带 fail-closed 卫生校验（PNG 魔数/mcmeta 合法 JSON/无孤儿/无异物）；本地对拍 PASS 且负面测试证明四类违规与反向泄漏均红；CI M3.4 步骤恢复绿 | 触发：M4.1 贴图提交 3913300c3 后 CI run 35234755824 在 M3.4 步骤红，S1 报 drift 1039（= 1015 PNG + 24 mcmeta 全部命中'随包独有(白名单外)'）→ 根因（主 agent 认定）：M4.1 验收时'N4 已把贴图排除在门禁外'的判断只对基线对拍侧成立，N4 登记的是 baseline-vs-current 的范围豁免，S1 是 datagen-vs-shipped 的逐字节门禁——贴图入库使 shipped 树新增 1039 个 S1 视角的随包独有文件，属门禁口径未随资产入库同步适配 → 实施（主 agent 直改门禁脚本，4 处）：datagen_diff.py S1 循环对 rel 第二路径段=='textures' 的随包独有文件按规则放行（单向：datagen 侧出现 textures/ 文件仍'产物独有'红、双树同路径内容不同仍红）；新增 texture_hygiene_failures() 对全部随包贴图做 fail-closed 卫生校验——.png 必须 8 字节 PNG 魔数（空文件/文本伪装恒红）、.png.mcmeta 必须合法 JSON object、mcmeta 必须有同路径对应 PNG（孤儿红）、textures/ 下不允许异物文件；头注 S1/N4/白名单登记三处同步（含 M4.1/M4.12 裁决溯源）→ 验证（主 agent 亲跑）：(1) 本地 runData 再生 + 对拍 --strict：S1 '比对 3113 路径, drift 0, 白名单放行 1, 贴图规则放行 1039(卫生违规 0) -> OK'，RESULT PASS exit 0（1039 与 M4.1 入库账目 1015+24 严丝合缝）；(2) 负面测试（/tmp 脏拷贝注入四类损坏）：坏 PNG/坏 mcmeta JSON/孤儿 mcmeta/异物 txt → 4 条 BADTEX 各自命中 + 'RESULT: FAIL — fail 项: S1 贴图卫生' exit 1；(3) 单向性测试（datagen 拷贝内造 textures/block/sneaky.png）→ 'DRIFT [产物独有]' + FAIL exit 1 → CI：ci.yml 未动（M3.4 命令不变，红源是脚本判定逻辑，适配在脚本内完成）；run 35242340570（head 6ff8e68ea 含贴图入库）同因红，由本提交的新 run 取代<br>notes: 裁决 1（放行哲学）：门禁适配不是'让灯变绿'——放行从逐文件白名单升级为单一前缀规则的同时，新增四项 fail-closed 卫生校验，净效果比事故前更紧（事故前 textures/ 目录完全不在门禁监控内，此后任何损坏 PNG/坏 mcmeta/孤儿/异物都会红）；规则严格单向，datagen 永远不允许产出贴图（产物侧出现即红），保住 S1 'runData 逐字节再生随包可再生部分'的原始语义。裁决 2（流程教训）：资产入库任务（M4.1）验收时必须枚举其对全部既有门禁的输入面（当时只核了 N4 基线侧与 S1 的 datagen 再生面，漏了 S1 的 shipped 侧差集），本条以 CI 实红暴露并闭环 |
+| M4.13 | M4.13 GUI 建世界/菜单加载静默失败诊断（quickPlay 路径正常） | in_progress（进行中） | 定位根因并给出修复或明确环境/上游定性（dev-only vs 生产影响）；GUI 创建新世界与菜单加载已有世界恢复可用，或登记为上游/环境已知问题并给出生产影响结论 | 复现（累计 3 次：旧污染 jar 2 次 + M4.11 修复后新 jar 1 次，Xvfb 真客户端）：GUI 创建卡 'Preparing for world creation 50%' 190s+ 或 2-3 分钟后静默退回世界列表（无存档生成）；菜单选中已有世界 Play 卡加载屏 0%（level.dat mtime 不变）；全程零异常零崩溃零新增日志；jstack 无 Server thread、无 Worker-Main；quickPlay 同 jar 同存档 11 秒进入且四判据正常。M4.11 修复后复测两症状均未自愈 → 与数据包污染独立成因。只读调查（26.1.2 反编译源，Gradle 缓存 neoformruntime decompile jar）：(a) 旧会话线索 'Missing data pack tests' 与 'Loaded 3076 recipes' 溯源均为 vanilla 本体——前者是 dev 模式 CreateWorldScreen 注入 tests pack（CreateWorldScreen.java:174-176，IS_RUNNING_IN_IDE 才有；quickPlay 与生产用户无此注入）被 MinecraftServer.configurePackRepository 剔除时的 WARN，后者为 RecipeManager 正常加载行；(b) BuildCraft 客户端嫌疑清零：全源码 13 处 addListener 逐一核对全部在世界创建/加载窗口期之外，无 ScreenEvent/ClientTickEvent/WorldEvent/mixin，无自建线程池/锁/阻塞，CompletableFuture 仅存在于 datagen 离线路径 6 处；(c) 死点夹逼：创建路径 apply 段日志（recipes/advancements）全部打完后 vanilla WorldLoader.load 链尾（WorldLoader.java:79-82）→ CreateWorldScreen.java:190 managedBlock 的 loadResult 永不完成；菜单路径（WorldOpenFlows.java:302/310 data_read 屏）在链更早处零日志即死；两路径共用 WorldLoader.load，而 quickPlay 走同一链 0.8 秒完成（2026-09-17-3.log.gz 实证）<br>notes: 假设排序：H1 vanilla WorldLoader 链尾完成信号丢失（dev 模式 tests pack 剔除路径特有嫌疑）> H2 Xvfb/llvmpipe 无头 GL 环境缺陷 > H3 BuildCraft 数据内容在 GUI 特有 pack 组合下触发。裁决（用户影响评估）：BuildCraft 代码直接责任已排除；症状目前仅在 dev/Xvfb 环境复现，生产 jar 用户路径（非 IDE 无 tests 注入）未见受影响证据，暂不定性生产 P0；但 M4.9 实机矩阵展开前必须闭环本项。下一步实验（按性价比）：(1) H1 双 jstack（卡住时 5s 间隔两次，分辨 Render thread 栈顶是 managedBlock 轮询还是纯渲染）；(2) 生产客户端 GUI 冒烟试验台（NeoForge installer client 模式 + 我们的 jar，判定 dev-only 还是生产也中）；(3) NeoForge issue tracker 检索同症状（WebSearch 配额 2026-09-19 恢复后补，本会话本地与 worker 均已耗尽）；(4) H3 数据二分（临时改 build 输出侧 data/ 目录复跑 GUI） |
 
 ## 代码实时指标
 
-采集时间：2026-09-17 11:53:17；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
+采集时间：2026-09-17 12:51:35；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
 
 | 指标 | 当前值 | 调研基线(2026-09) | 目标 |
 |---|---:|---:|---|
