@@ -498,12 +498,23 @@ jobs:
           [ -n "$NEO_VERSION" ] || { echo "neo_version missing in gradle.properties" >&2; exit 1; }
           JAR="$(ls build/libs/buildcraftcore-*.jar 2>/dev/null | head -1)"
           [ -n "$JAR" ] || { echo "no built jar under build/libs" >&2; exit 1; }
-          # run.sh 用 PATH 上的 java（CI 是 21），MC 26.1 需 Java 25：取 Gradle foojay 工具链
-          # 在 Build 步骤下载的 JDK 25（MDG runs 与本地同款布局 ~/.gradle/jdks/*25*）。
-          JDK25="$(find "$HOME/.gradle/jdks" -maxdepth 1 -type d -name '*25*' | head -1)"
-          [ -n "$JDK25" ] && [ -x "$JDK25/bin/java" ] || { echo "JDK 25 toolchain not found under ~/.gradle/jdks" >&2; exit 1; }
-          "$JDK25/bin/java" -version 2>&1 | head -1 | grep -q 'version "25' || { echo "located JDK is not Java 25: $JDK25" >&2; exit 1; }
-          echo "using NeoForge $NEO_VERSION, jar $(basename "$JAR"), java $($JDK25/bin/java -version 2>&1 | head -1)"
+          # run.sh 用 PATH 上的 java（CI 是 21），MC 26.1 需 Java 25：按序探测 Gradle 工具链
+          # 下载目录（~/.gradle/jdks，本地形态）与 GitHub runner 预装 JDK 布局（/usr/lib/jvm、
+          # /opt/hostedtoolcache）——Build 步骤的工具链解析必在其中某处命中 25（否则 build 早就红了），
+          # 每个候选以 java -version 实证是 25 才采纳；全都找不到则打出工具链清单后变红（fail-closed）。
+          JDK25=""
+          for d in "$HOME"/.gradle/jdks/*25* /usr/lib/jvm/*25* /opt/hostedtoolcache/*/*25* /opt/hostedtoolcache/*25*; do
+            [ -x "$d/bin/java" ] || continue
+            if "$d/bin/java" -version 2>&1 | head -1 | grep -q 'version "25'; then
+              JDK25="$d"; break
+            fi
+          done
+          if [ -z "$JDK25" ]; then
+            echo "no usable JDK 25 found; gradle toolchain inventory:" >&2
+            ./gradlew -q javaToolchains >&2 || true
+            exit 1
+          fi
+          echo "using NeoForge $NEO_VERSION, jar $(basename "$JAR"), java $($JDK25/bin/java -version 2>&1 | head -1) ($JDK25)"
           cd /tmp
           rm -rf m39-prod && mkdir -p m39-prod && cd m39-prod
           curl -fLo installer.jar "https://maven.neoforged.net/releases/net/neoforged/neoforge/$NEO_VERSION/neoforge-$NEO_VERSION-installer.jar"
