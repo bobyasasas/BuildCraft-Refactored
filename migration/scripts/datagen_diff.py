@@ -10,8 +10,12 @@
       --strict         物品/方块 id 对拍按白名单外 diff=0 判定（默认仅量化报告，不判 fail）
 
 三个判定层（S1/S3 悬空引用/S4 可达性恒定 fail-closed，不受 --strict 影响）:
-  S1 无漂移: datagen 产物 vs 随包资源逐字节 diff。除白名单（1 项，见下）外必须 diff=0。
-     这是 M3.4 的核心门禁：runData 必须能逐字节再生随包 assets，任何漂移都 fail。
+  S1 无漂移: datagen 产物 vs 随包资源逐字节 diff。除白名单（1 项手工模型，见下）与手工贴图
+     规则（assets/<ns>/textures/**，M4.1 全量入库，见下）外必须 diff=0。这是 M3.4 的核心
+     门禁：runData 必须能逐字节再生随包 assets。贴图规则放行是单向的（只允许"随包有、产物无"；
+     datagen 侧产出 textures/ 文件、或双树同路径内容不同，仍按漂移 FAIL），并附带收紧的
+     fail-closed 卫生校验 texture_hygiene_failures：PNG 魔数/非空、.png.mcmeta 必须是合法
+     JSON object 且有对应 PNG（孤儿 mcmeta 恒 fail）、textures/ 下不允许异物文件。
   S2 物品 id 对拍（归一化 N1/N2 后）: 白名单外 diff=0（--strict 判 fail，lenient 仅量化）。
   S3 方块 id 对拍（blockstate 层）: base-only 必须 0；cur-only 白名单外必须 0；悬空模型引用恒 fail。
   S4 方块模型账目（归一化 N3）: 双方"多出"的 models/block 文件必须能被本方某个 blockstate
@@ -31,13 +35,19 @@
        语义对拍由 registry_diff.py --strict（1561/1561）覆盖；
      - lang: buildcraft_resources_generated 基线不含 lang（legacy datagen 不生成），
        857 键冻结集对拍由 lang_diff.py 覆盖（datagen 侧由 BcLangData.KEY_COUNT==857 守卫）；
-     - 纹理 PNG: 非 datagen 产物（基线 240 个为手工放置资产），不在对拍范围。
+     - 纹理 PNG: 非 datagen 产物（基线 240 个为手工放置资产），基线侧不做文件级对拍；
+       随包侧自 M4.1 起全量入库（1015 PNG + 24 .png.mcmeta），在 S1 按手工贴图规则
+       单向放行并做卫生校验（见 S1 段与 texture_hygiene_failures）。
 
-白名单（逐项枚举，路径 + 原因；整目录兜底一律不做）:
+白名单与规则放行（逐项枚举/单一前缀规则，路径 + 原因；整目录兜底一律不做）:
   S1（随包独有）:
     - buildcraftcore/models/block/pipe_kinesis_wood_inventory.json —
       手写紧凑 elements/from/to/UV 数组模型，stock gson pretty-print 无法产出该字节形态；
       属于手工资产，datagen 不再生它（drift gate 对它单向豁免：只允许"随包有、产物无"）。
+    - 规则放行 assets/<ns>/textures/**（M4.1 裁决入库、M4.12 门禁适配）: 手工美术资产，
+      1.20.1 基线 1015 PNG + 24 .png.mcmeta 全量移植（md5 一致）。单向豁免（只允许
+      "随包有、产物无"），附带收紧的卫生校验 texture_hygiene_failures（PNG 魔数、
+      mcmeta 合法 JSON、无孤儿 mcmeta、无异物文件），任何卫生违规恒 fail。
   S2/S3（id 级，两侧各自枚举）:
     - 基线独有 31 项物品 id:
         buildcraftenergy:<fuel|oil|...>_bucket_christmas ×30 — legacy 圣诞彩蛋 override 模型，
@@ -71,6 +81,52 @@ SHIPPED_ONLY_WHITELIST = {
     "buildcraftcore/models/block/pipe_kinesis_wood_inventory.json":
         "手写紧凑 elements/UV 数组模型，gson pretty-print 无法产出该字节形态（手工资产）",
 }
+
+
+# S1 规则放行（M4.1/M4.12 裁决）：assets/<ns>/textures/** 为手工放置的美术资产
+# （1.20.1 基线全量入库，md5 一致），本质不由 datagen 再生。放行单向：只允许
+# "随包有、产物无"；datagen 侧产出 textures/ 文件、或双树同路径内容不同，仍按漂移 FAIL。
+def is_handplaced_texture(rel):
+    parts = rel.split("/")
+    return len(parts) >= 3 and parts[1] == "textures"
+
+
+def texture_hygiene_failures(shipped):
+    """随包 textures/ 资产的 fail-closed 卫生校验，返回 [(kind, rel)]。
+
+    收紧项（M4.12）：放行不等于免检——
+      - .png 必须 8 字节 PNG 魔数开头（空文件/文本伪装恒 fail）；
+      - .png.mcmeta 必须是合法 JSON object；
+      - .png.mcmeta 必须有同路径对应 .png（孤儿 mcmeta 恒 fail）；
+      - textures/ 下不允许 .png/.png.mcmeta 之外的异物文件。
+    """
+    bad = []
+    pngs = set()
+    metas = set()
+    for rel, path in sorted(shipped.items()):
+        if not is_handplaced_texture(rel):
+            continue
+        if rel.endswith(".png"):
+            pngs.add(rel)
+            with open(path, "rb") as f:
+                head = f.read(8)
+            if head != b"\x89PNG\r\n\x1a\n":
+                bad.append(("贴图损坏(非PNG或空文件)", rel))
+        elif rel.endswith(".png.mcmeta"):
+            metas.add(rel)
+            try:
+                with open(path, encoding="utf-8") as f:
+                    meta = json.load(f)
+                if not isinstance(meta, dict):
+                    raise ValueError("顶层必须是 JSON object")
+            except (ValueError, OSError, UnicodeDecodeError) as exc:
+                bad.append(("贴图mcmeta非法(%s)" % exc, rel))
+        else:
+            bad.append(("贴图目录异物", rel))
+    for rel in sorted(metas):
+        if rel[: -len(".mcmeta")] not in pngs:
+            bad.append(("贴图mcmeta孤儿(无对应PNG)", rel))
+    return bad
 
 # 与 RegistryParityTest.EXTRA_WHITELIST 同源的 M2.2 垂直切片 id（按 id path 匹配）。
 SLICE_IDS = frozenset({"marker", "engine_stone", "pipe_kinesis_wood", "energy_meter"})
@@ -307,20 +363,27 @@ def main(argv):
                 if fa.read() != fb.read():
                     drift.append(("内容不同", rel))
         elif rel in shipped:
-            # 产物缺失侧：仅白名单内的手工资产允许"随包有、产物无"
-            if rel not in SHIPPED_ONLY_WHITELIST:
+            # 产物缺失侧：白名单手工模型与手工贴图规则（单向）允许"随包有、产物无"
+            if rel not in SHIPPED_ONLY_WHITELIST and not is_handplaced_texture(rel):
                 drift.append(("随包独有(白名单外)", rel))
         else:
             drift.append(("产物独有", rel))
     allowed = [rel for rel in shipped if rel in SHIPPED_ONLY_WHITELIST and rel not in datagen]
+    tex_exempt = [rel for rel in shipped if is_handplaced_texture(rel) and rel not in datagen]
+    hygiene = texture_hygiene_failures(shipped)
     for kind, rel in drift:
         print(f"    DRIFT [{kind}] {rel}")
+    for kind, rel in hygiene:
+        print(f"    BADTEX [{kind}] {rel}")
+    s1_ok = not drift and not hygiene
     print(f"S1: 比对 {len(set(shipped) | set(datagen))} 路径, drift {len(drift)},"
-          f" 白名单放行 {len(allowed)}  -> {'OK' if not drift else 'FAIL'}")
-    if drift:
-        failures.append("S1 无漂移")
+          f" 白名单放行 {len(allowed)}, 贴图规则放行 {len(tex_exempt)}(卫生违规 {len(hygiene)})"
+          f"  -> {'OK' if s1_ok else 'FAIL'}")
+    if not s1_ok:
+        failures.append("S1 无漂移" if drift else "S1 贴图卫生")
     else:
         print(f"    白名单放行: {', '.join(allowed)}")
+        print(f"    贴图规则放行: {len(tex_exempt)} 项手工贴图（卫生校验通过，不逐项罗列）")
     print("")
 
     # ---- S2 物品 id 对拍（N1/N2 归一化） ----
@@ -424,8 +487,10 @@ def main(argv):
     if strict:
         wl = len(SHIPPED_ONLY_WHITELIST) + len(BASE_ONLY_ITEM_WHITELIST) + len(CUR_ONLY_WHITELIST) \
             + len(CUR_ONLY_BLOCKSTATE_WHITELIST) + len(BASE_ONLY_ATLAS_WHITELIST)
-        print(f"RESULT: PASS — 无漂移 diff=0（白名单 {len(SHIPPED_ONLY_WHITELIST)} 项）；"
-              f"物品/方块 id 对拍白名单外 diff=0（白名单合计 {wl} 项，逐项枚举见脚本头注）")
+        tex_n = sum(1 for rel in shipped if is_handplaced_texture(rel))
+        print(f"RESULT: PASS — 无漂移 diff=0（白名单 {len(SHIPPED_ONLY_WHITELIST)} 项 +"
+              f"贴图规则放行 {tex_n} 项，卫生校验通过）；物品/方块 id 对拍白名单外 diff=0"
+              f"（白名单合计 {wl} 项，逐项枚举见脚本头注）")
     else:
         print("RESULT: PASS — 无漂移 diff=0；id 对拍白名单外 diff=0（lenient 模式）")
     return 0
