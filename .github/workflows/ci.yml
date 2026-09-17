@@ -484,8 +484,98 @@ jobs:
           fi
           exit $diff_rc
 
+      # M3.9: 生产启动冒烟——把"刚构建的 jar"放进真实 NeoForge 服务端（installer 安装，非 dev classpath），
+      # 断言 8 mod 加载 + expression 冒烟执行 + Done。背景：dev 门禁（gametest/runServer 冒烟）的 classpath
+      # 天然带 :expression 项目，曾放过一个缺 429 个 expression 类的 jar（用户实测 NoClassDefFoundError、
+      # exit=1，复现于 2026-09-17），本门禁堵死该盲区：缺类/打包回归在这里必红。
+      # NeoForge 版本不硬编码，读 neo/gradle.properties 的 neo_version（单一事实源）。
+      - name: Production launch smoke of built jar (M3.9)
+        timeout-minutes: 15
+        run: |
+          set -euo pipefail
+          cd neo
+          NEO_VERSION="$(grep '^neo_version=' gradle.properties | cut -d= -f2 | tr -d ' \r')"
+          [ -n "$NEO_VERSION" ] || { echo "neo_version missing in gradle.properties" >&2; exit 1; }
+          JAR="$(ls build/libs/buildcraftcore-*.jar 2>/dev/null | head -1)"
+          [ -n "$JAR" ] || { echo "no built jar under build/libs" >&2; exit 1; }
+          # run.sh 用 PATH 上的 java（CI 是 21），MC 26.1 需 Java 25：取 Gradle foojay 工具链
+          # 在 Build 步骤下载的 JDK 25（MDG runs 与本地同款布局 ~/.gradle/jdks/*25*）。
+          JDK25="$(find "$HOME/.gradle/jdks" -maxdepth 1 -type d -name '*25*' | head -1)"
+          [ -n "$JDK25" ] && [ -x "$JDK25/bin/java" ] || { echo "JDK 25 toolchain not found under ~/.gradle/jdks" >&2; exit 1; }
+          "$JDK25/bin/java" -version 2>&1 | head -1 | grep -q 'version "25' || { echo "located JDK is not Java 25: $JDK25" >&2; exit 1; }
+          echo "using NeoForge $NEO_VERSION, jar $(basename "$JAR"), java $($JDK25/bin/java -version 2>&1 | head -1)"
+          cd /tmp
+          rm -rf m39-prod && mkdir -p m39-prod && cd m39-prod
+          curl -fLo installer.jar "https://maven.neoforged.net/releases/net/neoforged/neoforge/$NEO_VERSION/neoforge-$NEO_VERSION-installer.jar"
+          "$JDK25/bin/java" -jar installer.jar --installServer server
+          mkdir -p server/mods
+          cp "$GITHUB_WORKSPACE/$JAR" "server/mods/$(basename "$JAR")" || { echo "failed to stage jar into mods/" >&2; exit 1; }
+          cd server
+          echo "eula=true" > eula.txt
+          # 空 server.properties：避免 vanilla 首启无配置文件的良性 ERROR 干扰判定（同 M3.7 理由）
+          touch server.properties
+          rm -rf world crash-reports logs
+          START=$(date +%s)
+          # 后台起服 + 轮询 Done（最多 480s），Done 即停——健康路径只需 1-2 分钟；
+          # setsid 建独立进程组便于整组收尾（JVM 偶尔会脱离外层进程组，末尾另有 pkill 兜底）
+          PATH="$JDK25/bin:$PATH" setsid ./run.sh --nogui > console.log 2>&1 &
+          GPID=$!
+          DEAD=0
+          for i in $(seq 1 960); do
+            grep -q 'Done (' console.log 2>/dev/null && break
+            kill -0 "$GPID" 2>/dev/null || { DEAD=1; break; }
+            sleep 0.5
+          done
+          END=$(date +%s)
+          # 收尾：TERM 进程组 → 15s 宽限 → KILL → 按 m39-prod 路径兜底清扫（本 runner 上无他人进程）
+          kill -- -"$GPID" 2>/dev/null || true
+          for i in $(seq 1 30); do
+            kill -0 -- -"$GPID" 2>/dev/null || break
+            sleep 0.5
+          done
+          kill -9 -- -"$GPID" 2>/dev/null || true
+          pkill -9 -f "m39-prod" 2>/dev/null || true
+          problems=0
+          grep -q 'Done (' console.log || { echo "M3.9 FAILED: no 'Done (' line" >&2; problems=1; }
+          LOADED="$(grep -c 'neo skeleton) loaded' console.log || true)"
+          [ "$LOADED" -eq 8 ] || { echo "M3.9 FAILED: expected 8 mod loaded lines, got $LOADED" >&2; problems=1; }
+          grep -q 'expression smoke' console.log || { echo "M3.9 FAILED: expression smoke line missing (library not loading in production)" >&2; problems=1; }
+          MISSING="$(grep -E 'NoClassDefFoundError|ClassNotFoundException' console.log | grep -vc kqueue || true)"
+          [ "$MISSING" -eq 0 ] || { echo "M3.9 FAILED: $MISSING missing-class error lines (non-kqueue)" >&2; grep -E 'NoClassDefFoundError|ClassNotFoundException' console.log | grep -v kqueue >&2; problems=1; }
+          if grep -q 'Failed to start the minecraft server' console.log; then
+            echo "M3.9 FAILED: server reported startup failure" >&2; problems=1
+          fi
+          if [ -d crash-reports ] && [ -n "$(ls -A crash-reports)" ]; then
+            echo "M3.9 FAILED: crash-reports present" >&2; problems=1
+          fi
+          # 已知良性（不算失败）：netty kqueue 原生传输是 macOS-only，Linux 上类初始化失败属预期回退，
+          # 由 NeoForge DebugFile appender 打成一条 ERROR —— 与 BuildCraft 无关，服务器照常 Done 并监听。
+          ERRORS="$(grep -c ' ERROR ' console.log || true)"
+          KQUEUE="$(grep -c kqueue console.log || true)"
+          DONE_LINE="$(grep 'Done (' console.log | head -1 || true)"
+          if [ -n "$GITHUB_STEP_SUMMARY" ]; then
+            {
+              echo '### M3.9 production launch smoke (installer server + built jar in mods/)'
+              echo '```'
+              echo "jar:            $(basename "$JAR")"
+              echo "neoforge:       $NEO_VERSION"
+              echo "mods loaded:    $LOADED/8"
+              echo "done line:      $DONE_LINE"
+              echo "wall seconds:   $((END - START))"
+              echo "ERROR lines:    $ERRORS (known-benign kqueue/netty lines: $KQUEUE)"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ "$problems" -ne 0 ]; then
+            echo '--- last 40 console lines ---' >&2
+            tail -40 console.log >&2 || true
+            exit 1
+          fi
+          echo "M3.9 production smoke PASSED ($LOADED/8 mods, $DONE_LINE)"
+
       # 编译产物上传：每次 CI 构建出的 8-mod 一 jar（buildcraftcore-<mc>-<ver>.jar）挂到 run 页面供下载。
       # 若 build 成功但 libs 下没有 jar（打包配置回归），本步骤按 upload-artifact 的 if-no-files-found: error 变红。
+      # 放在 M3.9 生产启动门禁之后：不可运行的 jar 不应出现在 run 页面供下载。
       - name: Upload built mod jar
         uses: actions/upload-artifact@v4
         with:
