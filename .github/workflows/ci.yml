@@ -594,6 +594,25 @@ jobs:
           fi
           echo "M3.9 production smoke PASSED ($LOADED/8 mods, $DONE_LINE)"
 
+      # M4.11 jar 卫生门禁（收紧，append-only）：随包 jar 绝不允许携带 minecraft:load/tick 函数标签钩子
+      # 或 m2xx 取证脚手架。事故背景：M2.7b~M2.13 的截图取证 mcfunction（gamemode spectator @a +
+      # 相机锁定 + 出生点旁自动搭 rig + 召唤机器人）随 jar 发布，在每个用户世界每次加载自动执行，
+      # 造成"进世界即旁观模式、面前有奇怪机器、完全无法游玩"（用户实测 + 实机复现四判据坐实，
+      # 见 migration/tasks.json M4.11）。dev-only 工具只允许存在于 run/ 侧或 dev-only 源集，永远不进
+      # src/main/resources。本步骤 fail-closed：任何命中即红，杜绝同类事故复发。
+      - name: Jar hygiene - no evidence scaffolding (M4.11)
+        run: |
+          cd neo
+          JAR=$(ls build/libs/buildcraftcore-*.jar | head -1)
+          echo "checking $JAR"
+          hits=$(unzip -l "$JAR" | grep -cE "data/minecraft/tags/function/|buildcraftcore/function/m2") || true
+          if [ "$hits" -ne 0 ]; then
+            echo "FAIL: shipped jar hooks vanilla function tags or carries evidence scaffolding:" >&2
+            unzip -l "$JAR" | grep -E "data/minecraft/tags/function/|buildcraftcore/function/m2" >&2
+            exit 1
+          fi
+          echo "M4.11 jar hygiene PASSED (0 function-tag hooks, 0 evidence scaffolding entries)"
+
       # 编译产物上传：每次 CI 构建出的 8-mod 一 jar（buildcraftcore-<mc>-<ver>.jar）挂到 run 页面供下载。
       # 若 build 成功但 libs 下没有 jar（打包配置回归），本步骤按 upload-artifact 的 if-no-files-found: error 变红。
       # 放在 M3.9 生产启动门禁之后：不可运行的 jar 不应出现在 run 页面供下载。

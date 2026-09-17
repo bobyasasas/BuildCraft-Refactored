@@ -403,7 +403,7 @@
       "title": "实机逐功能测试矩阵（客户端真机验收层）",
       "status": "pending",
       "acceptance": "Xvfb 真客户端逐功能实机验证：每功能进世界截图+日志双证据（创造页/物品模型/各机器/管道/门/机器人），旁观模式症状根因闭环",
-      "evidence": "",
+      "evidence": "复现已完成（M4.9a，2026-09-17）：worker 以 Xvfb+xdotool 真客户端实机复现用户两症状——quickPlay 进档后 /data get entity @s playerGameType=3（硬证据）、HUD 三无、E 无背包、左键不可破坏、相机被锁；出生点旁 5-6 台蓝色箱形机器人（后证实为取证 rig 召唤的 robot_miner，正在挖出生点下的方块）。根因闭环见 M4.11（取证脚手架数据包污染 jar），非 mod 代码缺陷。矩阵化逐功能实机验证待 M4.11 修复落地 + 建世界死锁（复现会话另发现：GUI 创建新世界 3 次静默失败、菜单进旧档死锁于 Loading world 0% 且 jstack 证明无 Server 线程）诊断后展开；jstack 与日志存 /tmp/m49a/",
       "notes": "用户 2026-09-17 明确要求'一个一个功能进入游戏实机测试'；M4.9a 复现已派发"
     },
     {
@@ -414,6 +414,15 @@
       "acceptance": "（若获批）JEI 插件展示 BuildCraft 配方/机器类别；不获批则维持基线忠实（配方已随包，JEI 装机即自动索引原版类别）",
       "evidence": "",
       "notes": "红线冲突：1.20.1 基线无 JEI 代码，实施需引入 JEI API 依赖，违反'不引入新第三方依赖'——必须用户明示批准方可开工"
+    },
+    {
+      "id": "M4.11",
+      "phase": "Phase 4 视觉与实机可玩性",
+      "title": "P0：取证脚手架数据包污染生产 jar（旁观模式+怪机器根因）",
+      "status": "done",
+      "acceptance": "随包 jar 不再携带任何 minecraft:load/tick 函数钩子与 m2xx 取证脚本；实机回归证明进世界不再被强制旁观/锁相机/自动搭 rig；CI 增设 jar 卫生门禁防复发",
+      "evidence": "用户实测（2026-09-17）'进世界即旁观模式，面前有几个奇怪的机器，根本无法游玩' → 实机复现（worker，Xvfb 真客户端 + /data 硬证据 playerGameType=3 + HUD 三无 + 相机锁定 + 机器人挖掘出生点）→ 根因（主 agent 定位）：M2.7b~M2.13 截图取证脚手架随 jar 发布——data/minecraft/tags/function/tick.json 每刻执行 buildcraftcore:m27b/camera_lock（gamemode spectator @a + tp @a 固定机位 = 旁观+锁相机+不能动），load.json 每次世界加载执行 4 个 load_setup（出生点南侧 30/40/50/56/62 格自动搭建引擎-管道-门-填充器-采石场 rig + 召唤满电采矿机器人 = '奇怪的机器'）；mcfunction 注释自称'只在 dev 世界运行'系错误假设——jar 内置数据包在所有世界（含用户正式世界）自动加载。存档反证：level.dat GameType=1 且（复现会话前）无 Player 标签，旁观为运行时强制而非存档带入 → 修复（worker 实施）：git rm 14 个 mcfunction（m211/m212/m213/m27b 四目录）+ minecraft/tags/function/{load,tick}.json（data/minecraft 空壳一并移除），删除前 grep 证明零 Java 功能引用（6 处命中全为注释）→ 验证：build 绿（55 tests 全过）；jar 断言 data/minecraft/tags/function=0、buildcraftcore/function/=0、textures 1015+24 mcmeta 不受影响、class 620 不变；实机回归四判据——(1) tick 钩子死亡决定性证据：/gamemode creative 后 280 tick 仍保持 1（污染时代每刻强制拉回 spectator）(2) 移动 PASS：按 W 北移 6 格无回拉 (3) 背包 E 可开 (4) HUD 快捷栏+准星恢复；load 钩子死亡：会话内 game time 连续累计无重置（782078→789922 与 20tps 严丝合缝）、日志 'Set the time'=0、反推加载时刻 day≈4822≠1000；8 模块加载正常。会话初读 playerGameType=3 系上次污染会话写入存档的玩家 NBT 遗留（登录坐标=旧机位佐证），已手动切回 creative，新 jar 不再写入 → CI 收紧门禁（主 agent 实施）：neo-build 追加 'Jar hygiene - no evidence scaffolding (M4.11)' 步骤（Upload 之前）：unzip 断言 jar 内 data/minecraft/tags/function/ 与 buildcraftcore/function/m2 命中数=0，任何命中即红；本地对重建 jar 干跑通过（hits=0），YAML 校验通过",
+      "notes": "裁决 1（事故定性）：这是'验证工具变成产品行为'的打包卫生事故——取证脚手架写进 src/main/resources/data 即随 jar 发布并在用户世界执行；dev-only 工具今后只允许存在于 run/ 侧或 dev-only 源集/配置，CI 卫生门禁（任何 vanilla function 标签钩子=红）制度化该红线。裁决 2（用户侧遗留说明）：用户已加载过的世界会保留历史 rig 方块/机器人（数据包删除只阻止'每次加载重搭+锁人'，不追溯清方块），玩家 NBT 若已被写为 spectator 需手动 /gamemode 切回——已在发布说明层面记录。裁决 3（经验）：'8 模块加载+Done' 的服务端冒烟无法暴露数据包行为面；实机客户端四判据（HUD/游戏类型/移动/背包）才是可玩性最小验证集，与用户'一个一个功能实机测试'的要求一致，固化为 M4.9 矩阵的基线判据"
     }
   ]
 }
