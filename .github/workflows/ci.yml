@@ -331,7 +331,15 @@ jobs:
               else:
                   mod_lines.append(line.split(']: ', 1)[-1].strip())
 
+          # 已知 vanilla 噪声（首见 2026-09-17 run 35225596765）：M2.8 oil 探针在 Done 后强制生成
+          # 32 区块半径的地图时，vanilla 的 large_dripstone feature 可能打出
+          # "[worldgen/ERROR] [minecraft/Util]: Detected setBlock in a far chunk ..."——纯 vanilla
+          # 世界生成内部记账（仅记日志、无行为影响），种子随机所以偶发，与 BuildCraft 无关。
+          # 仅排除这一条 vanilla 精确模式，其余一切 ERROR 行照旧致命。
+          VANILLA_FAR_CHUNK = re.compile(r'\[worldgen/ERROR\] \[minecraft/Util\]: Detected setBlock in a far chunk')
           error_lines = [l for l in lines if '/ERROR]' in l]
+          vanilla_diag = [l for l in error_lines if VANILLA_FAR_CHUNK.search(l)]
+          error_lines = [l for l in error_lines if not VANILLA_FAR_CHUNK.search(l)]
           if error_lines:
               problems.append('%d ERROR-level log line(s), first: %s' % (len(error_lines), error_lines[0].strip()))
 
@@ -355,7 +363,7 @@ jobs:
                   'wall-clock gradle start -> Done (CI 口径): %ss' % wall,
                   'mods loaded: %d/8' % len(mod_lines)]
           rows += ['  - ' + l for l in mod_lines]
-          rows += ['ERROR-level log lines: %d' % len(error_lines),
+          rows += ['ERROR-level log lines: %d (+%d known-vanilla far-chunk diagnostics, excluded)' % (len(error_lines), len(vanilla_diag)),
                    'crash markers: %s' % ('none' if not crash_lines else crash_lines[0].strip()),
                    'M2.8 oil probe (informational): %s' % oil_text,
                    'gradle rc after kill: %s (expected nonzero, kill-induced; not a gate)' % gradle_rc]
