@@ -218,6 +218,10 @@ tasks.withType(JavaCompile).configureEach {
 // (they read the output folders), but production installs would lose it.
 tasks.jar {
     from sourceSets.client.output
+    // M3.9: inline the shared expression library classes into the shipped jar to
+    // match the legacy 1.20.1 fat-jar packaging; dev classpath already had them
+    // via implementation, production launch did not (NoClassDefFoundError reproduced).
+    from({ project(':expression').sourceSets.main.output })
 }
 
 // M3.6: JaCoCo line coverage gate for the core packages (buildcraft.core.* and
