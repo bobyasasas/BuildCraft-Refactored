@@ -498,6 +498,8 @@ jobs:
           [ -n "$NEO_VERSION" ] || { echo "neo_version missing in gradle.properties" >&2; exit 1; }
           JAR="$(ls build/libs/buildcraftcore-*.jar 2>/dev/null | head -1)"
           [ -n "$JAR" ] || { echo "no built jar under build/libs" >&2; exit 1; }
+          # 转 absolute（后续 cd /tmp 后仍可引用；JAR 此前相对 neo/，直接拼 GITHUB_WORKSPACE 会缺 neo/ 段）
+          JAR="$(cd "$(dirname "$JAR")" && pwd)/$(basename "$JAR")"
           # run.sh 用 PATH 上的 java（CI 是 21），MC 26.1 需 Java 25：按序探测 Gradle 工具链
           # 下载目录（~/.gradle/jdks，本地形态）与 GitHub runner 预装 JDK 布局（/usr/lib/jvm、
           # /opt/hostedtoolcache）——Build 步骤的工具链解析必在其中某处命中 25（否则 build 早就红了），
