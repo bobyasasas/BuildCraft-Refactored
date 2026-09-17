@@ -315,6 +315,105 @@
       "acceptance": "CI 产物 jar 放入 installer 安装的真实 NeoForge 26.1.2.109 服务端 mods/ 后 headless 启动至 Done，8/8 mod 加载且 expression 库在生产环境实际执行；该验证固化为 neo-build 追加门禁（upload 之前），不可运行的 jar 不可能再绿灯出库",
       "evidence": "用户实测 CI artifact 无法运行（2026-09-17）→ 主 agent 诊断 jar 内 buildcraft/lib/expression 类为 0（全 jar 仅 191 class）而 BuildCraftCore 构造器引用 buildcraft.lib.expression.api.InvalidExpressionException → worker 于干净生产环境复现：installer 装 NeoForge 26.1.2.109 服务端（Java 25.0.4.1）、mods/ 放 jar、headless 启动 4 秒即崩于 FML mod construction 阶段，NoClassDefFoundError: buildcraft/lib/expression/api/InvalidExpressionException（Caused by ClassNotFoundException），exit=1，crash-reports/crash-2026-09-17_08.41.32-fml.txt 在案，其余 7 mod 全部正常加载（证明缺类是唯一死因）→ 根因：neo/build.gradle 仅 implementation project(':expression')（dev classpath 可见，gametest/runServer 冒烟全被蒙蔽），生产打包未含其类 → 修复（worker 实施，commit a9e7bb6b4）：tasks.jar 追加 from({ project(':expression').sourceSets.main.output }) 平铺内联（lazy 闭包），jar 由 191 class 增至 620（expression 429 个，166 源文件含内部类），javax/annotation 0 泄入，mods.toml 完好 → 全量回归（worker 逐字复刻 ci.yml 命令 + 主 agent 亲证）：build+55 单测绿、gametest 9/9、coverage 74.68%/2.20% PASS、registry strict PASS、lang 857/857 PASS、datagen no-drift PASS、生产环境重启动 Done (2.076s) 8/8 mod + 'BuildCraft expression smoke: 1+2*3 = 7' 生产环境实际执行 + 0 crash-report；主 agent 另行亲跑生产启动 Done (2.409s) 8/8 缺类错误 0 → CI 门禁（主 agent 实施，commit 32cd0348d，neo-build 追加步骤 Production launch smoke of built jar (M3.9)，置于 Upload built mod jar 之前）：读 gradle.properties 的 neo_version（单一事实源）下载 installer 装真实服务端、取 ~/.gradle/jdks 工具链 JDK 25（CI PATH 是 21）、后台轮询 Done 即停（setsid+组杀，同 M3.7 实证模式）、fail-closed 断言（Done 行/8 mod loaded 行/expression smoke 行/非 kqueue 缺类错误=0/无 Failed to start/无 crash-reports），gate 逻辑本地对真实 26.1.2.109 服务端干跑 problems=0；YAML 与 bash -n 双校验通过。CI 门禁三次迭代全记录：首跑红于 runner 无 ~/.gradle/jdks（Build 步骤工具链在 runner 预装位命中 25，改为多布局探测+java -version 实证+找不到打工具链清单后变红）；二跑红于 jar 暂存路径缺 neo/ 段（改为发现即转绝对路径）；三跑红于既有 M3.7 步骤的 vanilla far-chunk 噪声误报（见 M3.7 裁决，与本门禁无关）——每次失败均有日志诊断与独立提交，无跳步无掩盖。终验：run 35226808149 全绿（M3.9 生产启动门禁 CI 实跑通过 + artifact 上传），主 agent 经 API 下载该 run artifact（sha256 b690b6936dd4735cd4959040e9f3a2c8e43ddce47e9a293bf28c5018b3da0ed2，与本地亲证 jar 逐字节一致，含 429 个 expression 类），将该下载 jar 放入生产服务端 mods/ 亲证：Done (1.875s) + 8/8 mod loaded + 'BuildCraft expression smoke: 1+2*3 = 7' 生产执行 + 非 kqueue 缺类错误 0 + crash-reports 0——用户场景（下载 Action 包并运行）端到端闭环",
       "notes": "裁决 1（打包机制）：expression 平铺内联进单一 jar，与 legacy 1.20.1 fat jar 打包行为一致；不采用 jarJar 嵌套 jar（避免引入新打包格式与依赖声明，且 legacy 先例就是平铺）。裁决 2（处方偏离接受）：eager 形式 from(project(':expression').sourceSets.main.output) 因根项目先于子项目求值而静默贡献为空（jar 仍 191 类不报错），worker 改用语义等价的 lazy 闭包 from({ ... })，实测 jar 即含全部 429 类——接受，这是 Gradle 处理该求值时序的标准写法。裁决 3（kqueue 白名单）：netty kqueue 原生传输为 macOS-only，Linux 上类初始化失败并经 NeoForge DebugFile appender 打成一条 ERROR 属平台预期回退，与 BuildCraft 无关（服务器照常 Done 并监听），门禁按行白名单排除、计数仍入 summary 透明展示，不做 ERROR==0 一刀切。裁决 4（upload 顺序语义）：门禁插在 Upload built mod jar 之前但未改动 upload 步骤本身（append-only），效果为不可运行的 jar 不出现在 run 页面供下载。经验沉淀：dev classpath 会系统性蒙蔽打包类缺失，gametest/runServer 冒烟不能替代 mods/ 目录加载的实机验证——此类'产物可运行性'必须以消费者形态（installer 服务端）入 CI。"
+    },
+    {
+      "id": "M4.0",
+      "phase": "Phase 4 视觉与实机可玩性",
+      "title": "客户端视觉栈基线审计（1.20.1 → 26.1.2 移植全量清单）",
+      "status": "done",
+      "acceptance": "以 git 基线分支 8.0.x-1.20.1 为唯一事实源，只读盘点全部客户端视觉组件，产出按依赖排序的移植清单，归档入仓库",
+      "evidence": "用户实测反馈（2026-09-17）：进入世界后机器全是占位外观（原版熔炉贴图）且'贴图/JEI 全没移植'→ 主 agent 亲证：随包 jar 内纹理 PNG 数 = 0（unzip -l 全 jar grep '\\.png' = 0），src/main/resources/assets 各命名空间 textures 目录不存在；随包模型 1014 条贴图引用 100% 指向 minecraft:*（占位）；datagen_diff.py N3 条款证实占位化是 M3.2 登记裁决（'将 legacy 手工方块模型替换为每方块单一张占位模型'）而非事故，N4 证实纹理不在对拍范围（贴图入库不破门禁）→ worker 只读审计（git ls-tree/git show，全程零工作区改动）：8.0.x-1.20.1 客户端共 234 个 java 文件，含 20 个 BlockEntityRenderer + 1 个实体渲染器（RenderRobot 577 行分层模型）+ 9 个插件/流体/行为子渲染器；模型体系为 buildcraftlib 自研 JsonVariableModel（.jsonbc 资源 + expression 引擎变量求值 + MutableQuad 680 行），基线仅 2 个标准 json 模型 + 21 个 .jsonbc，其余全部代码定义/运行时烘焙（ModelPipe 管体程序化几何、ModelItemSimple/ModelPipeItem 物品栏动态模型、ModelEvent.ModifyBakingResult 烘焙替换）；GUI 体系 lib/gui ~90 类 + 各模块 24 个 Screen/Container 对（含 GuiGate 门编程、GuiZonePlanner 662 行），26.1.2 侧为零；静态/BER 分界实证：A 类纯静态（builder/frame/tank/chute 等）、B 类全 BER（管道/热交换/引擎）、C 类静态+BER 叠加（最常见）→ 报告 408 行归档 migration/snapshots/m4-visual-stack-audit.md，含 P0~P3 依赖排序。主 agent 复核：审计自称基线 PNG 1039 张有误，主 agent 亲数 git ls-tree 与工作区均 1016（8 命名空间 1015 + minecraft:white 1），以亲证为准",
+      "notes": "裁决 1（占位化的终结）：M3.2 '每方块单张占位模型' 裁决在 Phase 3（注册表/数据对拍）语境下成立，但用户实机反馈证明占位外观不构成可玩迁移——Phase 4 以基线真实资产（纹理 + generated 真模型 + BER/GUI 代码移植）取代占位，datagen_diff N3 归一化随之作废（后续任务更新）。裁决 2（JEI）：1.20.1 基线（本仓库 buildcraft_resources/子模块）无任何 JEI 兼容代码（grep 全库仅 changelog 提及），随包 data/ 已含 1561 条配方；实现 JEI 插件 = 引入新第三方依赖，违反既定红线，列为 M4.10 待用户裁决，不擅自实施。经验：CI 门禁（registry/lang/datagen 对拍）全部无法捕获'视觉缺失'——可玩性验收必须落到实机客户端（M4.9）"
+    },
+    {
+      "id": "M4.1",
+      "phase": "Phase 4 视觉与实机可玩性",
+      "title": "纹理资产全量搬迁（1015 张 PNG 入库）",
+      "status": "done",
+      "acceptance": "buildcraft_resources 8 命名空间全部纹理 PNG 原样入库 neo/src/main/resources/assets，数量与内容逐文件可证一致，不触碰对拍门禁",
+      "evidence": "worker 实施整目录复制 buildcraft_resources/assets/<ns>/textures → neo/src/main/resources/assets/<ns>/textures（8 ns）：transport 339/builders 177/core 163/robotics 107/silicon 93/factory 72/lib 46/energy 18 = 1015 张 PNG + 24 个 .png.mcmeta 动画元数据，源目标路径清单 diff 一致、全量 md5 比对 CONTENT_IDENTICAL（零处理二进制原样）；minecraft 命名空间（仅 white.png 1 张）按指令未搬 → 主 agent 亲证：git ls-tree 8.0.x-1.20.1 与工作区 buildcraft_resources 各 ns PNG 数逐一相等（1016 总数口径一致）；门禁安全性亲证：datagen_diff.py N4 明文'纹理 PNG 非 datagen 产物不在对拍范围'，S1（datagen vs 随包逐字节）只覆盖 datagen 再生物，贴图入库不破 M3.4；atlases/blocks.json（generated 侧 445 个 single source）按 M4.0 裁决留待 BER/精灵图集任务一并处理，未搬",
+      "notes": "裁决（搬运口径）：整目录原样搬（含 .mcmeta），不做筛选/重命名/压缩；minecraft: 命名空间资源不搬（非 BuildCraft 资产）；generated 侧 30 条 fluid_*_heat_N particle 引用在基线本就无对应 PNG（1.20.1 运行时染色），留 M4.2 裁决映射到 buildcraftlib 基底热贴图"
+    },
+    {
+      "id": "M4.2",
+      "phase": "Phase 4 视觉与实机可玩性",
+      "title": "静态模型真迁：datagen 产出基线真模型（废占位）",
+      "status": "pending",
+      "acceptance": "A 类方块的随包模型/blockstate 与 1.20.1 generated 基线语义一致（真实 BC 纹理引用），S1 无漂移门禁保持绿，客户端实机渲染非占位外观",
+      "evidence": "",
+      "notes": "待办：BcDatagen 供给器改为产出基线真模型；30 条 fluid heat particle 引用映射裁定；M3.2 占位裁决在台账废止"
+    },
+    {
+      "id": "M4.3",
+      "phase": "Phase 4 视觉与实机可玩性",
+      "title": "渲染基元补全 + 动态物品模型（BcQuad→MutableQuad 能力面）",
+      "status": "pending",
+      "acceptance": "物品栏/手持的引擎、管道等动态物品以真实贴图渲染（ModelItemSimple 等价），棋盘格消失",
+      "evidence": "",
+      "notes": "审计 P0-B + P1-4 物品侧"
+    },
+    {
+      "id": "M4.4",
+      "phase": "Phase 4 视觉与实机可玩性",
+      "title": "引擎家族 BER + jsonbc 最小实现（5 引擎 + MJ 发电机）",
+      "status": "pending",
+      "acceptance": "世界内引擎以 1.20.1 同款动态模型渲染（活塞行程/朝向/阶段），非静态占位",
+      "evidence": "",
+      "notes": "审计 P1-1；JsonVariableModel 最小集（cutout+textures+parent）"
+    },
+    {
+      "id": "M4.5",
+      "phase": "Phase 4 视觉与实机可玩性",
+      "title": "激光体系 + 采石场/标记完整渲染",
+      "status": "pending",
+      "acceptance": "采石场激光框/钻头、标记体积盒与 1.20.1 视觉等价",
+      "evidence": "",
+      "notes": "审计 P1-2/P1-3；RenderLevelStage 全局层等价"
+    },
+    {
+      "id": "M4.6",
+      "phase": "Phase 4 视觉与实机可玩性",
+      "title": "管道系统全量视觉（管体/插头/线/流）",
+      "status": "pending",
+      "acceptance": "所有管道按定义贴图渲染管体+连接，物品/流体/能量流可见，门/插头静态+动态层正确",
+      "evidence": "",
+      "notes": "审计 P1-4（最大件）；先全 BER 保正确，chunk 烘焙优化后置"
+    },
+    {
+      "id": "M4.7",
+      "phase": "Phase 4 视觉与实机可玩性",
+      "title": "流体渲染器族（FluidRenderer + 罐/蒸馏器/泵/热交换）",
+      "status": "pending",
+      "acceptance": "罐内流体高度/类型正确渲染，热交换/蒸馏器视觉完整",
+      "evidence": "",
+      "notes": "审计 P1-5；heat_exchange_static.jsonbc 依赖 jsonbc 解析器"
+    },
+    {
+      "id": "M4.8",
+      "phase": "Phase 4 视觉与实机可玩性",
+      "title": "GUI 框架 + 首批机器 GUI（引擎/罐/填充器/钻石管）",
+      "status": "pending",
+      "acceptance": "右键机器打开可操作的 BuildCraft 风格 GUI（26.1.2 Menu/Screen 体系），核心机器可交互",
+      "evidence": "",
+      "notes": "审计 P2-1/P2-2 首批；lib/gui 框架按 26.1.2 范式重写而非照搬"
+    },
+    {
+      "id": "M4.9",
+      "phase": "Phase 4 视觉与实机可玩性",
+      "title": "实机逐功能测试矩阵（客户端真机验收层）",
+      "status": "pending",
+      "acceptance": "Xvfb 真客户端逐功能实机验证：每功能进世界截图+日志双证据（创造页/物品模型/各机器/管道/门/机器人），旁观模式症状根因闭环",
+      "evidence": "",
+      "notes": "用户 2026-09-17 明确要求'一个一个功能进入游戏实机测试'；M4.9a 复现已派发"
+    },
+    {
+      "id": "M4.10",
+      "phase": "Phase 4 视觉与实机可玩性",
+      "title": "JEI 兼容（待用户裁决）",
+      "status": "pending",
+      "acceptance": "（若获批）JEI 插件展示 BuildCraft 配方/机器类别；不获批则维持基线忠实（配方已随包，JEI 装机即自动索引原版类别）",
+      "evidence": "",
+      "notes": "红线冲突：1.20.1 基线无 JEI 代码，实施需引入 JEI API 依赖，违反'不引入新第三方依赖'——必须用户明示批准方可开工"
     }
   ]
 }
