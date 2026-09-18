@@ -2,11 +2,11 @@
 
 > **本文件由 migration/scripts/progress.py 自动生成，禁止手改；更新任务请编辑 migration/tasks.json 或用 `--set` 命令。**
 >
-> 生成时间：2026-09-18 17:21:43 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-17）
+> 生成时间：2026-09-18 19:22:27 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-17）
 
 ## 总览
 
-**总任务数 49** ｜ pending(未完成)=2、in_progress(进行中)=0、partial(部分完成)=0、unverified(未验证)=0、done(已完成)=47 ｜ **完成率 96%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
+**总任务数 49** ｜ pending(未完成)=1、in_progress(进行中)=0、partial(部分完成)=0、unverified(未验证)=0、done(已完成)=48 ｜ **完成率 98%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
 
 ## 阶段汇总
 
@@ -16,7 +16,7 @@
 | Phase 1 工程化整备 | 5 | 5 | 100% |
 | Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109 | 13 | 13 | 100% |
 | Phase 3 功能验证金字塔 | 9 | 9 | 100% |
-| Phase 4 视觉与实机可玩性 | 16 | 14 | 88% |
+| Phase 4 视觉与实机可玩性 | 16 | 15 | 94% |
 
 ## 任务明细
 
@@ -62,7 +62,7 @@
 | M4.4 | 引擎家族 BER + jsonbc 最小实现（5 引擎 + MJ 发电机） | done（已完成） | 世界内引擎以 1.20.1 同款动态模型渲染（活塞行程/朝向/阶段），非静态占位 | 验收（三 worker 并行 + 修复轮，主 agent 亲跑全门禁：build EXIT=0 / datagen --strict PASS diff=0 / lang / license / registry --strict PASS / gametest 9/9）：jsonbc 最小解析器落地 buildcraft/lib/model/json（可复用 API，M4.7 将依赖）；EngineBlockRenderer 统一 BER（5 引擎+mj_dynamo）按 BE 电量/燃烧阶段取活塞行程、blockstate facing 取向、过热切纹理；BcEngineModels 烘焙缓存 + jsonbcResource() 后缀归一化（修复视锥内 FileNotFoundException 崩溃）；datagen 新增 BcTileModelsProvider + particle-only 方块模型/MJ 发电机模型重生成；新增 jsonbc 单测（合计 102 test 全过；覆盖率 lib 77.56%≥73%、core 4.88%≥2%）。实机（Xvfb 独立 gameDir run/m44）：数据包自动搭 6 台引擎同框两帧（/tmp/m44_shots/rig4_1/2.png）——东/南双朝向、4 秒间隔活塞相位差、燃烧阶段分级纹理（红/绿/青树干），无 jsonbc/引擎模型错误；修复轮 R5 联机环境 9 引擎视锥内 35s+ 零崩溃复核。<br>notes: 审计 P1-1；JsonVariableModel 最小集（cutout+textures+parent） 裁决记录：mj_dynamo 归 buildcraftenergy 注册；datagen minecraft:atlases/blocks.json 单写者改为 BcTileModelsProvider（含 3 项 fail-closed 纹理校验）；robotics item particle 告警仍属 M4.2 范围登记。 |
 | M4.5 | 激光体系 + 采石场/标记完整渲染 | done（已完成） | 采石场激光框/钻头、标记体积盒与 1.20.1 视觉等价 | 验收（三 worker 并行 + 修复轮，主 agent 亲跑全门禁同上）：激光烘焙库 buildcraft/lib/client/render/laser（8 文件，marker/signals/quarry 缩放 1/16.05\|1/16.2\|1/16 照抄基线）；QuarryBlockRenderer 重写：区域 12 边黄黑框（STRIPES_WRITE）+ 通电 POWER_LOW 束 + DRILL 钻头柱（yOffset 与基线静止位一致）；MarkerVolumeBlockRenderer 12 边体积盒（组内最小 pos 单次渲染）+ 六向红石 signal 线；MarkerPathBlockRenderer 链接线；QuarryBlockEntity receivePower 后 syncToClients 驱动客户端渲染。实机（Xvfb :91 独立 gameDir run/m45，/tmp/m45_client11.log 全链证据 + 截图已 Read 核对）：quarry_frame（黄黑框+角柱）、quarry_mining（红束+青钻头柱+挖掘堑壕，800% 放大像素确认）、markers_box_path（暗红体积盒+蓝链）、marker_signals（红石驱动 signal 线）。修复轮 R3：findNextMineable 扫描方向 bug 修正为自顶向下逐层（QuarryScan 纯函数 + QuarryScanOrderTest 5 用例含"2x2x2 第二层可挖"）；MAX_POWER_PER_TICK=51,200µMJ 经基线出处核对正确（TileQuarry.java:78 512*MjAPI.MJ）。<br>notes: 审计 P1-2/P1-3；RenderLevelStage 全局层等价 裁决记录（v1 取舍）：束起点=采石场方块中心（基线为 FRAME 吊点）、无钻头逐 tick 插值、FRAME 吊架未做——记 QuarryBlockRenderer javadoc；signals 颜色按基线贴图蓝（任务文本"红"作废，基线优先）；marker 连接为简化分布式实现（BE 存组成员表，无全局 cache/SavedData）。 |
 | M4.6 | 管道系统全量视觉（管体/插头/线/流） | done（已完成） | 所有管道按定义贴图渲染管体+连接，物品/流体/能量流可见，门/插头静态+动态层正确 | 验收（三 worker 并行 + 修复轮，主 agent 亲跑全门禁同上）：BcPipeFamilies 46 族注册；PipeHolderBlockEntity 全量（六向 ItemInbox/物品行进路由/能量切片/连接扫描/Beacon 式 update tag 同步）；PipeHolderBlockRenderer BER：管体+连接 cutout、插板六向、流体柱 translucent+tint、能量核 full-bright 脉冲、行进物品插值；KinesisPipeBlockRenderer 能量核+铁门；MessageMultiPipeItem 行进物品批量同步（legacy 报文格式）；items_stone.png 与基线 cmp 逐字节一致。实机（Xvfb :92 独立 gameDir run/m46，exit 0 干净退出）：7 根物品管 T 型/弯头/P0 连接正确、4 直管 client travelling items=1（漏斗→箱子链路+客户端镜像工作）、流体管水柱 1000mB、能量注入后 600/600 均衡 + kinesis 600µMJ gate=true；4 截图（items_layout/items_flow 两帧 diff 证实位移/fluids/power）已 Read 核对。修复轮 R2：M45/M46 探针全部 -Dbuildcraft.m45probe\|m46probe 门控（默认惰性，隔离环境浸泡 40s [M45] 日志 0 条）。能量 BER 证据当时经反射注入取得（引擎崩溃旧证据所致），R5 引擎修复复核后真实链路留 M4.9 矩阵复验。<br>notes: 审计 P1-4（最大件）；先全 BER 保正确，chunk 烘焙优化后置 裁决记录：FIRST_EXTRACT 一次性诊断日志保留（kinesis loggedGate 同模式）；chunk 烘焙优化按台账既定后置。 |
-| M4.7 | 流体渲染器族（FluidRenderer + 罐/蒸馏器/泵/热交换） | pending（未完成） | 罐内流体高度/类型正确渲染，热交换/蒸馏器视觉完整 | notes: 审计 P1-5；heat_exchange_static.jsonbc 依赖 jsonbc 解析器 |
+| M4.7 | 流体渲染器族（FluidRenderer + 罐/蒸馏器/泵/热交换） | done（已完成） | 罐内流体高度/类型正确渲染，热交换/蒸馏器视觉完整 | 验收（worker 完整证据链 + 主 agent 亲验全门禁）：build EXIT=0（test 114/114）；datagen_diff --strict PASS（S4 孤儿以 heat_exchange 单模型方案消除，未动门禁）；lang 857 PASS；license PASS；registry_diff（m47 dump）--strict PASS（BE id 不变，4 类切真实现）；runGameTestServer 9/9 主 agent 亲跑。实现：TankBlockEntity 16 桶真罐（基线 TileTank 容量）+ BER 液面高度/流体色（BcFluidWindows）；DistillerBlockEntity 输入罐+气/液输出罐按 BcDistillationRecipe 批处理（UP→气/DOWN→液）；HeatExchangeBlockEntity 双罐按 BcHeatExchangeRecipe 换热 + 基线 heat_exchange_static.jsonbc 经 M4.4 jsonbc 解析器烘焙（INVISIBLE+BER）；PumpBlockEntity 每 20t 抽正下方源方块；桶交互走 FluidUtil.interactWithFluidHandler（FactoryMachineBlock.useItemOn）；Beacon 式 BE 同步；FactoryMachineLogicTest 14 纯函数断言。实机（独立 gameDir run/m47、Xvfb :77、m47probe 门控 rig）：m47_tanks 三罐 1/3 水蓝 / 2/3 岩浆橙 / 空，液面高度与颜色对比明确；空桶抽水+灌入日志（目标罐 water ×1000 mB，interactWithFluidHandler=true）；蒸馏器 95 批精确配方算术（in 2000→1240，气 1520=95×16，液 285=95×3）；热交换 in 2000→950 / out 1050（105×10）；泵内罐 0→16000 mB；5 张截图 worker 逐张 Read 自核。<br>notes: 审计 P1-7 re-scope 落地：工厂 4 BE 原全为 PlaceholderBlockEntity，本任务行为+视觉合一。v1 裁剪（裁决保留，BE javadoc 已标注）：罐堆叠独立（基线 balanceTankFluids 未迁）；蒸馏/换热无 MJ 功耗，以 5t/批 pacing 替代基线电力驱动；热交换单块固定 MIDDLE 变体（基线 3 格塔）；泵仅抽正下方且未接管道取出；机器窗口流体显示 M2.5 占位贴图（heat_0_still 灰），贴图美化属 M2.5+。蒸馏器/热交换 GUI 未做（基线有）——GUI 第二批不在 49 任务清单内，M4.9 实机矩阵按现状验收并在证据中如实标注。 |
 | M4.8 | GUI 框架 + 首批机器 GUI（引擎/罐/填充器/钻石管） | done（已完成） | 右键机器打开可操作的 BuildCraft 风格 GUI（26.1.2 Menu/Screen 体系），核心机器可交互 | 验收（worker 两轮接力 + 主 agent 亲跑全门禁）：build EXIT=0（test+jacoco 过）；lang_diff 857/857 PASS；license 全过；registry_diff --strict PASS；runGameTestServer 9/9 含引擎/填充器 BE 重构回归。26.1.2 GUI 体系：lib/gui/menu/BcBlockEntityMenu + client BcContainerScreen 最小基类、IMenuTypeExtension+BlockPos 码流菜单（buildcraftcore:engine_stone / buildcraftbuilders:filler）、RegisterMenuScreensEvent 注册（latest.log: core menu screens registered ... -> StoneEngineScreen）。实机（Xvfb quickPlay + setblock + xdotool 右键）：引擎 GUI Stirling Engine 标题+燃料槽+Stored 行（steam_engine_gui.png），燃烧态火焰点亮且 Stored 6,600/100,000 μJ 实时上升（/tmp/m48/engine_burning_gui2.png）；填充器 GUI 27 格资源栏+fillerpattern 图案框（filler_gui_open.png）；交互服务器 NBT 落库：shift-click 煤→Items[{count:3,Slot:0b,minecraft:coal}]+bc_burn_remain:715 点火，再入 1 煤 count:4；填 16 泥土→Items[{count:16}]；生存/创造双模式复验 4 次受控试验全过。<br>notes: 审计 P2-1/P2-2 首批；lib/gui 框架按 26.1.2 范式重写而非照搬 遗留登记：buildcraft.core 覆盖率 2.01%（floor 2.0%）贴线，后续任务补测试；1 次未复现异常（手持燃料右键开 GUI 而非插入，早期 2 次，后续 4 次全过）记录在案，复现时从 isFuel→getBurnTime 早期返回方向排查。 |
 | M4.9 | 实机逐功能测试矩阵（客户端真机验收层） | pending（未完成） | Xvfb 真客户端逐功能实机验证：每功能进世界截图+日志双证据（创造页/物品模型/各机器/管道/门/机器人），旁观模式症状根因闭环 | 复现已完成（M4.9a，2026-09-17）：worker 以 Xvfb+xdotool 真客户端实机复现用户两症状——quickPlay 进档后 /data get entity @s playerGameType=3（硬证据）、HUD 三无、E 无背包、左键不可破坏、相机被锁；出生点旁 5-6 台蓝色箱形机器人（后证实为取证 rig 召唤的 robot_miner，正在挖出生点下的方块）。根因闭环见 M4.11（取证脚手架数据包污染 jar），非 mod 代码缺陷。矩阵化逐功能实机验证待 M4.11 修复落地 + 建世界死锁（复现会话另发现：GUI 创建新世界 3 次静默失败、菜单进旧档死锁于 Loading world 0% 且 jstack 证明无 Server 线程）诊断后展开；jstack 与日志存 /tmp/m49a/<br>notes: 用户 2026-09-17 明确要求'一个一个功能进入游戏实机测试'；M4.9a 复现已派发 |
 | M4.10 | M4.10 JEI 可选依赖集成（已获用户批准） | done（已完成） | JEI 以 compileOnly 可选依赖接入：未安装 JEI 时 BuildCraft 正常运行；安装后展示 BuildCraft 自定义配方类别（装配台/集成台/炼油等，以当前已注册 RecipeType 为准）；版本钉死进 gradle.properties；dev 实装（-PbcCompatDev）冒烟证据：JEI 加载 + BuildCraft 插件注册日志行 | 用户 2026-09-17 批准：'增加jei和jade的可选依赖'（第三方依赖禁令仅豁免 jei/jade）。接线（worker A）：maven.blamejared.com，jei 26.1.2-{common,neoforge}-api:29.37.0.99 compileOnly + jei-26.1.2-neoforge runtimeOnly（-PbcCompatDev 开发实装门控，默认关、CI 不受影响）；mods.toml [[dependencies.buildcraftcore]] modId=jei type=optional versionRange=[29,) ordering=AFTER side=BOTH。类别实现（worker B）：7 类别 assembly/integration/programming/distillation/heat_exchange/fuel/coolant，标题复用冻结键（tile.assemblyTableBlock.name 等 7 键主 agent 逐一 grep 证实存在；coolant 用 buildcraft.help.tank.title.tankCoolant 裁决接受），槽底 buildcraftcore:textures/gui/slot.png (7,7,18,18)、空白背景（不裁整机 GUI，裁决）、能量行 μJ 千分位、catalyst 挂机器方块（fuel/coolant→铁引擎）；JEI API 类型零外泄 compat/jei 包。验证：主 agent 亲跑无 bcCompatDev build 绿 + 官方 ./gradlew runClient --no-daemon -PbcCompatDev 联合冒烟（2026-09-17 22:22）：7 类别 registered 85/17/17/10/42/9/3 与 visible 计数逐项相等且与 JSON 配方全量一致、joined the game、零崩溃零 compat ERROR；license 绿。裁决：facade_swap 不做类别；远程服务器配方同步 v1 缓办（无 integrated server 时 warn 并保持类别空）<br>notes: 实施分派：worker A 依赖接线+骨架插件+实装冒烟；worker B 配方类别实现（依赖侦察清单）；裁决保留：类别背景贴图优先用已入库的 1015 张基线贴图（M4.1），不新造美术 |
@@ -74,12 +74,12 @@
 
 ## 代码实时指标
 
-采集时间：2026-09-18 17:21:43；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
+采集时间：2026-09-18 19:22:27；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
 
 | 指标 | 当前值 | 调研基线(2026-09) | 目标 |
 |---|---:|---:|---|
-| .java 文件总数 | 422 | 1772（main 1510 + API 子模块 262） | 无目标(参考) |
-| .java 总行数 | 54,800 | — | 无目标(参考) |
+| .java 文件总数 | 441 | 1772（main 1510 + API 子模块 262） | 无目标(参考) |
+| .java 总行数 | 56,918 | — | 无目标(参考) |
 | Forge import 文件数 | 0 | 549 | 0 |
 | Forge import 出现次数 | 0 | — | 0 |
 | TODO 出现次数 | 20 | 222 | 随 M1.4 下降 |

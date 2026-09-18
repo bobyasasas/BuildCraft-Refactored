@@ -53,7 +53,8 @@ public final class BcTileModelsProvider extends BcDatagenProvider {
     private static final Map<String, List<String>> TILE_JSONBC = Map.of(
             "buildcraftlib", List.of("engine_base"),
             "buildcraftcore", List.of("engine_redstone", "engine_creative"),
-            "buildcraftenergy", List.of("engine_stone", "engine_iron", "engine_rf", "mj_dynamo"));
+            "buildcraftenergy", List.of("engine_stone", "engine_iron", "engine_rf", "mj_dynamo"),
+            "buildcraftfactory", List.of("heat_exchange_static"));
 
     /**
      * The namespace whose provider instance emits the shared {@code minecraft:atlases/blocks.json} (exactly one of

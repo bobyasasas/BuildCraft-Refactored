@@ -280,6 +280,11 @@ public final class BcBlockStateProvider extends BcDatagenProvider {
                             "west", "buildcraftfactory:block/auto_workbench_item/side")));
             case "chute" -> BlockAsset.of(modid, path, chuteModel());
             case "distiller" -> BlockAsset.of(modid, path, distillerModel());
+            // M4.7: the jsonbc BER draws the whole machine in-world (RenderShape.INVISIBLE), so this cube_all is
+            // the item form + the break-particle texture (cube_all maps particle to #all); one model keeps the S4
+            // model ledger reachable
+            case "heat_exchange" -> BlockAsset.of(modid, path,
+                    BcModelJson.cubeAll("buildcraftfactory:block/heat_exchange/sprite_a"));
             case "flood_gate" -> new BlockAsset(modid + ":block/flood_gate/false_false_false_false_false", List.of(
                     new ModelFile("flood_gate/false_false_false_false_false", floodGateModel("closed")),
                     // the all-connected variant the baseline item model shows
@@ -305,7 +310,7 @@ public final class BcBlockStateProvider extends BcDatagenProvider {
             case "tank" -> BlockAsset.of(modid, path, tankModel());
             case "water_gel" -> BlockAsset.of(modid, "water_gel/gel",
                     BcModelJson.cubeAll("buildcraftfactory:block/gel/gel"));
-            // heat_exchange/tube: builtin/entity in the baseline (BER), keep the placeholder
+            // tube: builtin/entity in the baseline (BER), keep the placeholder
             default -> placeholderAsset(path);
         };
     }
