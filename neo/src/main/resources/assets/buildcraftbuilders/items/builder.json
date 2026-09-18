@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "buildcraftbuilders:block/builder/main"
+    "model": "buildcraftbuilders:item/builder"
   }
 }

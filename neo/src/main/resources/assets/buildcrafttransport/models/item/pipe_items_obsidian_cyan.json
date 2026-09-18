@@ -1,6 +1,78 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "minecraft:block/block",
+  "elements": [
+    {
+      "faces": {
+        "down": {
+          "texture": "#pipe",
+          "uv": [
+            4.0,
+            4.0,
+            12.0,
+            12.0
+          ]
+        },
+        "east": {
+          "texture": "#pipe",
+          "uv": [
+            4.0,
+            0.0,
+            12.0,
+            16.0
+          ]
+        },
+        "north": {
+          "texture": "#pipe",
+          "uv": [
+            4.0,
+            0.0,
+            12.0,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#pipe",
+          "uv": [
+            4.0,
+            0.0,
+            12.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#pipe",
+          "uv": [
+            4.0,
+            4.0,
+            12.0,
+            12.0
+          ]
+        },
+        "west": {
+          "texture": "#pipe",
+          "uv": [
+            4.0,
+            0.0,
+            12.0,
+            16.0
+          ]
+        }
+      },
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        16,
+        12
+      ]
+    }
+  ],
+  "gui_light": "front",
   "textures": {
-    "layer0": "minecraft:item/cyan_dye"
+    "particle": "buildcrafttransport:pipes/items_obsidian",
+    "pipe": "buildcrafttransport:pipes/items_obsidian"
   }
 }

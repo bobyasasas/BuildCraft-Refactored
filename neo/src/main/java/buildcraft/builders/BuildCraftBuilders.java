@@ -28,6 +28,8 @@ public class BuildCraftBuilders {
         BcBuildersBlocks.BLOCKS.register(modEventBus);
         BcBuildersItems.ITEMS.register(modEventBus);
         BcBuildersBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+        // M4.8: menu types (the lib/gui framework's registry half).
+        BcBuildersMenus.MENUS.register(modEventBus);
         // M3.4: datagen providers for this mod's namespace (item models, blockstates, lang placeholder).
         BcDatagen.register(modEventBus);
     }

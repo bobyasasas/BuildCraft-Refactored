@@ -40,6 +40,8 @@ public class BuildCraftCore {
         BcItems.ITEMS.register(modEventBus);
         BcBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         BcCreativeTabs.TABS.register(modEventBus);
+        // M4.8: menu types (the lib/gui framework's registry half).
+        BcMenus.MENUS.register(modEventBus);
 
         // M3.4: datagen providers for this mod's namespace (item models, blockstates, frozen lang).
         BcDatagen.register(modEventBus);

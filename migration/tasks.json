@@ -347,10 +347,10 @@
       "id": "M4.3",
       "phase": "Phase 4 视觉与实机可玩性",
       "title": "渲染基元补全 + 动态物品模型（BcQuad→MutableQuad 能力面）",
-      "status": "pending",
+      "status": "done",
       "acceptance": "物品栏/手持的引擎、管道等动态物品以真实贴图渲染（ModelItemSimple 等价），棋盘格消失",
-      "evidence": "",
-      "notes": "审计 P0-B + P1-4 物品侧；M4.2 顺延：chute/tank/builder/distiller 的 item display 变换未迁（item def 直指 block 模型）"
+      "evidence": "验收（worker 两轮接力：被中断轮的实现 + 本轮全量审计与实机验证，主 agent 亲跑全门禁）：build EXIT=0；datagen_diff --strict PASS diff=0（含新增 assets/minecraft/atlases/blocks.json 图集条目——BC 管道贴图跨命名空间渲染必要条件，实机成立）；lang/license PASS；registry_diff --strict（registry-dump-m48.json）PASS。实机：quickPlay 进世界 + m43give datapack 发放全类物品，131 张截图逐一人工核验（/tmp/m43_smoke/）：5 引擎（wood 蓝活塞/creative trunk_overheat）、多色 pipe_fluids/pipe_items/pipe_power（clay_lapis_red 蓝底红斑、diamond 纹、power_ion 青白）、plug_power_adaptor 金边、M4.2 顺延 display 变换 4 件（tank 玻璃红框/chute 格栅/distiller 红框/builder 深灰面板）全部真实贴图、手持 3D，无棋盘格；inv_final.png 16 件全渲染。引擎/管道 items/*.json→item model definitions→elements 模型抽查一致。",
+      "notes": "审计 P0-B + P1-4 物品侧；M4.2 顺延：chute/tank/builder/distiller 的 item display 变换未迁（item def 直指 block 模型） 遗留登记：18 条 buildcraftrobotics item particle 引用 warning（M4.2 范围，列 M4.9 前小修）；transport STICK_TEXTURES plug 死键无害不清理；datagen_diff.py 头注对 minecraft 图集描述过时（禁改清单文件，主 agent 侧待修）。"
     },
     {
       "id": "M4.4",
@@ -392,10 +392,10 @@
       "id": "M4.8",
       "phase": "Phase 4 视觉与实机可玩性",
       "title": "GUI 框架 + 首批机器 GUI（引擎/罐/填充器/钻石管）",
-      "status": "pending",
+      "status": "done",
       "acceptance": "右键机器打开可操作的 BuildCraft 风格 GUI（26.1.2 Menu/Screen 体系），核心机器可交互",
-      "evidence": "",
-      "notes": "审计 P2-1/P2-2 首批；lib/gui 框架按 26.1.2 范式重写而非照搬"
+      "evidence": "验收（worker 两轮接力 + 主 agent 亲跑全门禁）：build EXIT=0（test+jacoco 过）；lang_diff 857/857 PASS；license 全过；registry_diff --strict PASS；runGameTestServer 9/9 含引擎/填充器 BE 重构回归。26.1.2 GUI 体系：lib/gui/menu/BcBlockEntityMenu + client BcContainerScreen 最小基类、IMenuTypeExtension+BlockPos 码流菜单（buildcraftcore:engine_stone / buildcraftbuilders:filler）、RegisterMenuScreensEvent 注册（latest.log: core menu screens registered ... -> StoneEngineScreen）。实机（Xvfb quickPlay + setblock + xdotool 右键）：引擎 GUI Stirling Engine 标题+燃料槽+Stored 行（steam_engine_gui.png），燃烧态火焰点亮且 Stored 6,600/100,000 μJ 实时上升（/tmp/m48/engine_burning_gui2.png）；填充器 GUI 27 格资源栏+fillerpattern 图案框（filler_gui_open.png）；交互服务器 NBT 落库：shift-click 煤→Items[{count:3,Slot:0b,minecraft:coal}]+bc_burn_remain:715 点火，再入 1 煤 count:4；填 16 泥土→Items[{count:16}]；生存/创造双模式复验 4 次受控试验全过。",
+      "notes": "审计 P2-1/P2-2 首批；lib/gui 框架按 26.1.2 范式重写而非照搬 遗留登记：buildcraft.core 覆盖率 2.01%（floor 2.0%）贴线，后续任务补测试；1 次未复现异常（手持燃料右键开 GUI 而非插入，早期 2 次，后续 4 次全过）记录在案，复现时从 isFuel→getBurnTime 早期返回方向排查。"
     },
     {
       "id": "M4.9",
@@ -437,9 +437,9 @@
       "id": "M4.13",
       "phase": "Phase 4 视觉与实机可玩性",
       "title": "M4.13 GUI 建世界/菜单加载静默失败诊断（quickPlay 路径正常）",
-      "status": "in_progress",
+      "status": "done",
       "acceptance": "定位根因并给出修复或明确环境/上游定性（dev-only vs 生产影响）；GUI 创建新世界与菜单加载已有世界恢复可用，或登记为上游/环境已知问题并给出生产影响结论",
-      "evidence": "复现（累计 3 次：旧污染 jar 2 次 + M4.11 修复后新 jar 1 次，Xvfb 真客户端）：GUI 创建卡 'Preparing for world creation 50%' 190s+ 或 2-3 分钟后静默退回世界列表（无存档生成）；菜单选中已有世界 Play 卡加载屏 0%（level.dat mtime 不变）；全程零异常零崩溃零新增日志；jstack 无 Server thread、无 Worker-Main；quickPlay 同 jar 同存档 11 秒进入且四判据正常。M4.11 修复后复测两症状均未自愈 → 与数据包污染独立成因。只读调查（26.1.2 反编译源，Gradle 缓存 neoformruntime decompile jar）：(a) 旧会话线索 'Missing data pack tests' 与 'Loaded 3076 recipes' 溯源均为 vanilla 本体——前者是 dev 模式 CreateWorldScreen 注入 tests pack（CreateWorldScreen.java:174-176，IS_RUNNING_IN_IDE 才有；quickPlay 与生产用户无此注入）被 MinecraftServer.configurePackRepository 剔除时的 WARN，后者为 RecipeManager 正常加载行；(b) BuildCraft 客户端嫌疑清零：全源码 13 处 addListener 逐一核对全部在世界创建/加载窗口期之外，无 ScreenEvent/ClientTickEvent/WorldEvent/mixin，无自建线程池/锁/阻塞，CompletableFuture 仅存在于 datagen 离线路径 6 处；(c) 死点夹逼：创建路径 apply 段日志（recipes/advancements）全部打完后 vanilla WorldLoader.load 链尾（WorldLoader.java:79-82）→ CreateWorldScreen.java:190 managedBlock 的 loadResult 永不完成；菜单路径（WorldOpenFlows.java:302/310 data_read 屏）在链更早处零日志即死；两路径共用 WorldLoader.load，而 quickPlay 走同一链 0.8 秒完成（2026-09-17-3.log.gz 实证）",
+      "evidence": "结案（worker 只读诊断 + 证据修正，主 agent 采纳）：本轮症状完全无法复现——dev create 8/8（6-11s 进世界，含新 JVM 首建场景）、dev play 2/2（5-6s）、生产客户端（NeoForge 26.1.2.109 installer client + 本 mod jar，隔离 gameDir /tmp/m4_13/prod_e3）create 14s / play 7s 全成功；生产主菜单无 IDE tests 注入项。上轮\"3 次复现\"复核为误读：2 次实为成功 join + 1 次 Xvfb :99 死亡杀客户端（日志 X connection to :99 broken），今日零真卡死样本。H1（WorldLoader 链尾信号丢失）无法证实/证伪，但四组合 13 连续通过削弱其可能性；H2（Xvfb/llvmpipe 无头环境不稳）获直接观测；新确认干扰源：多客户端共享 neo/run gameDir 产生世界锁（Locked by another running instance，零日志拒绝加载，形态酷似原 0% 症状）。定性：非生产 P0，生产端正常；症状为 dev/无头环境特定或历史偶发。M4.9 实机矩阵强制规程：每实例隔离 gameDir、起前核对 Xvfb 存活、加载时长与 10s 基线对比后再判卡。产物留存 /tmp/m4_13/（jstack 健康基线+误报样本、e1/e2/e3 全日志与截图、prod 安装台）。上游 issue 检索待 9-19 WebSearch 配额恢复补做（低优先级）。",
       "notes": "假设排序：H1 vanilla WorldLoader 链尾完成信号丢失（dev 模式 tests pack 剔除路径特有嫌疑）> H2 Xvfb/llvmpipe 无头 GL 环境缺陷 > H3 BuildCraft 数据内容在 GUI 特有 pack 组合下触发。裁决（用户影响评估）：BuildCraft 代码直接责任已排除；症状目前仅在 dev/Xvfb 环境复现，生产 jar 用户路径（非 IDE 无 tests 注入）未见受影响证据，暂不定性生产 P0；但 M4.9 实机矩阵展开前必须闭环本项。下一步实验（按性价比）：(1) H1 双 jstack（卡住时 5s 间隔两次，分辨 Render thread 栈顶是 managedBlock 轮询还是纯渲染）；(2) 生产客户端 GUI 冒烟试验台（NeoForge installer client 模式 + 我们的 jar，判定 dev-only 还是生产也中）；(3) NeoForge issue tracker 检索同症状（WebSearch 配额 2026-09-19 恢复后补，本会话本地与 worker 均已耗尽）；(4) H3 数据二分（临时改 build 输出侧 data/ 目录复跑 GUI）"
     },
     {

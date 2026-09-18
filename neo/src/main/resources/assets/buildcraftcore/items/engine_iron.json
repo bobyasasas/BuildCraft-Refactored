@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "buildcraftcore:block/engine_iron"
+    "model": "buildcraftcore:item/engine_iron"
   }
 }

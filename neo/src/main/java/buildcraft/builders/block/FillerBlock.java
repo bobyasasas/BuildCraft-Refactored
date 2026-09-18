@@ -35,11 +35,12 @@ import buildcraft.builders.blockentity.FillerBlockEntity;
  * return here (the slice filler works on a programmatic work area instead of a facing-relative one; facing comes back
  * with the marker/volume box systems).
  *
- * <p>Right-clicking with a placeable block item loads it into the {@link FillerBlockEntity} resource buffer (the
- * no-GUI slice interaction, the {@code StoneEngineBlock#useItemOn} pattern); the same entry point is available
- * programmatically via {@link FillerBlockEntity#insertResource}, which the game tests call directly. Pattern/area
- * selection stay programmatic too (legacy: the pattern GUI and marker boxes &mdash; not migrated, see
- * {@link FillerBlockEntity}).
+ * <p>Right-clicking with a placeable block item loads it into the {@link FillerBlockEntity} resource inventory (the
+ * {@code StoneEngineBlock#useItemOn} pattern); right-clicking otherwise opens the M4.8 filler GUI
+ * ({@link #useWithoutItem}, the vanilla furnace pattern: the block entity is its own {@code MenuProvider} and the menu
+ * opens through {@code player.openMenu}). The same insertion entry point is available programmatically via
+ * {@link FillerBlockEntity#insertResource}, which the game tests call directly. Pattern/area selection stay
+ * programmatic too (legacy: the pattern GUI and marker boxes &mdash; not migrated, see {@link FillerBlockEntity}).
  */
 public class FillerBlock extends BaseEntityBlock {
 
@@ -72,7 +73,19 @@ public class FillerBlock extends BaseEntityBlock {
             }
             return InteractionResult.SUCCESS;
         }
+        // Not a placeable block item (or every slot is full): fall through to the empty-hand GUI behaviour.
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+            BlockHitResult hitResult) {
+        // The vanilla furnace pattern: the block entity is its own MenuProvider; the NeoForge openMenu extension
+        // writes the position into the menu's extra data so the client half can re-resolve the filler.
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof FillerBlockEntity filler) {
+            player.openMenu(filler, pos);
+        }
+        return InteractionResult.SUCCESS;
     }
 
     @Override

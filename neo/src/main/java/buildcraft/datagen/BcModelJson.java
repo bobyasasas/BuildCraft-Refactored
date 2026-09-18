@@ -105,17 +105,23 @@ final class BcModelJson {
 
     /** One box element ({@code from}/{@code to} corners plus per-direction faces, in baseline face order). */
     static final class Element {
-        private final int[] from;
-        private final int[] to;
+        private final double[] from;
+        private final double[] to;
         private final Map<String, Face> faces = new LinkedHashMap<>();
 
-        private Element(int[] from, int[] to) {
+        private Element(double[] from, double[] to) {
             this.from = from;
             this.to = to;
         }
 
         static Element of(int fx, int fy, int fz, int tx, int ty, int tz) {
-            return new Element(new int[]{fx, fy, fz}, new int[]{tx, ty, tz});
+            return of((double) fx, fy, fz, tx, ty, tz);
+        }
+
+        /** Fractional corners for the M4.3 frozen-variable item geometries (the engine's moving cuboid bakes at
+         * y 7.198/11.198, the plugs at x 4.01). */
+        static Element of(double fx, double fy, double fz, double tx, double ty, double tz) {
+            return new Element(new double[]{fx, fy, fz}, new double[]{tx, ty, tz});
         }
 
         Element face(String dir, String texture) {
@@ -133,15 +139,15 @@ final class BcModelJson {
             return this;
         }
 
-        private JsonObject toJson() {
+        JsonObject toJson() {
             JsonObject obj = new JsonObject();
             JsonObject facesObj = new JsonObject();
             for (Map.Entry<String, Face> entry : faces.entrySet()) {
                 facesObj.add(entry.getKey(), entry.getValue().toJson());
             }
             obj.add("faces", facesObj);
-            obj.add("from", ints(from));
-            obj.add("to", ints(to));
+            obj.add("from", coords(from));
+            obj.add("to", coords(to));
             return obj;
         }
     }
@@ -197,10 +203,16 @@ final class BcModelJson {
         }
     }
 
-    private static JsonArray ints(int[] values) {
+    private static JsonArray coords(double[] values) {
         JsonArray arr = new JsonArray();
-        for (int v : values) {
-            arr.add(v);
+        for (double v : values) {
+            // whole values emit as integers (the established shipped convention, e.g. the robot base "from": [4, 4, 4]);
+            // fractional values keep their decimals (gson writes 7.198, 4.01, ...)
+            if (v == Math.floor(v) && !Double.isInfinite(v)) {
+                arr.add((long) v);
+            } else {
+                arr.add(v);
+            }
         }
         return arr;
     }

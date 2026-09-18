@@ -38,8 +38,10 @@ import buildcraft.core.blockentity.StoneEngineBlockEntity;
  * and animation behaviour are not migrated here (see {@link StoneEngineBlockEntity}). The final energy module registry
  * placement is an M2.4/M2.9 decision.
  *
- * <p>Right-clicking with a fuel item inserts it into the {@link StoneEngineBlockEntity} (burn length resolved through
- * the vanilla fuel table); the same action is available programmatically via
+ * <p>Right-clicking with a fuel item inserts one item into the {@link StoneEngineBlockEntity} (burn length resolved
+ * through the vanilla fuel table); right-clicking otherwise opens the M4.8 stone engine GUI
+ * ({@link #useWithoutItem}, the vanilla furnace pattern: the block entity is its own {@code MenuProvider} and the menu
+ * opens through {@code player.openMenu}). Fuel insertion stays available programmatically via
  * {@link StoneEngineBlockEntity#insertFuel(net.minecraft.world.item.ItemStack, net.minecraft.world.level.block.entity.FuelValues)},
  * which the game tests call directly.
  */
@@ -84,7 +86,19 @@ public class StoneEngineBlock extends BaseEntityBlock {
             }
             return InteractionResult.SUCCESS;
         }
+        // Not fuel (or the slot is full): fall through to the empty-hand behaviour, which opens the GUI.
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+            BlockHitResult hitResult) {
+        // The vanilla furnace pattern: the block entity is its own MenuProvider; the NeoForge openMenu extension
+        // writes the position into the menu's extra data so the client half can re-resolve the engine.
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof StoneEngineBlockEntity engine) {
+            player.openMenu(engine, pos);
+        }
+        return InteractionResult.SUCCESS;
     }
 
     @Override
