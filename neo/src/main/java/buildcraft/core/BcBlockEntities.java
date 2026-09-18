@@ -10,7 +10,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import buildcraft.core.blockentity.EnergyMeterBlockEntity;
+import buildcraft.core.blockentity.EngineBlockEntity;
 import buildcraft.core.blockentity.KinesisPipeBlockEntity;
+import buildcraft.core.blockentity.MarkerPathBlockEntity;
+import buildcraft.core.blockentity.MarkerVolumeBlockEntity;
 import buildcraft.core.blockentity.PlaceholderBlockEntity;
 import buildcraft.core.blockentity.StoneEngineBlockEntity;
 
@@ -60,35 +63,34 @@ public final class BcBlockEntities {
     // PlaceholderBlockEntity. All placeholder, behaviour classes migrate in M2.5+.
     // -------------------------------------------------------------------------
 
-    /** Placeholder for {@code buildcraftcore:engine_wood}; behaviour class migrates in M2.5+. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlaceholderBlockEntity>> ENGINE_WOOD = BLOCK_ENTITIES
+    /** M4.4: the real wooden engine block entity (render slice of the legacy {@code TileEngineRedstone_BC8}). */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EngineBlockEntity>> ENGINE_WOOD = BLOCK_ENTITIES
             .register("engine_wood", () -> new BlockEntityType<>(
-                    (pos, state) -> new PlaceholderBlockEntity(BcBlockEntities.ENGINE_WOOD.value(), pos, state), BcBlocks.ENGINE_WOOD.value()));
+                    (pos, state) -> new EngineBlockEntity(BcBlockEntities.ENGINE_WOOD.value(), pos, state, false), BcBlocks.ENGINE_WOOD.value()));
 
-    /** Placeholder for {@code buildcraftcore:engine_creative}; behaviour class migrates in M2.5+. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlaceholderBlockEntity>> ENGINE_CREATIVE = BLOCK_ENTITIES
+    /** M4.4: the real creative engine block entity (render slice of the legacy {@code TileEngineCreative}). */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EngineBlockEntity>> ENGINE_CREATIVE = BLOCK_ENTITIES
             .register("engine_creative", () -> new BlockEntityType<>(
-                    (pos, state) -> new PlaceholderBlockEntity(BcBlockEntities.ENGINE_CREATIVE.value(), pos, state), BcBlocks.ENGINE_CREATIVE.value()));
+                    (pos, state) -> new EngineBlockEntity(BcBlockEntities.ENGINE_CREATIVE.value(), pos, state, true), BcBlocks.ENGINE_CREATIVE.value()));
 
-    /** Placeholder for {@code buildcraftcore:engine_iron}; behaviour class migrates in M2.5+. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlaceholderBlockEntity>> ENGINE_IRON = BLOCK_ENTITIES
+    /** M4.4: the real iron engine block entity (render slice of the legacy iron {@code TileEngineIron_BC8}). */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EngineBlockEntity>> ENGINE_IRON = BLOCK_ENTITIES
             .register("engine_iron", () -> new BlockEntityType<>(
-                    (pos, state) -> new PlaceholderBlockEntity(BcBlockEntities.ENGINE_IRON.value(), pos, state), BcBlocks.ENGINE_IRON.value()));
+                    (pos, state) -> new EngineBlockEntity(BcBlockEntities.ENGINE_IRON.value(), pos, state, false), BcBlocks.ENGINE_IRON.value()));
 
-    /** Placeholder for {@code buildcraftcore:engine_rf}; behaviour class migrates in M2.5+. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlaceholderBlockEntity>> ENGINE_RF = BLOCK_ENTITIES
+    /** M4.4: the real rf engine block entity (render slice of the legacy rf {@code TileEngineRf_BC8}). */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EngineBlockEntity>> ENGINE_RF = BLOCK_ENTITIES
             .register("engine_rf", () -> new BlockEntityType<>(
-                    (pos, state) -> new PlaceholderBlockEntity(BcBlockEntities.ENGINE_RF.value(), pos, state), BcBlocks.ENGINE_RF.value()));
+                    (pos, state) -> new EngineBlockEntity(BcBlockEntities.ENGINE_RF.value(), pos, state, false), BcBlocks.ENGINE_RF.value()));
 
-    /** Placeholder for {@code buildcraftcore:marker_path}; behaviour class migrates in M2.5+. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlaceholderBlockEntity>> MARKER_PATH = BLOCK_ENTITIES
-            .register("marker_path", () -> new BlockEntityType<>(
-                    (pos, state) -> new PlaceholderBlockEntity(BcBlockEntities.MARKER_PATH.value(), pos, state), BcBlocks.MARKER_PATH.value()));
+    /** M4.5: the real path marker (legacy {@code TileMarkerPath}), replacing the M2.4a placeholder. */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MarkerPathBlockEntity>> MARKER_PATH = BLOCK_ENTITIES
+            .register("marker_path", () -> new BlockEntityType<>(MarkerPathBlockEntity::new, BcBlocks.MARKER_PATH.value()));
 
-    /** Placeholder for {@code buildcraftcore:marker_volume}; behaviour class migrates in M2.5+. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlaceholderBlockEntity>> MARKER_VOLUME = BLOCK_ENTITIES
-            .register("marker_volume", () -> new BlockEntityType<>(
-                    (pos, state) -> new PlaceholderBlockEntity(BcBlockEntities.MARKER_VOLUME.value(), pos, state), BcBlocks.MARKER_VOLUME.value()));
+    /** M4.5: the real volume marker (legacy {@code TileMarkerVolume}), replacing the M2.4a placeholder. */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MarkerVolumeBlockEntity>> MARKER_VOLUME = BLOCK_ENTITIES
+            .register("marker_volume", () -> new BlockEntityType<>(MarkerVolumeBlockEntity::new, BcBlocks.MARKER_VOLUME.value()));
+
 
     /** Placeholder for {@code buildcraftcore:power_tester}; behaviour class migrates in M2.5+. */
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlaceholderBlockEntity>> POWER_TESTER = BLOCK_ENTITIES

@@ -6,15 +6,18 @@
 package buildcraft.transport;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import buildcraft.lib.BcLangKeys;
+import buildcraft.transport.block.PipeHolderBlock;
 
 /**
  * Central block registration for buildcrafttransport (task M2.4c registry parity). Every block id the 1.20.1 registry
- * baseline attributes to {@code buildcrafttransport} registers here as a plain placeholder {@link Block}; the real
- * behaviour classes (legacy {@code BCTransportBlocks}) migrate in M2.5+. Note the baseline deliberately has no item for
- * {@code pipe_holder}, so none is invented in {@link BcTransportItems}.
+ * baseline attributes to {@code buildcrafttransport} registers here; since M4.6 the shared pipe block carries the real
+ * {@link PipeHolderBlock} behaviour, the rest are plain placeholder {@link Block}s whose behaviour classes migrate in
+ * M2.5+. Note the baseline deliberately has no item for {@code pipe_holder}, so none is invented in
+ * {@link BcTransportItems}.
  */
 public final class BcTransportBlocks {
 
@@ -24,9 +27,14 @@ public final class BcTransportBlocks {
     public static final DeferredBlock<Block> FILTERED_BUFFER = BcLangKeys.simpleBlock(BLOCKS, "filtered_buffer",
             properties -> properties.strength(0.5F));
 
-    /** Placeholder for {@code buildcrafttransport:pipe_holder} (legacy {@code BlockPipeHolder}); behaviour class migrates in M2.5+. */
-    public static final DeferredBlock<Block> PIPE_HOLDER = BcLangKeys.simpleBlock(BLOCKS, "pipe_holder",
-            properties -> properties.strength(0.25F, 3.0F).noOcclusion());
+    /**
+     * The shared pipe block (M4.6): one block, one block entity, every pipe family &mdash; the family/colour/plugs/
+     * connections live in {@code PipeHolderBlockEntity} and the visual is a BER (legacy {@code BlockPipeHolder}).
+     * Same properties as the M2.4c placeholder (strength 0.25/3, no occlusion), so the datagen output is unchanged.
+     */
+    public static final DeferredBlock<PipeHolderBlock> PIPE_HOLDER = BcLangKeys.block(BLOCKS, "pipe_holder",
+            PipeHolderBlock::new,
+            () -> BlockBehaviour.Properties.of().strength(0.25F, 3.0F).noOcclusion());
 
     private BcTransportBlocks() {
     }

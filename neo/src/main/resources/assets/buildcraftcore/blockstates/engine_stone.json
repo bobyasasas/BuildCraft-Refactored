@@ -1,19 +1,16 @@
 {
   "variants": {
     "facing=east": {
-      "model": "buildcraftcore:block/engine_stone",
-      "y": 90
+      "model": "buildcraftcore:block/engine_stone"
     },
     "facing=north": {
       "model": "buildcraftcore:block/engine_stone"
     },
     "facing=south": {
-      "model": "buildcraftcore:block/engine_stone",
-      "y": 180
+      "model": "buildcraftcore:block/engine_stone"
     },
     "facing=west": {
-      "model": "buildcraftcore:block/engine_stone",
-      "y": 270
+      "model": "buildcraftcore:block/engine_stone"
     }
   }
 }

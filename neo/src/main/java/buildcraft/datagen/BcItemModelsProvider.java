@@ -5,7 +5,6 @@
 
 package buildcraft.datagen;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,10 +51,10 @@ import net.neoforged.neoforge.registries.DeferredHolder;
  * these overrides emit a {@code models/item/<id>.json} and repoint the definition at it — the geometry/transform
  * tables below were transcribed from the baseline {@code buildcraft_resources} jsonbc models and generated item
  * models.</li>
- * <li>Transport additionally emits {@code assets/minecraft/atlases/blocks.json} (the M4.3 pipes atlas entry): the
- * pipe/plug item models reference {@code textures/pipes/} sprites, which no vanilla atlas directory rule covers, so
- * a {@code minecraft:directory} source stitches them into the shared blocks atlas — the same coverage the 1.20.1
- * baseline's generated atlas provided through one {@code minecraft:single} entry per sprite.</li>
+ * <li>The shared {@code assets/minecraft/atlases/blocks.json} moved to {@link BcTileModelsProvider} in the M4.5
+ * close-out (the lasers/frame/drill BER sprite sources joined the M4.3 pipes source there, and one file must have one
+ * writer) — the pipe/plug item models still rely on its {@code pipes} directory source for their
+ * {@code textures/pipes/} sprites.</li>
  * <li>Every other item gets a definition pointing at {@code <ns>:item/<id>} plus a {@code models/item/<id>.json}.
  * M4.2 swapped in the 1.20.1 baseline's real-texture flat models for every item whose texture shipped (gears,
  * goggles, wrench, paintbrushes, chipsets, waterproof, the robot boards and robot bodies, ...) and keeps the M3.4
@@ -119,16 +118,18 @@ public final class BcItemModelsProvider extends BcDatagenProvider {
             Map.entry("board_robot_stripes", "yellow"));
 
     /**
-     * M4.3: the five engines, by full item id, to the namespace holding their {@code block/engine/<type>} back/side
-     * textures (the baseline {@code models/tile/engine_*.jsonbc} texture tables: wood/creative live in core, the
-     * combustion engines in energy).
+     * M4.3: the five engines + the M4.4 MJ dynamo, by full item id, to the namespace holding their
+     * {@code block/engine/<type>} resp. {@code block/mj_dynamo} back/side textures (the baseline
+     * {@code models/tile/engine_*.jsonbc} texture tables: wood/creative live in core, the combustion engines and the
+     * dynamo in energy).
      */
     private static final Map<String, String> ENGINE_TEXTURE_NAMESPACES = Map.ofEntries(
             Map.entry("buildcraftcore:engine_wood", "buildcraftcore"),
             Map.entry("buildcraftcore:engine_creative", "buildcraftcore"),
             Map.entry("buildcraftcore:engine_stone", "buildcraftenergy"),
             Map.entry("buildcraftcore:engine_iron", "buildcraftenergy"),
-            Map.entry("buildcraftcore:engine_rf", "buildcraftenergy"));
+            Map.entry("buildcraftcore:engine_rf", "buildcraftenergy"),
+            Map.entry("buildcraftenergy:mj_dynamo", "buildcraftenergy"));
 
     /**
      * M4.3: the pipe families whose item texture is not the plain {@code <flow>_<material>} stem — the baseline
@@ -217,22 +218,6 @@ public final class BcItemModelsProvider extends BcDatagenProvider {
     @Override
     public CompletableFuture<?> run(CachedOutput cache) {
         List<CompletableFuture<?>> futures = new ArrayList<>();
-        if ("buildcrafttransport".equals(modid)) {
-            // M4.3: the pipe item models reference sprites under textures/pipes/, which no vanilla atlas directory
-            // source covers — stitch them into the shared minecraft blocks atlas like the 1.20.1 baseline's
-            // generated assets/minecraft/atlases/blocks.json did (single source per sprite there, one directory
-            // rule here: same coverage, no per-texture maintenance). Cross-namespace on purpose, hence no saveAsset.
-            JsonObject atlas = new JsonObject();
-            JsonArray sources = new JsonArray();
-            JsonObject directory = new JsonObject();
-            directory.addProperty("type", "minecraft:directory");
-            directory.addProperty("source", "pipes");
-            directory.addProperty("prefix", "pipes/");
-            sources.add(directory);
-            atlas.add("sources", sources);
-            futures.add(BcDatagenJson.save(cache, atlas, paths.asset("minecraft", "atlases", "blocks"),
-                    DataProvider.KEY_COMPARATOR));
-        }
         for (DeferredHolder<Item, ? extends Item> holder : items) {
             String path = holder.getId().getPath();
             Item item = holder.get();
@@ -449,24 +434,37 @@ public final class BcItemModelsProvider extends BcDatagenProvider {
      * state ({@code progress = 0.2} → {@code progress_size = 3.198}, stage BLUE; the creative engine baked BLACK,
      * whose {@code trunk_black} abstracts onto {@code trunk_overheat}), parented to {@code minecraft:block/block}
      * (= the baseline {@code TRANSFORM_BLOCK}) with front GUI light ({@code ModelItemSimple#usesBlockLight()} false).
+     * M4.4: the MJ dynamo joins with its own jsonbc geometry ({@code mj_dynamo.jsonbc}: a 12&times;12
+     * {@code #front}-textured moving block at the same frozen progress).
      */
     private JsonObject engineItemModel(String path) {
         String namespace = ENGINE_TEXTURE_NAMESPACES.get(modid + ":" + path);
         if (namespace == null) {
             throw new IllegalStateException("BcItemModelsProvider: engine without texture namespace " + modid + ":" + path);
         }
-        String type = path.substring("engine_".length());
+        boolean dynamo = "mj_dynamo".equals(path);
+        String type = dynamo ? "mj_dynamo" : path.substring("engine_".length());
         String trunkStem = "creative".equals(type) ? "block/engine/trunk_overheat" : "block/engine/trunk_blue";
-        validateTexture(namespace, "block/engine/" + type + "/back");
-        validateTexture(namespace, "block/engine/" + type + "/side");
+        String texStem = dynamo ? "block/mj_dynamo" : "block/engine/" + type;
+        validateTexture(namespace, texStem + "/back");
+        validateTexture(namespace, texStem + "/side");
+        if (dynamo) {
+            validateTexture(namespace, texStem + "/front");
+        }
         validateTexture("buildcraftlib", trunkStem);
         validateTexture("buildcraftlib", "block/engine/chamber_base");
-        JsonObject model = BcModelJson.elements("minecraft:block/block", BcModelJson.tex(
-                "back", namespace + ":block/engine/" + type + "/back",
+        Map<String, String> textures = BcModelJson.tex(
+                "back", namespace + ":" + texStem + "/back",
                 "chamber", "buildcraftlib:block/engine/chamber_base",
-                "particle", namespace + ":block/engine/" + type + "/back",
-                "side", namespace + ":block/engine/" + type + "/side",
-                "trunk", "buildcraftlib:" + trunkStem),
+                "particle", namespace + ":" + texStem + "/back",
+                "side", namespace + ":" + texStem + "/side",
+                "trunk", "buildcraftlib:" + trunkStem);
+        if (dynamo) {
+            // the dynamo's frozen base_moving cube is #front-textured (its jsonbc), so the map needs the key or the
+            // client logs "Missing texture references in model buildcraftenergy:item/mj_dynamo: #front"
+            textures.put("front", namespace + ":" + texStem + "/front");
+        }
+        JsonObject model = BcModelJson.elements("minecraft:block/block", textures,
                 // base: the fixed foot block, back texture on the caps, side texture around the rim
                 BcModelJson.Element.of(0, 0, 0, 16, 4, 16)
                         .face("down", "#back", null, null, 0, 0, 16, 16)
@@ -481,14 +479,23 @@ public final class BcItemModelsProvider extends BcDatagenProvider {
                         .face("south", "#chamber", null, null, 3, 3.198, 13, 0)
                         .face("west", "#chamber", null, null, 3, 3.198, 13, 0)
                         .face("east", "#chamber", null, null, 3, 3.198, 13, 0),
-                // base_moving: the travelling middle block at progress 0.2 (y 4+3.198 → 8+3.198)
-                BcModelJson.Element.of(0, 7.198, 0, 16, 11.198, 16)
-                        .face("down", "#back", null, null, 0, 0, 16, 16)
-                        .face("up", "#back", null, null, 0, 0, 16, 16)
-                        .face("north", "#side", null, null, 0, 0, 16, 4)
-                        .face("south", "#side", null, null, 0, 0, 16, 4)
-                        .face("west", "#side", null, null, 0, 0, 16, 4)
-                        .face("east", "#side", null, null, 0, 0, 16, 4),
+                // base_moving: the travelling middle block at progress 0.2 (y 4+3.198 → 8+3.198); the dynamo's is
+                // 12×12 and #front-textured (its jsonbc cubes it in to from 2 to 14)
+                dynamo
+                    ? BcModelJson.Element.of(2, 7.198, 2, 14, 11.198, 14)
+                            .face("down", "#front", null, null, 0, 0, 12, 12)
+                            .face("up", "#front", null, null, 0, 0, 12, 12)
+                            .face("north", "#front", null, null, 0, 12, 12, 16)
+                            .face("south", "#front", null, null, 0, 12, 12, 16)
+                            .face("west", "#front", null, null, 0, 12, 12, 16)
+                            .face("east", "#front", null, null, 0, 12, 12, 16)
+                    : BcModelJson.Element.of(0, 7.198, 0, 16, 11.198, 16)
+                            .face("down", "#back", null, null, 0, 0, 16, 16)
+                            .face("up", "#back", null, null, 0, 0, 16, 16)
+                            .face("north", "#side", null, null, 0, 0, 16, 4)
+                            .face("south", "#side", null, null, 0, 0, 16, 4)
+                            .face("west", "#side", null, null, 0, 0, 16, 4)
+                            .face("east", "#side", null, null, 0, 0, 16, 4),
                 // trunk: the power stalk, stage-coloured (baseline item bake froze stage BLUE / creative BLACK)
                 BcModelJson.Element.of(4, 4, 4, 12, 16, 12)
                         .face("down", "#trunk", null, null, 0, 0, 8, 8)

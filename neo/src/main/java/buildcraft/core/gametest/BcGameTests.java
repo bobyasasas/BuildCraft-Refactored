@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.event.RegisterGameTestsEvent;
+import net.neoforged.neoforge.server.loading.ServerModLoader;
 import buildcraft.builders.BcBuildersBlocks;
 import buildcraft.builders.blockentity.FillerBlockEntity;
 import buildcraft.builders.blockentity.QuarryBlockEntity;
@@ -47,19 +48,26 @@ import buildcraft.robotics.zone.BoxZone;
  * ({@code RegisterGameTestsEvent}, see the handler wiring in {@link BuildCraftCore}). Each test pairs a structure
  * template from {@code data/buildcraftcore/structure/} with a test function from {@link BcGameTestInstance}.
  *
- * <p>Registration is deliberately skipped on the client dist: {@code minecraft:test_instance} is one of vanilla's
- * login-synchronised registries ({@code RegistryDataLoader#SYNCHRONIZED_REGISTRIES}), and a code-registered instance
- * whose codec is not an entry of the frozen {@code minecraft:test_instance_type} registry cannot be encoded for that
- * sync — the encode failure used to crash every singleplayer world join with "Failed to serialize ... /
- * BcGameTestInstance is code-registered" (found by the M2.5 login handshake probe). The tests only ever run on the
- * headless gametest server (a dedicated, server-dist process), so skipping the client dist costs nothing.
+ * <p>Registration is deliberately skipped outside real gametest processes: {@code minecraft:test_instance} is one of
+ * vanilla's login-synchronised registries ({@code RegistryDataLoader#SYNCHRONIZED_REGISTRIES}), and a code-registered
+ * instance whose codec is not an entry of the frozen {@code minecraft:test_instance_type} registry cannot be encoded
+ * for that sync — the encode failure crashes every client join against a server that registered them with
+ * {@code RegistrySynchronization.packRegistries} ("Failed to serialize ... / BcGameTestInstance is code-registered",
+ * found by the M2.5 login handshake probe). {@code RegisterGameTestsEvent} itself fires in every non-production
+ * process ({@code GameTestHooks#isGametestEnabled} ORs in {@code SharedConstants.IS_RUNNING_IN_IDE}), so the original
+ * client-dist-only skip still let a dev {@code runServer} register the instances and then break every joining client.
+ * The tests only ever run on the headless gametest server, where {@code ServerModLoader#isGameTestServer()} is true
+ * (or in an explicit {@code -Dneoforge.enableGameTest=true} opt-in, the vanilla switch) — so registration is gated to
+ * exactly that (the client-dist skip stays for the property-enabled singleplayer case). Production jars are unaffected
+ * either way: the event never fires when {@code !FMLEnvironment.isProduction()}.
  * TODO(M3+): revisit (e.g. register a real test instance type) if tests should be runnable from a singleplayer
  * {@code /test} command.
  */
 public final class BcGameTests {
 
     public static void onRegisterGameTests(RegisterGameTestsEvent event) {
-        if (FMLEnvironment.getDist() == Dist.CLIENT) {
+        if (FMLEnvironment.getDist() == Dist.CLIENT
+                || !(ServerModLoader.isGameTestServer() || Boolean.getBoolean("neoforge.enableGameTest"))) {
             return;
         }
         Holder<TestEnvironmentDefinition<?>> environment = event.registerEnvironment(

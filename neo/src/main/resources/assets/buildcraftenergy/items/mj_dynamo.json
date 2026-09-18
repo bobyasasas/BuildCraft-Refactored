@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "buildcraftenergy:block/mj_dynamo"
+    "model": "buildcraftenergy:item/mj_dynamo"
   }
 }

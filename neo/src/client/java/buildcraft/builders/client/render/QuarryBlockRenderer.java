@@ -17,59 +17,57 @@ import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
-import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.logging.LogUtils;
 import org.jspecify.annotations.Nullable;
 import buildcraft.builders.blockentity.QuarryBlockEntity;
-import buildcraft.core.client.render.BcBoxes;
-import buildcraft.lib.client.render.BcQuad;
+import buildcraft.lib.client.render.laser.BcLaserBaker;
+import buildcraft.lib.client.render.laser.BcLaserBoxRenderer;
+import buildcraft.lib.client.render.laser.BcLaserData;
+import buildcraft.lib.client.render.laser.BcLaserQuad;
+import buildcraft.lib.client.render.laser.BcLaserTypes;
 import org.slf4j.Logger;
 
 /**
- * M2.12 quarry block entity renderer: outlines the mining area and highlights the cell currently being drilled,
- * mirroring the legacy {@code RenderQuarry}/{@code AdvDebuggerQuarry} box rendering in miniature (the legacy drill
- * head, laser animations and frame-laying visuals have not migrated). All geometry is drawn as {@link BcBoxes} boxes
- * through {@code submitCustomGeometry}, exactly like the M2.7b/M2.11 engine/pipe/gate slice.
+ * M4.5 quarry block entity renderer, the laser-visual port of legacy {@code RenderQuarry}: the mining area gets the
+ * blue {@code STRIPES_WRITE} border box (legacy
+ * {@code LaserBoxRenderer.renderLaserBoxStatic(tile.frameBox, STRIPES_WRITE, pose, true)}), the active drill target
+ * gets the red {@code POWER_LOW} beam from the quarry's centre (legacy "don't render a laser before we have any
+ * power", keyed here on the synced energy buffer) and the {@code DRILL} column hovering above the target block.
+ *
+ * <p>Not ported from legacy {@code RenderQuarry}: the {@code FRAME}/<code>FRAME_BOTTOM</code> hanger rails and the
+ * power-driven drill bobbing ({@code yOffset}) both need the legacy per-tick {@code drillPos}/{@code clientPower}
+ * interpolation state, which the M4.5 sync slice does not carry — the drill column sits at the fixed rest offset
+ * instead. Geometry is baked block-relative by {@link BcLaserBaker} and submitted through
+ * {@code submitCustomGeometry}, like every other BER in this port.
  *
  * <p>Everything the renderer draws rides the BE's update tag (the Beacon-pattern sync of
  * {@link QuarryBlockEntity}): area corners, current target cell and the finished flag are plain
- * {@code saveAdditional} keys, so the frame appearing on the client is itself the proof that the update-tag channel
+ * {@code saveAdditional} keys, so the lasers appearing on the client is itself the proof that the update-tag channel
  * carried the state.
  */
 public class QuarryBlockRenderer implements BlockEntityRenderer<QuarryBlockEntity, QuarryBlockRenderer.State> {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    /** Plain white block sprite, tinted per part (one atlas sprite keeps the submit group single). */
-    private static final SpriteId WHITE_CONCRETE = new SpriteId(
-        TextureAtlas.LOCATION_BLOCKS, Identifier.withDefaultNamespace("block/white_concrete"));
+    /** Legacy {@code RenderQuarry#getViewDistance()}: the frame box can be far outside the normal 64-block cull. */
+    private static final int VIEW_DISTANCE = 512;
+
+    /** Legacy laser scale for the power beam, drill column and frame rails ({@code 1 / 16D}). */
+    private static final double LASER_SCALE = 1 / 16.0;
+
+    /** The drill column's rest offset above the target block, legacy {@code yOffset = 1 + 4 / 16D}. */
+    private static final double DRILL_REST_OFFSET = 1 + 4 / 16.0;
 
     /** Render type for block-atlas-textured custom geometry (cutout + cull, like baked block quads). */
     private static final RenderType RENDER_TYPE = Sheets.cutoutBlockSheet();
 
-    /** Frame edge cross-section, in block units (2/16 - chunky like the legacy quarry frame pipes). */
-    private static final float FRAME_T = 2.0f / 16.0f;
-    /** Outward inflation so the frame does not z-fight with the neighbour block faces it sits on. */
-    private static final float FRAME_EPSILON = 1.0f / 64.0f;
-    /** Dark steel tint of the mining-area frame (the legacy quarry frame colour family). */
-    private static final int FRAME_TINT = 0xFF505058;
-    /** Warm amber tint of the active-target marker (the M2.11 gate glow family colour). */
-    private static final int TARGET_TINT = 0xFFFFC860;
-    /** Target-cage edge cross-section, in block units (same family as the area frame so the cage reads at
-     * evidence-screenshot distance). */
-    private static final float TARGET_CAGE_T = 2.5f / 16.0f;
-    /** Packed full-bright light for the active-target marker. */
-    private static final int FULL_BRIGHT = 15728880;
-
-    /** Positions whose area already got a "quarry synced" log line (M2.12 sync evidence). */
+    /** Positions whose area already got a "quarry synced" log line (M2.12 sync evidence, kept for M4.5). */
     private final Set<BlockPos> loggedSync = new HashSet<>();
     /** Positions whose current drill target already got a "target synced" log line (M2.12 sync evidence). */
     private final Set<BlockPos> loggedTargets = new HashSet<>();
@@ -86,18 +84,53 @@ public class QuarryBlockRenderer implements BlockEntityRenderer<QuarryBlockEntit
     }
 
     @Override
+    public boolean shouldRenderOffScreen() {
+        return true;
+    }
+
+    @Override
+    public int getViewDistance() {
+        return VIEW_DISTANCE;
+    }
+
+    @Override
+    public AABB getRenderBoundingBox(QuarryBlockEntity quarry) {
+        BlockPos min = quarry.getAreaMin();
+        BlockPos max = quarry.getAreaMax();
+        BlockPos target = quarry.getCurrentTarget();
+        if (min == null || max == null) {
+            if (target == null) {
+                return BlockEntityRenderer.super.getRenderBoundingBox(quarry);
+            }
+            min = target;
+            max = target;
+        }
+        if (target != null) {
+            min = new BlockPos(
+                Math.min(min.getX(), target.getX()), Math.min(min.getY(), target.getY()),
+                Math.min(min.getZ(), target.getZ()));
+            max = new BlockPos(
+                Math.max(max.getX(), target.getX()), Math.max(max.getY(), target.getY()),
+                Math.max(max.getZ(), target.getZ()));
+        }
+        return new AABB(
+            Vec3.atLowerCornerOf(min), Vec3.atLowerCornerOf(max).add(1, 1, 1)).inflate(1);
+    }
+
+    @Override
     public void extractRenderState(
         QuarryBlockEntity quarry, State state, float partialTicks, Vec3 cameraPosition,
         ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress
     ) {
         BlockEntityRenderer.super.extractRenderState(quarry, state, partialTicks, cameraPosition, breakProgress);
-        state.geometry.clear();
+        state.lasers.clear();
         BlockPos pos = quarry.getBlockPos();
         state.hasArea = quarry.getAreaMin() != null && quarry.getAreaMax() != null;
         state.areaMin = quarry.getAreaMin();
         state.areaMax = quarry.getAreaMax();
         state.currentTarget = quarry.getCurrentTarget();
         state.finished = quarry.isFinished();
+        state.hasPower = quarry.getEnergyStored() > 0;
         if (!state.hasArea) {
             return;
         }
@@ -114,32 +147,29 @@ public class QuarryBlockRenderer implements BlockEntityRenderer<QuarryBlockEntit
         if (level == null) {
             return;
         }
-        // block-relative frame box, inflated a hair outward (see FRAME_EPSILON)
-        float x0 = state.areaMin.getX() - pos.getX() - FRAME_EPSILON;
-        float y0 = state.areaMin.getY() - pos.getY() - FRAME_EPSILON;
-        float z0 = state.areaMin.getZ() - pos.getZ() - FRAME_EPSILON;
-        float x1 = state.areaMax.getX() - pos.getX() + 1 + FRAME_EPSILON;
-        float y1 = state.areaMax.getY() - pos.getY() + 1 + FRAME_EPSILON;
-        float z1 = state.areaMax.getZ() - pos.getZ() + 1 + FRAME_EPSILON;
-        List<BcQuad> frame = BcBoxes.frame(x0, y0, z0, x1, y1, z1, FRAME_T);
-        BcBoxes.lightAll(frame, state);
-        for (int i = 0; i < frame.size(); i++) {
-            frame.set(i, frame.get(i).multiplyColor(FRAME_TINT));
+        // The STRIPES_WRITE border around the whole mining area (legacy frame box, centre-aligned so the lasers sit
+        // on the box's edges).
+        BcLaserBoxRenderer.makeLaserBox(state.areaMin, state.areaMax, BcLaserTypes.STRIPES_WRITE, true)
+            .forEach(laser -> BcLaserBaker.bake(laser, pos, level, this.sprites, state.lasers));
+        if (state.currentTarget == null) {
+            return;
         }
-        state.geometry.addAll(frame);
-        // the active drill target: a full-bright amber cage wrapped around the whole target cell (the legacy
-        // laser wrapped the drill block too — an inner cube would be buried inside the not-yet-broken stone)
-        if (state.currentTarget != null) {
-            float cx = state.currentTarget.getX() - pos.getX();
-            float cy = state.currentTarget.getY() - pos.getY();
-            float cz = state.currentTarget.getZ() - pos.getZ();
-            List<BcQuad> cage = BcBoxes.frame(
-                cx - 0.05f, cy - 0.05f, cz - 0.05f, cx + 1.05f, cy + 1.05f, cz + 1.05f, TARGET_CAGE_T);
-            for (int i = 0; i < cage.size(); i++) {
-                cage.set(i, cage.get(i).multiplyColor(TARGET_TINT).withLight(FULL_BRIGHT));
-            }
-            state.geometry.addAll(cage);
+        // The POWER_LOW beam from the quarry's centre to the target's centre — legacy skips it entirely before any
+        // power arrived, which here is "the synced energy buffer is still empty".
+        if (state.hasPower) {
+            BcLaserBaker.bake(new BcLaserData(
+                BcLaserTypes.POWER_LOW, Vec3.atLowerCornerOf(pos).add(0.5, 0.5, 0.5),
+                Vec3.atLowerCornerOf(state.currentTarget).add(0.5, 0.5, 0.5), LASER_SCALE),
+                pos, level, this.sprites, state.lasers);
         }
+        // The DRILL column above the target block (legacy rest offset; see class javadoc for the dropped bobbing).
+        double tx = state.currentTarget.getX() + 0.5 - pos.getX();
+        double ty = state.currentTarget.getY() - pos.getY();
+        double tz = state.currentTarget.getZ() + 0.5 - pos.getZ();
+        BcLaserBaker.bake(new BcLaserData(
+            BcLaserTypes.DRILL, new Vec3(tx, ty + 1 + DRILL_REST_OFFSET, tz),
+            new Vec3(tx, ty + DRILL_REST_OFFSET, tz), LASER_SCALE, true),
+            pos, level, this.sprites, state.lasers);
     }
 
     @Override
@@ -147,18 +177,17 @@ public class QuarryBlockRenderer implements BlockEntityRenderer<QuarryBlockEntit
         CameraRenderState cameraRenderState) {
         // Block-relative coordinates: LevelRenderer#submitBlockEntities already translated the pose to the block's
         // (0,0,0) corner, no per-position transform needed here.
-        if (state.geometry.isEmpty()) {
+        if (state.lasers.isEmpty()) {
             return;
         }
-        TextureAtlasSprite sprite = this.sprites.get(WHITE_CONCRETE);
         submitNodeCollector.submitCustomGeometry(poseStack, RENDER_TYPE, (pose, buffer) -> {
-            for (BcQuad quad : state.geometry) {
-                quad.mapUv(sprite).emit(pose, buffer);
+            for (BcLaserQuad quad : state.lasers) {
+                quad.emit(pose, buffer);
             }
         });
     }
 
-    /** M2.12 render state of one quarry: the extracted area/target/finished mirror plus the built frame geometry. */
+    /** M4.5 render state of one quarry: the extracted area/target/power mirror plus the baked laser quads. */
     public static class State extends BlockEntityRenderState {
         /** True while the quarry has a mining area (legacy: markers placed). */
         public boolean hasArea;
@@ -172,7 +201,9 @@ public class QuarryBlockRenderer implements BlockEntityRenderer<QuarryBlockEntit
         public BlockPos currentTarget;
         /** True once the area is fully mined. */
         public boolean finished;
-        /** Frame + active-target quads, block-relative and light-baked (or full-bright) at extract time. */
-        public final List<BcQuad> geometry = new ArrayList<>();
+        /** True while the synced energy buffer holds any power (legacy {@code clientPower != 0}). */
+        public boolean hasPower;
+        /** Baked laser quads (block-relative) for the area border, power beam and drill column. */
+        public final List<BcLaserQuad> lasers = new ArrayList<>();
     }
 }

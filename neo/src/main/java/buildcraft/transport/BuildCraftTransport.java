@@ -6,9 +6,13 @@
 package buildcraft.transport;
 
 import buildcraft.datagen.BcDatagen;
+import buildcraft.transport.net.PipeItemMessageQueue;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 
 /**
@@ -30,5 +34,17 @@ public class BuildCraftTransport {
         BcTransportBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         // M3.4: datagen providers for this mod's namespace (item models, blockstates, lang placeholder).
         BcDatagen.register(modEventBus);
+        // M4.6: expose the pipe's per-face item inboxes to automation (hoppers etc. push stacks into pipes through
+        // the 26.1.2 item capability; vanilla containers are bridged on the other side by NeoForge's own hooks).
+        modEventBus.addListener(this::onRegisterCapabilities);
+        // M4.6: flush the travelling-item sync batch at the end of every server tick (legacy PipeItemMessageQueue).
+        NeoForge.EVENT_BUS.addListener(PipeItemMessageQueue::onServerTickPost);
+    }
+
+    private void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(
+            Capabilities.Item.BLOCK,
+            BcTransportBlockEntities.PIPE_HOLDER.value(),
+            (blockEntity, side) -> blockEntity.getInbox(side));
     }
 }

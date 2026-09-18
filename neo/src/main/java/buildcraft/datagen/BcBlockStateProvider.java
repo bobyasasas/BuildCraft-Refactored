@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.PackOutput;
@@ -35,12 +36,16 @@ import net.neoforged.neoforge.registries.DeferredHolder;
  * the 30 energy fluid blocks point their particle at the shipped {@code buildcraftlib:block/fluid/heat_N_still} base
  * texture (the baseline referenced runtime-tinted {@code buildcraftenergy:block/fluid/*_heat_N_still} files that
  * never existed as PNGs).</li>
- * <li><b>Kept as-is (dynamic-render families, M4.3/M4.4/M4.5)</b>: the five engines + {@code mj_dynamo} + {@code tube}
+ * <li><b>Kept as-is (dynamic-render families, M4.3/M4.4/M4.5)</b>: {@code tube}
  * + {@code heat_exchange} + {@code pipe_holder} (baseline {@code minecraft:builtin/entity}, geometry lives in a BER),
  * {@code laser}, {@code quarry}/{@code frame}, {@code marker_path}/{@code marker_volume}/{@code marker_construction}
  * (baseline static body exists but the ruling reserves them for their BER tasks), and the M2.2 slice ids
  * {@code marker}/{@code energy_meter}/{@code pipe_kinesis_wood}. These keep their existing placeholder models and
  * blockstates untouched.</li>
+ * <li><b>M4.4 engines</b>: the five engines + {@code mj_dynamo} get the baseline-equivalent static base — the
+ * baseline {@code builtin/entity} + {@code particle} model becomes a particle-only model (26.1.2 has no
+ * {@code builtin/entity}; the jsonbc BER draws everything), and the blockstate carries one variant per facing
+ * without {@code y} rotation (the {@code builtin:rotate_facing} rule rotates the BER quads).</li>
  * </ul>
  * Every registered block id must resolve to an explicit rule here or the run fails (fail-closed, same philosophy as
  * the item provider); the drift gate then re-proves the shipped assets byte for byte on every run.
@@ -61,14 +66,31 @@ public final class BcBlockStateProvider extends BcDatagenProvider {
             "buildcraftcore:energy_meter", "target_top",
             "buildcraftfactory:water_gel", "blue_concrete");
 
-    /** Vanilla orientable textures for the stone engine (the only textured placeholder with a BER contract). */
-    private static final String ENGINE_STONE_FRONT = "minecraft:block/furnace_front";
-    private static final String ENGINE_STONE_SIDE = "minecraft:block/furnace_side";
-    private static final String ENGINE_STONE_TOP = "minecraft:block/furnace_top";
-
     /** Blocks with a hand-shaped model instead of the mod default (both unchanged from M3.4). */
     private static final String PIPE_KINESIS_WOOD = "buildcraftcore:pipe_kinesis_wood";
-    private static final String ENGINE_STONE = "buildcraftcore:engine_stone";
+
+    /**
+     * M4.4: the six engine-family blocks (five engines + the MJ dynamo). Their baseline block model is
+     * {@code minecraft:builtin/entity} + a {@code particle} texture (geometry lives in the tile/jsonbc BER); the
+     * 26.1.2 equivalent is a particle-only model, with the blockstate keeping one variant per facing (no
+     * {@code y} rotation — the jsonbc {@code builtin:rotate_facing} rule rotates the BER quads).
+     */
+    private static final Set<String> ENGINE_BLOCKS = Set.of(
+            "buildcraftcore:engine_stone",
+            "buildcraftcore:engine_wood",
+            "buildcraftcore:engine_creative",
+            "buildcraftcore:engine_iron",
+            "buildcraftcore:engine_rf",
+            "buildcraftenergy:mj_dynamo");
+
+    /** The baseline {@code particle} texture of each engine block model (the {@code #back} texture of its jsonbc). */
+    private static final Map<String, String> ENGINE_PARTICLE_TEXTURES = Map.of(
+            "buildcraftcore:engine_wood", "buildcraftcore:block/engine/wood/back",
+            "buildcraftcore:engine_creative", "buildcraftcore:block/engine/creative/back",
+            "buildcraftcore:engine_stone", "buildcraftenergy:block/engine/stone/back",
+            "buildcraftcore:engine_iron", "buildcraftenergy:block/engine/iron/back",
+            "buildcraftcore:engine_rf", "buildcraftenergy:block/engine/rf/back",
+            "buildcraftenergy:mj_dynamo", "buildcraftenergy:block/mj_dynamo/back");
 
     private final Iterable<DeferredHolder<Block, ? extends Block>> blocks;
 
@@ -98,10 +120,11 @@ public final class BcBlockStateProvider extends BcDatagenProvider {
         for (DeferredHolder<Block, ? extends Block> holder : blocks) {
             String path = holder.getId().getPath();
             String fullId = modid + ":" + path;
-            if (ENGINE_STONE.equals(fullId)) {
-                // unchanged M3.4 special: facing-variant blockstate + vanilla orientable model (BER base)
+            if (ENGINE_BLOCKS.contains(fullId)) {
+                // M4.4: particle-only block model (the baseline builtin/entity contract), one facing variant each
+                // without y rotation (the jsonbc BER rotates the quads itself)
                 futures.add(saveAsset(cache, facingVariants(path), path, "blockstates"));
-                futures.add(saveAsset(cache, orientableModel(), path, "models/block"));
+                futures.add(saveAsset(cache, engineParticleModel(fullId), path, "models/block"));
                 continue;
             }
             if (PIPE_KINESIS_WOOD.equals(fullId)) {
@@ -225,7 +248,7 @@ public final class BcBlockStateProvider extends BcDatagenProvider {
             return BlockAsset.of(modid, path, BcModelJson.parented(null, BcModelJson.tex(
                     "particle", "buildcraftlib:block/fluid/heat_" + heat + "_still")));
         }
-        // mj_dynamo: builtin/entity in the baseline (BER), keep the placeholder
+        // mj_dynamo is handled by the M4.4 ENGINE_BLOCKS branch above (particle-only BER model)
         return placeholderAsset(path);
     }
 
@@ -581,39 +604,30 @@ public final class BcBlockStateProvider extends BcDatagenProvider {
     }
 
     /**
-     * The stone engine's 4 facing variants (its 26.1.2 block class is the one block with a real property). Key order
+     * The engine blockstate: 4 facing variants (every engine block class carries {@code FACING}), all pointing at the
+     * same model without {@code y} rotation — the M4.4 jsonbc BER reads the facing and rotates its quads. Key order
      * in the output is handled by the stock comparator (alphabetical), matching the shipped file.
      */
     private JsonObject facingVariants(String path) {
         JsonObject state = new JsonObject();
         JsonObject variants = new JsonObject();
-        variants.add("facing=east", rotatedVariant(modid + ":block/" + path, 90));
-        variants.add("facing=north", rotatedVariant(modid + ":block/" + path, 0));
-        variants.add("facing=south", rotatedVariant(modid + ":block/" + path, 180));
-        variants.add("facing=west", rotatedVariant(modid + ":block/" + path, 270));
+        for (String facing : List.of("east", "north", "south", "west")) {
+            JsonObject variant = new JsonObject();
+            variant.addProperty("model", modid + ":block/" + path);
+            variants.add("facing=" + facing, variant);
+        }
         state.add("variants", variants);
         return state;
     }
 
-    private JsonObject rotatedVariant(String modelRef, int yRotation) {
-        JsonObject variant = new JsonObject();
-        variant.addProperty("model", modelRef);
-        if (yRotation != 0) {
-            variant.addProperty("y", yRotation);
-        }
-        return variant;
-    }
-
     // ----------------------------------------------------------------------------------------------------- specials
 
-    /** The stone engine model: vanilla orientable parent with furnace textures (StoneEngineBlockRenderer's base). */
-    private JsonObject orientableModel() {
+    /** The engine block model (M4.4): the baseline {@code builtin/entity} + particle contract, i.e. particle-only —
+     * the jsonbc BER draws the whole engine. */
+    private JsonObject engineParticleModel(String fullId) {
         JsonObject model = new JsonObject();
-        model.addProperty("parent", "minecraft:block/orientable");
         JsonObject textures = new JsonObject();
-        textures.addProperty("front", ENGINE_STONE_FRONT);
-        textures.addProperty("side", ENGINE_STONE_SIDE);
-        textures.addProperty("top", ENGINE_STONE_TOP);
+        textures.addProperty("particle", ENGINE_PARTICLE_TEXTURES.get(fullId));
         model.add("textures", textures);
         return model;
     }

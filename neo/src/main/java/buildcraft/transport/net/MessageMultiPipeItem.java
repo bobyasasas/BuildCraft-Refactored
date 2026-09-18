@@ -8,9 +8,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import javax.annotation.Nullable;
 import buildcraft.lib.BCLib;
-import buildcraft.lib.net.MessageManager;
+import buildcraft.lib.misc.MessageUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -132,12 +133,20 @@ public class MessageMultiPipeItem implements CustomPacketPayload {
         list.add(new TravellingItemData(stackId, stackCount, toCenter, side, colour, timeToDest));
     }
 
-    /** Client-side travelling item renderer feed. */
+    /**
+     * The client-side travelling item renderer feed, installed by the client entry point
+     * ({@code BuildCraftTransportClient}, client source set — this class lives in the main source set and cannot
+     * reference it directly). Receives every decoded batch; null outside the client.
+     */
+    @Nullable
+    public static volatile Consumer<MessageMultiPipeItem> clientHandler;
+
+    /** Client-side travelling item renderer feed (delegates to {@link #clientHandler}). */
     public static void handleClient(MessageMultiPipeItem message, IPayloadContext context) {
-        // TODO(M2.6+): port PipeFlowItems#handleClientReceviedItems + the pipe lookup, then replay the legacy handler.
-        MessageManager.LOGGER.info(
-                "[lib.messages] Received MessageMultiPipeItem ({} pipes) - client pipe flow rendering not migrated yet",
-                message.items.size());
+        Consumer<MessageMultiPipeItem> handler = clientHandler;
+        if (handler != null) {
+            handler.accept(message);
+        }
     }
 
     @Override

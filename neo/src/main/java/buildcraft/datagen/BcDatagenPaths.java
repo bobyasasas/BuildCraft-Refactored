@@ -30,6 +30,12 @@ public final class BcDatagenPaths {
         return assetsDir.resolve(namespace).resolve(folder).resolve(name + ".json");
     }
 
+    /** {@code assets/<namespace>/<folder>/<fileName>} with the full file name (e.g. {@code engine_base.jsonbc}) —
+     * the M4.4 tile jsonbc emitter needs a non-{@code .json} extension. */
+    public Path assetFile(String namespace, String folder, String fileName) {
+        return assetsDir.resolve(namespace).resolve(folder).resolve(fileName);
+    }
+
     /** Same layout as {@code PackOutput.PathProvider#json(Identifier)} for a full id, rooted under assets. */
     public Path asset(Identifier id, String folder) {
         return asset(id.getNamespace(), folder, id.getPath());

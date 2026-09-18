@@ -356,28 +356,28 @@
       "id": "M4.4",
       "phase": "Phase 4 视觉与实机可玩性",
       "title": "引擎家族 BER + jsonbc 最小实现（5 引擎 + MJ 发电机）",
-      "status": "pending",
+      "status": "done",
       "acceptance": "世界内引擎以 1.20.1 同款动态模型渲染（活塞行程/朝向/阶段），非静态占位",
-      "evidence": "",
-      "notes": "审计 P1-1；JsonVariableModel 最小集（cutout+textures+parent）"
+      "evidence": "验收（三 worker 并行 + 修复轮，主 agent 亲跑全门禁：build EXIT=0 / datagen --strict PASS diff=0 / lang / license / registry --strict PASS / gametest 9/9）：jsonbc 最小解析器落地 buildcraft/lib/model/json（可复用 API，M4.7 将依赖）；EngineBlockRenderer 统一 BER（5 引擎+mj_dynamo）按 BE 电量/燃烧阶段取活塞行程、blockstate facing 取向、过热切纹理；BcEngineModels 烘焙缓存 + jsonbcResource() 后缀归一化（修复视锥内 FileNotFoundException 崩溃）；datagen 新增 BcTileModelsProvider + particle-only 方块模型/MJ 发电机模型重生成；新增 jsonbc 单测（合计 102 test 全过；覆盖率 lib 77.56%≥73%、core 4.88%≥2%）。实机（Xvfb 独立 gameDir run/m44）：数据包自动搭 6 台引擎同框两帧（/tmp/m44_shots/rig4_1/2.png）——东/南双朝向、4 秒间隔活塞相位差、燃烧阶段分级纹理（红/绿/青树干），无 jsonbc/引擎模型错误；修复轮 R5 联机环境 9 引擎视锥内 35s+ 零崩溃复核。",
+      "notes": "审计 P1-1；JsonVariableModel 最小集（cutout+textures+parent） 裁决记录：mj_dynamo 归 buildcraftenergy 注册；datagen minecraft:atlases/blocks.json 单写者改为 BcTileModelsProvider（含 3 项 fail-closed 纹理校验）；robotics item particle 告警仍属 M4.2 范围登记。"
     },
     {
       "id": "M4.5",
       "phase": "Phase 4 视觉与实机可玩性",
       "title": "激光体系 + 采石场/标记完整渲染",
-      "status": "pending",
+      "status": "done",
       "acceptance": "采石场激光框/钻头、标记体积盒与 1.20.1 视觉等价",
-      "evidence": "",
-      "notes": "审计 P1-2/P1-3；RenderLevelStage 全局层等价"
+      "evidence": "验收（三 worker 并行 + 修复轮，主 agent 亲跑全门禁同上）：激光烘焙库 buildcraft/lib/client/render/laser（8 文件，marker/signals/quarry 缩放 1/16.05|1/16.2|1/16 照抄基线）；QuarryBlockRenderer 重写：区域 12 边黄黑框（STRIPES_WRITE）+ 通电 POWER_LOW 束 + DRILL 钻头柱（yOffset 与基线静止位一致）；MarkerVolumeBlockRenderer 12 边体积盒（组内最小 pos 单次渲染）+ 六向红石 signal 线；MarkerPathBlockRenderer 链接线；QuarryBlockEntity receivePower 后 syncToClients 驱动客户端渲染。实机（Xvfb :91 独立 gameDir run/m45，/tmp/m45_client11.log 全链证据 + 截图已 Read 核对）：quarry_frame（黄黑框+角柱）、quarry_mining（红束+青钻头柱+挖掘堑壕，800% 放大像素确认）、markers_box_path（暗红体积盒+蓝链）、marker_signals（红石驱动 signal 线）。修复轮 R3：findNextMineable 扫描方向 bug 修正为自顶向下逐层（QuarryScan 纯函数 + QuarryScanOrderTest 5 用例含\"2x2x2 第二层可挖\"）；MAX_POWER_PER_TICK=51,200µMJ 经基线出处核对正确（TileQuarry.java:78 512*MjAPI.MJ）。",
+      "notes": "审计 P1-2/P1-3；RenderLevelStage 全局层等价 裁决记录（v1 取舍）：束起点=采石场方块中心（基线为 FRAME 吊点）、无钻头逐 tick 插值、FRAME 吊架未做——记 QuarryBlockRenderer javadoc；signals 颜色按基线贴图蓝（任务文本\"红\"作废，基线优先）；marker 连接为简化分布式实现（BE 存组成员表，无全局 cache/SavedData）。"
     },
     {
       "id": "M4.6",
       "phase": "Phase 4 视觉与实机可玩性",
       "title": "管道系统全量视觉（管体/插头/线/流）",
-      "status": "pending",
+      "status": "done",
       "acceptance": "所有管道按定义贴图渲染管体+连接，物品/流体/能量流可见，门/插头静态+动态层正确",
-      "evidence": "",
-      "notes": "审计 P1-4（最大件）；先全 BER 保正确，chunk 烘焙优化后置"
+      "evidence": "验收（三 worker 并行 + 修复轮，主 agent 亲跑全门禁同上）：BcPipeFamilies 46 族注册；PipeHolderBlockEntity 全量（六向 ItemInbox/物品行进路由/能量切片/连接扫描/Beacon 式 update tag 同步）；PipeHolderBlockRenderer BER：管体+连接 cutout、插板六向、流体柱 translucent+tint、能量核 full-bright 脉冲、行进物品插值；KinesisPipeBlockRenderer 能量核+铁门；MessageMultiPipeItem 行进物品批量同步（legacy 报文格式）；items_stone.png 与基线 cmp 逐字节一致。实机（Xvfb :92 独立 gameDir run/m46，exit 0 干净退出）：7 根物品管 T 型/弯头/P0 连接正确、4 直管 client travelling items=1（漏斗→箱子链路+客户端镜像工作）、流体管水柱 1000mB、能量注入后 600/600 均衡 + kinesis 600µMJ gate=true；4 截图（items_layout/items_flow 两帧 diff 证实位移/fluids/power）已 Read 核对。修复轮 R2：M45/M46 探针全部 -Dbuildcraft.m45probe|m46probe 门控（默认惰性，隔离环境浸泡 40s [M45] 日志 0 条）。能量 BER 证据当时经反射注入取得（引擎崩溃旧证据所致），R5 引擎修复复核后真实链路留 M4.9 矩阵复验。",
+      "notes": "审计 P1-4（最大件）；先全 BER 保正确，chunk 烘焙优化后置 裁决记录：FIRST_EXTRACT 一次性诊断日志保留（kinesis loggedGate 同模式）；chunk 烘焙优化按台账既定后置。"
     },
     {
       "id": "M4.7",

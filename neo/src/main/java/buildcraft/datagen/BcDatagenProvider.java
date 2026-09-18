@@ -16,8 +16,8 @@ import net.minecraft.data.PackOutput;
  * M3.4: base class for the per-mod BuildCraft datagen providers. A provider owns exactly one mod namespace: it is
  * created from that mod's {@code GatherDataEvent} {@link PackOutput} and only ever writes files under it, matching the
  * per-mod event contract (one event per mod, each with its own DataGenerator). Sole deliberate exception since M4.3:
- * the transport item model provider also emits the shared {@code minecraft:atlases/blocks.json} pipes entry (see
- * {@link BcItemModelsProvider}).
+ * the shared {@code minecraft:atlases/blocks.json} is a cross-namespace file — since the M4.5 close-out it is emitted
+ * by the tile models provider (see {@link BcTileModelsProvider}).
  *
  * <p>Serialisation goes through {@link BcDatagenJson#save(CachedOutput, JsonObject, Path, java.util.Comparator)}, the
  * byte-faithful variant of stock {@code DataProvider.saveStable}; see that class for the two deliberate deltas

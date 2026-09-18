@@ -1,6 +1,15 @@
 {
   "variants": {
-    "": {
+    "facing=east": {
+      "model": "buildcraftcore:block/engine_rf"
+    },
+    "facing=north": {
+      "model": "buildcraftcore:block/engine_rf"
+    },
+    "facing=south": {
+      "model": "buildcraftcore:block/engine_rf"
+    },
+    "facing=west": {
       "model": "buildcraftcore:block/engine_rf"
     }
   }

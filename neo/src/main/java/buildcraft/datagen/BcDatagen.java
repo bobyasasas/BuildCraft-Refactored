@@ -70,6 +70,8 @@ public final class BcDatagen {
         pack.addProvider(output -> new BcItemModelsProvider(modid, output, items));
         pack.addProvider(output -> new BcBlockStateProvider(modid, output, blocks));
         pack.addProvider(output -> new BcLangProvider(modid, output));
+        // M4.4: the tile jsonbc models re-emit byte-exact so the S1 drift gate covers them too
+        pack.addProvider(output -> new BcTileModelsProvider(modid, output));
 
         if ("buildcraftcore".equals(modid)) {
             // frozen-table guard: the drift gate depends on the embedded table being complete (857 keys, M3.5)

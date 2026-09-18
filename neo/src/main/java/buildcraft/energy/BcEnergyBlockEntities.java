@@ -9,22 +9,23 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import buildcraft.core.blockentity.PlaceholderBlockEntity;
+import buildcraft.core.blockentity.EngineBlockEntity;
 
 /**
- * Central block entity type registration for buildcraftenergy (task M2.4a skeleton, registry parity since M2.4b). The
- * single baseline id ({@code mj_dynamo}) registers as the shared {@link PlaceholderBlockEntity} bound to its block;
- * the real dynamo behaviour (legacy {@code TileDynamoMJ}) migrates in M2.5+.
+ * Central block entity type registration for buildcraftenergy (task M2.4a skeleton, registry parity since M2.4b).
+ * Since M4.4 {@code mj_dynamo} binds the shared {@link EngineBlockEntity} rendering slice (fuel + buffer state the
+ * engine BER animates, see {@link buildcraft.core.block.EngineBlock}); the real dynamo behaviour (legacy
+ * {@code TileDynamoMJ}) migrates in M2.5+.
  */
 public final class BcEnergyBlockEntities {
 
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister
             .create(BuiltInRegistries.BLOCK_ENTITY_TYPE, BuildCraftEnergy.MOD_ID);
 
-    /** Placeholder for {@code buildcraftenergy:mj_dynamo} (legacy {@code TileDynamoMJ}); behaviour class migrates in M2.5+. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlaceholderBlockEntity>> MJ_DYNAMO = BLOCK_ENTITIES
+    /** M4.4: the mj_dynamo rendering slice (shared {@link EngineBlockEntity}); real behaviour migrates in M2.5+. */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EngineBlockEntity>> MJ_DYNAMO = BLOCK_ENTITIES
             .register("mj_dynamo", () -> new BlockEntityType<>(
-                    (pos, state) -> new PlaceholderBlockEntity(BcEnergyBlockEntities.MJ_DYNAMO.value(), pos, state),
+                    (pos, state) -> new EngineBlockEntity(BcEnergyBlockEntities.MJ_DYNAMO.value(), pos, state, false),
                     BcEnergyBlocks.MJ_DYNAMO.value()));
 
     private BcEnergyBlockEntities() {

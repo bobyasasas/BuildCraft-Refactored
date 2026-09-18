@@ -5,12 +5,12 @@
 
 package buildcraft.energy;
 
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import buildcraft.lib.BcLangKeys;
+import buildcraft.core.block.EngineBlock;
 import buildcraft.energy.fluid.PlaceholderFluidBlock;
 
 /**
@@ -173,8 +173,13 @@ public final class BcEnergyBlocks {
             properties -> new PlaceholderFluidBlock(BcEnergyFluids.OIL_RESIDUE_HEAT_2.value(), properties),
             properties -> properties.replaceable().noCollision().randomTicks().strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable().liquid());
 
-    /** Placeholder for {@code buildcraftenergy:mj_dynamo} (legacy {@code BlockDynamoMJ}); behaviour class migrates in M2.5+. */
-    public static final DeferredBlock<Block> MJ_DYNAMO = BcLangKeys.simpleBlock(BLOCKS, "mj_dynamo",
+    /**
+     * M4.4: the real mj_dynamo block (legacy {@code BlockDynamoMJ}) — the shared {@link EngineBlock} rendering slice
+     * (fuel + buffer state the engine BER animates), bound to the buildcraftenergy block entity type. The real dynamo
+     * behaviour (legacy {@code TileDynamoMJ} MJ generation) migrates in M2.5+.
+     */
+    public static final DeferredBlock<EngineBlock> MJ_DYNAMO = BcLangKeys.block(BLOCKS, "mj_dynamo",
+            properties -> new EngineBlock(properties, BcEnergyBlockEntities.MJ_DYNAMO::value, false),
             properties -> properties.strength(0.5F));
 
 

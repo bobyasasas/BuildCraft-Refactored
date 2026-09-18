@@ -6,11 +6,15 @@
 package buildcraft.energy.client;
 
 import com.mojang.logging.LogUtils;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterFluidModelsEvent;
 import org.slf4j.Logger;
+import buildcraft.core.client.render.EngineBlockRenderer;
+import buildcraft.energy.BcEnergyBlockEntities;
 import buildcraft.energy.BuildCraftEnergy;
 import buildcraft.lib.client.render.BcQuadSmoke;
 
@@ -34,7 +38,17 @@ public class BuildCraftEnergyClient {
     public BuildCraftEnergyClient(IEventBus modEventBus) {
         // One FluidModel per placeholder fluid pair (avoids 60 Missing FluidModel warnings).
         modEventBus.addListener(BcEnergyFluidModels::onRegisterFluidModels);
+        // M4.4: the MJ dynamo is an engine family member and draws through the shared jsonbc renderer.
+        modEventBus.addListener(BuildCraftEnergyClient::onRegisterRenderers);
         // M2.7a compile+startup smoke check for the new quad toolkit (real renderers come with M2.7b).
         LOGGER.info("BcQuad smoke check: {}", BcQuadSmoke.check() ? "PASS" : "FAIL");
+    }
+
+    /** M4.4: the MJ dynamo's block entity renderer (jsonbc model pipeline, same as the five engines in core). */
+    private static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(BcEnergyBlockEntities.MJ_DYNAMO.value(),//
+            context -> new EngineBlockRenderer<>(context, Identifier.parse("buildcraftenergy:models/tile/mj_dynamo")));
+        LOGGER.info("BuildCraft energy client renderers registered: {} -> EngineBlockRenderer",
+            BcEnergyBlockEntities.MJ_DYNAMO.getId());
     }
 }

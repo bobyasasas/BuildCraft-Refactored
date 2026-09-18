@@ -1,0 +1,268 @@
+{
+  "parent": "minecraft:block/block",
+  "elements": [
+    {
+      "faces": {
+        "down": {
+          "texture": "#back",
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#side",
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            4.0
+          ]
+        },
+        "north": {
+          "texture": "#side",
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            4.0
+          ]
+        },
+        "south": {
+          "texture": "#side",
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            4.0
+          ]
+        },
+        "up": {
+          "texture": "#back",
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#side",
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            4.0
+          ]
+        }
+      },
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        4,
+        16
+      ]
+    },
+    {
+      "faces": {
+        "east": {
+          "texture": "#chamber",
+          "uv": [
+            3.0,
+            3.198,
+            13.0,
+            0.0
+          ]
+        },
+        "north": {
+          "texture": "#chamber",
+          "uv": [
+            3.0,
+            3.198,
+            13.0,
+            0.0
+          ]
+        },
+        "south": {
+          "texture": "#chamber",
+          "uv": [
+            3.0,
+            3.198,
+            13.0,
+            0.0
+          ]
+        },
+        "west": {
+          "texture": "#chamber",
+          "uv": [
+            3.0,
+            3.198,
+            13.0,
+            0.0
+          ]
+        }
+      },
+      "from": [
+        3,
+        4,
+        3
+      ],
+      "to": [
+        13,
+        7.198,
+        13
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#front",
+          "uv": [
+            0.0,
+            0.0,
+            12.0,
+            12.0
+          ]
+        },
+        "east": {
+          "texture": "#front",
+          "uv": [
+            0.0,
+            12.0,
+            12.0,
+            16.0
+          ]
+        },
+        "north": {
+          "texture": "#front",
+          "uv": [
+            0.0,
+            12.0,
+            12.0,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#front",
+          "uv": [
+            0.0,
+            12.0,
+            12.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#front",
+          "uv": [
+            0.0,
+            0.0,
+            12.0,
+            12.0
+          ]
+        },
+        "west": {
+          "texture": "#front",
+          "uv": [
+            0.0,
+            12.0,
+            12.0,
+            16.0
+          ]
+        }
+      },
+      "from": [
+        2,
+        7.198,
+        2
+      ],
+      "to": [
+        14,
+        11.198,
+        14
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#trunk",
+          "uv": [
+            0.0,
+            0.0,
+            8.0,
+            8.0
+          ]
+        },
+        "east": {
+          "texture": "#trunk",
+          "uv": [
+            8.0,
+            0.0,
+            16.0,
+            12.0
+          ]
+        },
+        "north": {
+          "texture": "#trunk",
+          "uv": [
+            8.0,
+            0.0,
+            16.0,
+            12.0
+          ]
+        },
+        "south": {
+          "texture": "#trunk",
+          "uv": [
+            8.0,
+            0.0,
+            16.0,
+            12.0
+          ]
+        },
+        "up": {
+          "texture": "#trunk",
+          "uv": [
+            0.0,
+            0.0,
+            8.0,
+            8.0
+          ]
+        },
+        "west": {
+          "texture": "#trunk",
+          "uv": [
+            8.0,
+            0.0,
+            16.0,
+            12.0
+          ]
+        }
+      },
+      "from": [
+        4,
+        4,
+        4
+      ],
+      "to": [
+        12,
+        16,
+        12
+      ]
+    }
+  ],
+  "gui_light": "front",
+  "textures": {
+    "back": "buildcraftenergy:block/mj_dynamo/back",
+    "chamber": "buildcraftlib:block/engine/chamber_base",
+    "front": "buildcraftenergy:block/mj_dynamo/front",
+    "particle": "buildcraftenergy:block/mj_dynamo/back",
+    "side": "buildcraftenergy:block/mj_dynamo/side",
+    "trunk": "buildcraftlib:block/engine/trunk_blue"
+  }
+}

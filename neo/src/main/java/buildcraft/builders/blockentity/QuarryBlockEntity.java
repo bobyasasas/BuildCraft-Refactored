@@ -126,7 +126,8 @@ public class QuarryBlockEntity extends BlockEntity implements MjReceiver {
         }
         this.areaMin = min;
         this.areaMax = max;
-        this.scanCursor = min;
+        // the scan starts at the top layer's first cell (the drill works top-down)
+        this.scanCursor = QuarryScan.scanStart(min, max);
         this.currentTarget = null;
         this.taskPower = 0;
         this.finished = false;
@@ -184,7 +185,8 @@ public class QuarryBlockEntity extends BlockEntity implements MjReceiver {
         if (!simulate && accepted > 0) {
             this.energyStored += accepted;
             this.totalReceived += accepted;
-            setChanged();
+            // the beam renders from the client mirror's battery, so new power must reach the update tag
+            this.syncToClients();
         }
         return microJoules - accepted;
     }
@@ -271,45 +273,26 @@ public class QuarryBlockEntity extends BlockEntity implements MjReceiver {
     }
 
     /**
-     * Deterministic slice scan (legacy randomises XZY/ZXY and x/z inversions per session): x, then z, then y
-     * <em>descending</em> &mdash; the drill works top-down. Advances/resumes from {@link #scanCursor}.
+     * Deterministic slice scan (the {@link QuarryScan} order — legacy randomises XZY/ZXY and x/z inversions per
+     * session): x, then z, then y <em>descending</em> &mdash; the drill works top-down, so the scan walks each layer
+     * fully and only then drops to the layer below, staying inside the area until the bottom layer is exhausted.
+     * Advances/resumes from {@link #scanCursor}.
      */
     @Nullable
     private BlockPos findNextMineable(ServerLevel level) {
         if (this.areaMin == null || this.areaMax == null) {
             return null;
         }
-        BlockPos cursor = this.scanCursor != null ? this.scanCursor : this.areaMin;
-        BlockPos pos = cursor;
-        while (pos.getY() >= this.areaMin.getY()) {
+        BlockPos pos = this.scanCursor != null ? this.scanCursor : QuarryScan.scanStart(this.areaMin, this.areaMax);
+        while (pos != null) {
             if (canMine(level, pos)) {
                 this.scanCursor = pos;
                 return pos;
             }
-            BlockPos next = this.nextScanPos(pos);
-            if (next == null) {
-                break;
-            }
-            pos = next;
+            pos = QuarryScan.nextScanPos(pos, this.areaMin, this.areaMax);
         }
         this.scanCursor = null;
         return null;
-    }
-
-    /** Scan order helper: x ascending, then z ascending, then y descending (see {@link #findNextMineable}). */
-    private BlockPos nextScanPos(BlockPos pos) {
-        BlockPos min = this.areaMin;
-        BlockPos max = this.areaMax;
-        if (min == null || max == null) {
-            return null;
-        }
-        if (pos.getX() < max.getX()) {
-            return pos.offset(1, 0, 0);
-        }
-        if (pos.getZ() < max.getZ()) {
-            return new BlockPos(min.getX(), pos.getY(), pos.getZ() + 1);
-        }
-        return new BlockPos(min.getX(), pos.getY() - 1, min.getZ());
     }
 
     // ---------------------------------------------------------------------

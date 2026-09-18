@@ -71,13 +71,20 @@ public class KinesisPipeBlockRenderer implements BlockEntityRenderer<KinesisPipe
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    /** Wooden pipe texture, straight from the vanilla block atlas (oak planks = the classic wooden pipe colour). */
-    private static final SpriteId OAK_PLANKS = new SpriteId(
-        TextureAtlas.LOCATION_BLOCKS, Identifier.withDefaultNamespace("block/oak_planks"));
+    /** Wooden power pipe texture, straight from the block atlas (M4.6: the real baseline sprite
+     * {@code items→power_wood_clear}, legacy {@code PipeBehaviourWoodPower} texture index 0, replacing the M2.7b
+     * oak-planks placeholder). */
+    private static final SpriteId POWER_WOOD = new SpriteId(
+        TextureAtlas.LOCATION_BLOCKS, Identifier.fromNamespaceAndPath("buildcrafttransport", "pipes/power_wood_clear"));
 
-    /** Gate body texture: the gate material's block sprite (the iron gate variant is the only migrated one). */
+    /** Gate body texture (M4.6: the real baseline gate material sprite, copied into the transport pipes texture
+     * directory so the shared block atlas stitches it — replacing the M2.7b iron-block placeholder). */
     private static final SpriteId GATE_IRON = new SpriteId(
-        TextureAtlas.LOCATION_BLOCKS, Identifier.withDefaultNamespace("block/iron_block"));
+        TextureAtlas.LOCATION_BLOCKS, Identifier.fromNamespaceAndPath("buildcrafttransport", "pipes/gate_material_iron"));
+
+    /** The animated power-flow core (baseline {@code BCTransportSprites#POWER_FLOW}). */
+    private static final SpriteId POWER_FLOW = new SpriteId(
+        TextureAtlas.LOCATION_BLOCKS, Identifier.fromNamespaceAndPath("buildcrafttransport", "pipes/power_flow"));
 
     /** Render type for block-atlas-textured custom geometry (cutout + cull, like baked block quads). */
     private static final RenderType RENDER_TYPE = Sheets.cutoutBlockSheet();
@@ -188,6 +195,23 @@ public class KinesisPipeBlockRenderer implements BlockEntityRenderer<KinesisPipe
             BcBoxes.lightAll(arm, state);
             state.geometry.addAll(arm);
         }
+
+        // M4.6: the power flow core (baseline PipeFlowRendererPower: a full-bright inner box of radius
+        // 0.248 * stored-fraction, textured with the animated power_flow sprite, gently pulsing).
+        state.powerQuads.clear();
+        state.powerFlow = pipe.getEnergyStored() > 0;
+        if (state.powerFlow) {
+            float fraction = Math.min(1.0f, pipe.getEnergyStored() / 1000f);
+            float pulse = 0.8f + 0.2f * (float) Math.sin((pipe.getLevel() == null ? 0
+                : pipe.getLevel().getGameTime()) * 0.3 + pipe.getBlockPos().hashCode() * 0.7);
+            float radius = 0.248f * fraction * pulse;
+            List<BcQuad> core = BcBoxes.box(0.5f - radius, 0.5f - radius, 0.5f - radius,
+                0.5f + radius, 0.5f + radius, 0.5f + radius);
+            for (int i = 0; i < core.size(); i++) {
+                core.set(i, core.get(i).withLight(FULL_BRIGHT));
+            }
+            state.powerQuads.addAll(core);
+        }
     }
 
     /** Client-side connection scan: pipe-to-pipe, engine-output-to-pipe and pipe-to-meter all connect. Block-state
@@ -223,10 +247,18 @@ public class KinesisPipeBlockRenderer implements BlockEntityRenderer<KinesisPipe
         // Block-relative coordinates: LevelRenderer#submitBlockEntities already translated the pose to the block's
         // (0,0,0) corner, no per-position transform needed here.
         if (!state.geometry.isEmpty()) {
-            TextureAtlasSprite sprite = this.sprites.get(OAK_PLANKS);
+            TextureAtlasSprite sprite = this.sprites.get(POWER_WOOD);
             submitNodeCollector.submitCustomGeometry(poseStack, RENDER_TYPE, (pose, buffer) -> {
                 for (BcQuad quad : state.geometry) {
                     quad.mapUv(sprite).emit(pose, buffer);
+                }
+            });
+        }
+        if (!state.powerQuads.isEmpty()) {
+            TextureAtlasSprite flowSprite = this.sprites.get(POWER_FLOW);
+            submitNodeCollector.submitCustomGeometry(poseStack, RENDER_TYPE, (pose, buffer) -> {
+                for (BcQuad quad : state.powerQuads) {
+                    quad.mapUv(flowSprite).emit(pose, buffer);
                 }
             });
         }
@@ -256,5 +288,9 @@ public class KinesisPipeBlockRenderer implements BlockEntityRenderer<KinesisPipe
         public final EnumSet<DyeColor> wires = EnumSet.noneOf(DyeColor.class);
         /** The gate body quads, block-relative, light-baked (or full-bright while glowing) at extract time. */
         public final List<BcQuad> gateQuads = new ArrayList<>();
+        /** The M4.6 power flow core quads (empty while the pipe holds no energy). */
+        public final List<BcQuad> powerQuads = new ArrayList<>();
+        /** True while the power flow core should render. */
+        public boolean powerFlow;
     }
 }

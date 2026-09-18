@@ -1,8 +1,5 @@
 {
-  "parent": "minecraft:block/orientable",
   "textures": {
-    "front": "minecraft:block/furnace_front",
-    "side": "minecraft:block/furnace_side",
-    "top": "minecraft:block/furnace_top"
+    "particle": "buildcraftenergy:block/engine/stone/back"
   }
 }

@@ -62,7 +62,7 @@ import buildcraft.core.menu.StoneEngineMenu;
  * and pushes the position to the client. The GUI-visible state (burn remaining/total, stored energy) reaches the open
  * menu through {@link #guiData}, the vanilla {@code ContainerData} sync channel.
  *
- * <p><b>Client sync (M2.7b, for {@code StoneEngineBlockRenderer}):</b> the burn state is replicated through the
+ * <p><b>Client sync (M2.7b, now feeding the M4.4 {@code EngineBlockRenderer} jsonbc pipeline):</b> the burn state is replicated through the
  * vanilla block entity update channel, exactly the way {@code BeaconBlockEntity} does it: {@link #getUpdatePacket()}
  * returns {@code ClientboundBlockEntityDataPacket.create(this)} (which packs {@link #getUpdateTag}), and
  * {@link #getUpdateTag} returns {@link #saveCustomOnly} &mdash; i.e. the update tag carries exactly the
@@ -72,7 +72,7 @@ import buildcraft.core.menu.StoneEngineMenu;
  * {@link #SYNC_INTERVAL} ticks while burning (the {@code ConduitBlockEntity} pattern) so the client can drive the
  * piston animation from {@code burnRemain}/{@code burnTotal}.
  */
-public class StoneEngineBlockEntity extends BlockEntity implements Container, MenuProvider {
+public class StoneEngineBlockEntity extends BlockEntity implements Container, MenuProvider, EngineVisual {
 
     /** Constant power output while burning, in &micro;MJ per tick (slice value, see class javadoc). */
     public static final long POWER_PER_TICK = 100;
@@ -89,6 +89,20 @@ public class StoneEngineBlockEntity extends BlockEntity implements Container, Me
     private int burnTotal;
     /** Internal energy buffer, &micro;MJ (see class javadoc). */
     private long energyStored;
+    /**
+     * M4.4 client-side piston animation state (the legacy {@code TileEngineBase_BC8} {@code progress} /
+     * {@code lastProgress} pair): advanced by {@link #clientTick} from the synced burn state, read by the renderer
+     * through {@link #getProgressClient(float)}. Never persisted or synced &mdash; the piston restarting at 0 after a
+     * chunk reload matches the legacy engine re-syncing its progress.
+     */
+    private float progress, lastProgress;
+    /**
+     * M4.4 client-derived power stage (the legacy {@code powerStage}): recomputed by {@link #clientTick} from the
+     * synced buffer, read by the renderer. On the server it is computed on demand (see {@link #getPowerStage()}).
+     */
+    private EnumPowerStage powerStage = EnumPowerStage.BLUE;
+    /** M4.4 client copy of the legacy {@code isPumping} flag, refreshed by {@link #clientTick}. */
+    private boolean pumping;
     /** The fuel slot contents (vanilla {@code Items} list persistence through {@link ContainerHelper}). */
     private final NonNullList<ItemStack> fuelItems = NonNullList.withSize(FUEL_SLOTS, ItemStack.EMPTY);
 
@@ -187,7 +201,72 @@ public class StoneEngineBlockEntity extends BlockEntity implements Container, Me
         return this.burnRemain > 0;
     }
 
+    // ---------------------------------------------------------------------
+    // Render state (M4.4): what the engine BER animates, on top of the M4.8 GUI surface
+    // ---------------------------------------------------------------------
+
+    /** M4.4 render alias of the legacy {@code isPumping}: true while the piston is cycling (client copy refreshed by
+     * {@link #clientTick}). */
+    @Override
+    public boolean isPumping() {
+        return this.pumping;
+    }
+
+    /**
+     * M4.4 port of the legacy {@code computePowerStage}: the stage threshold table applied to the buffer fill ratio
+     * (the legacy heat level tracked the power level one to one, see {@code updateHeatLevel}). Pure function &mdash;
+     * the server calls it per tick, the client caches the result in {@link #clientTick}.
+     */
+    @Override
+    public EnumPowerStage getPowerStage() {
+        return EnumPowerStage.fromLevel(this.energyStored / (double) CAPACITY);
+    }
+
+    /** M4.4 port of the legacy {@code getPistonSpeed}: progress gained per client tick for the current stage. */
+    public double getPistonSpeed() {
+        return this.getPowerStage().getPistonSpeed();
+    }
+
+    /** M4.4 port of the legacy {@code getProgressClient}: the piston position interpolated between the last two
+     * client ticks, handling the 1&rarr;0 wrap so the stroke stays continuous. */
+    @Override
+    public float getProgressClient(float partialTicks) {
+        float last = this.lastProgress;
+        float now = this.progress;
+        if (last > 0.5 && now < 0.5) {
+            // we just returned
+            now += 1;
+        }
+        float interp = last * (1 - partialTicks) + now * partialTicks;
+        return interp % 1;
+    }
+
+    /**
+     * M4.4 client ticker (wired through {@code StoneEngineBlock#getTicker}): advances the piston exactly like the
+     * legacy client block of {@code TileEngineBase_BC8#update()} and refreshes the cached power stage. The server's
+     * burn-state sync (see the class javadoc) is the only input; the burn state already carries
+     * {@code energyStored} (trunk stage) and {@code burnRemain} (pumping).
+     */
+    public static void clientTick(Level level, BlockPos pos, BlockState state, StoneEngineBlockEntity engine) {
+        engine.lastProgress = engine.progress;
+        engine.pumping = engine.isBurning();
+
+        if (engine.pumping) {
+            engine.progress += engine.getPistonSpeed();
+            if (engine.progress >= 1) {
+                engine.progress = 0;
+            }
+        } else if (engine.progress > 0) {
+            engine.progress -= 0.01f;
+            if (engine.progress < 0) {
+                engine.progress = 0;
+            }
+        }
+        engine.powerStage = engine.getPowerStage();
+    }
+
     /** Facing of the block this engine sits in = the energy output face (slice contract for M2.2c pipes). */
+    @Override
     public Direction getOutputFacing() {
         return this.getBlockState().getValue(StoneEngineBlock.FACING);
     }

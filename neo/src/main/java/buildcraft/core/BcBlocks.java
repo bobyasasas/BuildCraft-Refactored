@@ -11,7 +11,10 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import buildcraft.lib.BcLangKeys;
 import buildcraft.core.block.EnergyMeterBlock;
+import buildcraft.core.block.EngineBlock;
 import buildcraft.core.block.KinesisPipeBlock;
+import buildcraft.core.block.MarkerPathBlock;
+import buildcraft.core.block.MarkerVolumeBlock;
 import buildcraft.core.block.StoneEngineBlock;
 
 /**
@@ -93,29 +96,49 @@ public final class BcBlocks {
     public static final DeferredBlock<Block> DECORATED_TEMPLATE = BcLangKeys.simpleBlock(BLOCKS, "decorated_template",
             properties -> properties.strength(0.5F));
 
-    /** Placeholder for {@code buildcraftcore:engine_wood} (legacy {@code BlockEngine_BC8}); behaviour class migrates in M2.5+. */
-    public static final DeferredBlock<Block> ENGINE_WOOD = BcLangKeys.simpleBlock(BLOCKS, "engine_wood",
+    /**
+     * M4.4: the real wooden engine (legacy {@code BlockEngine_BC8} + {@code TileEngineRedstone_BC8}), replacing the
+     * M2.4a placeholder; rendering slice — the block entity carries the fuel/buffer state the engine BER animates
+     * (see {@link EngineBlock} and {@link buildcraft.core.blockentity.EngineBlockEntity}).
+     */
+    public static final DeferredBlock<EngineBlock> ENGINE_WOOD = BcLangKeys.block(BLOCKS, "engine_wood",
+            properties -> new EngineBlock(properties, () -> BcBlockEntities.ENGINE_WOOD.value(), false),
             properties -> properties.strength(0.5F));
 
-    /** Placeholder for {@code buildcraftcore:engine_creative} (legacy {@code BlockEngine_BC8}); behaviour class migrates in M2.5+. */
-    public static final DeferredBlock<Block> ENGINE_CREATIVE = BcLangKeys.simpleBlock(BLOCKS, "engine_creative",
+    /**
+     * M4.4: the real creative engine (legacy {@code BlockEngine_BC8} + {@code TileEngineCreative}), replacing the
+     * M2.4a placeholder; redstone-driven, never burns (see {@link EngineBlock}).
+     */
+    public static final DeferredBlock<EngineBlock> ENGINE_CREATIVE = BcLangKeys.block(BLOCKS, "engine_creative",
+            properties -> new EngineBlock(properties, () -> BcBlockEntities.ENGINE_CREATIVE.value(), true),
             properties -> properties.strength(0.5F));
 
-    /** Placeholder for {@code buildcraftcore:engine_iron} (legacy {@code BlockEngine_BC8}); behaviour class migrates in M2.5+. */
-    public static final DeferredBlock<Block> ENGINE_IRON = BcLangKeys.simpleBlock(BLOCKS, "engine_iron",
+    /** M4.4: the real iron engine (legacy {@code BlockEngine_BC8}); rendering slice, see {@link #ENGINE_WOOD}. */
+    public static final DeferredBlock<EngineBlock> ENGINE_IRON = BcLangKeys.block(BLOCKS, "engine_iron",
+            properties -> new EngineBlock(properties, () -> BcBlockEntities.ENGINE_IRON.value(), false),
             properties -> properties.strength(0.5F));
 
-    /** Placeholder for {@code buildcraftcore:engine_rf} (legacy {@code BlockEngine_BC8}); behaviour class migrates in M2.5+. */
-    public static final DeferredBlock<Block> ENGINE_RF = BcLangKeys.simpleBlock(BLOCKS, "engine_rf",
+    /** M4.4: the real rf engine (legacy {@code BlockEngine_BC8}); rendering slice, see {@link #ENGINE_WOOD}. */
+    public static final DeferredBlock<EngineBlock> ENGINE_RF = BcLangKeys.block(BLOCKS, "engine_rf",
+            properties -> new EngineBlock(properties, () -> BcBlockEntities.ENGINE_RF.value(), false),
             properties -> properties.strength(0.5F));
 
-    /** Placeholder for {@code buildcraftcore:marker_volume} (legacy {@code BlockMarkerVolume}); behaviour class migrates in M2.5+. */
-    public static final DeferredBlock<Block> MARKER_VOLUME = BcLangKeys.simpleBlock(BLOCKS, "marker_volume",
-            properties -> properties.strength(0.5F));
+    /**
+     * M4.5: the real volume marker (legacy {@code BlockMarkerVolume}), replacing the M2.4a placeholder. The block
+     * entity carries the marker connection bookkeeping and the redstone-driven signal lines (see
+     * {@link MarkerVolumeBlock} and {@link buildcraft.core.blockentity.MarkerVolumeBlockEntity}).
+     */
+    public static final DeferredBlock<MarkerVolumeBlock> MARKER_VOLUME = BcLangKeys.block(BLOCKS, "marker_volume",
+            MarkerVolumeBlock::new, () -> BlockBehaviour.Properties.of().strength(0.5F));
 
-    /** Placeholder for {@code buildcraftcore:marker_path} (legacy {@code BlockMarkerPath}); behaviour class migrates in M2.5+. */
-    public static final DeferredBlock<Block> MARKER_PATH = BcLangKeys.simpleBlock(BLOCKS, "marker_path",
-            properties -> properties.strength(0.5F));
+    /**
+     * M4.5: the real path marker (legacy {@code BlockMarkerPath}), replacing the M2.4a placeholder; connections are
+     * ordered chains along one axis (see {@link MarkerPathBlock} and
+     * {@link buildcraft.core.blockentity.MarkerPathBlockEntity}).
+     */
+    public static final DeferredBlock<MarkerPathBlock> MARKER_PATH = BcLangKeys.block(BLOCKS, "marker_path",
+            MarkerPathBlock::new, () -> BlockBehaviour.Properties.of().strength(0.5F));
+
 
     /** Placeholder for {@code buildcraftcore:power_tester} (legacy {@code BlockPowerConsumerTester}); behaviour class migrates in M2.5+. */
     public static final DeferredBlock<Block> POWER_TESTER = BcLangKeys.simpleBlock(BLOCKS, "power_tester",

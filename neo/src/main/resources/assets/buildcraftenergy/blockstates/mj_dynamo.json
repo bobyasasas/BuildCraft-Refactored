@@ -1,6 +1,15 @@
 {
   "variants": {
-    "": {
+    "facing=east": {
+      "model": "buildcraftenergy:block/mj_dynamo"
+    },
+    "facing=north": {
+      "model": "buildcraftenergy:block/mj_dynamo"
+    },
+    "facing=south": {
+      "model": "buildcraftenergy:block/mj_dynamo"
+    },
+    "facing=west": {
       "model": "buildcraftenergy:block/mj_dynamo"
     }
   }

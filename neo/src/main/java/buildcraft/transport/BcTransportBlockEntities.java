@@ -6,6 +6,7 @@
 package buildcraft.transport;
 
 import buildcraft.core.blockentity.PlaceholderBlockEntity;
+import buildcraft.transport.blockentity.PipeHolderBlockEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -13,9 +14,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
  * Central block entity type registration for buildcrafttransport (task M2.4c registry parity). Every block entity id
- * the 1.20.1 registry baseline attributes to {@code buildcrafttransport} registers here, bound to its (placeholder)
- * block through the shared {@link PlaceholderBlockEntity}. All placeholder, behaviour classes (legacy
- * {@code TileFilteredBuffer} / {@code TilePipeHolder}) migrate in M2.5+.
+ * the 1.20.1 registry baseline attributes to {@code buildcrafttransport} registers here; since M4.6 the
+ * {@code pipe_holder} type is the real {@link PipeHolderBlockEntity} (every pipe family), the rest stay bound to the
+ * shared {@link PlaceholderBlockEntity}. Remaining behaviour classes (legacy {@code TileFilteredBuffer}) migrate in
+ * M2.5+.
  */
 public final class BcTransportBlockEntities {
 
@@ -28,10 +30,10 @@ public final class BcTransportBlockEntities {
                     (pos, state) -> new PlaceholderBlockEntity(BcTransportBlockEntities.FILTERED_BUFFER.value(), pos, state),
                     BcTransportBlocks.FILTERED_BUFFER.value()));
 
-    /** Placeholder for {@code buildcrafttransport:pipe_holder}; behaviour class migrates in M2.5+. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlaceholderBlockEntity>> PIPE_HOLDER = BLOCK_ENTITIES
+    /** The shared pipe block entity (M4.6): family/colour/plugs/connections + the item/fluid/power slices. */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PipeHolderBlockEntity>> PIPE_HOLDER = BLOCK_ENTITIES
             .register("pipe_holder", () -> new BlockEntityType<>(
-                    (pos, state) -> new PlaceholderBlockEntity(BcTransportBlockEntities.PIPE_HOLDER.value(), pos, state),
+                    PipeHolderBlockEntity::new,
                     BcTransportBlocks.PIPE_HOLDER.value()));
 
     private BcTransportBlockEntities() {

@@ -4,6 +4,19 @@
       "type": "minecraft:directory",
       "prefix": "pipes/",
       "source": "pipes"
+    },
+    {
+      "type": "minecraft:directory",
+      "prefix": "lasers/",
+      "source": "lasers"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "buildcraftbuilders:block/frame/default"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "buildcraftbuilders:block/quarry/drill"
     }
   ]
 }

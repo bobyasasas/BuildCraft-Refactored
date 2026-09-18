@@ -15,6 +15,11 @@ import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import buildcraft.lib.BcLangKeys;
+import buildcraft.transport.item.ItemPipeHolder;
+import buildcraft.transport.item.ItemPlug;
+import buildcraft.transport.blockentity.PipeHolderBlockEntity;
+import buildcraft.transport.pipe.BcPipeFamilies;
+import buildcraft.transport.pipe.BcPipeFamilies.Family;
 
 /**
  * Central item registration for buildcrafttransport (task M2.4c registry parity). The 1.20.1 registry baseline
@@ -106,11 +111,13 @@ public final class BcTransportItems {
     /** Placeholder for {@code buildcrafttransport:filtered_buffer} (item form of {@link BcTransportBlocks#FILTERED_BUFFER}); behaviour class migrates in M2.5+. */
     public static final DeferredItem<BlockItem> FILTERED_BUFFER = BcLangKeys.blockItem(ITEMS, BcTransportBlocks.FILTERED_BUFFER);
 
-    /** Placeholder for {@code buildcrafttransport:plug_blocker} (legacy {@code ItemPluggableSimple}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PLUG_BLOCKER = BcLangKeys.item(ITEMS, "plug_blocker");
+    /** Placeholder for {@code buildcrafttransport:plug_blocker} (legacy {@code ItemPluggableSimple}); attaches to pipes since M4.6. */
+    public static final DeferredItem<Item> PLUG_BLOCKER = BcLangKeys.item(ITEMS, "plug_blocker",
+            properties -> new ItemPlug(properties, PipeHolderBlockEntity.PLUG_BLOCKER));
 
-    /** Placeholder for {@code buildcrafttransport:plug_power_adaptor} (legacy {@code ItemPluggableSimple}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PLUG_POWER_ADAPTOR = BcLangKeys.item(ITEMS, "plug_power_adaptor");
+    /** Placeholder for {@code buildcrafttransport:plug_power_adaptor} (legacy {@code ItemPluggableSimple}); attaches to pipes since M4.6. */
+    public static final DeferredItem<Item> PLUG_POWER_ADAPTOR = BcLangKeys.item(ITEMS, "plug_power_adaptor",
+            properties -> new ItemPlug(properties, PipeHolderBlockEntity.PLUG_POWER_ADAPTOR));
 
     /** Placeholder for {@code buildcrafttransport:waterproof} (legacy {@code ItemBC_Neptune}); behaviour class migrates in M2.5+. */
     public static final DeferredItem<Item> WATERPROOF = BcLangKeys.item(ITEMS, "waterproof");
@@ -120,8 +127,8 @@ public final class BcTransportItems {
 
     static {
         // Expand every pipe family into its 17 colour variants (colorless + the 16 dye colours) and register them all
-        // as plain placeholder items, exactly like legacy PipeRegistry#createItemForPipe did. Placeholder only; the
-        // real ItemPipeHolder behaviour migrates in M2.5+.
+        // as real pipe items: each one places the shared pipe_holder block stamped with its family + colour
+        // (M4.6; legacy PipeRegistry#createItemForPipe did the same through ItemPipeHolder#createAndTag).
         List<String> ids = new ArrayList<>(PIPE_FAMILIES.size() * 17);
         for (String family : PIPE_FAMILIES) {
             ids.add(family + "_colorless");
@@ -129,8 +136,13 @@ public final class BcTransportItems {
                 ids.add(family + "_" + color.getName());
             }
         }
+        DyeColor[] colourOut = new DyeColor[1];
         for (String id : ids) {
-            PIPE_ITEMS.put(id, BcLangKeys.item(ITEMS, id));
+            Family parsedFamily = BcPipeFamilies.parse(id, colourOut);
+            DyeColor colour = colourOut[0];
+            PIPE_ITEMS.put(id, parsedFamily == null
+                ? BcLangKeys.item(ITEMS, id)
+                : BcLangKeys.item(ITEMS, id, properties -> new ItemPipeHolder(properties, parsedFamily, colour)));
         }
     }
 

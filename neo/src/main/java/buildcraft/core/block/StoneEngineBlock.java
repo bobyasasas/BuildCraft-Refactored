@@ -109,6 +109,14 @@ public class StoneEngineBlock extends BaseEntityBlock {
                 BcBlockEntities.ENGINE_STONE.value(),
                 (innerLevel, pos, innerState, entity) -> StoneEngineBlockEntity.serverTick(serverLevel, pos, innerState, entity));
         }
+        // M4.4: the client advances the piston animation and derives the trunk stage from the synced burn state
+        // (see StoneEngineBlockEntity#clientTick).
+        if (level.isClientSide()) {
+            return createTickerHelper(
+                type,
+                BcBlockEntities.ENGINE_STONE.value(),
+                StoneEngineBlockEntity::clientTick);
+        }
         return null;
     }
 }
