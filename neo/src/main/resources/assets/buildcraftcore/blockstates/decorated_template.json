@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "buildcraftcore:block/decorated_template"
+      "model": "buildcraftcore:block/decorated/template"
     }
   }
 }

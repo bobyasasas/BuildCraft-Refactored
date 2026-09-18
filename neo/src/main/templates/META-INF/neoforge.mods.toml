@@ -105,6 +105,23 @@ Extending Minecraft with pipes, auto-crafting, quarries, engines and much more! 
     ordering="AFTER"
     side="BOTH"
 
+# Optional compat integrations (buildcraftlib-era BuildCraft 8 did the same):
+# JEI + Jade are never required; when present we just load after them so their
+# plugin discovery (FML annotation scan) has already initialized them.
+[[dependencies.buildcraftcore]]
+    modId="jei"
+    type="optional"
+    versionRange="[29,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.buildcraftcore]]
+    modId="jade"
+    type="optional"
+    versionRange="[26.1,)"
+    ordering="AFTER"
+    side="BOTH"
+
 [[dependencies.buildcraftbuilders]]
     modId="neoforge"
     type="required"

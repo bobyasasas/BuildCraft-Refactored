@@ -338,10 +338,10 @@
       "id": "M4.2",
       "phase": "Phase 4 视觉与实机可玩性",
       "title": "静态模型真迁：datagen 产出基线真模型（废占位）",
-      "status": "pending",
+      "status": "done",
       "acceptance": "A 类方块的随包模型/blockstate 与 1.20.1 generated 基线语义一致（真实 BC 纹理引用），S1 无漂移门禁保持绿，客户端实机渲染非占位外观",
-      "evidence": "",
-      "notes": "待办：BcDatagen 供给器改为产出基线真模型；30 条 fluid heat particle 引用映射裁定；M3.2 占位裁决在台账废止"
+      "evidence": "worker D 实施：新增 BcModelJson + 重写 BcBlockStateProvider/BcItemModelsProvider（58 blockstate 指真模型、59 block model 真贴图、76 item model 真贴图 + robot base 几何 item/robot/base.json）；随包 assets 从 runData 产物机械同步（不动 textures——主 agent 裁决：该同步即 S1 门禁设计的合规机制）；30 条 fluid_*_heat_N 粒子引用按主 agent 裁决映射 buildcraftlib:block/fluid/heat_{0,1,2}_still（10 油种×3 档，越界 fail-closed）；BER/JsonVariableModel 族 20 blockstate + 857 占位 item model 明确跳过留 M4.3-M4.5。验证：自写 parity checker 对 8.0.x 基线 PARITY OK（block30+fluid30+item75+robot base+blockstate defaults30+item def targets）；主 agent 亲跑 datagen_diff --strict PASS（无漂移 diff=0、白名单 1+贴图放行 1039、卫生通过）与 license_check 绿、build 绿（无 bcCompatDev）；实机 Xvfb：28 代表方块网格+创造页 robot 3D/board 彩色贴图截图 worker 亲判无紫黑棋盘格，日志零 missing model/texture。已记录偏差 4 条均裁决接受：autoworkbench parent 矛盾消解（minecraft:block/cube）、robot 子目录布局（避 S2 extra-id）、robot_* parent=item/robot/base、chute/tank/builder/distiller item display 变换未迁（转记 M4.3 notes）；robot 族 18 条 particle 缺失警告为基线同款继承行为",
+      "notes": "M3.2 占位裁决自本任务起废止（静态方块范围）；30 条热粒子映射表见 evidence"
     },
     {
       "id": "M4.3",
@@ -350,7 +350,7 @@
       "status": "pending",
       "acceptance": "物品栏/手持的引擎、管道等动态物品以真实贴图渲染（ModelItemSimple 等价），棋盘格消失",
       "evidence": "",
-      "notes": "审计 P0-B + P1-4 物品侧"
+      "notes": "审计 P0-B + P1-4 物品侧；M4.2 顺延：chute/tank/builder/distiller 的 item display 变换未迁（item def 直指 block 模型）"
     },
     {
       "id": "M4.4",
@@ -409,11 +409,11 @@
     {
       "id": "M4.10",
       "phase": "Phase 4 视觉与实机可玩性",
-      "title": "JEI 兼容（待用户裁决）",
-      "status": "pending",
-      "acceptance": "（若获批）JEI 插件展示 BuildCraft 配方/机器类别；不获批则维持基线忠实（配方已随包，JEI 装机即自动索引原版类别）",
-      "evidence": "",
-      "notes": "红线冲突：1.20.1 基线无 JEI 代码，实施需引入 JEI API 依赖，违反'不引入新第三方依赖'——必须用户明示批准方可开工"
+      "title": "M4.10 JEI 可选依赖集成（已获用户批准）",
+      "status": "done",
+      "acceptance": "JEI 以 compileOnly 可选依赖接入：未安装 JEI 时 BuildCraft 正常运行；安装后展示 BuildCraft 自定义配方类别（装配台/集成台/炼油等，以当前已注册 RecipeType 为准）；版本钉死进 gradle.properties；dev 实装（-PbcCompatDev）冒烟证据：JEI 加载 + BuildCraft 插件注册日志行",
+      "evidence": "用户 2026-09-17 批准：'增加jei和jade的可选依赖'（第三方依赖禁令仅豁免 jei/jade）。接线（worker A）：maven.blamejared.com，jei 26.1.2-{common,neoforge}-api:29.37.0.99 compileOnly + jei-26.1.2-neoforge runtimeOnly（-PbcCompatDev 开发实装门控，默认关、CI 不受影响）；mods.toml [[dependencies.buildcraftcore]] modId=jei type=optional versionRange=[29,) ordering=AFTER side=BOTH。类别实现（worker B）：7 类别 assembly/integration/programming/distillation/heat_exchange/fuel/coolant，标题复用冻结键（tile.assemblyTableBlock.name 等 7 键主 agent 逐一 grep 证实存在；coolant 用 buildcraft.help.tank.title.tankCoolant 裁决接受），槽底 buildcraftcore:textures/gui/slot.png (7,7,18,18)、空白背景（不裁整机 GUI，裁决）、能量行 μJ 千分位、catalyst 挂机器方块（fuel/coolant→铁引擎）；JEI API 类型零外泄 compat/jei 包。验证：主 agent 亲跑无 bcCompatDev build 绿 + 官方 ./gradlew runClient --no-daemon -PbcCompatDev 联合冒烟（2026-09-17 22:22）：7 类别 registered 85/17/17/10/42/9/3 与 visible 计数逐项相等且与 JSON 配方全量一致、joined the game、零崩溃零 compat ERROR；license 绿。裁决：facade_swap 不做类别；远程服务器配方同步 v1 缓办（无 integrated server 时 warn 并保持类别空）",
+      "notes": "实施分派：worker A 依赖接线+骨架插件+实装冒烟；worker B 配方类别实现（依赖侦察清单）；裁决保留：类别背景贴图优先用已入库的 1015 张基线贴图（M4.1），不新造美术"
     },
     {
       "id": "M4.11",
@@ -441,6 +441,24 @@
       "acceptance": "定位根因并给出修复或明确环境/上游定性（dev-only vs 生产影响）；GUI 创建新世界与菜单加载已有世界恢复可用，或登记为上游/环境已知问题并给出生产影响结论",
       "evidence": "复现（累计 3 次：旧污染 jar 2 次 + M4.11 修复后新 jar 1 次，Xvfb 真客户端）：GUI 创建卡 'Preparing for world creation 50%' 190s+ 或 2-3 分钟后静默退回世界列表（无存档生成）；菜单选中已有世界 Play 卡加载屏 0%（level.dat mtime 不变）；全程零异常零崩溃零新增日志；jstack 无 Server thread、无 Worker-Main；quickPlay 同 jar 同存档 11 秒进入且四判据正常。M4.11 修复后复测两症状均未自愈 → 与数据包污染独立成因。只读调查（26.1.2 反编译源，Gradle 缓存 neoformruntime decompile jar）：(a) 旧会话线索 'Missing data pack tests' 与 'Loaded 3076 recipes' 溯源均为 vanilla 本体——前者是 dev 模式 CreateWorldScreen 注入 tests pack（CreateWorldScreen.java:174-176，IS_RUNNING_IN_IDE 才有；quickPlay 与生产用户无此注入）被 MinecraftServer.configurePackRepository 剔除时的 WARN，后者为 RecipeManager 正常加载行；(b) BuildCraft 客户端嫌疑清零：全源码 13 处 addListener 逐一核对全部在世界创建/加载窗口期之外，无 ScreenEvent/ClientTickEvent/WorldEvent/mixin，无自建线程池/锁/阻塞，CompletableFuture 仅存在于 datagen 离线路径 6 处；(c) 死点夹逼：创建路径 apply 段日志（recipes/advancements）全部打完后 vanilla WorldLoader.load 链尾（WorldLoader.java:79-82）→ CreateWorldScreen.java:190 managedBlock 的 loadResult 永不完成；菜单路径（WorldOpenFlows.java:302/310 data_read 屏）在链更早处零日志即死；两路径共用 WorldLoader.load，而 quickPlay 走同一链 0.8 秒完成（2026-09-17-3.log.gz 实证）",
       "notes": "假设排序：H1 vanilla WorldLoader 链尾完成信号丢失（dev 模式 tests pack 剔除路径特有嫌疑）> H2 Xvfb/llvmpipe 无头 GL 环境缺陷 > H3 BuildCraft 数据内容在 GUI 特有 pack 组合下触发。裁决（用户影响评估）：BuildCraft 代码直接责任已排除；症状目前仅在 dev/Xvfb 环境复现，生产 jar 用户路径（非 IDE 无 tests 注入）未见受影响证据，暂不定性生产 P0；但 M4.9 实机矩阵展开前必须闭环本项。下一步实验（按性价比）：(1) H1 双 jstack（卡住时 5s 间隔两次，分辨 Render thread 栈顶是 managedBlock 轮询还是纯渲染）；(2) 生产客户端 GUI 冒烟试验台（NeoForge installer client 模式 + 我们的 jar，判定 dev-only 还是生产也中）；(3) NeoForge issue tracker 检索同症状（WebSearch 配额 2026-09-19 恢复后补，本会话本地与 worker 均已耗尽）；(4) H3 数据二分（临时改 build 输出侧 data/ 目录复跑 GUI）"
+    },
+    {
+      "id": "M4.14",
+      "phase": "Phase 4 视觉与实机可玩性",
+      "title": "M4.14 Jade 可选依赖集成（用户追加批准）",
+      "status": "done",
+      "acceptance": "Jade 以 compileOnly 可选依赖接入：未安装 Jade 时 BuildCraft 正常运行；安装后对 BuildCraft 方块实体显示信息面板（以当前 BE 数据访问点为准：能量/流体/机器状态）；版本钉死；dev 实装冒烟证据：Jade 加载 + BuildCraft 插件注册日志行",
+      "evidence": "用户追加批准（同上句豁免）。接线（worker A）：Modrinth maven maven.modrinth:jade:26.1.11+neoforge compileOnly + 同坐标 runtimeOnly（bcCompatDev 门控）；mods.toml optional [26.1,) AFTER BOTH。实现（worker C）：5 真实 BE（石头引擎/动能木管/能量计/填充器/采石场）两段式——外层 IServerDataProvider<BlockAccessor> 经 registerBlockDataProvider 按 BE 类注册，嵌套 Client IBlockComponentProvider 经 registerBlockComponent 按 Block 类注册，共享 uid，appendServerData 塞 CompoundTag / 客户端 getServerData 读（服务端字段不同步问题的正解）；该范式绕开 Jade 1.21.6+ 'Data providers cannot implement IComponentProvider' 硬限制（第一版单类双接口即崩于此已删）。展示：能量 μJ 千分位（x / CAP μJ）、燃烧百分比 clamp 0-100、能量计累计、filler pattern/cell 与 quarry target present-only 键编码 null、Buffer N items；占位 BE 21 个零注册零提示（裁决）。验证：无 bcCompatDev build 绿；主 agent 亲跑官方联合冒烟：'BuildCraft Jade compat registered' + joined the game + 零错误；worker 实装冒烟截图亲判引擎 0 / 100,000 μJ、采石场 0 / 2,400,000 μJ 真渲染；license 绿。裁决：jade 包留 src/client → 专职服 server data 半不加载，v1 接受（与 JEI 远程同步同批缓办，多人场景未入测试矩阵）；Buffer=物品件数求和（规格原文）；pattern 显示原样 uniqueTag（本地化需新键被冻结门禁禁止）",
+      "notes": "与 M4.10 共用 worker A 接线（同批仓库/属性/开关）；Jade 数据提供者（worker C）按侦察清单的 BE getter 现状分期：本期覆盖有公开访问点的 BE，无 getter 的 BE 留待 M4.5-M4.7 渲染任务补齐数据访问后扩展"
+    },
+    {
+      "id": "M4.15",
+      "phase": "Phase 4 视觉与实机可玩性",
+      "title": "方块/物品名接入冻结翻译键（消除游戏内裸键名）",
+      "status": "done",
+      "acceptance": "游戏内（背包/创造页/tooltip/JEI/Jade 首行）BC 方块与物品显示 en_us 翻译名而非 block.<ns>.<path> 裸键；零新增 lang 键；无法映射的 id 有明示清单与主 agent 裁决记录",
+      "evidence": "根因：全库无 descriptionId 覆写 + lang 为旧式 857 键冻结集 + 注册走 registerSimpleBlockItem 默认键 → 游戏内全裸键（Jade 冒烟实测发现）。worker E 实施：BcLangKeys 一处机制（Item.Properties#overrideDescription / BlockBehaviour.Properties#overrideDescription——26.1.2 getDescriptionId 已 final）+ 一张表（约 192 显式条目 + 46 管道族前缀最长匹配×17 色变体≈782 id ≈ 共 974 id；近似映射注释 approximate）+ 15 个 Bc*Items/Bc*Blocks 注册行改走 helper（字段名/泛型零变动，compat 引用不受影响）。验证：build 绿（JaCoCo core 2.20%≥2.0、lib 79.38%≥73.0）；主 agent 亲跑 lang_diff PASS 857/857 missing0 extra0 + license 绿；实机截图 worker 亲判：tooltip 'Combustion Engine'、BC 创造页标题 'BuildCraft' 且整页零裸键、11/14 页 'Cobblestone Structure Pipe'（管道前缀机制生效）、/setblock 聊天 '[Combustion Engine]'。主 agent 裁决 5 组未映射 id 维持默认键并记录（lang 集确无对应键、造新键被禁）：energy_meter、decorated_destroy/leather/paper（仅 blueprint/laser_back/template 有 decorated 键）、fragile_fluid_shard（仅 'Fragile %s Shard' 格式键，直映渲染字面 %s）、plug_gate×25（旧版 '%s %s Gate' 组合式，gate.name.basic 不存在）、pipe_holder（技术方块无物品）；组合式命名机制留后续任务。BcLangKeysTest 越出原文件域追认（JaCoCo 门限需要；Recording 子类绕开 DeferredHolder 对 BuiltInRegistries 急切绑定）",
+      "notes": "根因（2026-09-17 Jade 冒烟实测发现）：全库无 setDescriptionId/getDescriptionId 覆写，en_us.json 为旧式 tile.*/item.* 857 键冻结集，注册走 registerSimpleBlockItem 默认键 → 名字裸键。方案：中央 BcNamedBlockItem/BcNamedItem + 注册 id→旧键映射表"
     }
   ]
 }

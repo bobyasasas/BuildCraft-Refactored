@@ -23,13 +23,13 @@ public final class BcLibItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(BCLib.MOD_ID);
 
     /** Placeholder for {@code buildcraftlib:guide} (legacy {@code ItemGuide}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> GUIDE = ITEMS.registerSimpleItem("guide");
+    public static final DeferredItem<Item> GUIDE = BcLangKeys.item(ITEMS, "guide");
 
     /** Placeholder for {@code buildcraftlib:guide_note} (legacy {@code ItemGuideNote}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> GUIDE_NOTE = ITEMS.registerSimpleItem("guide_note");
+    public static final DeferredItem<Item> GUIDE_NOTE = BcLangKeys.item(ITEMS, "guide_note");
 
     /** Placeholder for {@code buildcraftlib:debugger} (legacy {@code ItemDebugger}, stacks to 1); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> DEBUGGER = ITEMS.registerSimpleItem("debugger", properties -> properties.stacksTo(1));
+    public static final DeferredItem<Item> DEBUGGER = BcLangKeys.simpleItem(ITEMS, "debugger", properties -> properties.stacksTo(1));
 
     private BcLibItems() {
     }

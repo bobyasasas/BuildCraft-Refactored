@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "buildcraftsilicon:block/advanced_crafting_table"
+      "model": "buildcraftsilicon:block/table/advanced_crafting"
     }
   }
 }

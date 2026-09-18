@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "buildcraftbuilders:block/architect"
+    "model": "buildcraftbuilders:block/architect_off"
   }
 }

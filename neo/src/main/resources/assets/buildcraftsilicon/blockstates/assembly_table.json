@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "buildcraftsilicon:block/assembly_table"
+      "model": "buildcraftsilicon:block/table/assembly"
     }
   }
 }

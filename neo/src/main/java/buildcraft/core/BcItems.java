@@ -9,6 +9,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import buildcraft.lib.BcLangKeys;
 
 /**
  * Central item registration for buildcraftcore (task M2.2a, M2.4a registry parity). Every item this mod registers gets
@@ -25,16 +26,16 @@ public final class BcItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(BuildCraftCore.MOD_ID);
 
     /** Item form of the {@link BcBlocks#MARKER} placeholder block. */
-    public static final DeferredItem<BlockItem> MARKER = ITEMS.registerSimpleBlockItem(BcBlocks.MARKER);
+    public static final DeferredItem<BlockItem> MARKER = BcLangKeys.blockItem(ITEMS, BcBlocks.MARKER);
 
     /** Item form of the {@link BcBlocks#ENGINE_STONE} slice block (M2.2b). */
-    public static final DeferredItem<BlockItem> ENGINE_STONE = ITEMS.registerSimpleBlockItem(BcBlocks.ENGINE_STONE);
+    public static final DeferredItem<BlockItem> ENGINE_STONE = BcLangKeys.blockItem(ITEMS, BcBlocks.ENGINE_STONE);
 
     /** Item form of the {@link BcBlocks#PIPE_KINESIS_WOOD} slice block (M2.2c). */
-    public static final DeferredItem<BlockItem> PIPE_KINESIS_WOOD = ITEMS.registerSimpleBlockItem(BcBlocks.PIPE_KINESIS_WOOD);
+    public static final DeferredItem<BlockItem> PIPE_KINESIS_WOOD = BcLangKeys.blockItem(ITEMS, BcBlocks.PIPE_KINESIS_WOOD);
 
     /** Item form of the {@link BcBlocks#ENERGY_METER} slice-only measurement block (M2.2c). */
-    public static final DeferredItem<BlockItem> ENERGY_METER = ITEMS.registerSimpleBlockItem(BcBlocks.ENERGY_METER);
+    public static final DeferredItem<BlockItem> ENERGY_METER = BcLangKeys.blockItem(ITEMS, BcBlocks.ENERGY_METER);
 
     // -------------------------------------------------------------------------
     // M2.4a registry parity: block items of the M2.4a placeholder blocks (legacy
@@ -43,49 +44,49 @@ public final class BcItems {
     // -------------------------------------------------------------------------
 
     /** Placeholder for {@code buildcraftcore:spring_water}; behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> SPRING_WATER = ITEMS.registerSimpleBlockItem(BcBlocks.SPRING_WATER);
+    public static final DeferredItem<BlockItem> SPRING_WATER = BcLangKeys.blockItem(ITEMS, BcBlocks.SPRING_WATER);
 
     /** Placeholder for {@code buildcraftcore:spring_oil}; behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> SPRING_OIL = ITEMS.registerSimpleBlockItem(BcBlocks.SPRING_OIL);
+    public static final DeferredItem<BlockItem> SPRING_OIL = BcLangKeys.blockItem(ITEMS, BcBlocks.SPRING_OIL);
 
     /** Placeholder for {@code buildcraftcore:decorated_blueprint}; behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> DECORATED_BLUEPRINT = ITEMS.registerSimpleBlockItem(BcBlocks.DECORATED_BLUEPRINT);
+    public static final DeferredItem<BlockItem> DECORATED_BLUEPRINT = BcLangKeys.blockItem(ITEMS, BcBlocks.DECORATED_BLUEPRINT);
 
     /** Placeholder for {@code buildcraftcore:decorated_destroy}; behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> DECORATED_DESTROY = ITEMS.registerSimpleBlockItem(BcBlocks.DECORATED_DESTROY);
+    public static final DeferredItem<BlockItem> DECORATED_DESTROY = BcLangKeys.blockItem(ITEMS, BcBlocks.DECORATED_DESTROY);
 
     /** Placeholder for {@code buildcraftcore:decorated_laser_back}; behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> DECORATED_LASER_BACK = ITEMS.registerSimpleBlockItem(BcBlocks.DECORATED_LASER_BACK);
+    public static final DeferredItem<BlockItem> DECORATED_LASER_BACK = BcLangKeys.blockItem(ITEMS, BcBlocks.DECORATED_LASER_BACK);
 
     /** Placeholder for {@code buildcraftcore:decorated_leather}; behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> DECORATED_LEATHER = ITEMS.registerSimpleBlockItem(BcBlocks.DECORATED_LEATHER);
+    public static final DeferredItem<BlockItem> DECORATED_LEATHER = BcLangKeys.blockItem(ITEMS, BcBlocks.DECORATED_LEATHER);
 
     /** Placeholder for {@code buildcraftcore:decorated_paper}; behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> DECORATED_PAPER = ITEMS.registerSimpleBlockItem(BcBlocks.DECORATED_PAPER);
+    public static final DeferredItem<BlockItem> DECORATED_PAPER = BcLangKeys.blockItem(ITEMS, BcBlocks.DECORATED_PAPER);
 
     /** Placeholder for {@code buildcraftcore:decorated_template}; behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> DECORATED_TEMPLATE = ITEMS.registerSimpleBlockItem(BcBlocks.DECORATED_TEMPLATE);
+    public static final DeferredItem<BlockItem> DECORATED_TEMPLATE = BcLangKeys.blockItem(ITEMS, BcBlocks.DECORATED_TEMPLATE);
 
     /** Placeholder for {@code buildcraftcore:engine_wood}; behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> ENGINE_WOOD = ITEMS.registerSimpleBlockItem(BcBlocks.ENGINE_WOOD);
+    public static final DeferredItem<BlockItem> ENGINE_WOOD = BcLangKeys.blockItem(ITEMS, BcBlocks.ENGINE_WOOD);
 
     /** Placeholder for {@code buildcraftcore:engine_creative}; behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> ENGINE_CREATIVE = ITEMS.registerSimpleBlockItem(BcBlocks.ENGINE_CREATIVE);
+    public static final DeferredItem<BlockItem> ENGINE_CREATIVE = BcLangKeys.blockItem(ITEMS, BcBlocks.ENGINE_CREATIVE);
 
     /** Placeholder for {@code buildcraftcore:engine_iron}; behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> ENGINE_IRON = ITEMS.registerSimpleBlockItem(BcBlocks.ENGINE_IRON);
+    public static final DeferredItem<BlockItem> ENGINE_IRON = BcLangKeys.blockItem(ITEMS, BcBlocks.ENGINE_IRON);
 
     /** Placeholder for {@code buildcraftcore:engine_rf}; behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> ENGINE_RF = ITEMS.registerSimpleBlockItem(BcBlocks.ENGINE_RF);
+    public static final DeferredItem<BlockItem> ENGINE_RF = BcLangKeys.blockItem(ITEMS, BcBlocks.ENGINE_RF);
 
     /** Placeholder for {@code buildcraftcore:marker_volume}; behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> MARKER_VOLUME = ITEMS.registerSimpleBlockItem(BcBlocks.MARKER_VOLUME);
+    public static final DeferredItem<BlockItem> MARKER_VOLUME = BcLangKeys.blockItem(ITEMS, BcBlocks.MARKER_VOLUME);
 
     /** Placeholder for {@code buildcraftcore:marker_path}; behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> MARKER_PATH = ITEMS.registerSimpleBlockItem(BcBlocks.MARKER_PATH);
+    public static final DeferredItem<BlockItem> MARKER_PATH = BcLangKeys.blockItem(ITEMS, BcBlocks.MARKER_PATH);
 
     /** Placeholder for {@code buildcraftcore:power_tester}; behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> POWER_TESTER = ITEMS.registerSimpleBlockItem(BcBlocks.POWER_TESTER);
+    public static final DeferredItem<BlockItem> POWER_TESTER = BcLangKeys.blockItem(ITEMS, BcBlocks.POWER_TESTER);
 
     // -------------------------------------------------------------------------
     // M2.4a registry parity: pure items (legacy BCCoreItems). Placeholder, real
@@ -93,91 +94,91 @@ public final class BcItems {
     // -------------------------------------------------------------------------
 
     /** Placeholder for {@code buildcraftcore:fragile_fluid_shard} (legacy {@code ItemFragileFluidShard}); migrates in M2.5+. */
-    public static final DeferredItem<Item> FRAGILE_FLUID_SHARD = ITEMS.registerSimpleItem("fragile_fluid_shard");
+    public static final DeferredItem<Item> FRAGILE_FLUID_SHARD = BcLangKeys.item(ITEMS, "fragile_fluid_shard");
 
     /** Placeholder for {@code buildcraftcore:gear_wood} (legacy {@code ItemGear}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> GEAR_WOOD = ITEMS.registerSimpleItem("gear_wood");
+    public static final DeferredItem<Item> GEAR_WOOD = BcLangKeys.item(ITEMS, "gear_wood");
 
     /** Placeholder for {@code buildcraftcore:gear_stone} (legacy {@code ItemGear}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> GEAR_STONE = ITEMS.registerSimpleItem("gear_stone");
+    public static final DeferredItem<Item> GEAR_STONE = BcLangKeys.item(ITEMS, "gear_stone");
 
     /** Placeholder for {@code buildcraftcore:gear_iron} (legacy {@code ItemGear}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> GEAR_IRON = ITEMS.registerSimpleItem("gear_iron");
+    public static final DeferredItem<Item> GEAR_IRON = BcLangKeys.item(ITEMS, "gear_iron");
 
     /** Placeholder for {@code buildcraftcore:gear_gold} (legacy {@code ItemGear}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> GEAR_GOLD = ITEMS.registerSimpleItem("gear_gold");
+    public static final DeferredItem<Item> GEAR_GOLD = BcLangKeys.item(ITEMS, "gear_gold");
 
     /** Placeholder for {@code buildcraftcore:gear_diamond} (legacy {@code ItemGear}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> GEAR_DIAMOND = ITEMS.registerSimpleItem("gear_diamond");
+    public static final DeferredItem<Item> GEAR_DIAMOND = BcLangKeys.item(ITEMS, "gear_diamond");
 
     /** Placeholder for {@code buildcraftcore:goggles} (legacy {@code ItemGoggles}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> GOGGLES = ITEMS.registerSimpleItem("goggles");
+    public static final DeferredItem<Item> GOGGLES = BcLangKeys.item(ITEMS, "goggles");
 
     /** Placeholder for {@code buildcraftcore:list} (legacy {@code ItemList}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> LIST = ITEMS.registerSimpleItem("list");
+    public static final DeferredItem<Item> LIST = BcLangKeys.item(ITEMS, "list");
 
     /** Placeholder for {@code buildcraftcore:map_location} (legacy {@code ItemMapLocation}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> MAP_LOCATION = ITEMS.registerSimpleItem("map_location");
+    public static final DeferredItem<Item> MAP_LOCATION = BcLangKeys.item(ITEMS, "map_location");
 
     /** Placeholder for {@code buildcraftcore:marker_connector} (legacy {@code ItemMarkerConnector}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> MARKER_CONNECTOR = ITEMS.registerSimpleItem("marker_connector");
+    public static final DeferredItem<Item> MARKER_CONNECTOR = BcLangKeys.item(ITEMS, "marker_connector");
 
     /** Placeholder for {@code buildcraftcore:paintbrush_black} (legacy {@code ItemPaintbrush}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PAINTBRUSH_BLACK = ITEMS.registerSimpleItem("paintbrush_black");
+    public static final DeferredItem<Item> PAINTBRUSH_BLACK = BcLangKeys.item(ITEMS, "paintbrush_black");
 
     /** Placeholder for {@code buildcraftcore:paintbrush_blue} (legacy {@code ItemPaintbrush}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PAINTBRUSH_BLUE = ITEMS.registerSimpleItem("paintbrush_blue");
+    public static final DeferredItem<Item> PAINTBRUSH_BLUE = BcLangKeys.item(ITEMS, "paintbrush_blue");
 
     /** Placeholder for {@code buildcraftcore:paintbrush_brown} (legacy {@code ItemPaintbrush}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PAINTBRUSH_BROWN = ITEMS.registerSimpleItem("paintbrush_brown");
+    public static final DeferredItem<Item> PAINTBRUSH_BROWN = BcLangKeys.item(ITEMS, "paintbrush_brown");
 
     /** Placeholder for {@code buildcraftcore:paintbrush_clean} (legacy {@code ItemPaintbrush}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PAINTBRUSH_CLEAN = ITEMS.registerSimpleItem("paintbrush_clean");
+    public static final DeferredItem<Item> PAINTBRUSH_CLEAN = BcLangKeys.item(ITEMS, "paintbrush_clean");
 
     /** Placeholder for {@code buildcraftcore:paintbrush_cyan} (legacy {@code ItemPaintbrush}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PAINTBRUSH_CYAN = ITEMS.registerSimpleItem("paintbrush_cyan");
+    public static final DeferredItem<Item> PAINTBRUSH_CYAN = BcLangKeys.item(ITEMS, "paintbrush_cyan");
 
     /** Placeholder for {@code buildcraftcore:paintbrush_gray} (legacy {@code ItemPaintbrush}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PAINTBRUSH_GRAY = ITEMS.registerSimpleItem("paintbrush_gray");
+    public static final DeferredItem<Item> PAINTBRUSH_GRAY = BcLangKeys.item(ITEMS, "paintbrush_gray");
 
     /** Placeholder for {@code buildcraftcore:paintbrush_green} (legacy {@code ItemPaintbrush}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PAINTBRUSH_GREEN = ITEMS.registerSimpleItem("paintbrush_green");
+    public static final DeferredItem<Item> PAINTBRUSH_GREEN = BcLangKeys.item(ITEMS, "paintbrush_green");
 
     /** Placeholder for {@code buildcraftcore:paintbrush_light_blue} (legacy {@code ItemPaintbrush}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PAINTBRUSH_LIGHT_BLUE = ITEMS.registerSimpleItem("paintbrush_light_blue");
+    public static final DeferredItem<Item> PAINTBRUSH_LIGHT_BLUE = BcLangKeys.item(ITEMS, "paintbrush_light_blue");
 
     /** Placeholder for {@code buildcraftcore:paintbrush_light_gray} (legacy {@code ItemPaintbrush}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PAINTBRUSH_LIGHT_GRAY = ITEMS.registerSimpleItem("paintbrush_light_gray");
+    public static final DeferredItem<Item> PAINTBRUSH_LIGHT_GRAY = BcLangKeys.item(ITEMS, "paintbrush_light_gray");
 
     /** Placeholder for {@code buildcraftcore:paintbrush_lime} (legacy {@code ItemPaintbrush}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PAINTBRUSH_LIME = ITEMS.registerSimpleItem("paintbrush_lime");
+    public static final DeferredItem<Item> PAINTBRUSH_LIME = BcLangKeys.item(ITEMS, "paintbrush_lime");
 
     /** Placeholder for {@code buildcraftcore:paintbrush_magenta} (legacy {@code ItemPaintbrush}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PAINTBRUSH_MAGENTA = ITEMS.registerSimpleItem("paintbrush_magenta");
+    public static final DeferredItem<Item> PAINTBRUSH_MAGENTA = BcLangKeys.item(ITEMS, "paintbrush_magenta");
 
     /** Placeholder for {@code buildcraftcore:paintbrush_orange} (legacy {@code ItemPaintbrush}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PAINTBRUSH_ORANGE = ITEMS.registerSimpleItem("paintbrush_orange");
+    public static final DeferredItem<Item> PAINTBRUSH_ORANGE = BcLangKeys.item(ITEMS, "paintbrush_orange");
 
     /** Placeholder for {@code buildcraftcore:paintbrush_pink} (legacy {@code ItemPaintbrush}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PAINTBRUSH_PINK = ITEMS.registerSimpleItem("paintbrush_pink");
+    public static final DeferredItem<Item> PAINTBRUSH_PINK = BcLangKeys.item(ITEMS, "paintbrush_pink");
 
     /** Placeholder for {@code buildcraftcore:paintbrush_purple} (legacy {@code ItemPaintbrush}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PAINTBRUSH_PURPLE = ITEMS.registerSimpleItem("paintbrush_purple");
+    public static final DeferredItem<Item> PAINTBRUSH_PURPLE = BcLangKeys.item(ITEMS, "paintbrush_purple");
 
     /** Placeholder for {@code buildcraftcore:paintbrush_red} (legacy {@code ItemPaintbrush}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PAINTBRUSH_RED = ITEMS.registerSimpleItem("paintbrush_red");
+    public static final DeferredItem<Item> PAINTBRUSH_RED = BcLangKeys.item(ITEMS, "paintbrush_red");
 
     /** Placeholder for {@code buildcraftcore:paintbrush_white} (legacy {@code ItemPaintbrush}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PAINTBRUSH_WHITE = ITEMS.registerSimpleItem("paintbrush_white");
+    public static final DeferredItem<Item> PAINTBRUSH_WHITE = BcLangKeys.item(ITEMS, "paintbrush_white");
 
     /** Placeholder for {@code buildcraftcore:paintbrush_yellow} (legacy {@code ItemPaintbrush}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PAINTBRUSH_YELLOW = ITEMS.registerSimpleItem("paintbrush_yellow");
+    public static final DeferredItem<Item> PAINTBRUSH_YELLOW = BcLangKeys.item(ITEMS, "paintbrush_yellow");
 
     /** Placeholder for {@code buildcraftcore:volume_box} (legacy {@code ItemVolumeBox}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> VOLUME_BOX = ITEMS.registerSimpleItem("volume_box");
+    public static final DeferredItem<Item> VOLUME_BOX = BcLangKeys.item(ITEMS, "volume_box");
 
     /** Placeholder for {@code buildcraftcore:wrench} (legacy {@code ItemWrench}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> WRENCH = ITEMS.registerSimpleItem("wrench");
+    public static final DeferredItem<Item> WRENCH = BcLangKeys.item(ITEMS, "wrench");
 
     private BcItems() {
     }

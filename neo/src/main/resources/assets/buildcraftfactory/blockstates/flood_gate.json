@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "buildcraftfactory:block/flood_gate"
+      "model": "buildcraftfactory:block/flood_gate/false_false_false_false_false"
     }
   }
 }

@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "buildcraftsilicon:block/integration_table"
+      "model": "buildcraftsilicon:block/table/integration"
     }
   }
 }

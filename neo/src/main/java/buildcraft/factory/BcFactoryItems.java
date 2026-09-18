@@ -9,6 +9,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import buildcraft.lib.BcLangKeys;
 
 /**
  * Central item registration for buildcraftfactory (task M2.4a skeleton, registry parity since M2.4b). Every item id
@@ -20,37 +21,37 @@ public final class BcFactoryItems {
 
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(BuildCraftFactory.MOD_ID);
     /** Item form of the {@code buildcraftfactory:autoworkbench_item} placeholder block (legacy {@code BlockItem} of {@code BlockAutoWorkbenchItems}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> AUTOWORKBENCH_ITEM = ITEMS.registerSimpleBlockItem(BcFactoryBlocks.AUTOWORKBENCH_ITEM);
+    public static final DeferredItem<BlockItem> AUTOWORKBENCH_ITEM = BcLangKeys.blockItem(ITEMS, BcFactoryBlocks.AUTOWORKBENCH_ITEM);
 
     /** Item form of the {@code buildcraftfactory:chute} placeholder block (legacy {@code BlockItem} of {@code BlockChute}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> CHUTE = ITEMS.registerSimpleBlockItem(BcFactoryBlocks.CHUTE);
+    public static final DeferredItem<BlockItem> CHUTE = BcLangKeys.blockItem(ITEMS, BcFactoryBlocks.CHUTE);
 
     /** Item form of the {@code buildcraftfactory:distiller} placeholder block (legacy {@code BlockItem} of {@code BlockDistiller_BC8}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> DISTILLER = ITEMS.registerSimpleBlockItem(BcFactoryBlocks.DISTILLER);
+    public static final DeferredItem<BlockItem> DISTILLER = BcLangKeys.blockItem(ITEMS, BcFactoryBlocks.DISTILLER);
 
     /** Item form of the {@code buildcraftfactory:flood_gate} placeholder block (legacy {@code BlockItem} of {@code BlockFloodGate}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> FLOOD_GATE = ITEMS.registerSimpleBlockItem(BcFactoryBlocks.FLOOD_GATE);
+    public static final DeferredItem<BlockItem> FLOOD_GATE = BcLangKeys.blockItem(ITEMS, BcFactoryBlocks.FLOOD_GATE);
 
     /** Placeholder for {@code buildcraftfactory:gel} (legacy {@code ItemBC_Neptune}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> GEL = ITEMS.registerSimpleItem("gel");
+    public static final DeferredItem<Item> GEL = BcLangKeys.item(ITEMS, "gel");
 
     /** Item form of the {@code buildcraftfactory:heat_exchange} placeholder block (legacy {@code BlockItem} of {@code BlockHeatExchange}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> HEAT_EXCHANGE = ITEMS.registerSimpleBlockItem(BcFactoryBlocks.HEAT_EXCHANGE);
+    public static final DeferredItem<BlockItem> HEAT_EXCHANGE = BcLangKeys.blockItem(ITEMS, BcFactoryBlocks.HEAT_EXCHANGE);
 
     /** Item form of the {@code buildcraftfactory:mining_well} placeholder block (legacy {@code BlockItem} of {@code BlockMiningWell}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> MINING_WELL = ITEMS.registerSimpleBlockItem(BcFactoryBlocks.MINING_WELL);
+    public static final DeferredItem<BlockItem> MINING_WELL = BcLangKeys.blockItem(ITEMS, BcFactoryBlocks.MINING_WELL);
 
     /** Placeholder for {@code buildcraftfactory:plastic_sheet} (legacy {@code ItemBC_Neptune}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PLASTIC_SHEET = ITEMS.registerSimpleItem("plastic_sheet");
+    public static final DeferredItem<Item> PLASTIC_SHEET = BcLangKeys.item(ITEMS, "plastic_sheet");
 
     /** Item form of the {@code buildcraftfactory:pump} placeholder block (legacy {@code BlockItem} of {@code BlockPump}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> PUMP = ITEMS.registerSimpleBlockItem(BcFactoryBlocks.PUMP);
+    public static final DeferredItem<BlockItem> PUMP = BcLangKeys.blockItem(ITEMS, BcFactoryBlocks.PUMP);
 
     /** Item form of the {@code buildcraftfactory:tank} placeholder block (legacy {@code BlockItem} of {@code BlockTank}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> TANK = ITEMS.registerSimpleBlockItem(BcFactoryBlocks.TANK);
+    public static final DeferredItem<BlockItem> TANK = BcLangKeys.blockItem(ITEMS, BcFactoryBlocks.TANK);
 
     /** Placeholder for {@code buildcraftfactory:water_gel_spawn} (legacy {@code ItemWaterGel}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> WATER_GEL_SPAWN = ITEMS.registerSimpleItem("water_gel_spawn");
+    public static final DeferredItem<Item> WATER_GEL_SPAWN = BcLangKeys.item(ITEMS, "water_gel_spawn");
 
 
     private BcFactoryItems() {

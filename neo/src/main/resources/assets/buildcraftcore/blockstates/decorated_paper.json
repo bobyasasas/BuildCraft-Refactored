@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "buildcraftcore:block/decorated_paper"
+      "model": "buildcraftcore:block/decorated/paper"
     }
   }
 }

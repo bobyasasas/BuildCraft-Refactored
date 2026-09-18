@@ -14,6 +14,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import buildcraft.lib.BcLangKeys;
 
 /**
  * Central item registration for buildcrafttransport (task M2.4c registry parity). The 1.20.1 registry baseline
@@ -103,19 +104,19 @@ public final class BcTransportItems {
     public static final Map<String, DeferredItem<Item>> PIPE_ITEMS = new HashMap<>();
 
     /** Placeholder for {@code buildcrafttransport:filtered_buffer} (item form of {@link BcTransportBlocks#FILTERED_BUFFER}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<BlockItem> FILTERED_BUFFER = ITEMS.registerSimpleBlockItem(BcTransportBlocks.FILTERED_BUFFER);
+    public static final DeferredItem<BlockItem> FILTERED_BUFFER = BcLangKeys.blockItem(ITEMS, BcTransportBlocks.FILTERED_BUFFER);
 
     /** Placeholder for {@code buildcrafttransport:plug_blocker} (legacy {@code ItemPluggableSimple}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PLUG_BLOCKER = ITEMS.registerSimpleItem("plug_blocker");
+    public static final DeferredItem<Item> PLUG_BLOCKER = BcLangKeys.item(ITEMS, "plug_blocker");
 
     /** Placeholder for {@code buildcrafttransport:plug_power_adaptor} (legacy {@code ItemPluggableSimple}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> PLUG_POWER_ADAPTOR = ITEMS.registerSimpleItem("plug_power_adaptor");
+    public static final DeferredItem<Item> PLUG_POWER_ADAPTOR = BcLangKeys.item(ITEMS, "plug_power_adaptor");
 
     /** Placeholder for {@code buildcrafttransport:waterproof} (legacy {@code ItemBC_Neptune}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> WATERPROOF = ITEMS.registerSimpleItem("waterproof");
+    public static final DeferredItem<Item> WATERPROOF = BcLangKeys.item(ITEMS, "waterproof");
 
     /** Placeholder for {@code buildcrafttransport:wire} (legacy {@code ItemWire}); behaviour class migrates in M2.5+. */
-    public static final DeferredItem<Item> WIRE = ITEMS.registerSimpleItem("wire");
+    public static final DeferredItem<Item> WIRE = BcLangKeys.item(ITEMS, "wire");
 
     static {
         // Expand every pipe family into its 17 colour variants (colorless + the 16 dye colours) and register them all
@@ -129,7 +130,7 @@ public final class BcTransportItems {
             }
         }
         for (String id : ids) {
-            PIPE_ITEMS.put(id, ITEMS.registerSimpleItem(id));
+            PIPE_ITEMS.put(id, BcLangKeys.item(ITEMS, id));
         }
     }
 

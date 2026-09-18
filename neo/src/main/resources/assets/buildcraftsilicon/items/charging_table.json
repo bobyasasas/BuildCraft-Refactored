@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "buildcraftsilicon:block/charging_table"
+    "model": "buildcraftsilicon:block/table/charging"
   }
 }

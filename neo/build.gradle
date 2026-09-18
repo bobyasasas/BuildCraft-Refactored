@@ -55,11 +55,44 @@ configurations {
 sourceSets.client.compileClasspath += sourceSets.main.output
 sourceSets.client.runtimeClasspath += sourceSets.main.output
 
+// Optional compat integrations (JEI + Jade): API maven repos. The artifacts
+// themselves are compileOnly, so nothing here ends up on any published
+// dependency metadata or in the shipped jar.
+repositories {
+    maven {
+        name = 'BlameJaredMaven' // JEI (mezz.jei artifacts)
+        url = uri('https://maven.blamejared.com')
+    }
+    maven {
+        name = 'ModrinthMaven' // Jade (maven.modrinth:jade)
+        url = uri('https://api.modrinth.com/maven')
+    }
+}
+
 dependencies {
     // M2.3: wire the pure-logic expression library (Java 17 toolchain, no MC deps)
     // into the mod classpath. Staying on 17 is deliberate: the legacy 1.20.1 fat
     // jar packages these class files and must remain Java 17 loadable (major 61).
     implementation project(':expression')
+
+    // Optional compat integrations, versions pinned in gradle.properties.
+    // compileOnly: the shipped jar must run with JEI/Jade absent. The compat
+    // plugin classes (buildcraft.lib.compat.*) are only ever class-loaded by
+    // JEI/Jade themselves via FML annotation scanning; no BuildCraft code
+    // references them. Visible to src/client too (clientCompileOnly extends
+    // from compileOnly in the configurations block above).
+    compileOnly "mezz.jei:jei-${jei_mc}-common-api:${jei_version}"
+    compileOnly "mezz.jei:jei-${jei_mc}-neoforge-api:${jei_version}"
+    compileOnly "maven.modrinth:jade:${jade_version}"
+
+    // Dev-only smoke-test wiring: `-PbcCompatDev` puts the real JEI + Jade mods
+    // on the dev run classpaths (client run inherits runtimeOnly through
+    // clientRuntimeOnly) so the compat skeletons can be exercised in-game.
+    // Off by default — plain builds and CI never pass the property.
+    if (project.hasProperty("bcCompatDev")) {
+        runtimeOnly "mezz.jei:jei-${jei_mc}-neoforge:${jei_version}"
+        runtimeOnly "maven.modrinth:jade:${jade_version}"
+    }
 
     // M2.5: codec round-trip tests for the 16 payload classes. MDG's unitTest is
     // enabled below ONLY to put the minecraft/neoforge jars on the test compile

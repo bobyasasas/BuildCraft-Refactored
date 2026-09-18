@@ -1,6 +1,12 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube",
   "textures": {
-    "all": "minecraft:block/cyan_concrete"
+    "down": "buildcraftbuilders:block/replacer/bottom",
+    "east": "buildcraftbuilders:block/replacer/side",
+    "north": "buildcraftbuilders:block/replacer/front",
+    "particle": "buildcraftbuilders:block/replacer/side",
+    "south": "buildcraftbuilders:block/replacer/side",
+    "up": "buildcraftbuilders:block/replacer/top",
+    "west": "buildcraftbuilders:block/replacer/side"
   }
 }

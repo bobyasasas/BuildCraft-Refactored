@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "buildcraftfactory:block/water_gel"
+      "model": "buildcraftfactory:block/water_gel/gel"
     }
   }
 }

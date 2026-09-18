@@ -8,6 +8,7 @@ package buildcraft.transport;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import buildcraft.lib.BcLangKeys;
 
 /**
  * Central block registration for buildcrafttransport (task M2.4c registry parity). Every block id the 1.20.1 registry
@@ -20,11 +21,11 @@ public final class BcTransportBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(BuildCraftTransport.MOD_ID);
 
     /** Placeholder for {@code buildcrafttransport:filtered_buffer} (legacy {@code BlockFilteredBuffer}); behaviour class migrates in M2.5+. */
-    public static final DeferredBlock<Block> FILTERED_BUFFER = BLOCKS.registerSimpleBlock("filtered_buffer",
+    public static final DeferredBlock<Block> FILTERED_BUFFER = BcLangKeys.simpleBlock(BLOCKS, "filtered_buffer",
             properties -> properties.strength(0.5F));
 
     /** Placeholder for {@code buildcrafttransport:pipe_holder} (legacy {@code BlockPipeHolder}); behaviour class migrates in M2.5+. */
-    public static final DeferredBlock<Block> PIPE_HOLDER = BLOCKS.registerSimpleBlock("pipe_holder",
+    public static final DeferredBlock<Block> PIPE_HOLDER = BcLangKeys.simpleBlock(BLOCKS, "pipe_holder",
             properties -> properties.strength(0.25F, 3.0F).noOcclusion());
 
     private BcTransportBlocks() {

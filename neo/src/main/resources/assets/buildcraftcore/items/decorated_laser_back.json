@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "buildcraftcore:block/decorated_laser_back"
+    "model": "buildcraftcore:block/decorated/laser_back"
   }
 }

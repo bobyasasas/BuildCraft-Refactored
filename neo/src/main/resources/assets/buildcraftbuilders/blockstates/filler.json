@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "buildcraftbuilders:block/filler"
+      "model": "buildcraftbuilders:block/filler/main"
     }
   }
 }
