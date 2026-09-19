@@ -17,8 +17,9 @@ import org.slf4j.Logger;
 /**
  * BuildCraft factory mod entry point for the NeoForge 26.1.2 port (task M2.4a eight-mod skeleton, full registry
  * parity since M2.4b). Legacy counterpart: {@code buildcraft.factory.BCFactory}. Most registrations are
- * placeholders (see the {@code BcFactory*} centres); the M4.7 machines (tank, distiller, heat exchange, pump) carry
- * their real behaviour classes plus their fluid capabilities.
+ * placeholders (see the {@code BcFactory*} centres); the M4.7 machines (tank, distiller, heat exchange, pump) and the
+ * M4.16 machines (autoworkbench item, chute, flood gate, mining well) carry their real behaviour classes plus the
+ * machine capabilities.
  */
 // The value here should match the modId in META-INF/neoforge.mods.toml
 @Mod(BuildCraftFactory.MOD_ID)
@@ -51,6 +52,12 @@ public class BuildCraftFactory {
         event.registerBlockEntity(Capabilities.Fluid.BLOCK, BcFactoryBlockEntities.HEAT_EXCHANGE.value(),
             (blockEntity, side) -> blockEntity.getFluidHandler(side));
         event.registerBlockEntity(Capabilities.Fluid.BLOCK, BcFactoryBlockEntities.PUMP.value(),
+            (blockEntity, side) -> blockEntity.getFluidHandler(side));
+        // M4.16: the auto workbench grid is automation-insertable (and the result slot extractable) from every side;
+        // the flood gate tank is bucket/capability-refillable from every side (the legacy all-parts registrations).
+        event.registerBlockEntity(Capabilities.Item.BLOCK, BcFactoryBlockEntities.AUTOWORKBENCH_ITEM.value(),
+            (blockEntity, side) -> blockEntity.getInv());
+        event.registerBlockEntity(Capabilities.Fluid.BLOCK, BcFactoryBlockEntities.FLOOD_GATE.value(),
             (blockEntity, side) -> blockEntity.getFluidHandler(side));
     }
 }

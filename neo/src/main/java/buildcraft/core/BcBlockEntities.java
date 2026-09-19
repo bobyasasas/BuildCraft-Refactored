@@ -15,6 +15,8 @@ import buildcraft.core.blockentity.KinesisPipeBlockEntity;
 import buildcraft.core.blockentity.MarkerPathBlockEntity;
 import buildcraft.core.blockentity.MarkerVolumeBlockEntity;
 import buildcraft.core.blockentity.PlaceholderBlockEntity;
+import buildcraft.core.blockentity.PowerTesterBlockEntity;
+import buildcraft.core.blockentity.SpringOilBlockEntity;
 import buildcraft.core.blockentity.StoneEngineBlockEntity;
 
 /**
@@ -92,15 +94,19 @@ public final class BcBlockEntities {
             .register("marker_volume", () -> new BlockEntityType<>(MarkerVolumeBlockEntity::new, BcBlocks.MARKER_VOLUME.value()));
 
 
-    /** Placeholder for {@code buildcraftcore:power_tester}; behaviour class migrates in M2.5+. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlaceholderBlockEntity>> POWER_TESTER = BLOCK_ENTITIES
-            .register("power_tester", () -> new BlockEntityType<>(
-                    (pos, state) -> new PlaceholderBlockEntity(BcBlockEntities.POWER_TESTER.value(), pos, state), BcBlocks.POWER_TESTER.value()));
+    /**
+     * M4.16: the real power consumer tester (legacy {@code TilePowerConsumerTester}), replacing the M2.4a placeholder.
+     * An always-on MJ debug sink: every offered &micro;MJ packet is counted (see {@link PowerTesterBlockEntity}).
+     */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PowerTesterBlockEntity>> POWER_TESTER = BLOCK_ENTITIES
+            .register("power_tester", () -> new BlockEntityType<>(PowerTesterBlockEntity::new, BcBlocks.POWER_TESTER.value()));
 
-    /** Placeholder for {@code buildcraftcore:spring_oil}; behaviour class migrates in M2.5+. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlaceholderBlockEntity>> SPRING_OIL = BLOCK_ENTITIES
-            .register("spring_oil", () -> new BlockEntityType<>(
-                    (pos, state) -> new PlaceholderBlockEntity(BcBlockEntities.SPRING_OIL.value(), pos, state), BcBlocks.SPRING_OIL.value()));
+    /**
+     * M4.16: the real oil spring (legacy {@code TileSpringOil} slice), replacing the M2.4a placeholder. Places an oil
+     * source block above itself on its tick interval (see {@link SpringOilBlockEntity}).
+     */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SpringOilBlockEntity>> SPRING_OIL = BLOCK_ENTITIES
+            .register("spring_oil", () -> new BlockEntityType<>(SpringOilBlockEntity::new, BcBlocks.SPRING_OIL.value()));
 
     private BcBlockEntities() {
     }

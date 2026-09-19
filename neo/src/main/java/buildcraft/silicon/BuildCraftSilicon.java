@@ -10,12 +10,15 @@ import buildcraft.datagen.BcDatagen;
 import buildcraft.silicon.recipe.BcSiliconRecipes;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import org.slf4j.Logger;
 
 /**
  * BuildCraft silicon mod entry point for the NeoForge 26.1.2 port (task M2.4a eight-mod skeleton, full registry
- * parity since M2.4b). Legacy counterpart: {@code buildcraft.silicon.BCSilicon}. The registrations are
- * placeholders (see the {@code BcSilicon*} centres); real behaviour classes migrate in M2.5+.
+ * parity since M2.4b). Legacy counterpart: {@code buildcraft.silicon.BCSilicon}. Since M4.16 the six machines
+ * (laser + five tables) carry their real behaviour classes and expose the tables' inventories through the 26.1.2
+ * item capability.
  */
 // The value here should match the modId in META-INF/neoforge.mods.toml
 @Mod(BuildCraftSilicon.MOD_ID)
@@ -36,5 +39,17 @@ public class BuildCraftSilicon {
         // live in the buildcraftrobotics namespace, exactly like 1.20.1).
         BcSiliconRecipes.TYPES.register(modEventBus);
         BcSiliconRecipes.SERIALIZERS.register(modEventBus);
+        // M4.16: the four tables with inventories reach automation from every face (the M4.6 pipe-inbox precedent);
+        // the laser has no item inventory and the programming table none in its v2 slice.
+        modEventBus.addListener(this::onRegisterCapabilities);
+    }
+
+    private void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.Item.BLOCK, BcSiliconBlockEntities.ASSEMBLY_TABLE.value(),
+            (blockEntity, side) -> blockEntity.getItemHandler(side));
+        event.registerBlockEntity(Capabilities.Item.BLOCK, BcSiliconBlockEntities.INTEGRATION_TABLE.value(),
+            (blockEntity, side) -> blockEntity.getItemHandler(side));
+        event.registerBlockEntity(Capabilities.Item.BLOCK, BcSiliconBlockEntities.ADVANCED_CRAFTING_TABLE.value(),
+            (blockEntity, side) -> blockEntity.getItemHandler(side));
     }
 }

@@ -15,6 +15,8 @@ import buildcraft.core.block.EngineBlock;
 import buildcraft.core.block.KinesisPipeBlock;
 import buildcraft.core.block.MarkerPathBlock;
 import buildcraft.core.block.MarkerVolumeBlock;
+import buildcraft.core.block.PowerTesterBlock;
+import buildcraft.core.block.SpringOilBlock;
 import buildcraft.core.block.StoneEngineBlock;
 
 /**
@@ -68,9 +70,13 @@ public final class BcBlocks {
     public static final DeferredBlock<Block> SPRING_WATER = BcLangKeys.simpleBlock(BLOCKS, "spring_water",
             properties -> properties.strength(0.5F));
 
-    /** Placeholder for {@code buildcraftcore:spring_oil} (legacy {@code BlockSpring}); behaviour class migrates in M2.5+. */
-    public static final DeferredBlock<Block> SPRING_OIL = BcLangKeys.simpleBlock(BLOCKS, "spring_oil",
-            properties -> properties.strength(0.5F));
+    /**
+     * M4.16: the real oil spring (legacy {@code BlockSpring} for {@code EnumSpring.OIL} + the {@code TileSpringOil}
+     * slice), replacing the M2.4a placeholder; the generation loop ticks in the block entity (see
+     * {@link buildcraft.core.block.SpringOilBlock} and {@link buildcraft.core.blockentity.SpringOilBlockEntity}).
+     */
+    public static final DeferredBlock<SpringOilBlock> SPRING_OIL = BcLangKeys.block(BLOCKS, "spring_oil",
+            SpringOilBlock::new, () -> BlockBehaviour.Properties.of().strength(0.5F));
 
     /** Placeholder for {@code buildcraftcore:decorated_blueprint} (legacy {@code BlockDecoration}); behaviour class migrates in M2.5+. */
     public static final DeferredBlock<Block> DECORATED_BLUEPRINT = BcLangKeys.simpleBlock(BLOCKS, "decorated_blueprint",
@@ -140,9 +146,14 @@ public final class BcBlocks {
             MarkerPathBlock::new, () -> BlockBehaviour.Properties.of().strength(0.5F));
 
 
-    /** Placeholder for {@code buildcraftcore:power_tester} (legacy {@code BlockPowerConsumerTester}); behaviour class migrates in M2.5+. */
-    public static final DeferredBlock<Block> POWER_TESTER = BcLangKeys.simpleBlock(BLOCKS, "power_tester",
-            properties -> properties.strength(0.5F));
+    /**
+     * M4.16: the real power consumer tester (legacy {@code BlockPowerConsumerTester} +
+     * {@code TilePowerConsumerTester}), replacing the M2.4a placeholder; the always-on MJ sink lives in the block
+     * entity (see {@link buildcraft.core.block.PowerTesterBlock} and
+     * {@link buildcraft.core.blockentity.PowerTesterBlockEntity}).
+     */
+    public static final DeferredBlock<PowerTesterBlock> POWER_TESTER = BcLangKeys.block(BLOCKS, "power_tester",
+            PowerTesterBlock::new, () -> BlockBehaviour.Properties.of().strength(0.5F));
 
     private BcBlocks() {
     }

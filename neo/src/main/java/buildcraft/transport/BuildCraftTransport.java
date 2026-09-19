@@ -46,5 +46,11 @@ public class BuildCraftTransport {
             Capabilities.Item.BLOCK,
             BcTransportBlockEntities.PIPE_HOLDER.value(),
             (blockEntity, side) -> blockEntity.getInbox(side));
+        // M4.16: the filtered buffer's FIFO inventory on every side (the legacy invMain was handed to all six pipe
+        // faces with both insert and extract access; hoppers and item pipes push into and pull out of it through this).
+        event.registerBlockEntity(
+            Capabilities.Item.BLOCK,
+            BcTransportBlockEntities.FILTERED_BUFFER.value(),
+            (blockEntity, side) -> blockEntity.getBuffer());
     }
 }
