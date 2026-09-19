@@ -134,8 +134,22 @@ public final class BcEngineModels {
     }
 
     /** Converts one baked {@link JsonQuad} into an emit-ready {@link BcQuad}: world light merged with the quad's own
-     * {@code light} value (packed as block&nbsp;|&nbsp;sky&nbsp;&lt;&lt;&nbsp;20, see {@code LightTexture#pack}) and
-     * the vanilla per-face diffuse shade folded into the vertex colour (legacy {@code MutableQuad#multShade}). */
+     * {@code light} value (packed as block&nbsp;|&nbsp;sky&nbsp;&lt;&lt;&nbsp;20, exactly
+     * {@code LightCoordsUtil#pack}). The quad colour passes through untouched: the jsonbc {@code colour} expression is
+     * the only vertex-colour source, matching the baseline pipeline where
+     * {@code VariablePartCuboidBase#addQuads} emitted {@code RenderUtil.swapARGBforABGR(colour.evaluate())} verbatim.
+     *
+     * <p>Deliberately NOT ported here: the legacy per-face diffuse bake ({@code MutableQuad#multShade}, the
+     * DOWN&nbsp;0.5&nbsp;/&nbsp;UP&nbsp;1.0&nbsp;/&nbsp;NS&nbsp;0.8&nbsp;/&nbsp;EW&nbsp;0.6 table that
+     * {@code RenderEngine_BC8} applied once for 1.20.1's chunk {@code RenderType.cutout()}, whose terrain shader does
+     * no directional lighting). The 26.1.2 render type this renderer submits through
+     * ({@code Sheets.cutoutBlockSheet()} &rarr; entity cutout-cull) runs the entity vertex shader, which already folds
+     * a normal-based directional diffuse ({@code minecraft_mix_light}, light.glsl) into the vertex colour &mdash;
+     * baking the legacy table here as well shaded every horizontal face twice (east/west 0.6&times;0.498&nbsp;&asymp;&nbsp;0.30
+     * of baseline, north/south 0.8&times;0.742, bottom 0.5&times;0.4&nbsp;=&nbsp;0.20), which rendered the engines
+     * nearly black (M4.18b before-evidence: stone front face mean RGB&nbsp;8&ndash;15/255 vs texture&nbsp;76).
+     * The engine jsonbc files all leave {@code shade} at its {@code true} default and no quad here carries a
+     * non-white {@code colour}, so the entity diffuse is the single (vanilla-consistent) shade source. */
     private static BcQuad convert(JsonQuad quad, int packedWorldLight) {
         int worldBlock = (packedWorldLight >> 4) & 0xF;
         int worldSky = (packedWorldLight >> 20) & 0xF;
@@ -147,17 +161,7 @@ public final class BcEngineModels {
             JsonQuad.Vertex v = quad.vertices[i];
             vertices[i] = new BcVertex(new Vector3f(v.x, v.y, v.z), v.u, v.v, quad.colorArgb, light);
         }
-        BcQuad bcQuad = new BcQuad(quad.face, quad.shade, -1, vertices[0], vertices[1], vertices[2], vertices[3]);
-        if (quad.shade) {
-            float shade = switch (quad.face) {
-                case DOWN -> 0.5f;
-                case UP -> 1.0f;
-                case NORTH, SOUTH -> 0.8f;
-                case WEST, EAST -> 0.6f;
-            };
-            bcQuad = bcQuad.multiplyColor(shade, shade, shade, 1.0f);
-        }
-        return bcQuad;
+        return new BcQuad(quad.face, quad.shade, -1, vertices[0], vertices[1], vertices[2], vertices[3]);
     }
 
     private BcEngineModels() {

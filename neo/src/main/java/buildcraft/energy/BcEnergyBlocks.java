@@ -180,7 +180,7 @@ public final class BcEnergyBlocks {
      */
     public static final DeferredBlock<EngineBlock> MJ_DYNAMO = BcLangKeys.block(BLOCKS, "mj_dynamo",
             properties -> new EngineBlock(properties, BcEnergyBlockEntities.MJ_DYNAMO::value, false),
-            properties -> properties.strength(0.5F));
+            properties -> properties.strength(0.5F).noOcclusion());
 
 
     private BcEnergyBlocks() {

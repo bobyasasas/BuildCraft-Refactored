@@ -8,6 +8,7 @@ package buildcraft.core.client.render;
 import java.util.ArrayList;
 import java.util.List;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -35,7 +36,8 @@ import buildcraft.lib.client.render.BcQuad;
  * <p>Pipeline (verified against the 26.1.2 client sources, see {@code neo/docs/render-pipeline-26.1.2.md}):
  * <ul>
  * <li><b>extract</b> ({@link #extractRenderState}): refreshes the model variables from {@link EngineVisual} and bakes
- * the frame's quads, light-baked against {@link BlockEntityRenderState#lightCoords}.</li>
+ * the frame's quads against the ambient light read from the open cell above the engine (see the comment in
+ * {@link #extractRenderState} for why the block's own cell cannot be used).</li>
  * <li><b>submit</b> ({@link #submit}): emits them through {@link SubmitNodeCollector#submitCustomGeometry} into the
  * cutout block sheet. The pose stack origin is the block's (0,0,0) corner ({@code LevelRenderer#submitBlockEntities}
  * translates by {@code blockPos - cameraPos}); no rotation is applied because the jsonbc
@@ -75,6 +77,16 @@ public class EngineBlockRenderer<T extends BlockEntity & EngineVisual>
     ) {
         BlockEntityRenderer.super.extractRenderState(engine, state, partialTicks, cameraPosition, breakProgress);
         state.quads.clear();
+        // The engine block is a full cube, and full cubes store no light inside their own cell (the light engine
+        // keeps opaque-block cells at 0) — the baseline engine registered with {@code noOcclusion()}
+        // ({@code BCCoreBlocks#registerEngine}, 8.0.x), which let the legacy BER's {@code lightc} parameter see the
+        // surrounding light. Reading {@code state.lightCoords} (light at the block's own position, filled by
+        // {@link BlockEntityRenderState#extractBase}) therefore gave every engine the dark lightmap texel and
+        // rendered them near-black (M4.18b). The open cell above the engine sees the same ambient light the
+        // baseline's non-occluded cell did, so bake against that instead.
+        state.lightCoords = engine.getLevel() != null
+            ? LevelRenderer.getLightCoords(engine.getLevel(), state.blockPos.above())
+            : 15728880;
         state.quads.addAll(BcEngineModels.bake(this.modelId, engine.getProgressClient(partialTicks),//
             engine.getPowerStage(), engine.getOutputFacing(), state.lightCoords));
     }

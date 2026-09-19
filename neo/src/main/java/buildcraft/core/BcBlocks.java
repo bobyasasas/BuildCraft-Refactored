@@ -44,7 +44,7 @@ public final class BcBlocks {
      * the real engine registry migration (legacy {@code BlockRegistry} + engine module) is M2.4/M2.9.
      */
     public static final DeferredBlock<StoneEngineBlock> ENGINE_STONE = BcLangKeys.block(BLOCKS, "engine_stone",
-            StoneEngineBlock::new, () -> BlockBehaviour.Properties.of().strength(3.5F));
+            StoneEngineBlock::new, () -> BlockBehaviour.Properties.of().strength(3.5F).noOcclusion());
 
     /**
      * M2.2c wooden kinesis pipe slice block (see {@link KinesisPipeBlock}). Placeholder placement for the M2.2 slice
@@ -109,7 +109,7 @@ public final class BcBlocks {
      */
     public static final DeferredBlock<EngineBlock> ENGINE_WOOD = BcLangKeys.block(BLOCKS, "engine_wood",
             properties -> new EngineBlock(properties, () -> BcBlockEntities.ENGINE_WOOD.value(), false),
-            properties -> properties.strength(0.5F));
+            properties -> properties.strength(0.5F).noOcclusion());
 
     /**
      * M4.4: the real creative engine (legacy {@code BlockEngine_BC8} + {@code TileEngineCreative}), replacing the
@@ -117,17 +117,17 @@ public final class BcBlocks {
      */
     public static final DeferredBlock<EngineBlock> ENGINE_CREATIVE = BcLangKeys.block(BLOCKS, "engine_creative",
             properties -> new EngineBlock(properties, () -> BcBlockEntities.ENGINE_CREATIVE.value(), true),
-            properties -> properties.strength(0.5F));
+            properties -> properties.strength(0.5F).noOcclusion());
 
     /** M4.4: the real iron engine (legacy {@code BlockEngine_BC8}); rendering slice, see {@link #ENGINE_WOOD}. */
     public static final DeferredBlock<EngineBlock> ENGINE_IRON = BcLangKeys.block(BLOCKS, "engine_iron",
             properties -> new EngineBlock(properties, () -> BcBlockEntities.ENGINE_IRON.value(), false),
-            properties -> properties.strength(0.5F));
+            properties -> properties.strength(0.5F).noOcclusion());
 
     /** M4.4: the real rf engine (legacy {@code BlockEngine_BC8}); rendering slice, see {@link #ENGINE_WOOD}. */
     public static final DeferredBlock<EngineBlock> ENGINE_RF = BcLangKeys.block(BLOCKS, "engine_rf",
             properties -> new EngineBlock(properties, () -> BcBlockEntities.ENGINE_RF.value(), false),
-            properties -> properties.strength(0.5F));
+            properties -> properties.strength(0.5F).noOcclusion());
 
     /**
      * M4.5: the real volume marker (legacy {@code BlockMarkerVolume}), replacing the M2.4a placeholder. The block

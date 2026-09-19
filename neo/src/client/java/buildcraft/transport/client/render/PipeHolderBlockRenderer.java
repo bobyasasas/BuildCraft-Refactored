@@ -30,6 +30,7 @@ import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -58,6 +59,11 @@ import buildcraft.transport.pipe.BcPipeFamilies.FlowKind;
  * <li><b>Body + connections</b> ({@link BcPipeGeometry}): centre cube + one arm per connected face, textured with the
  * family's world sprite ({@code buildcrafttransport:pipes/<stem>}, resolved by {@code BcPipeFamilies#textureStem}).
  * Connections come from the server through the pipe BE's update tag, so client and server agree.</li>
+ * <li><b>Dyed skin</b>: a pipe with a dye colour ({@code PipeHolderBlockEntity#getColour}) draws one extra
+ * translucent layer over the body &mdash; the baseline {@code PIPE_COLOUR} skin ({@code BCTransportSprites#
+ * PIPE_COLOUR} = {@code pipes/overlay_stained} tinted with the dye's {@code ColourUtil#LIGHT_HEX}), inset
+ * {@code 0.01} into the surface and double-sided ({@code PipeBaseModelGenStandard#generateTranslucent} +
+ * {@code QUADS_COLOURED}, {@code PipeBaseTranslucentKey#shouldRender}: colourless pipes draw nothing here).</li>
  * <li><b>Plugs</b>: a 2-pixel plate per plugged face ({@code PipeHolderBlock#PLUG_BOXES} geometry), textured with the
  * baseline {@code plug.png}/{@code power_adapter.png}. They are drawn in the same static cutout pass as the body
  * &mdash; with a fully BER-rendered pipe there is no separate static model layer, which is the "静态层" role.</li>
@@ -92,6 +98,34 @@ public class PipeHolderBlockRenderer implements BlockEntityRenderer<PipeHolderBl
         TextureAtlas.LOCATION_BLOCKS, Identifier.fromNamespaceAndPath(BuildCraftTransport.MOD_ID, "pipes/power_flow"));
     private static final SpriteId RF_FLOW = new SpriteId(
         TextureAtlas.LOCATION_BLOCKS, Identifier.fromNamespaceAndPath(BuildCraftTransport.MOD_ID, "pipes/rf_flow"));
+    /** The dyed skin overlay (baseline {@code BCTransportSprites#PIPE_COLOUR}). */
+    private static final SpriteId PIPE_COLOUR = new SpriteId(
+        TextureAtlas.LOCATION_BLOCKS, Identifier.fromNamespaceAndPath(BuildCraftTransport.MOD_ID,
+            "pipes/overlay_stained"));
+
+    /**
+     * The baseline dye table (legacy {@code ColourUtil#LIGHT_HEX}, stored there indexed {@code 15 - DyeColor#getId()};
+     * re-indexed here by {@code DyeColor#ordinal()}), applied as the skin's ARGB with full alpha (legacy
+     * {@code PipeBaseModelGenStandard#getPipeModelColour}).
+     */
+    private static final int[] DYE_ARGB = {
+        0xe4e4e4, // white
+        0xEA7835, // orange
+        0xD943C6, // magenta
+        0x66AAFF, // light_blue
+        0xFFD91C, // yellow
+        0x39D52E, // lime
+        0xD97199, // pink
+        0x7A7A7A, // gray
+        0xa0a7a7, // light_gray
+        0x299799, // cyan
+        0x7e34bf, // purple
+        0x253193, // blue
+        0x89502D, // brown
+        0x007F0E, // green
+        0xBE2B27, // red
+        0x181414, // black
+    };
 
     /** Full fluid column radius at {@code perc = 1} (baseline {@code PipeFlowRendererFluids}). */
     private static final float FLUID_RADIUS = 0.24f;
@@ -125,10 +159,12 @@ public class PipeHolderBlockRenderer implements BlockEntityRenderer<PipeHolderBl
         state.plugQuads.clear();
         state.fluidQuads.clear();
         state.powerQuads.clear();
+        state.skinQuads.clear();
         state.items.clear();
         state.bodySprite = null;
         state.fluidSprite = null;
         state.powerSprite = null;
+        state.skinSprite = null;
 
         Family family = pipe.getFamily();
         if (FIRST_EXTRACT.add(pipe.getBlockPos())) {
@@ -152,6 +188,18 @@ public class PipeHolderBlockRenderer implements BlockEntityRenderer<PipeHolderBl
         List<BcQuad> body = BcPipeGeometry.pipeBody(pipe.connections);
         BcBoxes.lightAll(body, state);
         state.bodyQuads.addAll(body);
+
+        // dyed skin (colour != null only, baseline PipeBaseTranslucentKey#shouldRender): the overlay_stained
+        // sprite tinted with the dye colour, inset 0.01 into the body surface, translucent layer
+        DyeColor colour = pipe.getColour();
+        if (colour != null) {
+            state.skinSprite = this.sprites.get(PIPE_COLOUR);
+            int argb = 0xFF000000 | DYE_ARGB[colour.ordinal()];
+            List<BcQuad> skin = new ArrayList<>(BcPipeGeometry.colouredSkin(pipe.connections));
+            skin.replaceAll(quad -> quad.withColor(argb));
+            BcBoxes.lightAll(skin, state);
+            state.skinQuads.addAll(skin);
+        }
 
         // plugs: one 2-pixel plate per plugged face (the static layer role on a BER-only pipe)
         for (Direction face : Direction.values()) {
@@ -240,6 +288,14 @@ public class PipeHolderBlockRenderer implements BlockEntityRenderer<PipeHolderBl
                 }
             });
         }
+        if (state.skinSprite != null && !state.skinQuads.isEmpty()) {
+            TextureAtlasSprite skinSprite = state.skinSprite;
+            submitNodeCollector.submitCustomGeometry(poseStack, TRANSLUCENT, (pose, buffer) -> {
+                for (BcQuad quad : state.skinQuads) {
+                    quad.mapUv(skinSprite).emit(pose, buffer);
+                }
+            });
+        }
         for (PlugVisual plug : state.plugQuads) {
             submitNodeCollector.submitCustomGeometry(poseStack, CUTOUT, (pose, buffer) -> {
                 for (BcQuad quad : plug.quads()) {
@@ -287,6 +343,11 @@ public class PipeHolderBlockRenderer implements BlockEntityRenderer<PipeHolderBl
         /** The pipe body sprite ({@code buildcrafttransport:pipes/<stem>}). */
         @Nullable
         public TextureAtlasSprite bodySprite;
+        /** The dyed skin quads (empty on colourless pipes; see the class javadoc). */
+        public final List<BcQuad> skinQuads = new ArrayList<>();
+        /** The skin overlay sprite ({@code buildcrafttransport:pipes/overlay_stained}). */
+        @Nullable
+        public TextureAtlasSprite skinSprite;
         /** One entry per plugged face. */
         public final List<PlugVisual> plugQuads = new ArrayList<>();
         /** The fluid column quads (empty on non-fluid or empty pipes). */

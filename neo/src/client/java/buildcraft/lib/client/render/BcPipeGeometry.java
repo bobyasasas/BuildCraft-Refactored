@@ -32,9 +32,12 @@ import net.minecraft.core.Direction.AxisDirection;
  * </ul>
  *
  * <p>UVs stay raw (sprite-relative 0..1); the caller maps them onto the pipe's sprite with
- * {@link BcQuad#mapUv(net.minecraft.client.renderer.texture.TextureAtlasSprite)} at submit time. Vanilla's per-face
- * diffuse shading is baked into the vertex colours ({@code BcQuad#emit} writes colours as-is, the custom-geometry
- * render types don't re-derive face shading).
+ * {@link BcQuad#mapUv(net.minecraft.client.renderer.texture.TextureAtlasSprite)} at submit time. Face shading is
+ * <em>not</em> baked into the vertex colours any more: the 26.1.2 entity render pipelines the pipe is drawn with
+ * ({@code Sheets#cutoutBlockSheet()}/{@code translucentBlockSheet()}, both {@code minecraft_mix_light}) already apply
+ * the directional diffuse from the emitted per-vertex normal, so baking legacy's {@code setDiffuse} table here too
+ * squared it ({@code texel × diffuse²}, M4.18c pixel evidence). Vertex colours carry only explicit tints now (the
+ * inside-copy darkening and the dye skin's colour, set by the caller).
  */
 public final class BcPipeGeometry {
 
@@ -46,9 +49,8 @@ public final class BcPipeGeometry {
     private static final float ARM_RADIUS_AXIS = 0.125f;
     /** Arm half-extent across the axis (legacy radius = 0.25). */
     private static final float ARM_RADIUS_CROSS = 0.25f;
-
-    /** Vanilla per-face brightness, baked into vertex colours (legacy {@code MutableQuad#setDiffuse}). */
-    private static final float[] FACE_DIFFUSE = { 0.5f, 1.0f, 0.8f, 0.8f, 0.6f, 0.6f };
+    /** How far the dyed skin sits inside the pipe surface (legacy {@code PipeBaseModelGenStandard#colourOffset}). */
+    private static final float SKIN_INSET = 0.01f;
 
     /** Colour multiplier on the reversed inside copies (legacy {@code dupDarker}'s option, default 0.5). */
     private static final float INSIDE_DARKEN = 0.5f;
@@ -90,35 +92,88 @@ public final class BcPipeGeometry {
         return quads;
     }
 
+    /**
+     * Builds the dyed pipe's translucent skin (baseline {@code PipeBaseModelGenStandard} {@code QUADS_COLOURED} +
+     * {@code generateTranslucent}): one skin face per body face, each inset {@code 0.01} into the pipe (legacy
+     * {@code faceOffset} = opposite face's normal × {@code colourOffset}) and paired with an undarkened reversed twin
+     * ({@code createDoubleFace}/{@code dupInverted}) so the skin shows from both sides. Quads come out flat white —
+     * the caller tints them with the pipe's dye colour and draws them on the translucent layer.
+     */
+    public static List<BcQuad> colouredSkin(EnumSet<Direction> connections) {
+        List<BcQuad> quads = new ArrayList<>(24);
+        for (Direction face : Direction.values()) {
+            if (connections.contains(face)) {
+                float[] center = armCenter(face);
+                float[] radius = armRadius(face);
+                int i = 0;
+                for (Direction armSide : Direction.values()) {
+                    if (armSide.getAxis() == face.getAxis()) {
+                        continue;
+                    }
+                    BcQuad quad = insetForSkin(armFace(face, armSide, center, radius, i));
+                    quads.add(quad);
+                    quads.add(reversedCopy(quad));
+                    i++;
+                }
+            } else {
+                BcQuad quad = insetForSkin(centreFace(face));
+                quads.add(quad);
+                quads.add(reversedCopy(quad));
+            }
+        }
+        return quads;
+    }
+
     /** One centre face + inside copy: full 0.25..0.75 cube face, UVs on the sprite's central circle. */
     private static void addCentreFace(List<BcQuad> quads, Direction face) {
-        BcQuad quad = createFace(face, 0.5f, 0.5f, 0.5f, CENTER, CENTER, CENTER,
-            4 / 16f, 4 / 16f, 12 / 16f, 12 / 16f);
+        BcQuad quad = centreFace(face);
         quads.add(quad);
         quads.add(insideCopy(quad));
     }
 
+    private static BcQuad centreFace(Direction face) {
+        return createFace(face, 0.5f, 0.5f, 0.5f, CENTER, CENTER, CENTER,
+            4 / 16f, 4 / 16f, 12 / 16f, 12 / 16f);
+    }
+
     /** One connection arm + inside copies ({@code QUADS[1][side]}): centre-offset box, four side faces, no end face. */
     private static void addArm(List<BcQuad> quads, Direction side) {
-        float cx = 0.5f + side.getStepX() * ARM_OFFSET;
-        float cy = 0.5f + side.getStepY() * ARM_OFFSET;
-        float cz = 0.5f + side.getStepZ() * ARM_OFFSET;
-        float rx = side.getAxis() == Axis.X ? ARM_RADIUS_AXIS : ARM_RADIUS_CROSS;
-        float ry = side.getAxis() == Axis.Y ? ARM_RADIUS_AXIS : ARM_RADIUS_CROSS;
-        float rz = side.getAxis() == Axis.Z ? ARM_RADIUS_AXIS : ARM_RADIUS_CROSS;
-
+        float[] center = armCenter(side);
+        float[] radius = armRadius(side);
         int i = 0;
         for (Direction face : Direction.values()) {
             if (face.getAxis() == side.getAxis()) {
                 continue;
             }
-            float[] uv = ARM_UVS[i];
-            BcQuad quad = createFace(face, cx, cy, cz, rx, ry, rz, uv[0], uv[1], uv[2], uv[3]);
-            quad = rotateTextureUp(quad, UVS_ROT[side.ordinal()][i]);
+            BcQuad quad = armFace(side, face, center, radius, i);
             quads.add(quad);
             quads.add(insideCopy(quad));
             i++;
         }
+    }
+
+    /** The arm's centre point ({@code 0.5 + side * 0.375} per axis), as {@code [cx, cy, cz]}. */
+    private static float[] armCenter(Direction side) {
+        return new float[] {
+            0.5f + side.getStepX() * ARM_OFFSET,
+            0.5f + side.getStepY() * ARM_OFFSET,
+            0.5f + side.getStepZ() * ARM_OFFSET };
+    }
+
+    /** The arm's per-axis half extents (0.125 along the arm axis, 0.25 across), as {@code [rx, ry, rz]}. */
+    private static float[] armRadius(Direction side) {
+        return new float[] {
+            side.getAxis() == Axis.X ? ARM_RADIUS_AXIS : ARM_RADIUS_CROSS,
+            side.getAxis() == Axis.Y ? ARM_RADIUS_AXIS : ARM_RADIUS_CROSS,
+            side.getAxis() == Axis.Z ? ARM_RADIUS_AXIS : ARM_RADIUS_CROSS };
+    }
+
+    /** The {@code i}-th side face of the {@code side} arm: edge-band UVs rotated by the legacy {@code uvsRot} table. */
+    private static BcQuad armFace(Direction side, Direction face, float[] center, float[] radius, int i) {
+        float[] uv = ARM_UVS[i];
+        BcQuad quad = createFace(face, center[0], center[1], center[2], radius[0], radius[1], radius[2],
+            uv[0], uv[1], uv[2], uv[3]);
+        return rotateTextureUp(quad, UVS_ROT[side.ordinal()][i]);
     }
 
     /**
@@ -138,14 +193,18 @@ public final class BcPipeGeometry {
         float frz = positive ? rz - faz : rz + faz;
         boolean zisv = frx != 0.0f && fry == 0.0f;
 
-        // p0..p3 = centerOfFace + addOrNegate(faceRadius, u, v) for (f,f) (f,t) (t,t) (t,f)
+        // p0..p3 = centerOfFace + addOrNegate(faceRadius, u, v) for (f,f) (f,t) (t,t) (t,f). Legacy addOrNegate's z
+        // term is z * (zisv ? (v ? -1 : 1) : (u ? 1 : -1)), i.e. p0.z flips on zisv, p1.z is always -frz, p2.z flips
+        // on !zisv, and p3.z is ALWAYS +frz (both ternary branches give +1 for p3's u=true, v=false). Collapsing p3.z
+        // to -frz in the non-zisv branch (an earlier port typo) made p3 == p0 on every X-axis face, degenerating the
+        // WEST and EAST sides to half-triangles.
         float p0x = fcx + -frx, p0y = fcy + fry, p0z = fcz + (zisv ? frz : -frz);
-        float p1x = fcx + -frx, p1y = fcy + -fry, p1z = fcz + (zisv ? -frz : -frz);
+        float p1x = fcx + -frx, p1y = fcy + -fry, p1z = fcz - frz;
         float p2x = fcx + frx, p2y = fcy + -fry, p2z = fcz + (zisv ? -frz : frz);
-        float p3x = fcx + frx, p3y = fcy + fry, p3z = fcz + (zisv ? frz : -frz);
+        float p3x = fcx + frx, p3y = fcy + fry, p3z = fcz + frz;
 
-        float diffuse = FACE_DIFFUSE[face.ordinal()];
-        int argb = shadeArgb(diffuse);
+        // Colours stay white — the entity pipelines apply the face diffuse from the normal (see class javadoc).
+        int argb = 0xFFFFFFFF;
         BcQuad quad;
         if (shouldInvertForRender(face)) {
             // legacy branch 1: v0..v3 = p0(minU,minV), p1(minU,maxV), p2(maxU,maxV), p3(maxU,minV)
@@ -169,10 +228,29 @@ public final class BcPipeGeometry {
         return new BcVertex(new org.joml.Vector3f(x, y, z), u, v, argb, 15728880);
     }
 
-    /** ARGB white scaled by the diffuse factor (legacy {@code colourf(diffuse, diffuse, diffuse, 1)}). */
-    private static int shadeArgb(float diffuse) {
-        int c = Math.round(diffuse * 255.0f);
-        return (0xFF << 24) | (c << 16) | (c << 8) | c;
+    /**
+     * Translates one skin quad {@code 0.01} into the pipe (legacy {@code PipeBaseModelGenStandard#faceOffset}:
+     * {@code Vec3.atLowerCornerOf(face.getOpposite().getNormal()).scale(colourOffset)}).
+     */
+    private static BcQuad insetForSkin(BcQuad quad) {
+        Direction face = quad.face();
+        float dx = face.getOpposite().getStepX() * SKIN_INSET;
+        float dy = face.getOpposite().getStepY() * SKIN_INSET;
+        float dz = face.getOpposite().getStepZ() * SKIN_INSET;
+        BcQuad out = quad;
+        for (int i = 0; i < 4; i++) {
+            BcVertex vertex = out.vertex(i);
+            org.joml.Vector3f p = vertex.position();
+            out = out.withVertex(i, vertex.withPosition(p.x() + dx, p.y() + dy, p.z() + dz));
+        }
+        return out;
+    }
+
+    /** The skin's second copy (legacy {@code createDoubleFace}/{@code dupInverted}): reversed winding + opposite
+     * normal, flat colour — no {@code dupDarker} darkening on the dye skin. */
+    private static BcQuad reversedCopy(BcQuad quad) {
+        return new BcQuad(quad.face().getOpposite(), false, quad.tintIndex(),
+            quad.v3(), quad.v2(), quad.v1(), quad.v0());
     }
 
     /** Legacy {@code ModelUtil#shouldInvertForRender}: NEGATIVE axis faces, except the Z axis flips it. */
@@ -186,9 +264,7 @@ public final class BcPipeGeometry {
 
     /** Legacy {@code dupDarker}'s twin: reversed winding + opposite normal, darkened, unshaded (no diffuse twice). */
     private static BcQuad insideCopy(BcQuad quad) {
-        BcQuad reversed = new BcQuad(quad.face().getOpposite(), false, quad.tintIndex(),
-            quad.v3(), quad.v2(), quad.v1(), quad.v0());
-        return reversed.multiplyColor(INSIDE_DARKEN, INSIDE_DARKEN, INSIDE_DARKEN, 1.0f);
+        return reversedCopy(quad).multiplyColor(INSIDE_DARKEN, INSIDE_DARKEN, INSIDE_DARKEN, 1.0f);
     }
 
     /** Legacy {@code MutableQuad#rotateTextureUp(n)}: cyclically shifts the four vertex UVs. */
