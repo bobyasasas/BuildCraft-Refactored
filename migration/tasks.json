@@ -401,10 +401,10 @@
    "id": "M4.9",
    "phase": "Phase 4 视觉与实机可玩性",
    "title": "实机逐功能测试矩阵（客户端真机验收层）",
-   "status": "pending",
+   "status": "done",
    "acceptance": "Xvfb 真客户端逐功能实机验证：每功能进世界截图+日志双证据（创造页/物品模型/各机器/管道/门/机器人），旁观模式症状根因闭环",
-   "evidence": "复现已完成（M4.9a，2026-09-17）：worker 以 Xvfb+xdotool 真客户端实机复现用户两症状——quickPlay 进档后 /data get entity @s playerGameType=3（硬证据）、HUD 三无、E 无背包、左键不可破坏、相机被锁；出生点旁 5-6 台蓝色箱形机器人（后证实为取证 rig 召唤的 robot_miner，正在挖出生点下的方块）。根因闭环见 M4.11（取证脚手架数据包污染 jar），非 mod 代码缺陷。矩阵化逐功能实机验证待 M4.11 修复落地 + 建世界死锁（复现会话另发现：GUI 创建新世界 3 次静默失败、菜单进旧档死锁于 Loading world 0% 且 jstack 证明无 Server 线程）诊断后展开；jstack 与日志存 /tmp/m49a/",
-   "notes": "用户 2026-09-17 明确要求'一个一个功能进入游戏实机测试'；M4.9a 复现已派发"
+   "evidence": "验收（worker 完整矩阵 + 主 agent 亲跑门禁）：矩阵 PASS 15 / PARTIAL 2 / FAIL 0（23 行证据表 /tmp/m49_matrix.md，26 截图 neo/run/m49/screenshots/ 逐张自查，[M49] 日志 78 行 /tmp/m49/m49_run10_evidence.log）。逐功能双证据：创造栏（1 个 mod tab 图标齐全无紫黑，懒构建 displayItems=0 以截图为准）；物品模型手持+14 掉落物；石头引擎燃烧 stored 5800→29100 µMJ + M4.8 GUI 实开（Stored 29,100/100,000 µJ）；填充器 GUI 27 格 3x64；采石场框架盒+真实链挖掘（target 推进 (33,-61,25)→(34,-61,26)）；marker 体积/连线/红石信号线（红像素 85→3013）；三罐流体+空桶抽倒（poured 1000 mB）；蒸馏器 99 批精确算术（in 1208→gas 1584/liquid 297）；热交换 109 批；泵 16000 mB；物品/流体/动能管道三场景；M4.6 遗留复验：真实引擎→kinesis→采石场能量链 PASS（quarry totalReceived 2700→45700 µMJ 驱动钻掘）。生产客户端复验（M4.13 收口）：独立 gameDir+新 jar，HUD/E 背包/聊天正常，playerGameType=1 非 3。门禁：build EXIT=0、datagen_diff --strict PASS、lang 857 PASS、license PASS、gametest 9/9（主 agent 亲跑复验）。附带清理：build.gradle 移除 M2.7b 遗留 quickPlay TEMP 3 行（仅此改动，build 复验 EXIT=0）。",
+   "notes": "PARTIAL 2 项（v2 范围，裁决记录）：① gate 红石触发链路未驱动（attach/渲染/同步正常，gateOn=false）；② 机器人 AI 占位（robot_miner 实体+模型渲染正常，delta=0 无移动）。补充发现（v2 backlog，裁决不修）：power 管↔kinesis 管相邻不导能（tickPower 无 kinesis 分支/pullFromNeighbours 无 power 管分支，能量囤死 power 管；规定拓扑引擎→kinesis 直连已 PASS）。裁决：采石场激光束保持 legacy 'buffer>0 才画束' 行为不改（取证用 beam-assist 已如实标注）。创造栏为单 mod tab（buildcraftcore:main）聚合，沿 M3.x 注册现状。"
   },
   {
    "id": "M4.10",

@@ -119,9 +119,6 @@ neoForge {
         client {
             client()
             sourceSet = sourceSets.client
-            // TEMP M2.7b evidence (to be reverted): quickPlay straight into the scratch save.
-            programArgument '--quickPlaySingleplayer'
-            programArgument 'gametestworld'
         }
 
         // M2.7a: server-side runs stay on the main source set's runtime classpath —
