@@ -9,6 +9,8 @@ import buildcraft.datagen.BcDatagen;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import org.slf4j.Logger;
 
 /**
@@ -32,5 +34,20 @@ public class BuildCraftBuilders {
         BcBuildersMenus.MENUS.register(modEventBus);
         // M3.4: datagen providers for this mod's namespace (item models, blockstates, lang placeholder).
         BcDatagen.register(modEventBus);
+        // M4.17: the builder's blueprint/resource inventory and the library's shelf reach automation (a hopper, a
+        // pipe, the probe rig) through the 26.1.2 item capability; the architect's in/out buffers too (the M4.16
+        // all-faces machine registrations).
+        modEventBus.addListener(this::onRegisterCapabilities);
+    }
+
+    private void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.Item.BLOCK, BcBuildersBlockEntities.ARCHITECT.value(),
+            (blockEntity, side) -> blockEntity.getInv());
+        event.registerBlockEntity(Capabilities.Item.BLOCK, BcBuildersBlockEntities.BUILDER.value(),
+            (blockEntity, side) -> blockEntity.getInv());
+        event.registerBlockEntity(Capabilities.Item.BLOCK, BcBuildersBlockEntities.LIBRARY.value(),
+            (blockEntity, side) -> blockEntity.getInv());
+        event.registerBlockEntity(Capabilities.Item.BLOCK, BcBuildersBlockEntities.REPLACER.value(),
+            (blockEntity, side) -> blockEntity.getInv());
     }
 }

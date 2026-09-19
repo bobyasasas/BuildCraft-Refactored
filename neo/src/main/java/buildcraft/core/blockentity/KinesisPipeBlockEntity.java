@@ -54,7 +54,9 @@ import buildcraft.lib.datacomponent.gate.GateVariantData;
  * real {@code TilePipeHolder}; that system has not migrated, so the slice carries a single gate on a single face
  * ({@link #attachGate(Direction, GateVariantData)}, called by the gate item, tests and the evidence rig). The gate is
  * evaluated every server tick after the diffusion phases; a state change pushes the usual update-tag sync and the red
- * wire broadcast / latched redstone output are observable through {@link #getGate()}.
+ * wire broadcast / latched redstone output are observable through {@link #getGate()}. Since M4.17 an active
+ * {@code buildcraft:pipe.power.cutoff} action additionally chokes the pipe's own transmission (see
+ * {@link BcGateStatements#ACTION_PIPE_POWER_CUTOFF}).
  *
  * <p><b>Client sync (update tag, vanilla {@code BeaconBlockEntity} pattern, first used by
  * {@link StoneEngineBlockEntity} in M2.7b):</b> {@link #getUpdatePacket()} returns
@@ -106,9 +108,14 @@ public class KinesisPipeBlockEntity extends BlockEntity {
     /**
      * Energy output interface of the slice (same contract as
      * {@link StoneEngineBlockEntity#extractEnergy(long, boolean)}): pulls up to {@code max} &micro;MJ out of the
-     * buffer, deducting it unless {@code simulate} is true.
+     * buffer, deducting it unless {@code simulate} is true. M4.17 gate cutoff: a cut-off pipe yields nothing &mdash;
+     * this is what stops the <em>downstream</em> pipe's pull phase (the pulling neighbour calls this method), which a
+     * push-phase guard alone could never reach (pipes pull from pipes, they don't push into pipes).
      */
     public long extractEnergy(long max, boolean simulate) {
+        if (this.gate != null && this.gate.isPowerCutoff()) {
+            return 0;
+        }
         long extracted = Math.min(max, this.energyStored);
         if (extracted > 0 && !simulate) {
             this.energyStored -= extracted;
@@ -191,6 +198,9 @@ public class KinesisPipeBlockEntity extends BlockEntity {
 
     /** Pull phase: engines pointing at this pipe, then higher adjacent pipes (half-difference equalisation). */
     private void pullFromNeighbours(ServerLevel level, BlockPos pos) {
+        if (this.gate != null && this.gate.isPowerCutoff()) {
+            return;
+        }
         for (Direction direction : Direction.values()) {
             if (this.energyStored >= CAPACITY) {
                 return;
@@ -221,8 +231,20 @@ public class KinesisPipeBlockEntity extends BlockEntity {
      * {@code PipeTransportPower} pushing into {@code IMjReceiver} machines: request
      * {@code getPowerRequested()}, clamp to the pipe rate, deduct the accepted part from the returned excess) &mdash;
      * the M2.12 filler/quarry machines receive their power through it.
+     *
+     * <p>M4.17 gate cutoff: while the pipe's gate holds the {@code buildcraft:pipe.power.cutoff} action on an active
+     * slot (see {@link BcGateStatements#ACTION_PIPE_POWER_CUTOFF}), the pipe transmits nothing &mdash; both the pull
+     * and the push phase stand down and {@link #extractEnergy(long, boolean)} yields 0 (the closest slice stand-in
+     * for a gate choking its pipe's transmission; the legacy limiter pipes' power-limit actions reduce exactly this
+     * throughput). Upstream stalls against the frozen pipe the same way; releasing the trigger lets the chain flow
+     * again on the next tick. The value is the gate's last evaluation (the gate tick runs after the diffusion phases,
+     * so a fresh trigger state lands one tick later, exactly like legacy's {@code resolveActions}-then-transport
+     * ordering).
      */
     private void pushToNeighbours(ServerLevel level, BlockPos pos) {
+        if (this.gate != null && this.gate.isPowerCutoff()) {
+            return;
+        }
         for (Direction direction : Direction.values()) {
             if (this.energyStored <= 0) {
                 return;

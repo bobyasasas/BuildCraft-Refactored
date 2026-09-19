@@ -56,6 +56,13 @@ public class BcGateLogic {
     private boolean isOn;
     /** Latched redstone output level on the gate face (legacy {@code TilePipeHolder#redstoneValues} entry). */
     private int redstoneOutput;
+    /**
+     * True while the transmission-cutoff action holds on an active slot this tick (the M4.17
+     * {@link BcGateStatements#ACTION_PIPE_POWER_CUTOFF} state; follows the trigger instead of latching &mdash; the
+     * legacy action set has no pipe-side cut statement, so this slice action was purpose-built to follow
+     * {@code resolveActions}' per-tick activation exactly like {@code isOn} does).
+     */
+    private boolean powerCutoff;
     /** Wire colours this gate currently broadcasts (legacy {@code GateLogic#wireBroadcasts}). */
     private final EnumSet<DyeColor> wireBroadcasts = EnumSet.noneOf(DyeColor.class);
 
@@ -114,6 +121,7 @@ public class BcGateLogic {
         this.slots[slot] = new BcGateSlot(Optional.ofNullable(trigger), Optional.ofNullable(action));
         this.isOn = false;
         this.redstoneOutput = 0;
+        this.powerCutoff = false;
         this.wireBroadcasts.clear();
         for (int i = 0; i < this.triggerOn.length; i++) {
             this.triggerOn[i] = false;
@@ -133,6 +141,20 @@ public class BcGateLogic {
     /** Latches the redstone output (legacy {@code IRedstoneStatementContainer#setRedstoneOutput(side, value)}). */
     public void latchRedstoneOutput(int level) {
         this.redstoneOutput = level;
+    }
+
+    /**
+     * True while the transmission-cutoff action held on the last evaluation (read by the host pipe's push phase; see
+     * {@link BcGateStatements#ACTION_PIPE_POWER_CUTOFF}). Follows the trigger &mdash; it is recomputed from scratch
+     * every tick exactly like {@link #isOn()}, never latched.
+     */
+    public boolean isPowerCutoff() {
+        return this.powerCutoff;
+    }
+
+    /** Arms the transmission cutoff for the current evaluation (called from {@code BcGateStatements#runAction}). */
+    public void armPowerCutoff() {
+        this.powerCutoff = true;
     }
 
     /**
@@ -163,24 +185,33 @@ public class BcGateLogic {
 
     /**
      * One evaluation pass, called from the host's server tick (legacy {@code GateLogic#onTick} &rarr;
-     * {@code #resolveActions}). Wire broadcasts are cleared and re-emitted while their trigger holds (so they follow
-     * the trigger), while the redstone output latches (see {@link #latchRedstoneOutput}). The redstone emission itself
-     * is applied by the host block's signal overrides.
-     *
-     * @return true if any client-visible state changed (the host then syncs its update tag)
+     * {@code #resolveActions}). The trigger truth comes from the world through
+     * {@link BcGateStatements#isTriggerActive}; see {@link #tick(TriggerResolver)} for the evaluation contract.
      */
     public boolean tick(ServerLevel level, BlockPos pos, Direction gateSide) {
+        return this.tick((slot, trigger) -> BcGateStatements.isTriggerActive(trigger, level, pos, gateSide));
+    }
+
+    /**
+     * The evaluation core over an injected trigger resolver &mdash; the same pass as {@link #tick(ServerLevel, BlockPos,
+     * Direction)} with the world read factored out, which is what makes the trigger &rarr; {@code triggerOn} &rarr;
+     * output-latch chain unit-testable without a level (M4.17; the legacy counterpart
+     * {@code GateLogic#resolveActions} hard-wires {@code TriggerWrapper#isTriggerActive}). The resolver is called once
+     * per configured trigger, in slot order.
+     */
+    public boolean tick(TriggerResolver triggerResolver) {
         boolean previousOn = this.isOn;
         EnumSet<DyeColor> previousWires = EnumSet.copyOf(this.wireBroadcasts);
 
         this.isOn = false;
+        this.powerCutoff = false;
         this.wireBroadcasts.clear();
 
         for (int slot = 0; slot < this.slots.length; slot++) {
             this.triggerOn[slot] = false;
             this.actionOn[slot] = false;
             BcGateStatement trigger = this.slots[slot].trigger().orElse(null);
-            if (trigger != null && BcGateStatements.isTriggerActive(trigger, level, pos, gateSide)) {
+            if (trigger != null && triggerResolver.isActive(slot, trigger)) {
                 this.triggerOn[slot] = true;
             }
             // Degenerate group evaluation (all connection bits false): each slot is its own group, and a
@@ -190,11 +221,19 @@ public class BcGateLogic {
             this.actionOn[slot] = groupActive;
             if (groupActive && action != null) {
                 this.isOn = true;
-                BcGateStatements.runAction(action, level, pos, gateSide, this);
+                BcGateStatements.runAction(action, this);
             }
         }
 
         return previousOn != this.isOn || !previousWires.equals(this.wireBroadcasts);
+    }
+
+    /** The world-read half of a trigger evaluation (see {@link #tick(TriggerResolver)}). */
+    @FunctionalInterface
+    public interface TriggerResolver {
+
+        /** True when the world currently satisfies this slot's trigger (legacy {@code TriggerWrapper}). */
+        boolean isActive(int slot, BcGateStatement trigger);
     }
 
     /** The config value this gate's configuration round-trips as (the legacy {@code gate_data} compound shape). */

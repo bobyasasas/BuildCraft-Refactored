@@ -13,6 +13,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import org.slf4j.Logger;
 import buildcraft.builders.BuildCraftBuilders;
 import buildcraft.builders.BcBuildersBlockEntities;
+import buildcraft.builders.client.render.ConstructionMarkerRenderer;
 import buildcraft.builders.client.render.FillerBlockRenderer;
 import buildcraft.builders.client.render.QuarryBlockRenderer;
 
@@ -38,12 +39,16 @@ public class BuildCraftBuildersClient {
         modEventBus.addListener(BuildCraftBuildersClient::onRegisterRenderers);
     }
 
-    /** M2.12: block entity renderer registration (double-generic {@code <T, S>} provider form of 26.1.2). */
+    /** M2.12: block entity renderer registration (double-generic {@code <T, S>} provider form of 26.1.2). M4.17 adds
+     * the construction marker's pair-box frame. */
     private static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(BcBuildersBlockEntities.FILLER.value(), FillerBlockRenderer::new);
         event.registerBlockEntityRenderer(BcBuildersBlockEntities.QUARRY.value(), QuarryBlockRenderer::new);
-        LOGGER.info("BuildCraft builders client renderers registered: {} -> {}, {} -> {}",
+        event.registerBlockEntityRenderer(BcBuildersBlockEntities.MARKER_CONSTRUCTION.value(),
+            ConstructionMarkerRenderer::new);
+        LOGGER.info("BuildCraft builders client renderers registered: {} -> {}, {} -> {}, {} -> {}",
             BcBuildersBlockEntities.FILLER.getId(), FillerBlockRenderer.class.getSimpleName(),
-            BcBuildersBlockEntities.QUARRY.getId(), QuarryBlockRenderer.class.getSimpleName());
+            BcBuildersBlockEntities.QUARRY.getId(), QuarryBlockRenderer.class.getSimpleName(),
+            BcBuildersBlockEntities.MARKER_CONSTRUCTION.getId(), ConstructionMarkerRenderer.class.getSimpleName());
     }
 }

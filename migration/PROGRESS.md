@@ -2,11 +2,11 @@
 
 > **本文件由 migration/scripts/progress.py 自动生成，禁止手改；更新任务请编辑 migration/tasks.json 或用 `--set` 命令。**
 >
-> 生成时间：2026-09-19 05:39:00 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-17）
+> 生成时间：2026-09-19 08:29:00 ｜ 数据源：migration/tasks.json（schema=1，updated=2026-09-17）
 
 ## 总览
 
-**总任务数 50** ｜ pending(未完成)=0、in_progress(进行中)=0、partial(部分完成)=0、unverified(未验证)=0、done(已完成)=50 ｜ **完成率 100%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
+**总任务数 51** ｜ pending(未完成)=0、in_progress(进行中)=0、partial(部分完成)=0、unverified(未验证)=0、done(已完成)=51 ｜ **完成率 100%**（权重：done=1，in_progress/partial/unverified=0.5，pending=0）
 
 ## 阶段汇总
 
@@ -16,7 +16,7 @@
 | Phase 1 工程化整备 | 5 | 5 | 100% |
 | Phase 2 分层迁移到 MC 26.1.2 + NeoForge 26.1.2.109 | 13 | 13 | 100% |
 | Phase 3 功能验证金字塔 | 9 | 9 | 100% |
-| Phase 4 视觉与实机可玩性 | 17 | 17 | 100% |
+| Phase 4 视觉与实机可玩性 | 18 | 18 | 100% |
 
 ## 任务明细
 
@@ -72,15 +72,16 @@
 | M4.14 | M4.14 Jade 可选依赖集成（用户追加批准） | done（已完成） | Jade 以 compileOnly 可选依赖接入：未安装 Jade 时 BuildCraft 正常运行；安装后对 BuildCraft 方块实体显示信息面板（以当前 BE 数据访问点为准：能量/流体/机器状态）；版本钉死；dev 实装冒烟证据：Jade 加载 + BuildCraft 插件注册日志行 | 用户追加批准（同上句豁免）。接线（worker A）：Modrinth maven maven.modrinth:jade:26.1.11+neoforge compileOnly + 同坐标 runtimeOnly（bcCompatDev 门控）；mods.toml optional [26.1,) AFTER BOTH。实现（worker C）：5 真实 BE（石头引擎/动能木管/能量计/填充器/采石场）两段式——外层 IServerDataProvider<BlockAccessor> 经 registerBlockDataProvider 按 BE 类注册，嵌套 Client IBlockComponentProvider 经 registerBlockComponent 按 Block 类注册，共享 uid，appendServerData 塞 CompoundTag / 客户端 getServerData 读（服务端字段不同步问题的正解）；该范式绕开 Jade 1.21.6+ 'Data providers cannot implement IComponentProvider' 硬限制（第一版单类双接口即崩于此已删）。展示：能量 μJ 千分位（x / CAP μJ）、燃烧百分比 clamp 0-100、能量计累计、filler pattern/cell 与 quarry target present-only 键编码 null、Buffer N items；占位 BE 21 个零注册零提示（裁决）。验证：无 bcCompatDev build 绿；主 agent 亲跑官方联合冒烟：'BuildCraft Jade compat registered' + joined the game + 零错误；worker 实装冒烟截图亲判引擎 0 / 100,000 μJ、采石场 0 / 2,400,000 μJ 真渲染；license 绿。裁决：jade 包留 src/client → 专职服 server data 半不加载，v1 接受（与 JEI 远程同步同批缓办，多人场景未入测试矩阵）；Buffer=物品件数求和（规格原文）；pattern 显示原样 uniqueTag（本地化需新键被冻结门禁禁止）<br>notes: 与 M4.10 共用 worker A 接线（同批仓库/属性/开关）；Jade 数据提供者（worker C）按侦察清单的 BE getter 现状分期：本期覆盖有公开访问点的 BE，无 getter 的 BE 留待 M4.5-M4.7 渲染任务补齐数据访问后扩展 |
 | M4.15 | 方块/物品名接入冻结翻译键（消除游戏内裸键名） | done（已完成） | 游戏内（背包/创造页/tooltip/JEI/Jade 首行）BC 方块与物品显示 en_us 翻译名而非 block.<ns>.<path> 裸键；零新增 lang 键；无法映射的 id 有明示清单与主 agent 裁决记录 | 根因：全库无 descriptionId 覆写 + lang 为旧式 857 键冻结集 + 注册走 registerSimpleBlockItem 默认键 → 游戏内全裸键（Jade 冒烟实测发现）。worker E 实施：BcLangKeys 一处机制（Item.Properties#overrideDescription / BlockBehaviour.Properties#overrideDescription——26.1.2 getDescriptionId 已 final）+ 一张表（约 192 显式条目 + 46 管道族前缀最长匹配×17 色变体≈782 id ≈ 共 974 id；近似映射注释 approximate）+ 15 个 Bc*Items/Bc*Blocks 注册行改走 helper（字段名/泛型零变动，compat 引用不受影响）。验证：build 绿（JaCoCo core 2.20%≥2.0、lib 79.38%≥73.0）；主 agent 亲跑 lang_diff PASS 857/857 missing0 extra0 + license 绿；实机截图 worker 亲判：tooltip 'Combustion Engine'、BC 创造页标题 'BuildCraft' 且整页零裸键、11/14 页 'Cobblestone Structure Pipe'（管道前缀机制生效）、/setblock 聊天 '[Combustion Engine]'。主 agent 裁决 5 组未映射 id 维持默认键并记录（lang 集确无对应键、造新键被禁）：energy_meter、decorated_destroy/leather/paper（仅 blueprint/laser_back/template 有 decorated 键）、fragile_fluid_shard（仅 'Fragile %s Shard' 格式键，直映渲染字面 %s）、plug_gate×25（旧版 '%s %s Gate' 组合式，gate.name.basic 不存在）、pipe_holder（技术方块无物品）；组合式命名机制留后续任务。BcLangKeysTest 越出原文件域追认（JaCoCo 门限需要；Recording 子类绕开 DeferredHolder 对 BuiltInRegistries 急切绑定）<br>notes: 根因（2026-09-17 Jade 冒烟实测发现）：全库无 setDescriptionId/getDescriptionId 覆写，en_us.json 为旧式 tile.*/item.* 857 键冻结集，注册走 registerSimpleBlockItem 默认键 → 名字裸键。方案：中央 BcNamedBlockItem/BcNamedItem + 注册 id→旧键映射表 |
 | M4.16 | 剩余机器行为补全 + 全机器逐台实机矩阵（目标收口） | done（已完成） | 20 台占位 BE 机器（factory 4/builders 5/silicon 6/core 2/transport 1/robotics 2）逐台有世界内实机证据：可迁移行为机（自动工作台/chute/flood gate/mining well/silicon 激光工作台族/laser/power_tester/spring_oil/filtered_buffer）行为通过实机测试；蓝图体系依赖机（builder/architect/library/replacer/marker_construction/programming_table/requester/zone_planner）至少外观+放置+无崩溃证据并如实标注 v2 | 验收（三路 worker 并行 + 主 agent 合并树终验）：build EXIT=0（143 tests）；runGameTestServer 9/9×2；新 dump registry-dump-m416 --strict PASS（20 个 BE 切真类，id 全部不变）；lang 857/license/datagen --strict 全 PASS（零资产漂移）。20 台机器逐台世界内截图+日志双证据（矩阵 /tmp/m416_{a,b,c}_matrix.md；截图 neo/run/{m410a,m416b,m410c}/screenshots/ 共 23 张，worker 逐张 Read 自核）。真行为 12 台 PASS：autoworkbench_item（16 原木→16 木板，MJ 4000µMJ/次）、chute（箱→箱 128 件、箱→管道 64 件双场景）、flood_gate（水柱 placed=2 罐排空）、mining_well（引擎→kinesis→矿井真实能量链 totalReceived=14800 与成本公式吻合，broken 1→2→3 至基岩，双弹出模式）、laser（每 5t 推 2000µMJ）、assembly_table（红石→chipset_redstone）、integration_table（robot_base+board→robot_bomber）、advanced_crafting_table（原木→4 木板 flat 50000µMJ）、power_tester（链路 1900→22900µMJ 计数）、spring_oil（油源方块生成）、filtered_buffer（12 件全量穿通）。charging_table PARTIAL 如实（能量入仓满仓可见，切片无可充电物品 API）。v2 占位 7 台如实取证（builder/architect/library/marker_construction/replacer/requester/zone_planner+programming_table：放置+渲染+右键无崩溃）。<br>notes: 裁决记录：① charging_table PARTIAL 接受（IMjContainerItem 物品充电 API 未迁，属 v2）；② advanced_crafting_table 取真行为方案（vanilla 配方匹配+flat 50000µMJ，蓝图幻影槽/GUI 裁剪）；③ filtered_buffer FIFO 无过滤器 v1（基线幻影过滤网格+GUI 未迁）；④ 蓝图体系与机器人 AI 依赖机 8 台 v2 占位（完整行为依赖 blueprint 数据体系/robot AI，基线 Tile 参照已登记）；⑤ gameDir m416b 命名偏差接受。实机环境经验（后续泳道复用）：并发 runClient 共享 build/moddev/clientRun*Args.txt argfile 会互相覆写（快照 argfile 直启 JVM 规避）；gameDir 首启 onboardAccessibility:true 吞 quickPlay（置 false）；无 WM 无头下 mc.stop() 卡显示拆除（证据落盘后直接 kill）。 |
+| M4.17 | 全机器功能实机通过收口（充电链/gate 红石/蓝图体系与机器人支持机） | done（已完成） | 10 台未功能通过机器逐台功能实机 PASS：charging_table（机器人物品经激光能量真实充电，电量日志/NBT 证据）、gate（红石触发链驱动管道行为，拉杆开/关双态证据）、programming_table（基线 TileProgrammingTable_Neptune 最小忠实：IProgrammingRecipe 加工）、architect（扫描施工路标体积→写入蓝图物品）、builder（读蓝图+MJ+资源→世界放置方块）、library（蓝图存取索引）、replacer（标记体积内按基线最小化替换方块）、marker_construction（定义体积并可被 architect/replacer 消费）、requester（基线最小化：请求清单从相邻容器拉物）、zone_planner（基线最小化：区域定义）。机器人物品 AI 仍属 v2（实体非机器），本任务只做其物品充电 | 验收（四路 worker 并行 + 主 agent 合并树终验）：build EXIT=0（196 tests）；runGameTestServer 9/9；新 dump registry-dump-m417 --strict PASS（7 个 BE 再切真类，全仓库零新增注册表条目——电量/蓝图/区域数据走 vanilla custom_data）；lang 857/license/datagen --strict 全 PASS。10 台机器逐台功能实机双证据（矩阵 /tmp/m417_{a,b,c,d}_matrix.md；截图 neo/run/{m417a,m417b,m417c,m417d}/screenshots 共 19 张，worker 逐张 Read 自核）。charging_table PASS：机器人物品插入→激光供能 90t 34,400→600t 226,000→满充 500,000µMJ（custom_data stored 实读）；programming_table PASS：board_robot_empty→board_robot_bomber（cost 12.8GµJ 切片 1,280,000µMJ 忠实 3200t，槽位前后日志）；gate PASS：拉杆 OFF 引擎→kinesis→tester 正常输能（2300→5300，lastTick=100），ON → gateOn=true/cutoff=true/tester 冻结 8300 lastTick=0/管回压满仓，回 OFF 链路恢复（27238→37297）而红石输出按 legacy 永不复位语义锁存（三态截图+像素差异 2260px 量化）；marker_construction PASS（配对盒 5x2x5 渲染+日志）；architect PASS（扫描 50 格→蓝图 17 石砖 NBT 计数）；builder PASS（真实链 engine→kinesis→builder，placed 17/17，totalReceived=136,000µMJ=17×8000 分毫不差）；library PASS（存取+索引日志）；replacer PASS（9 草→泥土，盒外 146 格正确拒绝）；requester PASS（32 红石拉入缓冲+缺额清单+存档重启 restored 双证）；zone_planner PASS（BoxZone 343 cells 定义+存档恢复双证）。<br>notes: 裁决记录（全部接受为已登记 v1 切片）：① A 路 robotics 触碰接受（carve 意图=机器人物品充电，落地为新建 BcRobotItem+BcRoboticsItems 17 处接线，与 D 路文件零交叠）；② stacksTo(16/1) 按 legacy；③ programming_table auto-pick 取 recipe id 最小者（legacy 靠 GUI 手选，GUI 批次落地时替换）；④ 充电台无物品即时排水与 legacy 10µJ/tick 慢漏差异已 javadoc；⑤ gate 新增 slice-only statement buildcraft:pipe.power.cutoff（基线无 gate 级断能 statement，最近为 limiter 管功率限制；保留——它是 gate 作用于管道通断的最小可观测形态）；⑥ 蓝图体系 v1：architect 免墨水、builder 计价沿用 filler 先例 3200×(hardness+1)、marker 配对半径 16 格+盒 max.y+1、replacer 改世界就地替换耗资源（legacy 为蓝图数据手术）、builder 锚点为机器相对位置；⑦ zone_planner 16 层 ZonePlan 位图裁为单 BoxZone（半径 7）；⑧ requester 持久化用 vanilla ContainerHelper 槽位格式；⑨ requester 相邻双机互拉无节流记 v2 打磨项。机器人物品 AI（实体行为）仍属 v2——本任务收口的是机器维度，充电链已使机器人物品侧功能闭环。 |
 
 ## 代码实时指标
 
-采集时间：2026-09-19 05:39:00；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
+采集时间：2026-09-19 08:29:00；采集范围：仓库根目录（排除 .git、.gradle、build、buildcraft_resources_generated）。
 
 | 指标 | 当前值 | 调研基线(2026-09) | 目标 |
 |---|---:|---:|---|
-| .java 文件总数 | 480 | 1772（main 1510 + API 子模块 262） | 无目标(参考) |
-| .java 总行数 | 62,834 | — | 无目标(参考) |
+| .java 文件总数 | 514 | 1772（main 1510 + API 子模块 262） | 无目标(参考) |
+| .java 总行数 | 68,876 | — | 无目标(参考) |
 | Forge import 文件数 | 0 | 549 | 0 |
 | Forge import 出现次数 | 0 | — | 0 |
 | TODO 出现次数 | 20 | 222 | 随 M1.4 下降 |

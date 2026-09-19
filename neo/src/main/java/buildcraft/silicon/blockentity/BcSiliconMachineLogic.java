@@ -114,6 +114,15 @@ public final class BcSiliconMachineLogic {
         return true;
     }
 
+    /**
+     * The programming table's per-tick work target (M4.17, the legacy {@code TileProgrammingTable_Neptune}
+     * {@code getTarget}/{@code hasWork} rules): the auto-picked recipe's slice cost &micro;MJ only while a matching
+     * recipe exists AND the output slot is free (the legacy empty-output {@code hasWork} gate); 0 otherwise.
+     */
+    public static long programmingTarget(boolean recipeMatched, boolean outputEmpty, long sliceCost) {
+        return recipeMatched && outputEmpty ? sliceCost : 0;
+    }
+
     /** Slot/group matcher for {@link #extract}: which slots may satisfy which requirement group. */
     public interface SlotMatcher {
         boolean test(int slotIndex, int groupIndex);

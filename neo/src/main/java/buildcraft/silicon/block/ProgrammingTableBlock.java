@@ -7,23 +7,20 @@ package buildcraft.silicon.block;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jspecify.annotations.Nullable;
 import buildcraft.silicon.BcSiliconBlockEntities;
 import buildcraft.silicon.blockentity.ProgrammingTableBlockEntity;
 
 /**
- * {@code buildcraftsilicon:programming_table} (legacy {@code BlockLaserTable} variant): M4.16 keeps the real block
- * entity (v2 placeholder, see {@link ProgrammingTableBlockEntity}) under the static baseline model &mdash; no
- * ticker, no interaction behaviour beyond the vanilla defaults.
+ * {@code buildcraftsilicon:programming_table} (legacy {@code BlockLaserTable} variant): since M4.17 the real
+ * programming behaviour ticks here (the {@link ProgrammingTableBlockEntity} recipe loop), replacing the M4.16 v2
+ * placeholder no-op.
  */
-public class ProgrammingTableBlock extends Block implements EntityBlock {
+public class ProgrammingTableBlock extends SiliconTableBlock<ProgrammingTableBlockEntity> {
 
     public static final MapCodec<ProgrammingTableBlock> CODEC = simpleCodec(ProgrammingTableBlock::new);
 
@@ -42,8 +39,12 @@ public class ProgrammingTableBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state,
-        BlockEntityType<T> type) {
-        return null; // v2 placeholder: nothing ticks
+    protected BlockEntityType<ProgrammingTableBlockEntity> type() {
+        return BcSiliconBlockEntities.PROGRAMMING_TABLE.value();
+    }
+
+    @Override
+    protected void tick(ServerLevel level, BlockPos pos, BlockState state, ProgrammingTableBlockEntity table) {
+        ProgrammingTableBlockEntity.serverTick(level, pos, state, table);
     }
 }

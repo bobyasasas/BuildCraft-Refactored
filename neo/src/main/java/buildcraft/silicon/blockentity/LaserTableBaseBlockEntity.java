@@ -81,8 +81,13 @@ public abstract class LaserTableBaseBlockEntity extends BlockEntity implements L
     // Server tick (the subclasses' static serverTick calls refresh() then this)
     // ---------------------------------------------------------------------
 
-    /** The shared per-tick power economics: drain on no-target, craft on full, periodic sync while active. */
-    protected final void tickPower(ServerLevel level) {
+    /**
+     * The shared per-tick power economics: drain on no-target, craft on full, periodic sync while active. Not
+     * {@code final} since M4.17: the charging table prepends its per-tick item dump (the legacy
+     * {@code TileChargingTable#update} runs the dump after the shared base economics) and then calls
+     * {@code super}.
+     */
+    protected void tickPower(ServerLevel level) {
         long target = this.currentTarget();
         if (target <= 0) {
             if (this.power != 0) {

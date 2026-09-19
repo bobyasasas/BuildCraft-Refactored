@@ -39,8 +39,9 @@ public class BuildCraftSilicon {
         // live in the buildcraftrobotics namespace, exactly like 1.20.1).
         BcSiliconRecipes.TYPES.register(modEventBus);
         BcSiliconRecipes.SERIALIZERS.register(modEventBus);
-        // M4.16: the four tables with inventories reach automation from every face (the M4.6 pipe-inbox precedent);
-        // the laser has no item inventory and the programming table none in its v2 slice.
+        // M4.16: the tables with inventories reach automation from every face (the M4.6 pipe-inbox precedent);
+        // M4.17 adds the charging table's single slot and the programming table's input/output pair (the laser has
+        // no item inventory).
         modEventBus.addListener(this::onRegisterCapabilities);
     }
 
@@ -50,6 +51,10 @@ public class BuildCraftSilicon {
         event.registerBlockEntity(Capabilities.Item.BLOCK, BcSiliconBlockEntities.INTEGRATION_TABLE.value(),
             (blockEntity, side) -> blockEntity.getItemHandler(side));
         event.registerBlockEntity(Capabilities.Item.BLOCK, BcSiliconBlockEntities.ADVANCED_CRAFTING_TABLE.value(),
+            (blockEntity, side) -> blockEntity.getItemHandler(side));
+        event.registerBlockEntity(Capabilities.Item.BLOCK, BcSiliconBlockEntities.CHARGING_TABLE.value(),
+            (blockEntity, side) -> blockEntity.getItemHandler(side));
+        event.registerBlockEntity(Capabilities.Item.BLOCK, BcSiliconBlockEntities.PROGRAMMING_TABLE.value(),
             (blockEntity, side) -> blockEntity.getItemHandler(side));
     }
 }

@@ -184,6 +184,8 @@ public final class M416bSiliconSmokeProbe {
         LOGGER.info("[M416] scenes built: 5 laser+table pairs at x={}", TABLE_X);
         seedAssembly(level);
         seedIntegration(level);
+        // M4.17: the charging table takes real chargeable items now, so the scene seeds a robot like the others
+        seedCharging(level);
         seedAdvancedCrafting(level);
         refillLasers(level);
     }
@@ -216,6 +218,17 @@ public final class M416bSiliconSmokeProbe {
             }
             LOGGER.info("[M416] integration seeded at {}: robot_base (slot 0) + board_robot_bomber (slot 1)"
                 + " (recipe robot_bomber: 5,000,000,000µJ = 500,000µMJ slice)", table);
+        }
+    }
+
+    /** M4.17 refresh: the charging scene seeds a chargeable robot (the legacy empty slot proved nothing anymore). */
+    private static void seedCharging(ServerLevel level) {
+        BlockPos table = pos(TABLE_X[2], 0);
+        if (level.getBlockEntity(table) instanceof ChargingTableBlockEntity charging) {
+            ItemStack robot = new ItemStack(BcRoboticsItems.ROBOT_BUILDER.get());
+            insert(charging.getInv(), robot);
+            LOGGER.info("[M416] charging seeded at {}: 1x robot_builder (robot battery 500,000µMJ, legacy-paced"
+                + " charge 1,250 ticks at the slice laser cap)", table);
         }
     }
 
@@ -287,9 +300,12 @@ public final class M416bSiliconSmokeProbe {
         }
         logLaser(level, LASER_X[2]);
         if (level.getBlockEntity(pos(TABLE_X[2], 0)) instanceof ChargingTableBlockEntity charging) {
-            LOGGER.info("[M416] charging @ {}: buffer={}µMJ / {}µMJ (PARTIAL slice: no IMjContainerItem item"
-                + " migrated yet, energy-in + visible store only)",//
-                charging.getBlockPos(), charging.getPower(), ChargingTableBlockEntity.BUFFER_CAPACITY);
+            var stack = charging.getInv().getResource(ChargingTableBlockEntity.SLOT)
+                .toStack((int) charging.getInv().getAmountAsLong(ChargingTableBlockEntity.SLOT));
+            var data = stack.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
+            LOGGER.info("[M416] charging @ {}: buffer={}µMJ slot={} custom_data={} (M4.17: real item charging)",//
+                charging.getBlockPos(), charging.getPower(), stack.isEmpty() ? "-" : stack.getItem(),
+                data == null ? "{}" : data.copyTag().toString());
         }
         logLaser(level, LASER_X[3]);
         if (level.getBlockEntity(pos(TABLE_X[3], 0)) instanceof AdvancedCraftingTableBlockEntity crafting) {

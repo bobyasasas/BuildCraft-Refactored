@@ -51,7 +51,7 @@ public final class BcSiliconBlockEntities {
             .register("laser", () -> new BlockEntityType<>(
                     LaserBlockEntity::new, BcSiliconBlocks.LASER.value()));
 
-    /** {@code buildcraftsilicon:programming_table}; real class since M4.16 ({@link ProgrammingTableBlockEntity}, v2 placeholder behaviour). */
+    /** {@code buildcraftsilicon:programming_table}; real class since M4.16 ({@link ProgrammingTableBlockEntity}, real recipe loop since M4.17). */
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ProgrammingTableBlockEntity>> PROGRAMMING_TABLE = BLOCK_ENTITIES
             .register("programming_table", () -> new BlockEntityType<>(
                     ProgrammingTableBlockEntity::new, BcSiliconBlocks.PROGRAMMING_TABLE.value()));

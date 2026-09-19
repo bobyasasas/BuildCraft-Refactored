@@ -1,0 +1,7 @@
+-proc:none
+-nowarn
+-d
+/tmp/m417check/classes
+-cp
+build/classes/java/main:build/moddev/artifacts/minecraft-patched-26.1.2.109.jar:/home/codex/.gradle/caches/modules-2/files-2.1/net.neoforged/neoforge/26.1.2.109/e379d9f1f45c052061fa6024a5959ad726771408/neoforge-26.1.2.109-universal.jar
+@/tmp/m417check/sources.txt

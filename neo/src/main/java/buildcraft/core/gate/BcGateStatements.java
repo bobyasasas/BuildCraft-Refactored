@@ -42,6 +42,8 @@ import buildcraft.lib.datacomponent.gate.BcGateStatement;
  * {@code wireBroadcasts} first, so the broadcast follows the trigger). The wire network flood itself is transport
  * content that has not migrated; the slice keeps only the per-pipe broadcast set (visible to the renderer and
  * assertable in tests).</li>
+ * <li><b>{@code buildcraft:pipe.power.cutoff}</b> (action, slice-only v1 trim, M4.17) &mdash; no legacy counterpart:
+ * while active the host pipe transmits no energy (see {@link #ACTION_PIPE_POWER_CUTOFF}).</li>
  * </ul>
  *
  * <p>Unknown kinds evaluate to false / no-op, exactly like legacy reading a statement it cannot resolve (null
@@ -58,6 +60,17 @@ public final class BcGateStatements {
     public static final String ACTION_REDSTONE_OUTPUT = "buildcraft:redstone.output";
     /** Legacy {@code ActionPipeSignal(DyeColor.RED)} ({@code BCTransportStatements#ACTION_PIPE_SIGNAL}). */
     public static final String ACTION_PIPE_WIRE_RED = "buildcraft:pipe.wire.output.red";
+    /**
+     * <b>Slice-only v1 trim (no legacy statement id &mdash; M4.17):</b> while active, the host pipe transmits no
+     * energy ({@code KinesisPipeBlockEntity} stops its push phase). Legacy gates shape pipe power only indirectly:
+     * the limiter pipes' {@code ActionIronPowerLimit}/{@code ActionDiamondPowerLimit} shift a limiter pipe's max
+     * output (a different, unmigrated pipe), and the classic player recipe is the gate's redstone output switching a
+     * neighbouring engine off. The wooden kinesis gate host has neither a limiter behaviour nor a neighbour engine
+     * hook in the slice, so this purpose-built id stands in for the "gate chokes the pipe" play pattern the M4.17
+     * evidence rig requires; like {@link #ACTION_PIPE_WIRE_RED} it follows the trigger (re-armed per resolution,
+     * never latched).
+     */
+    public static final String ACTION_PIPE_POWER_CUTOFF = "buildcraft:pipe.power.cutoff";
 
     private BcGateStatements() {
     }
@@ -92,15 +105,19 @@ public final class BcGateStatements {
      * Runs one action for the gate attached at {@code pos} on face {@code gateSide}. Legacy counterpart:
      * {@code ActionWrapper#actionActivate} + the {@code PipeEventActionActivate} fire inside
      * {@code GateLogic#resolveActions} (the pipe-event hook has no slice listener &mdash; no extraction pipes exist
-     * yet &mdash; so it is not carried over).
+     * yet &mdash; so it is not carried over). Every statement of the current minimal set resolves against the gate's
+     * own state alone (the cutoff arms, the latch and the wire broadcast &mdash; none reads the world), so the legacy
+     * {@code (container, parameters)} activation arguments are not carried down; a world-reading statement would
+     * bring them back.
      */
-    public static void runAction(BcGateStatement action, ServerLevel level, BlockPos pos, Direction gateSide,
-            BcGateLogic gate) {
+    public static void runAction(BcGateStatement action, BcGateLogic gate) {
         switch (action.kind()) {
             // legacy: setRedstoneOutput(side, 15), latched (no deactivation reset)
             case ACTION_REDSTONE_OUTPUT -> gate.latchRedstoneOutput(15);
             // legacy: IWireEmitter#emitWire(RED), re-emitted every resolution while the trigger holds
             case ACTION_PIPE_WIRE_RED -> gate.emitWire(DyeColor.RED);
+            // slice-only v1 trim: arms the pipe's transmission cutoff for this resolution (follows the trigger)
+            case ACTION_PIPE_POWER_CUTOFF -> gate.armPowerCutoff();
             default -> {
             }
         }

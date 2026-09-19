@@ -9,6 +9,8 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.SharedConstants;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import org.slf4j.Logger;
 
 import buildcraft.datagen.BcDatagen;
@@ -49,5 +51,14 @@ public class BuildCraftRobotics {
 
         // M2.6: robot params NBT schema as a data component (buildcraftrobotics:robot_params).
         BcDataComponents.ROBOTICS.register(modEventBus);
+
+        // M4.17: the requester's buffer is automation-reachable from every side (the legacy
+        // ItemHandlerManager.EnumAccess.BOTH registration); zone planner has no capability.
+        modEventBus.addListener(this::onRegisterCapabilities);
+    }
+
+    private void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.Item.BLOCK, BcRoboticsBlockEntities.REQUESTER.value(),
+            (blockEntity, side) -> blockEntity.getInv());
     }
 }

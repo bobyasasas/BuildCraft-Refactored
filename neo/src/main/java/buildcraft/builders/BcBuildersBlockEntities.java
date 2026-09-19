@@ -5,9 +5,13 @@
 
 package buildcraft.builders;
 
+import buildcraft.builders.blockentity.ArchitectBlockEntity;
+import buildcraft.builders.blockentity.BuilderBlockEntity;
+import buildcraft.builders.blockentity.ConstructionMarkerBlockEntity;
 import buildcraft.builders.blockentity.FillerBlockEntity;
+import buildcraft.builders.blockentity.LibraryBlockEntity;
 import buildcraft.builders.blockentity.QuarryBlockEntity;
-import buildcraft.core.blockentity.PlaceholderBlockEntity;
+import buildcraft.builders.blockentity.ReplacerBlockEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -15,27 +19,26 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
  * Central block entity type registration for buildcraftbuilders (task M2.4c registry parity). Every block entity id
- * the 1.20.1 registry baseline attributes to {@code buildcraftbuilders} registers here, bound to its block through the
- * shared {@link PlaceholderBlockEntity}. All placeholder, behaviour classes (legacy
- * {@code TileArchitect}, {@code TileBuilder}, {@code TileFiller}, {@code TileLibrary}, {@code TileMarker},
- * {@code TileQuarry}, {@code TileReplacer}) migrate in M2.5+ &mdash; M2.12 swapped the first two (filler, quarry) from
- * the placeholder to their real behaviour classes under the unchanged ids.
+ * the 1.20.1 registry baseline attributes to {@code buildcraftbuilders} registers here, bound to its block. The
+ * placeholder registrations ({@code PlaceholderBlockEntity}) migrate to their real behaviour classes under the
+ * unchanged ids as the content lands: M2.12 swapped filler and quarry, M4.17 swapped architect, builder, library,
+ * marker_construction and replacer &mdash; the builders module carries no placeholder any more.
  */
 public final class BcBuildersBlockEntities {
 
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister
             .create(BuiltInRegistries.BLOCK_ENTITY_TYPE, BuildCraftBuilders.MOD_ID);
 
-    /** Placeholder for {@code buildcraftbuilders:architect}; behaviour class migrates in M2.5+. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlaceholderBlockEntity>> ARCHITECT = BLOCK_ENTITIES
+    /** {@code buildcraftbuilders:architect}; M4.17 replaced the placeholder behaviour with the real {@link ArchitectBlockEntity} (same id). */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ArchitectBlockEntity>> ARCHITECT = BLOCK_ENTITIES
             .register("architect", () -> new BlockEntityType<>(
-                    (pos, state) -> new PlaceholderBlockEntity(BcBuildersBlockEntities.ARCHITECT.value(), pos, state),
+                    ArchitectBlockEntity::new,
                     BcBuildersBlocks.ARCHITECT.value()));
 
-    /** Placeholder for {@code buildcraftbuilders:builder}; behaviour class migrates in M2.5+. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlaceholderBlockEntity>> BUILDER = BLOCK_ENTITIES
+    /** {@code buildcraftbuilders:builder}; M4.17 replaced the placeholder behaviour with the real {@link BuilderBlockEntity} (same id). */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BuilderBlockEntity>> BUILDER = BLOCK_ENTITIES
             .register("builder", () -> new BlockEntityType<>(
-                    (pos, state) -> new PlaceholderBlockEntity(BcBuildersBlockEntities.BUILDER.value(), pos, state),
+                    BuilderBlockEntity::new,
                     BcBuildersBlocks.BUILDER.value()));
 
     /** {@code buildcraftbuilders:filler}; M2.12 replaced the placeholder behaviour with the real {@link FillerBlockEntity} (same id). */
@@ -44,16 +47,16 @@ public final class BcBuildersBlockEntities {
                     FillerBlockEntity::new,
                     BcBuildersBlocks.FILLER.value()));
 
-    /** Placeholder for {@code buildcraftbuilders:library}; behaviour class migrates in M2.5+. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlaceholderBlockEntity>> LIBRARY = BLOCK_ENTITIES
+    /** {@code buildcraftbuilders:library}; M4.17 replaced the placeholder behaviour with the real {@link LibraryBlockEntity} (same id). */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LibraryBlockEntity>> LIBRARY = BLOCK_ENTITIES
             .register("library", () -> new BlockEntityType<>(
-                    (pos, state) -> new PlaceholderBlockEntity(BcBuildersBlockEntities.LIBRARY.value(), pos, state),
+                    LibraryBlockEntity::new,
                     BcBuildersBlocks.LIBRARY.value()));
 
-    /** Placeholder for {@code buildcraftbuilders:marker_construction}; behaviour class migrates in M2.5+. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlaceholderBlockEntity>> MARKER_CONSTRUCTION = BLOCK_ENTITIES
+    /** {@code buildcraftbuilders:marker_construction}; M4.17 replaced the placeholder behaviour with the real {@link ConstructionMarkerBlockEntity} (same id). */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ConstructionMarkerBlockEntity>> MARKER_CONSTRUCTION = BLOCK_ENTITIES
             .register("marker_construction", () -> new BlockEntityType<>(
-                    (pos, state) -> new PlaceholderBlockEntity(BcBuildersBlockEntities.MARKER_CONSTRUCTION.value(), pos, state),
+                    ConstructionMarkerBlockEntity::new,
                     BcBuildersBlocks.MARKER_CONSTRUCTION.value()));
 
     /** {@code buildcraftbuilders:quarry}; M2.12 replaced the placeholder behaviour with the real {@link QuarryBlockEntity} (same id). */
@@ -62,10 +65,10 @@ public final class BcBuildersBlockEntities {
                     QuarryBlockEntity::new,
                     BcBuildersBlocks.QUARRY.value()));
 
-    /** Placeholder for {@code buildcraftbuilders:replacer}; behaviour class migrates in M2.5+. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlaceholderBlockEntity>> REPLACER = BLOCK_ENTITIES
+    /** {@code buildcraftbuilders:replacer}; M4.17 replaced the placeholder behaviour with the real {@link ReplacerBlockEntity} (same id). */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ReplacerBlockEntity>> REPLACER = BLOCK_ENTITIES
             .register("replacer", () -> new BlockEntityType<>(
-                    (pos, state) -> new PlaceholderBlockEntity(BcBuildersBlockEntities.REPLACER.value(), pos, state),
+                    ReplacerBlockEntity::new,
                     BcBuildersBlocks.REPLACER.value()));
 
     private BcBuildersBlockEntities() {
